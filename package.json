@@ -1,0 +1,32 @@
+{
+  "name": "actions-on-google",
+  "description": "Actions on Google Client Library",
+  "main": "actions-on-google.js",
+  "version": "0.0.1",
+  "private": true,
+  "license": "Apache Version 2.0",
+  "author": "Google Inc.",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "./node_modules/.bin/mocha --reporter spec ./test/*.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/actions-on-google/client-library-nodejs.git"
+  },
+  "bugs": {
+    "url": "https://github.com/actions-on-google/client-library-nodejs/issues"
+  },
+  "homepage": "https://github.com/actions-on-google/client-library-nodejs#readme",
+  "dependencies": {
+    "debug": "^2.2.0",
+    "crypto-js": "~3.1.7"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "mocha": "^3.0.2",
+    "winston": "2.2.0"
+  }
+}
