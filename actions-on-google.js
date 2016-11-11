@@ -139,7 +139,7 @@ function Assistant (options) {
    * The API.ai context.
    * @public {object}
    */
-  self.context_ = null;
+  self.contexts_ = {};
 
   /**
    * The last error message.
@@ -1194,7 +1194,7 @@ State.prototype.getName = function () {
 // ---------------------------------------------------------------------------
 
 /**
- * Set the context for the current intent.
+ * Set a new context for the current intent.
  * @param {string} context name of the argument.
  * @param {int} context lifespan.
  * @param {object} context JSON parameters.
@@ -1207,16 +1207,17 @@ Assistant.prototype.setContext = function (context, lifespan, parameters) {
     return null;
   }
   if (self.apiAi) {
-    self.context_ = {
-      name: context,
-      lifespan: 1
+    let newContext = {
+      name : context,
+      lifespan : 1
     };
-    if (lifespan) {
-      self.context_.lifespan = lifespan;
+    if (lifespan !== null && lifespan !== undefined) {
+      newContext.lifespan = lifespan;
     }
     if (parameters) {
-      self.context_.parameters = parameters;
+      newContext.parameters = parameters;
     }
+    self.contexts_[context] = newContext;
   }
 };
 
@@ -1263,25 +1264,18 @@ Assistant.prototype.buildResponse_ = function (dialogState,
         is_ssml: true,
         no_input_prompts: []
       }
-    }
+    },
+    contextOut: []
   };
   if (expectUserResponse) {
-    response.contextOut = [
-      {
-        name: ACTIONS_API_AI_CONTEXT,
-        lifespan: MAX_LIFESPAN,
-        parameters: dialogState.data
-      }
-    ];
-    if (self.context_) {
-      response.contextOut.push(self.context_);
-    }
+    response.contextOut.push({
+      name: ACTIONS_API_AI_CONTEXT,
+      lifespan: MAX_LIFESPAN,
+      parameters: dialogState.data
+    });
   }
-  if (self.context_) {
-    if (!response.contextOut) {
-      response.contextOut = [];
-    }
-    response.contextOut.push(self.context_);
+  for (let context of Object.keys(self.contexts_)) {
+    response.contextOut.push(self.contexts_[context]);
   }
   return response;
 };
