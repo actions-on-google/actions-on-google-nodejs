@@ -17,7 +17,7 @@
 'use strict';
 
 // Enable actions-on-google debug logging
-// process.env.DEBUG = 'actions-on-google:*';
+process.env.DEBUG = 'actions-on-google:*';
 
 /**
  * Test suite for the actions client library.
@@ -44,7 +44,7 @@ function MockRequest (headers, body) {
     this.headers = {};
   }
   if (body) {
-    this.body = headers;
+    this.body = body;
   } else {
     this.body = {};
   }
@@ -140,7 +140,10 @@ describe('assistant#tell', function () {
 
           ]
         }
-      }
+      },
+      contextOut: [
+
+      ]
     };
     expect(mockResponse.body).to.deep.equal(expectedResponse);
   });

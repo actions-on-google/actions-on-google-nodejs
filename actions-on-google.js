@@ -1206,8 +1206,8 @@ Assistant.prototype.setContext = function (context, lifespan, parameters) {
   }
   if (self.apiAi) {
     let newContext = {
-      name : context,
-      lifespan : 1
+      name: context,
+      lifespan: 1
     };
     if (lifespan !== null && lifespan !== undefined) {
       newContext.lifespan = lifespan;
