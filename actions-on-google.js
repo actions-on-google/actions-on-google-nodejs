@@ -19,7 +19,7 @@
  * https://developers.google.com/actions/
  */
 
-"use strict";
+'use strict';
 
 let Debug = require('debug');
 let debug = Debug('actions-on-google:debug');
@@ -27,13 +27,11 @@ let error = Debug('actions-on-google:error');
 let cryptojs = require('crypto-js');
 
 // Constants
-const UTF_8_ENCODING = 'utf8';
 const ERROR_MESSAGE = 'Sorry, I am unable to process your request.';
 const API_ERROR_MESSAGE_PREFIX = 'API Error: ';
 const CONVERSATION_API_VERSION_HEADER = 'Google-Assistant-API-Version';
-const CONVERSATION_API_SIGNATURE_HEADER = "Google-Assistant-Signature";
-const CONVERSATION_API_AGENT_VERSION_HEADER = "Agent-Version-Label";
-const CONVERSATION_API_V1 = 'v1';
+const CONVERSATION_API_SIGNATURE_HEADER = 'Google-Assistant-Signature';
+const CONVERSATION_API_AGENT_VERSION_HEADER = 'Agent-Version-Label';
 const RESPONSE_CODE_OK = 200;
 const RESPONSE_CODE_BAD_REQUEST = 400;
 const ACTIONS_API_AI_CONTEXT = '_actions_on_google_';
@@ -57,7 +55,7 @@ error.log = console.error.bind(console);
  * @param {Object} options JSON configuration: {request, response, sessionStarted}
  * @constructor
  */
-function Assistant(options) {
+function Assistant (options) {
   debug('Assistant constructor');
   let self = this;
 
@@ -161,9 +159,9 @@ function Assistant(options) {
  */
 Assistant.prototype.StandardIntents = {
   // Assistant fires MAIN intent for queries like [talk to $agent].
-  MAIN : 'assistant.intent.action.MAIN',
+  MAIN: 'assistant.intent.action.MAIN',
   // Assistant fires TEXT intent when action issues ask intent.
-  TEXT : 'assistant.intent.action.TEXT',
+  TEXT: 'assistant.intent.action.TEXT',
   // Assistant fires PERMISSION intent when agent invokes askForPermission.
   PERMISSION: 'assistant.intent.action.PERMISSION',
   // Assistant asks user to sign-in to ensure Assistant has a linked 3P service.
@@ -191,10 +189,10 @@ Assistant.prototype.BuiltInArgNames = {
  * Checks if this action is part of API.ai fulfillment.
  * @return {boolean} true if request from API.ai.
  */
-Assistant.prototype.isApiAiRequest = function() {
+Assistant.prototype.isApiAiRequest = function () {
   debug('isApiAi');
   return this.apiAi;
-}
+};
 
 /**
  * Verifies whether the request comes from Google Assistant.
@@ -203,40 +201,40 @@ Assistant.prototype.isApiAiRequest = function() {
  *                 Action Package, only agent and Google know this key.
  * @return {boolean} indicates whether the request comes from Google Assistant.
  */
-Assistant.prototype.isRequestFromAssistant = function(privateKey) {
+Assistant.prototype.isRequestFromAssistant = function (privateKey) {
   debug('isRequestFromAssistant: privateKey=%s', privateKey);
   let self = this;
-  if (!privateKey || privateKey == '') {
+  if (!privateKey || privateKey === '') {
     self.handleError_('privateKey must be specified.');
     return false;
   }
   // Google-Assistant-Signature must exist.
   let googleSignedSignature = self.getConversationApiSignatureOrEmpty_();
-  if (!googleSignedSignature || googleSignedSignature == '') {
+  if (!googleSignedSignature || googleSignedSignature === '') {
     self.handleError_('Failed to get googleSignedSignature');
     return false;
   }
   // Use HMAC-SHA256 to compute signature of private_key:post_body and verify
   // whether it's the same.
   let hmacSha256 = cryptojs.HmacSHA256(JSON.stringify(self.body_), privateKey);
-  return hmacSha256 == googleSignedSignature;
-}
+  return hmacSha256 === googleSignedSignature;
+};
 
 /*
  * Gets the request API version.
  * @return {string} version value.
  */
-Assistant.prototype.getApiVersion = function() {
+Assistant.prototype.getApiVersion = function () {
   debug('getApiVersion');
   let self = this;
   return self.apiVersion_;
-}
+};
 
 /**
  * Gets user's raw input query.
  * @return {string} user's raw query like 'order a pizza'.
  */
-Assistant.prototype.getRawInput = function() {
+Assistant.prototype.getRawInput = function () {
   debug('getRawInput');
   let self = this;
   let input = self.getTopInput_();
@@ -244,7 +242,7 @@ Assistant.prototype.getRawInput = function() {
     self.handleError_('Failed to get top Input.');
     return null;
   }
-  if (!input.raw_inputs || input.raw_inputs.length == 0) {
+  if (!input.raw_inputs || input.raw_inputs.length === 0) {
     self.handleError_('Missing user raw input');
     return null;
   }
@@ -254,14 +252,14 @@ Assistant.prototype.getRawInput = function() {
     return null;
   }
   return rawInput.query;
-}
+};
 
 /**
  * Gets previous dialog state agent sent to Assistant, or null, e.g., {magic: 5}
  * @return {Object} JSON object developer provided to Google Assistant in prev
  *                  user turn.
  */
-Assistant.prototype.getDialogState = function() {
+Assistant.prototype.getDialogState = function () {
   debug('getDialogState');
   let self = this;
   if (self.body_.conversation &&
@@ -269,13 +267,13 @@ Assistant.prototype.getDialogState = function() {
     return JSON.parse(self.body_.conversation.conversation_token);
   }
   return {};
-}
+};
 
 /**
  * Gets the user object.
  * @return {object} user info.
  */
-Assistant.prototype.getUser = function() {
+Assistant.prototype.getUser = function () {
   debug('getUser');
   let self = this;
   if (self.apiAi) {
@@ -292,26 +290,30 @@ Assistant.prototype.getUser = function() {
     return null;
   }
   return self.body_.user;
-}
+};
 
 /**
  * Gets the Version Label specified inside the Action Package, used by agent to
  * do version control.
  * @return {string} the specified version label or empty if unspecified.
  */
-Assistant.prototype.getAgentVersionLabel = function() {
+Assistant.prototype.getAgentVersionLabel = function () {
   debug('getAgentVersionLabel');
   let self = this;
   let versionLabel = self.request_.get(CONVERSATION_API_AGENT_VERSION_HEADER);
-  return versionLabel ? versionLabel : '';
-}
+  if (versionLabel) {
+    return versionLabel;
+  } else {
+    return '';
+  }
+};
 
 /**
  * Gets unique conversation ID. It's a new ID for initial query, and stays the
  * same for the conversation.
  * @return {string} conversation ID.
  */
-Assistant.prototype.getConversationId = function() {
+Assistant.prototype.getConversationId = function () {
   debug('getConversationId');
   let self = this;
   if (!self.body_.conversation || !self.body_.conversation.conversation_id) {
@@ -319,13 +321,13 @@ Assistant.prototype.getConversationId = function() {
     return null;
   }
   return self.body_.conversation.conversation_id;
-}
+};
 
 /**
  * Get the current intent.
  * @return {string} intent id.
  */
-Assistant.prototype.getIntent = function() {
+Assistant.prototype.getIntent = function () {
   debug('getIntent');
   let self = this;
   if (self.apiAi) {
@@ -343,14 +345,14 @@ Assistant.prototype.getIntent = function() {
     }
     return input.intent;
   }
-}
+};
 
 /**
  * Get argument value by name from the current intent.
  * @param {string} argName name of the argument.
  * @return {string} argument value.
  */
-Assistant.prototype.getArgument = function(argName) {
+Assistant.prototype.getArgument = function (argName) {
   debug('getArgument: argName=%s', argName);
   let self = this;
   if (!argName) {
@@ -361,7 +363,7 @@ Assistant.prototype.getArgument = function(argName) {
     if (self.body_.result.parameters) {
       return self.body_.result.parameters[argName];
     }
-  } else  {
+  } else {
     let argument = self.getArgument_(argName);
     if (!argument) {
       self.handleError_('Missing argument');
@@ -375,7 +377,7 @@ Assistant.prototype.getArgument = function(argName) {
   }
   self.handleError_('Failed to get argument value: %s', argName);
   return null;
-}
+};
 
 /**
  * Asks Assistant to provide an input. A response is built and sent back to
@@ -387,7 +389,7 @@ Assistant.prototype.getArgument = function(argName) {
  * @param {string} conversationToken opaque token agent wants assistant to
  *                 circulate back.
  */
-Assistant.prototype.ask = function(inputPrompt, possibleIntents, speechBiasingHints, conversationToken) {
+Assistant.prototype.ask = function (inputPrompt, possibleIntents, speechBiasingHints, conversationToken) {
   debug('ask: inputPrompt=%s, possibleIntents=%s, speechBiasingHints=%s, conversationToken=%s',
     inputPrompt, possibleIntents, speechBiasingHints, conversationToken);
   let self = this;
@@ -396,24 +398,24 @@ Assistant.prototype.ask = function(inputPrompt, possibleIntents, speechBiasingHi
     return null;
   }
   if (self.apiAi) {
-    let dialog_state = {
-      'state' : (self.state instanceof State ? self.state.getName():self.state),
-      'data' : self.data
+    let dialogState = {
+      'state': (self.state instanceof State ? self.state.getName() : self.state),
+      'data': self.data
     };
-    let response = self.buildResponse_(dialog_state, inputPrompt, true);
+    let response = self.buildResponse_(dialogState, inputPrompt, true);
     return self.doResponse_(response, RESPONSE_CODE_OK);
   } else {
     let dialogState = {
-      'state' : (self.state instanceof State?self.state.getName():self.state),
-      'data' : self.data
+      'state': (self.state instanceof State ? self.state.getName() : self.state),
+      'data': self.data
     };
     if (conversationToken) {
       dialogState = conversationToken;
     }
     let expectedInput = {
-      input_prompt : inputPrompt,
-      possible_intents : possibleIntents,
-      speech_biasing_hints : speechBiasingHints
+      input_prompt: inputPrompt,
+      possible_intents: possibleIntents,
+      speech_biasing_hints: speechBiasingHints
     };
     let response = self.buildResponseHelper_(
       dialogState,
@@ -439,13 +441,13 @@ Assistant.prototype.ask = function(inputPrompt, possibleIntents, speechBiasingHi
  *
  * @return A response is sent to Assistant to ask user to provide an input.
  */
-Assistant.prototype.askForText = function(
+Assistant.prototype.askForText = function (
     speechResponse, dialogState, speechBiasingHints) {
   debug('askForText: speechResponse=%s, dialogState=%s, speechBiasingHints=%s',
     speechResponse, dialogState, speechBiasingHints);
   let self = this;
   let expectedIntent = this.buildExpectedIntent(self.StandardIntent.TEXT, []);
-  let isSsml = speech_response.ssml && speech_response.ssml != '';
+  let isSsml = speechResponse.ssml && speechResponse.ssml !== '';
   let initialPrompt =
       isSsml ? speechResponse.ssml : speechResponse.text_to_speech;
   // We don't provide no-match and no-input prompt b/c user's query will always
@@ -453,7 +455,7 @@ Assistant.prototype.askForText = function(
   let inputPrompt = self.buildInputPrompt_(isSsml, initialPrompt);
   return self.ask(inputPrompt, [expectedIntent], speechBiasingHints,
                    JSON.stringify(dialogState));
-}
+};
 
 /**
  * Asks assistant to guide user to grant the permissions, e.g., when agent wants
@@ -480,27 +482,27 @@ Assistant.prototype.askForPermissions = function (
   debug('askForPermissions: context=%s, permissions=%s, dialogState=%s',
     context, permissions, dialogState);
   let self = this;
-  if (!context || context == '') {
+  if (!context || context === '') {
     self.handleError_('Assistant context can NOT be empty.');
     return null;
   }
-  if (!permissions || permissions.length == 0) {
+  if (!permissions || permissions.length === 0) {
     console.error('At least one permission needed.');
     return null;
   }
   for (let i = 0; i < permissions.length; i++) {
     let permission = permissions[i];
-    if (permission != self.SupportedPermissions.NAME &&
-        permission != self.SupportedPermissions.EMAIL &&
-        permission != self.SupportedPermissions.PRECISE_LOCATION &&
-        permission != self.SupportedPermissions.COARSE_LOCATION) {
+    if (permission !== self.SupportedPermissions.NAME &&
+        permission !== self.SupportedPermissions.EMAIL &&
+        permission !== self.SupportedPermissions.PRECISE_LOCATION &&
+        permission !== self.SupportedPermissions.COARSE_LOCATION) {
       self.handleError_('Assistant permission must be one of ' +
           '[NAME, EMAIL, PRECISE_LOCATION, COARSE_LOCATION]');
       return null;
     }
   }
   // Build an Expected Intent object.
-  let expected_intent = {
+  let expectedIntent = {
     intent: self.BuiltInIntent.PERMISSION,
     input_value_spec: {
       permission_value_spec: {
@@ -508,12 +510,12 @@ Assistant.prototype.askForPermissions = function (
         permissions: permissions
       }
     }
-  }
+  };
   // Send an Ask request to Assistant.
-  let input_prompt = self.buildInputPrompt(false, 'PLACEHOLDER_FOR_PERMISSION');
-  return self.ask(input_prompt, [expected_intent], ['$SchemaOrg_YesNo'],
+  let inputPrompt = self.buildInputPrompt(false, 'PLACEHOLDER_FOR_PERMISSION');
+  return self.ask(inputPrompt, [expectedIntent], ['$SchemaOrg_YesNo'],
       JSON.stringify(dialogState));
-}
+};
 
 /**
  * Asks assistant to guide user to grant a permission, e.g., when agent wants
@@ -541,7 +543,7 @@ Assistant.prototype.askForPermission = function (
     context, permission, dialogState);
   let self = this;
   return self.askForPermissions(context, [permission], dialogState);
-}
+};
 
 /**
  * Asks Assistant to guide user to sign-in the agent. Once done,
@@ -569,7 +571,7 @@ Assistant.prototype.askForSignIn = function (actionPhrase, dialogState) {
   debug('askForSignIn: actionPhrase=%s, dialogState=%s',
     actionPhrase, dialogState);
   let self = this;
-  if (!actionPhrase || actionPhrase == '') {
+  if (!actionPhrase || actionPhrase === '') {
     self.handleError_('Action phrase should not be empty.');
     return null;
   }
@@ -581,13 +583,13 @@ Assistant.prototype.askForSignIn = function (actionPhrase, dialogState) {
         action_phrase: actionPhrase
       }
     }
-  }
+  };
   // Build a dummy input prompt which will not be used. The actual text to
   // speech would be based on the requested intent.
   let inputPrompt = self.buildInputPrompt(false, 'PLACEHOLDER_FOR_SIGN_IN');
   self.ask(inputPrompt, [expectedIntent], ['$SchemaOrg_YesNo'],
       JSON.stringify(dialogState));
-}
+};
 
 /**
  * Similar to ask method but developer only provides a list of raw values for expected
@@ -596,13 +598,13 @@ Assistant.prototype.askForSignIn = function (actionPhrase, dialogState) {
  * @param {Object} inputPrompt Object holding no-match, no-input prompts, use
  *                 buildInputPrompt to construct it.
  * @param {Array} expectedIntentIds list of intent IDs agent expects,
- *                 e.g., ["PROVIDE_LOCATION", "PROVIDE_DATE"].
+ *                 e.g., ['PROVIDE_LOCATION', 'PROVIDE_DATE'].
  * @param {Object} dialogState JSON object agent uses to hold dialog state, it
  *                 will be circulated back by Assistant, e.g., {magic: 10}.
  * @param {Array} speechBiasingHints list speech biasing hints.
  * @return A response is sent back to Assistant.
  */
-Assistant.prototype.askNoRuntimeEntities = function(inputPrompt, expectedIntentIds, dialogState, speechBiasingHints) {
+Assistant.prototype.askNoRuntimeEntities = function (inputPrompt, expectedIntentIds, dialogState, speechBiasingHints) {
   debug('askNoRuntimeEntities: inputPrompt=%s, expectedIntentIds=%s, dialogState=%s, speechBiasingHints=%s',
     inputPrompt, expectedIntentIds, dialogState, speechBiasingHints);
   let self = this;
@@ -628,7 +630,7 @@ Assistant.prototype.askNoRuntimeEntities = function(inputPrompt, expectedIntentI
  * @param {string} speechResponse final spoken response to assistant.
  * @return the response is sent back to Assistant.
  */
-Assistant.prototype.tell = function(speechResponse) {
+Assistant.prototype.tell = function (speechResponse) {
   debug('tell: speechResponse=%s', speechResponse);
   let self = this;
   if (!speechResponse) {
@@ -641,7 +643,7 @@ Assistant.prototype.tell = function(speechResponse) {
   } else {
     let response = self.buildResponseHelper_(
       null, false, null, {
-        speech_response : speechResponse
+        speech_response: speechResponse
       });
     return self.doResponse_(response, RESPONSE_CODE_OK);
   }
@@ -669,35 +671,36 @@ Assistant.prototype.tell = function(speechResponse) {
  *                 user does not respond.
  * @return {Object} an InputPrompt object.
  */
-Assistant.prototype.buildInputPrompt = function(isSsml, initialPrompt,
+Assistant.prototype.buildInputPrompt = function (isSsml, initialPrompt,
   noMatch1, noMatch2, noMatch3, noInput1, noInput2, noInput3) {
   debug('buildInputPrompt: isSsml=%s, initialPrompt=%s, noMatch1=%s, noMatch2=%s, noMatch3=%s, noInput1=%s, noInput2=%s, noInput3=%s',
     isSsml, initialPrompt, noMatch1, noMatch2, noMatch3, noInput1, noInput2, noInput3);
   let self = this;
-  let initials = [],
-    noMatches = [],
-    noInputs = [];
-  self.maybeAddItemToArray_(initial_prompt, initials);
-  self.maybeAddItemToArray_(no_match_1, noMatches);
-  self.maybeAddItemToArray_(no_match_2, noMatches);
-  self.maybeAddItemToArray_(no_match_3, noMatches);
-  self.maybeAddItemToArray_(no_input_1, noInputs);
-  self.maybeAddItemToArray_(no_input_2, noInputs);
-  self.maybeAddItemToArray_(no_input_3, noInputs);
+  let initials = [];
+  let noMatches = [];
+  let noInputs = [];
+
+  self.maybeAddItemToArray_(initialPrompt, initials);
+  self.maybeAddItemToArray_(noMatch1, noMatches);
+  self.maybeAddItemToArray_(noMatch2, noMatches);
+  self.maybeAddItemToArray_(noMatch3, noMatches);
+  self.maybeAddItemToArray_(noInput1, noInputs);
+  self.maybeAddItemToArray_(noInput2, noInputs);
+  self.maybeAddItemToArray_(noInput3, noInputs);
   if (isSsml) {
     return {
-      initial_prompts : self.buildPromptsFromSsmlHelper_(initials),
-      no_match_prompts : self.buildPromptsFromSsmlHelper_(noMatches),
-      no_input_prompts : self.buildPromptsFromSsmlHelper_(noInputs)
+      initial_prompts: self.buildPromptsFromSsmlHelper_(initials),
+      no_match_prompts: self.buildPromptsFromSsmlHelper_(noMatches),
+      no_input_prompts: self.buildPromptsFromSsmlHelper_(noInputs)
     };
   } else {
     return {
-      initial_prompts : self.buildPromptsFromPlainTextHelper_(initials),
-      no_match_prompts : self.buildPromptsFromPlainTextHelper_(noMatches),
-      no_input_prompts : self.buildPromptsFromPlainTextHelper_(noInputs)
+      initial_prompts: self.buildPromptsFromPlainTextHelper_(initials),
+      no_match_prompts: self.buildPromptsFromPlainTextHelper_(noMatches),
+      no_input_prompts: self.buildPromptsFromPlainTextHelper_(noInputs)
     };
   }
-}
+};
 
 /**
  * Helper to build an Expected Intent, refers to newRuntimeEntity to create the
@@ -705,7 +708,7 @@ Assistant.prototype.buildInputPrompt = function(isSsml, initialPrompt,
  *
  * @param {string} intent developer specified in-dialog intent inside Action
  *                 Package or assistant built-in intent like
- *                 "assistant.intent.action.TEXT".
+ *                 'assistant.intent.action.TEXT'.
  * @param {Array} runtimeEntities list of runtime entity, each runtime entity
  *                represents a custom type defined dynamically, e.g., car
  *                agent might return list of available drivers after user says
@@ -713,10 +716,10 @@ Assistant.prototype.buildInputPrompt = function(isSsml, initialPrompt,
  * let options = {
  *   [
  *     {
- *       name: "$RuntimeDriver"
+ *       name: '$RuntimeDriver'
  *       items: [
- *         { key: "S", synonyms: ["car S", "car small"] },
- *         { key: "XL", synonyms: ["car XL", "car large"] }
+ *         { key: 'S', synonyms: ['car S', 'car small'] },
+ *         { key: 'XL', synonyms: ['car XL', 'car large'] }
  *       ]
  *     }
  *   ]
@@ -726,22 +729,22 @@ Assistant.prototype.buildInputPrompt = function(isSsml, initialPrompt,
 Assistant.prototype.buildExpectedIntent = function (intent, runtimeEntities) {
   debug('buildExpectedIntent: intent=%s, runtimeEntities=%s', intent, runtimeEntities);
   let self = this;
-  if (!intent || intent == '') {
+  if (!intent || intent === '') {
     self.handleError_('Invalid intent');
     return null;
   }
   let expectedIntent = {
-    intent : intent
+    intent: intent
   };
   if (runtimeEntities && runtimeEntities.length) {
     expectedIntent.input_value_spec = {
-      option_value_spec : {
-        options : runtimeEntities
+      option_value_spec: {
+        options: runtimeEntities
       }
     };
   }
   return expectedIntent;
-}
+};
 
 /**
  * Creates a runtime entity including list of items. Mostly this is used to
@@ -759,19 +762,19 @@ Assistant.prototype.newRuntimeEntity = function (name, items) {
     self.handleError_('Invalid name');
     return null;
   }
-  if (!name.startsWith("$")) {
+  if (!name.startsWith('$')) {
     self.handleError_('Name must start with $, name: ' + name);
     return null;
   }
-  if (!items || items.length == 0) {
+  if (!items || items.length === 0) {
     self.handleError_('Missing items.');
     return null;
   }
   return {
-    name : name,
-    items : items
+    name: name,
+    items: items
   };
-}
+};
 
 /**
  * Creates a new item with a specific key and list of synonyms.
@@ -780,24 +783,23 @@ Assistant.prototype.newRuntimeEntity = function (name, items) {
  *                item.
  * @return {Object} an Item used to encapsulate this Item, e.g.,
  *  {
- *    key: "CAR_XL"
- *    synonyms: [ "car XL", "car large"]
+ *    key: 'CAR_XL'
+ *    synonyms: [ 'car XL', 'car large']
  *  }
  */
 Assistant.prototype.newItem = function (key, synonyms) {
   debug('newItem: key=%s, synonyms=%s', key, synonyms);
-  let self = this;
   return {
     key: key,
     synonyms: synonyms
   };
-}
+};
 
 /**
  * Handles the incoming assistant request using a handler or map of handlers.
  * @param {Object} handler The handler for the request.
  */
-Assistant.prototype.handleRequest = function(handler) {
+Assistant.prototype.handleRequest = function (handler) {
   debug('handleRequest: handler=%s', handler);
   let self = this;
   if (!handler) {
@@ -807,10 +809,14 @@ Assistant.prototype.handleRequest = function(handler) {
   self.data = {};
   if (self.apiAi) {
     if (self.body_.result && self.body_.result.contexts.length > 0) {
-      for(let i = 0; i < self.body_.result.contexts.length; i++) {
+      for (let i = 0; i < self.body_.result.contexts.length; i++) {
         if (self.body_.result.contexts[i].name === ACTIONS_API_AI_CONTEXT) {
           let parameters = self.body_.result.contexts[i].parameters;
-          self.data = parameters ? parameters : {};
+          if (parameters) {
+            self.data = parameters;
+          } else {
+            self.data = {};
+          }
           break;
         }
       }
@@ -828,13 +834,13 @@ Assistant.prototype.handleRequest = function(handler) {
     let promise = handler(self);
     if (promise instanceof Promise) {
       promise.then(
-        function(result) {
+        function (result) {
           debug(result);
         })
       .catch(
-        function(reason) {
+        function (reason) {
           self.handleError_('function failed: %s', reason.message);
-          self.tell(!reason.message?ERROR_MESSAGE : reason.message);
+          self.tell(!reason.message ? ERROR_MESSAGE : reason.message);
         });
     } else {
       self.handleError_('intent function does not return Promise');
@@ -846,14 +852,14 @@ Assistant.prototype.handleRequest = function(handler) {
     let intent = self.getIntent();
     let result = self.invokeIntentHandler_(handler, intent);
     if (!result) {
-      self.tell(!self.lastErrorMessage_ ?ERROR_MESSAGE : self.lastErrorMessage_);
+      self.tell(!self.lastErrorMessage_ ? ERROR_MESSAGE : self.lastErrorMessage_);
     }
     return;
   }
   // Could not handle intent
   self.handleError_('no matching handler');
   self.tell(ERROR_MESSAGE);
-}
+};
 
 // ---------------------------------------------------------------------------
 //                   Private Helpers
@@ -864,15 +870,15 @@ Assistant.prototype.handleRequest = function(handler) {
  * @return {object} input object.
  * @private
  */
-Assistant.prototype.getTopInput_ = function() {
+Assistant.prototype.getTopInput_ = function () {
   debug('getTopInput_');
   let self = this;
-  if (!self.body_.inputs || self.body_.inputs.length == 0) {
+  if (!self.body_.inputs || self.body_.inputs.length === 0) {
     self.handleError_('Missing inputs from request body');
     return null;
   }
   return self.body_.inputs[0];
-}
+};
 
 /**
  * Builds response to send back to Assistant.
@@ -884,11 +890,10 @@ Assistant.prototype.getTopInput_ = function() {
  * @return {string} final response returned to server.
  * @private
  */
-Assistant.prototype.buildResponseHelper_ = function(conversationToken,
+Assistant.prototype.buildResponseHelper_ = function (conversationToken,
   expectUserResponse, expectedInput, finalResponse) {
   debug('buildResponseHelper_: conversationToken=%s, expectUserResponse=%s, expectedInput=%s, finalResponse=%s',
     conversationToken, expectUserResponse, expectedInput, finalResponse);
-  let self = this;
   let response = {};
   if (conversationToken) {
     response.conversation_token = conversationToken;
@@ -901,7 +906,7 @@ Assistant.prototype.buildResponseHelper_ = function(conversationToken,
     response.final_response = finalResponse;
   }
   return response;
-}
+};
 
 /**
  * Utility function to invoke an intent handler.
@@ -910,7 +915,7 @@ Assistant.prototype.buildResponseHelper_ = function(conversationToken,
  * @return {boolean} true if the handler was invoked.
  * @private
  */
-Assistant.prototype.invokeIntentHandler_ = function(handler, intent) {
+Assistant.prototype.invokeIntentHandler_ = function (handler, intent) {
   debug('invokeIntentHandler_: handler=%s, intent=%s', handler, intent);
   let self = this;
   self.lastErrorMessage_ = null;
@@ -929,11 +934,11 @@ Assistant.prototype.invokeIntentHandler_ = function(handler, intent) {
       // String id
       name = key;
     }
-    debug('name='+name);
+    debug('name=' + name);
     if (value instanceof Map) {
-      debug('state='+ (self.state instanceof State ? self.state.getName() : self.state));
+      debug('state=' + (self.state instanceof State ? self.state.getName() : self.state));
       // map of states
-      if (!self.state && name == null) {
+      if (!self.state && name === null) {
         debug('undefined state');
         return self.invokeIntentHandler_(value, intent);
       } else if (self.state instanceof State && name === self.state.getName()) {
@@ -948,21 +953,18 @@ Assistant.prototype.invokeIntentHandler_ = function(handler, intent) {
       let promise = value(self);
       if (promise instanceof Promise) {
         promise.then(
-          function(result) {
-            // TODO too verbose
-            //debug(result);
+          function (result) {
+            // No-op
           })
         .catch(
-          function(reason) {
+          function (reason) {
             error(reason.message);
             self.handleError_('intent handler failed: %s', reason.message);
             self.lastErrorMessage_ = reason.message;
             return false;
           });
       } else {
-        // TODO support functions too?
-        //handleError_('intent handler does not return Promise');
-        //return false;
+        // Handle functions
         return true;
       }
       return true;
@@ -970,7 +972,7 @@ Assistant.prototype.invokeIntentHandler_ = function(handler, intent) {
   }
   self.handleError_('no matching intent handler');
   return false;
-}
+};
 
 /**
  * Utility function to detech SSML markup.
@@ -978,7 +980,7 @@ Assistant.prototype.invokeIntentHandler_ = function(handler, intent) {
  * @return {boolean} true if SSML markup.
  * @private
  */
-Assistant.prototype.isSsml_ = function(text) {
+Assistant.prototype.isSsml_ = function (text) {
   debug('isSsml_: text=%s', text);
   let self = this;
   if (!text) {
@@ -990,14 +992,14 @@ Assistant.prototype.isSsml_ = function(text) {
     return true;
   }
   return false;
-}
+};
 
 /**
  * Utility function to handle error message.
  * @param {string} text error message.
  * @private
  */
-Assistant.prototype.handleError_ = function(text) {
+Assistant.prototype.handleError_ = function (text) {
   debug('handleError_: text=%s', text);
   let self = this;
   if (!text) {
@@ -1015,37 +1017,37 @@ Assistant.prototype.handleError_ = function(text) {
     self.response_.status(RESPONSE_CODE_BAD_REQUEST).send(API_ERROR_MESSAGE_PREFIX + text);
     self.responded_ = true;
   }
-}
+};
 
 /**
  * Helper to build an ExpectedIntent object.
  * @private
  */
-Assistant.prototype.buildExpectedIntentHelper_ = function(intent, options) {
+Assistant.prototype.buildExpectedIntentHelper_ = function (intent, options) {
   debug('buildExpectedIntentHelper_: intent=%s, options=%s', intent, options);
   let self = this;
-  if (!intent || intent == '') {
+  if (!intent || intent === '') {
     self.handleError_('Missing intent');
     return null;
   }
   let expectedIntent = {
-    intent : intent
+    intent: intent
   };
   if (options && options.length) {
     expectedIntent.input_value_spec = {
-      option_value_spec : {
-        options : options
+      option_value_spec: {
+        options: options
       }
     };
   }
   return expectedIntent;
-}
+};
 
 /**
  * Helper to add item to an array.
  * @private
  */
-Assistant.prototype.maybeAddItemToArray_ = function(item, array) {
+Assistant.prototype.maybeAddItemToArray_ = function (item, array) {
   debug('maybeAddItemToArray_: item=%s, array=%s', item, array);
   let self = this;
   if (!array) {
@@ -1057,16 +1059,16 @@ Assistant.prototype.maybeAddItemToArray_ = function(item, array) {
     return;
   }
   array.push(item);
-}
+};
 
 /*
  * Gets Conversation API signature which is SHA256 of developer provided key
- * plus the request post_body, e.g., SHA-256("private_key:post_body"). Action
+ * plus the request post_body, e.g., SHA-256('private_key:post_body'). Action
  * needs to re-compute the signature to verify the request comes from Assistant
  * @return {string} if the signature exists, otherwise empty.
  * @private
  */
-Assistant.prototype.getConversationApiSignatureOrEmpty_ = function() {
+Assistant.prototype.getConversationApiSignatureOrEmpty_ = function () {
   debug('getConversationApiSignatureOrEmpty_');
   let self = this;
   if (self.request_.get(CONVERSATION_API_SIGNATURE_HEADER)) {
@@ -1074,7 +1076,7 @@ Assistant.prototype.getConversationApiSignatureOrEmpty_ = function() {
   } else {
     return '';
   }
-}
+};
 
 /**
  * Helper to build prompts from SSML's.
@@ -1082,18 +1084,17 @@ Assistant.prototype.getConversationApiSignatureOrEmpty_ = function() {
  * @return {array} list of SpeechResponse objects.
  * @private
  */
-Assistant.prototype.buildPromptsFromSSMLHelper_ = function(ssmls) {
+Assistant.prototype.buildPromptsFromSSMLHelper_ = function (ssmls) {
   debug('buildPromptsFromSSMLHelper_: ssmls=%s', ssmls);
-  let self = this;
   let prompts = [];
   for (let i = 0; i < ssmls.length; i++) {
     let prompt = {
-      ssml : ssmls[i]
+      ssml: ssmls[i]
     };
     prompts.push(prompt);
   }
   return prompts;
-}
+};
 
 /**
  * Helper to build prompts from plain texts.
@@ -1101,25 +1102,24 @@ Assistant.prototype.buildPromptsFromSSMLHelper_ = function(ssmls) {
  * @return {array} list of SpeechResponse objects.
  * @private
  */
-Assistant.prototype.buildPromptsFromPlainTextHelper_ = function(plainTexts) {
+Assistant.prototype.buildPromptsFromPlainTextHelper_ = function (plainTexts) {
   debug('buildPromptsFromPlainTextHelper_: plainTexts=%s', plainTexts);
-  let self = this;
   let prompts = [];
   for (let i = 0; i < plainTexts.length; i++) {
     let prompt = {
-      text_to_speech : plainTexts[i]
-      };
+      text_to_speech: plainTexts[i]
+    };
     prompts.push(prompt);
   }
   return prompts;
-}
+};
 
 /**
  * Get argument by name from the current action.
  * @param {string} argName name of the argument.
  * @return {object} argument matching argName.
  */
-Assistant.prototype.getArgument_ = function(argName) {
+Assistant.prototype.getArgument_ = function (argName) {
   debug('getArgument_: argName=%s', argName);
   let self = this;
   if (!argName) {
@@ -1138,13 +1138,13 @@ Assistant.prototype.getArgument_ = function(argName) {
   }
   self.handleError_('Failed to find argument: %s', argName);
   return null;
-}
+};
 
 /**
  * Utility method to send HTTP response.
  * @return {object} response.
  */
-Assistant.prototype.doResponse_ = function(response, responseCode) {
+Assistant.prototype.doResponse_ = function (response, responseCode) {
   debug('doResponse_');
   let self = this;
   if (self.responded_) {
@@ -1165,29 +1165,29 @@ Assistant.prototype.doResponse_ = function(response, responseCode) {
   let httpResponse = self.response_.status(code).send(response);
   self.responded_ = true;
   return httpResponse;
-}
+};
 
 /**
  * Utility class for representing intents by name.
  */
-let Intent = function(name) {
+let Intent = function (name) {
   this.name_ = name;
 };
 
-Intent.prototype.getName = function() {
+Intent.prototype.getName = function () {
   return this.name_;
-}
+};
 
 /**
  * Utility class for representing states by name.
  */
-let State = function(name) {
+let State = function (name) {
   this.name_ = name;
 };
 
-State.prototype.getName = function() {
+State.prototype.getName = function () {
   return this.name_;
-}
+};
 
 // ---------------------------------------------------------------------------
 //                   API.ai support
@@ -1199,7 +1199,7 @@ State.prototype.getName = function() {
  * @param {int} context lifespan.
  * @param {object} context JSON parameters.
  */
-Assistant.prototype.setContext = function(context, lifespan, parameters) {
+Assistant.prototype.setContext = function (context, lifespan, parameters) {
   debug('setContext: context=%s, lifespan=%s, parameters=%s', context, lifespan, parameters);
   let self = this;
   if (!context) {
@@ -1208,8 +1208,8 @@ Assistant.prototype.setContext = function(context, lifespan, parameters) {
   }
   if (self.apiAi) {
     self.context_ = {
-      name : context,
-      lifespan : 1
+      name: context,
+      lifespan: 1
     };
     if (lifespan) {
       self.context_.lifespan = lifespan;
@@ -1218,13 +1218,13 @@ Assistant.prototype.setContext = function(context, lifespan, parameters) {
       self.context_.parameters = parameters;
     }
   }
-}
+};
 
 /**
  * Get the current intent.
  * @return {string} action id.
  */
-Assistant.prototype.getIntent_ = function() {
+Assistant.prototype.getIntent_ = function () {
   debug('getIntent_');
   let self = this;
   if (self.body_.result) {
@@ -1233,44 +1233,44 @@ Assistant.prototype.getIntent_ = function() {
     self.handleError_('Missing result from request body');
     return null;
   }
-}
+};
 
 /**
  * @private
  * Builds response from API.ai to send back to Assistant.
  *
- * @param {object} dialog_state Arbitrary object to be circulated between
+ * @param {object} dialogState Arbitrary object to be circulated between
  * developer API and Server.
- * @param {string} text_to_speech TTS spoken to end user.
- * @param {boolean} expect_user_response True if user response is expected.
+ * @param {string} textToSpeech TTS spoken to end user.
+ * @param {boolean} expectUserResponse True if user response is expected.
  * @return {object} final response returned to server.
  */
-Assistant.prototype.buildResponse_ = function(dialog_state,
-  text_to_speech, expect_user_response) {
-  debug('buildResponse_: dialog_state=%s, text_to_speech=%s, expected_user_response=%s',
-    JSON.stringify(dialog_state), text_to_speech, expect_user_response);
+Assistant.prototype.buildResponse_ = function (dialogState,
+    textToSpeech, expectUserResponse) {
+  debug('buildResponse_: dialogState=%s, textToSpeech=%s, expectUserResponse=%s',
+    JSON.stringify(dialogState), textToSpeech, expectUserResponse);
   let self = this;
-  if (!text_to_speech === undefined) {
-    self.handleError_("Invalid text_to_speech");
+  if (!textToSpeech === undefined) {
+    self.handleError_('Invalid text to speech');
     return null;
   }
   let response = {
-    speech : text_to_speech,
-    data : {
+    speech: textToSpeech,
+    data: {
       google: {
-        expect_user_response : expect_user_response,
-        ssml : SSML_SPEAK_START + text_to_speech + SSML_SPEAK_END,
-        is_ssml : true,
-        no_input_prompts : []
+        expect_user_response: expectUserResponse,
+        ssml: SSML_SPEAK_START + textToSpeech + SSML_SPEAK_END,
+        is_ssml: true,
+        no_input_prompts: []
       }
     }
   };
-  if (expect_user_response) {
+  if (expectUserResponse) {
     response.contextOut = [
       {
-        name : ACTIONS_API_AI_CONTEXT,
-        lifespan : MAX_LIFESPAN,
-        parameters : dialog_state.data
+        name: ACTIONS_API_AI_CONTEXT,
+        lifespan: MAX_LIFESPAN,
+        parameters: dialogState.data
       }
     ];
     if (self.context_) {

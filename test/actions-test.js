@@ -17,7 +17,7 @@
 'use strict';
 
 // Enable actions-on-google debug logging
-//process.env.DEBUG = 'actions-on-google:*';
+// process.env.DEBUG = 'actions-on-google:*';
 
 /**
  * Test suite for the actions client library.
@@ -37,27 +37,35 @@ winston.loggers.add('DEFAULT_LOGGER', {
   }
 });
 
-function MockRequest(headers, body) {
-  this.headers = headers ? headers : {};
-  this.body = body ? body : {};
-};
-MockRequest.prototype.get = function(header) {
+function MockRequest (headers, body) {
+  if (headers) {
+    this.headers = headers;
+  } else {
+    this.headers = {};
+  }
+  if (body) {
+    this.body = headers;
+  } else {
+    this.body = {};
+  }
+}
+MockRequest.prototype.get = function (header) {
   return this.headers[header];
 };
 
-function MockResponse() {
+function MockResponse () {
   this.statusCode = 200;
   this.headers = {};
-};
-MockResponse.prototype.status = function(statusCode) {
+}
+MockResponse.prototype.status = function (statusCode) {
   this.statusCode = statusCode;
   return this;
 };
-MockResponse.prototype.send = function(body) {
+MockResponse.prototype.send = function (body) {
   this.body = body;
   return this;
 };
-MockResponse.prototype.append = function(header, value) {
+MockResponse.prototype.append = function (header, value) {
   this.headers[header] = value;
   return this;
 };
@@ -65,55 +73,55 @@ MockResponse.prototype.append = function(header, value) {
 /**
  * Describes the behavior for tell method.
  */
-describe('assistant#tell', function() {
+describe('assistant#tell', function () {
   // Success case test, when the API returns a valid 200 response with the response object
-  it('Should return the valid JSON in the response object for the success case.', function() {
-    let headers = {"Content-Type": "application/json", "google-assistant-api-version": "v1"};
+  it('Should return the valid JSON in the response object for the success case.', function () {
+    let headers = {'Content-Type': 'application/json', 'google-assistant-api-version': 'v1'};
     let body = {
-       "id":"ce7295cc-b042-42d8-8d72-14b83597ac1e",
-       "timestamp":"2016-10-28T03:05:34.288Z",
-       "result":{
-          "source":"agent",
-          "resolvedQuery":"start guess a number game",
-          "speech":"",
-          "action":"generate_answer",
-          "actionIncomplete":false,
-          "parameters":{
+      'id': 'ce7295cc-b042-42d8-8d72-14b83597ac1e',
+      'timestamp': '2016-10-28T03:05:34.288Z',
+      'result': {
+        'source': 'agent',
+        'resolvedQuery': 'start guess a number game',
+        'speech': '',
+        'action': 'generate_answer',
+        'actionIncomplete': false,
+        'parameters': {
 
-          },
-          "contexts":[
-             {
-                "name":"game",
-                "lifespan":5
-             }
-          ],
-          "metadata":{
-             "intentId":"56da4637-0419-46b2-b851-d7bf726b1b1b",
-             "webhookUsed":"true",
-             "intentName":"start_game"
-          },
-          "fulfillment":{
-             "speech":""
-          },
-          "score":1
-       },
-       "status":{
-          "code":200,
-          "errorType":"success"
-       },
-       "sessionId":"e420f007-501d-4bc8-b551-5d97772bc50c",
-       "originalRequest":null
+        },
+        'contexts': [
+          {
+            'name': 'game',
+            'lifespan': 5
+          }
+        ],
+        'metadata': {
+          'intentId': '56da4637-0419-46b2-b851-d7bf726b1b1b',
+          'webhookUsed': 'true',
+          'intentName': 'start_game'
+        },
+        'fulfillment': {
+          'speech': ''
+        },
+        'score': 1
+      },
+      'status': {
+        'code': 200,
+        'errorType': 'success'
+      },
+      'sessionId': 'e420f007-501d-4bc8-b551-5d97772bc50c',
+      'originalRequest': null
     };
     const mockRequest = new MockRequest(headers, body);
     const mockResponse = new MockResponse();
 
     const assistant = new Assistant({request: mockRequest, response: mockResponse});
 
-    function handler(assistant) {
+    function handler (assistant) {
       return new Promise(function (resolve, reject) {
         resolve(assistant.tell('hello'));
       });
-    };
+    }
 
     let actionMap = new Map();
     actionMap.set('generate_answer', handler);
@@ -122,17 +130,17 @@ describe('assistant#tell', function() {
 
     // Validating the response object
     let expectedResponse = {
-       "speech":"hello",
-       "data":{
-          "google":{
-             "expect_user_response":false,
-             "ssml":"<speak>hello</speak>",
-             "is_ssml":true,
-             "no_input_prompts":[
+      'speech': 'hello',
+      'data': {
+        'google': {
+          'expect_user_response': false,
+          'ssml': '<speak>hello</speak>',
+          'is_ssml': true,
+          'no_input_prompts': [
 
-             ]
-          }
-       }
+          ]
+        }
+      }
     };
     expect(mockResponse.body).to.deep.equal(expectedResponse);
   });
@@ -141,68 +149,68 @@ describe('assistant#tell', function() {
 /**
  * Describes the behavior for ask method.
  */
-describe('assistant#ask', function() {
+describe('assistant#ask', function () {
   // Success case test, when the API returns a valid 200 response with the response object
-  it('Should return the valid JSON in the response object for the success case.', function() {
-    let headers = {"Content-Type": "application/json", "google-assistant-api-version": "v1"};
+  it('Should return the valid JSON in the response object for the success case.', function () {
+    let headers = {'Content-Type': 'application/json', 'google-assistant-api-version': 'v1'};
     let body = {
-       "id":"9c4394e3-4f5a-4e68-b1af-088b75ad3071",
-       "timestamp":"2016-10-28T03:41:39.957Z",
-       "result":{
-          "source":"agent",
-          "resolvedQuery":"50",
-          "speech":"",
-          "action":"check_guess",
-          "actionIncomplete":false,
-          "parameters":{
-             "guess":"50"
+      'id': '9c4394e3-4f5a-4e68-b1af-088b75ad3071',
+      'timestamp': '2016-10-28T03:41:39.957Z',
+      'result': {
+        'source': 'agent',
+        'resolvedQuery': '50',
+        'speech': '',
+        'action': 'check_guess',
+        'actionIncomplete': false,
+        'parameters': {
+          'guess': '50'
+        },
+        'contexts': [
+          {
+            'name': 'game',
+            'parameters': {
+              'guess.original': '50',
+              'guess': '50'
+            },
+            'lifespan': 5
           },
-          "contexts":[
-             {
-                "name":"game",
-                "parameters":{
-                   "guess.original":"50",
-                   "guess":"50"
-                },
-                "lifespan":5
-             },
-             {
-                "name":"_assistant_",
-                "parameters":{
-                   "answer":68,
-                   "guess.original":"50",
-                   "guess":"50"
-                },
-                "lifespan":99
-             }
-          ],
-          "metadata":{
-             "intentId":"1e46ffc2-651f-4ac0-a54e-9698feb88880",
-             "webhookUsed":"true",
-             "intentName":"provide_guess"
-          },
-          "fulfillment":{
-             "speech":""
-          },
-          "score":1
-       },
-       "status":{
-          "code":200,
-          "errorType":"success"
-       },
-       "sessionId":"e420f007-501d-4bc8-b551-5d97772bc50c",
-       "originalRequest":null
+          {
+            'name': '_assistant_',
+            'parameters': {
+              'answer': 68,
+              'guess.original': '50',
+              'guess': '50'
+            },
+            'lifespan': 99
+          }
+        ],
+        'metadata': {
+          'intentId': '1e46ffc2-651f-4ac0-a54e-9698feb88880',
+          'webhookUsed': 'true',
+          'intentName': 'provide_guess'
+        },
+        'fulfillment': {
+          'speech': ''
+        },
+        'score': 1
+      },
+      'status': {
+        'code': 200,
+        'errorType': 'success'
+      },
+      'sessionId': 'e420f007-501d-4bc8-b551-5d97772bc50c',
+      'originalRequest': null
     };
     const mockRequest = new MockRequest(headers, body);
     const mockResponse = new MockResponse();
 
     const assistant = new Assistant({request: mockRequest, response: mockResponse});
 
-    function handler(assistant) {
+    function handler (assistant) {
       return new Promise(function (resolve, reject) {
         resolve(assistant.ask('hello'));
       });
-    };
+    }
 
     let actionMap = new Map();
     actionMap.set('check_guess', handler);
@@ -211,26 +219,26 @@ describe('assistant#ask', function() {
 
     // Validating the response object
     let expectedResponse = {
-       "speech":"hello",
-       "data":{
-          "google":{
-             "expect_user_response":true,
-             "ssml":"<speak>hello</speak>",
-             "is_ssml":true,
-             "no_input_prompts":[
+      'speech': 'hello',
+      'data': {
+        'google': {
+          'expect_user_response': true,
+          'ssml': '<speak>hello</speak>',
+          'is_ssml': true,
+          'no_input_prompts': [
 
-             ]
-          }
-       },
-       "contextOut":[
-          {
-             "name":"_actions_on_google_",
-             "lifespan":100,
-             "parameters":{
+          ]
+        }
+      },
+      'contextOut': [
+        {
+          'name': '_actions_on_google_',
+          'lifespan': 100,
+          'parameters': {
 
-             }
           }
-       ]
+        }
+      ]
     };
     expect(mockResponse.body).to.deep.equal(expectedResponse);
   });

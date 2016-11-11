@@ -1,6 +1,6 @@
 {
   "name": "actions-on-google",
-  "description": "Actions on Google Client Library",
+  "description": "Actions on Google Client Library for Node.js",
   "main": "actions-on-google.js",
   "version": "0.0.1",
   "private": true,
@@ -10,7 +10,8 @@
     "test": "test"
   },
   "scripts": {
-    "test": "./node_modules/.bin/mocha --reporter spec ./test/*.js"
+    "lint": "semistandard \"**/*.js\"",
+    "test": "npm run lint && ./node_modules/.bin/mocha --reporter spec ./test/*.js"
   },
   "repository": {
     "type": "git",
@@ -20,13 +21,30 @@
     "url": "https://github.com/actions-on-google/client-library-nodejs/issues"
   },
   "homepage": "https://github.com/actions-on-google/client-library-nodejs#readme",
+  "keywords": [
+    "google",
+    "google actions",
+    "google assistant",
+    "client library"
+  ],
+  "semistandard": {
+    "globals": [
+      "after",
+      "afterEach",
+      "before",
+      "beforeEach",
+      "describe",
+      "it"
+    ]
+  },
   "dependencies": {
-    "debug": "^2.2.0",
-    "crypto-js": "~3.1.7"
+    "crypto-js": "~3.1.7",
+    "debug": "^2.2.0"
   },
   "devDependencies": {
     "chai": "^3.5.0",
     "mocha": "^3.0.2",
-    "winston": "2.2.0"
+    "winston": "2.2.0",
+    "semistandard": "^9.1.0"
   }
 }
