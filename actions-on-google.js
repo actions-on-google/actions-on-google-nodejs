@@ -173,7 +173,6 @@ Assistant.prototype.StandardIntents = {
  */
 Assistant.prototype.SupportedPermissions = {
   NAME: 'NAME',
-  EMAIL: 'EMAIL',
   PRECISE_LOCATION: 'DEVICE_PRECISE_LOCATION',
   COARSE_LOCATION: 'DEVICE_COARSE_LOCATION'
 };
@@ -493,11 +492,10 @@ Assistant.prototype.askForPermissions = function (
   for (let i = 0; i < permissions.length; i++) {
     let permission = permissions[i];
     if (permission !== self.SupportedPermissions.NAME &&
-        permission !== self.SupportedPermissions.EMAIL &&
         permission !== self.SupportedPermissions.PRECISE_LOCATION &&
         permission !== self.SupportedPermissions.COARSE_LOCATION) {
       self.handleError_('Assistant permission must be one of ' +
-          '[NAME, EMAIL, PRECISE_LOCATION, COARSE_LOCATION]');
+          '[NAME, PRECISE_LOCATION, COARSE_LOCATION]');
       return null;
     }
   }
