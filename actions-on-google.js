@@ -1254,7 +1254,7 @@ Assistant.prototype.buildResponse_ = function (dialogState,
     return null;
   }
   let response = {
-    speech: textToSpeech,
+    speech: SSML_SPEAK_START + textToSpeech + SSML_SPEAK_END,
     data: {
       google: {
         expect_user_response: expectUserResponse,
