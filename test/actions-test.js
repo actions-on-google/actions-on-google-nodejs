@@ -130,7 +130,7 @@ describe('assistant#tell', function () {
 
     // Validating the response object
     let expectedResponse = {
-      'speech': 'hello',
+      'speech': '<speak>hello</speak>',
       'data': {
         'google': {
           'expect_user_response': false,
@@ -222,7 +222,7 @@ describe('assistant#ask', function () {
 
     // Validating the response object
     let expectedResponse = {
-      'speech': 'hello',
+      'speech': '<speak>hello</speak>',
       'data': {
         'google': {
           'expect_user_response': true,
