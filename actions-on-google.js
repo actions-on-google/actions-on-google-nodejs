@@ -38,6 +38,8 @@ const ACTIONS_API_AI_CONTEXT = '_actions_on_google_';
 const SSML_SPEAK_START = '<speak>';
 const SSML_SPEAK_END = '</speak>';
 const MAX_LIFESPAN = 100;
+const HTTP_CONTENT_TYPE_HEADER = 'Content-Type';
+const HTTP_CONTENT_TYPE_JSON = 'application/json';
 
 /**
  * Configure logging for hosting platforms that only
@@ -404,6 +406,9 @@ Assistant.prototype.ask = function (inputPrompt, possibleIntents, speechBiasingH
     let response = self.buildResponse_(dialogState, inputPrompt, true);
     return self.doResponse_(response, RESPONSE_CODE_OK);
   } else {
+    if (typeof inputPrompt === 'string') {
+      inputPrompt = self.buildInputPrompt(self.isSsml_(inputPrompt), inputPrompt);
+    }
     let dialogState = {
       'state': (self.state instanceof State ? self.state.getName() : self.state),
       'data': self.data
@@ -411,15 +416,15 @@ Assistant.prototype.ask = function (inputPrompt, possibleIntents, speechBiasingH
     if (conversationToken) {
       dialogState = conversationToken;
     }
-    let expectedInput = {
+    let expectedInputs = [{
       input_prompt: inputPrompt,
       possible_intents: possibleIntents,
       speech_biasing_hints: speechBiasingHints
-    };
+    }];
     let response = self.buildResponseHelper_(
-      dialogState,
+      JSON.stringify(dialogState),
       true, // expected_user_response
-      expectedInput,
+      expectedInputs,
       null // final_response is null b/c dialog is active
     );
     return self.doResponse_(response, RESPONSE_CODE_OK);
@@ -451,7 +456,7 @@ Assistant.prototype.askForText = function (
       isSsml ? speechResponse.ssml : speechResponse.text_to_speech;
   // We don't provide no-match and no-input prompt b/c user's query will always
   // be matched.
-  let inputPrompt = self.buildInputPrompt_(isSsml, initialPrompt);
+  let inputPrompt = self.buildInputPrompt(isSsml, initialPrompt);
   return self.ask(inputPrompt, [expectedIntent], speechBiasingHints,
                    JSON.stringify(dialogState));
 };
@@ -641,7 +646,9 @@ Assistant.prototype.tell = function (speechResponse) {
   } else {
     let response = self.buildResponseHelper_(
       null, false, null, {
-        speech_response: speechResponse
+        speech_response: {
+          text_to_speech: speechResponse
+        }
       });
     return self.doResponse_(response, RESPONSE_CODE_OK);
   }
@@ -898,7 +905,7 @@ Assistant.prototype.buildResponseHelper_ = function (conversationToken,
   }
   response.expect_user_response = expectUserResponse;
   if (expectedInput) {
-    response.expected_inputs = [expectedInput];
+    response.expected_inputs = expectedInput;
   }
   if (!expectUserResponse && finalResponse) {
     response.final_response = finalResponse;
@@ -1053,7 +1060,7 @@ Assistant.prototype.maybeAddItemToArray_ = function (item, array) {
     return;
   }
   if (!item) {
-    self.handleError_('Invalid item');
+    // ignore add
     return;
   }
   array.push(item);
@@ -1082,8 +1089,8 @@ Assistant.prototype.getConversationApiSignatureOrEmpty_ = function () {
  * @return {array} list of SpeechResponse objects.
  * @private
  */
-Assistant.prototype.buildPromptsFromSSMLHelper_ = function (ssmls) {
-  debug('buildPromptsFromSSMLHelper_: ssmls=%s', ssmls);
+Assistant.prototype.buildPromptsFromSsmlHelper_ = function (ssmls) {
+  debug('buildPromptsFromSsmlHelper_: ssmls=%s', ssmls);
   let prompts = [];
   for (let i = 0; i < ssmls.length; i++) {
     let prompt = {
@@ -1159,6 +1166,7 @@ Assistant.prototype.doResponse_ = function (response, responseCode) {
   if (!self.apiAi) {
     self.response_.append(CONVERSATION_API_VERSION_HEADER, self.apiVersion_);
   }
+  self.response_.append(HTTP_CONTENT_TYPE_HEADER, HTTP_CONTENT_TYPE_JSON);
   debug('Response %s', JSON.stringify(response));
   let httpResponse = self.response_.status(code).send(response);
   self.responded_ = true;
