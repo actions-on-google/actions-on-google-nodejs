@@ -22,9 +22,9 @@ process.env.DEBUG = 'actions-on-google:*';
 /**
  * Test suite for the actions client library.
  */
-var winston = require('winston');
-var expect = require('chai').expect;
-var Assistant = require('./../actions-on-google');
+let winston = require('winston');
+let expect = require('chai').expect;
+let ApiAiAssistant = require('.././actions-on-google').ApiAiAssistant;
 
 // Default logger
 winston.loggers.add('DEFAULT_LOGGER', {
@@ -115,7 +115,7 @@ describe('assistant#tell', function () {
     const mockRequest = new MockRequest(headers, body);
     const mockResponse = new MockResponse();
 
-    const assistant = new Assistant({request: mockRequest, response: mockResponse});
+    const assistant = new ApiAiAssistant({request: mockRequest, response: mockResponse});
 
     function handler (assistant) {
       return new Promise(function (resolve, reject) {
@@ -207,7 +207,7 @@ describe('assistant#ask', function () {
     const mockRequest = new MockRequest(headers, body);
     const mockResponse = new MockResponse();
 
-    const assistant = new Assistant({request: mockRequest, response: mockResponse});
+    const assistant = new ApiAiAssistant({request: mockRequest, response: mockResponse});
 
     function handler (assistant) {
       return new Promise(function (resolve, reject) {

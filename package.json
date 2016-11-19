@@ -2,15 +2,14 @@
   "name": "actions-on-google",
   "description": "Actions on Google Client Library for Node.js",
   "main": "actions-on-google.js",
-  "version": "0.0.1",
-  "private": true,
-  "license": "Apache Version 2.0",
+  "version": "1.0.0",
+  "license": "Apache-2.0",
   "author": "Google Inc.",
   "directories": {
     "test": "test"
   },
   "scripts": {
-    "lint": "semistandard \"**/*.js\"",
+    "lint": "semistandard --fix \"**/*.js\"",
     "test": "npm run lint && ./node_modules/.bin/mocha --reporter spec ./test/*.js"
   },
   "repository": {
