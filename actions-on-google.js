@@ -1340,19 +1340,17 @@ ApiAiAssistant.prototype.setContext = function (context, lifespan, parameters) {
     self.handleError_('Invalid context name');
     return null;
   }
-  if (self.apiAi) {
-    let newContext = {
-      name: context,
-      lifespan: 1
-    };
-    if (lifespan !== null && lifespan !== undefined) {
-      newContext.lifespan = lifespan;
-    }
-    if (parameters) {
-      newContext.parameters = parameters;
-    }
-    self.contexts_[context] = newContext;
+  let newContext = {
+    name: context,
+    lifespan: 1
+  };
+  if (lifespan !== null && lifespan !== undefined) {
+    newContext.lifespan = lifespan;
   }
+  if (parameters) {
+    newContext.parameters = parameters;
+  }
+  self.contexts_[context] = newContext;
 };
 
 // ---------------------------------------------------------------------------
