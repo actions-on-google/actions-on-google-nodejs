@@ -130,15 +130,15 @@ describe('assistant#tell', function () {
 
     // Validating the response object
     let expectedResponse = {
-      'speech': '<speak>hello</speak>',
+      'speech': 'hello',
       'data': {
         'google': {
           'expect_user_response': false,
-          'ssml': '<speak>hello</speak>',
-          'is_ssml': true,
+          'is_ssml': false,
           'no_input_prompts': [
 
-          ]
+          ],
+          speech_biasing_hints: []
         }
       },
       contextOut: [
@@ -222,15 +222,15 @@ describe('assistant#ask', function () {
 
     // Validating the response object
     let expectedResponse = {
-      'speech': '<speak>hello</speak>',
+      'speech': 'hello',
       'data': {
         'google': {
           'expect_user_response': true,
-          'ssml': '<speak>hello</speak>',
-          'is_ssml': true,
+          'is_ssml': false,
           'no_input_prompts': [
 
-          ]
+          ],
+          speech_biasing_hints: []
         }
       },
       'contextOut': [

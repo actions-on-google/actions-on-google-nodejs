@@ -1395,12 +1395,12 @@ ApiAiAssistant.prototype.buildResponse_ = function (dialogState,
     return null;
   }
   let response = {
-    speech: SSML_SPEAK_START + textToSpeech + SSML_SPEAK_END,
+    speech: textToSpeech,
     data: {
       google: {
         expect_user_response: expectUserResponse,
-        ssml: SSML_SPEAK_START + textToSpeech + SSML_SPEAK_END,
-        is_ssml: true,
+        speech_biasing_hints: [],
+        is_ssml: self.isSsml_(textToSpeech),
         no_input_prompts: []
       }
     },
