@@ -226,6 +226,84 @@ Assistant.prototype.handleRequest = function (handler) {
   self.tell(ERROR_MESSAGE);
 };
 
+/**
+ * Asks assistant to guide user to grant the permissions, e.g., when agent wants
+ * to access user's personal info, agent invokes askForPermissions method,
+ * assistant will ask user '<ActionPhrase>, I'll just need to get your '
+ * 'first name, last name, email and current location, is that OK?', once user
+ * says 'Yes' or 'No', assistant will fire another intent:
+ * assistant.intent.action.PERMISSION with a bool arg: 'permission_granted'. If
+ * permission_granted is true, agent can inspect request.user_info for details,
+ * otherwise agent needs to change the way it asks user to continue the dialog.
+ *
+ * @param {string} context context why permission is asked, it's the TTS
+ *                 prompt prefix (action phrase) we ask user.
+ * @param {Array} permissions list of permissions assistant supports, each of
+ *                which comes from Assistant.SupportedPermissions.
+ * @param {Object=} dialogState the opaque dialog state agent wants assistant to
+ *                 circulate back.
+ *
+ * @return A response is sent to assistant to ask for user's permission, for any
+ *         invalid input, we return null.
+ */
+Assistant.prototype.askForPermissions = function (
+  context, permissions, dialogState = undefined) {
+  debug('askForPermissions: context=%s, permissions=%s, dialogState=%s',
+    context, permissions, JSON.stringify(dialogState));
+  let self = this;
+  if (!context || context === '') {
+    self.handleError_('Assistant context can NOT be empty.');
+    return null;
+  }
+  if (!permissions || permissions.length === 0) {
+    console.error('At least one permission needed.');
+    return null;
+  }
+  for (let i = 0; i < permissions.length; i++) {
+    let permission = permissions[i];
+    if (permission !== self.SupportedPermissions.NAME &&
+      permission !== self.SupportedPermissions.PRECISE_LOCATION &&
+      permission !== self.SupportedPermissions.COARSE_LOCATION) {
+      self.handleError_('Assistant permission must be one of ' +
+        '[NAME, PRECISE_LOCATION, COARSE_LOCATION]');
+      return null;
+    }
+  }
+
+  return self.fulfillPermissionsRequest_({
+    opt_context: context,
+    permissions: permissions
+  }, dialogState);
+};
+
+/**
+ * Asks assistant to guide user to grant a permission, e.g., when agent wants
+ * to access user's personal info, agent invokes askForPermissions method,
+ * assistant will ask user '<ActionPhrase>, I'll just need to get your'
+ * '<first name, last name, email OR current location>, is that OK?', once user
+ * says 'Yes' or 'No', assistant will fire another intent:
+ * assistant.intent.action.PERMISSION with a bool arg: 'permission_granted'. If
+ * permission_granted is true, agent can inspect request.user_info for details,
+ * otherwise agent needs to change the way it asks user to continue the dialog.
+ *
+ * @param {string} opt_context context why permission is asked, it's the TTS
+ *                 prompt prefix (action phrase) we ask user.
+ * @param {string} permission one of permissions assistant supports, each of
+ *                 which comes from Assistant.SupportedPermissions.
+ * @param {Object=} dialogState the opaque dialog state agent wants assistant to
+ *                 circulate back. In ApiAiAssistant. use 'data' instead.
+ *
+ * @return A response is sent to assistant to ask for user's permission, for any
+ *         invalid input, we return null.
+ */
+Assistant.prototype.askForPermission = function (
+  context, permission, dialogState = undefined) {
+  debug('askForPermission: context=%s, permission=%s, dialogState=%s',
+    context, permission, JSON.stringify(dialogState));
+  let self = this;
+  return self.askForPermissions(context, [permission], dialogState);
+};
+
 // ---------------------------------------------------------------------------
 //                   Private Helpers
 // ---------------------------------------------------------------------------
@@ -668,95 +746,6 @@ ActionsSdkAssistant.prototype.askForText = function (
   let inputPrompt = self.buildInputPrompt(isSsml, initialPrompt);
   return self.ask(inputPrompt, [expectedIntent], speechBiasingHints,
                    JSON.stringify(dialogState));
-};
-
-/**
- * Asks assistant to guide user to grant the permissions, e.g., when agent wants
- * to access user's personal info, agent invokes askForPermissions method,
- * assistant will ask user 'In order to <ActionPhrase>, we need to access your'
- * 'first name, last name, email and current location, is that OK?', once user
- * says 'Yes' or 'No', assistant will fire another intent:
- * assistant.intent.action.PERMISSION with a bool arg: 'permission_granted'. If
- * permission_granted is true, agent can inspect request.user_info for details,
- * otherwise agent needs to change the way it asks user to continue the dialog.
- *
- * @param {string} context context why permission is asked, it's the TTS
- *                 prompt prefix we ask user.
- * @param {Array} permissions list of permissions assistant supports, each of
- *                which comes from Assistant.SupportedPermissions.
- * @param {Object} dialogState the opaque dialog state agent wants assistant to
- *                 circulate back.
- *
- * @return A response is sent to assistant to ask for user's permission, for any
- * invalid input, we return null.
- * @actionssdk
- */
-ActionsSdkAssistant.prototype.askForPermissions = function (
-    context, permissions, dialogState) {
-  debug('askForPermissions: context=%s, permissions=%s, dialogState=%s',
-    context, permissions, dialogState);
-  let self = this;
-  if (!context || context === '') {
-    self.handleError_('Assistant context can NOT be empty.');
-    return null;
-  }
-  if (!permissions || permissions.length === 0) {
-    console.error('At least one permission needed.');
-    return null;
-  }
-  for (let i = 0; i < permissions.length; i++) {
-    let permission = permissions[i];
-    if (permission !== self.SupportedPermissions.NAME &&
-        permission !== self.SupportedPermissions.PRECISE_LOCATION &&
-        permission !== self.SupportedPermissions.COARSE_LOCATION) {
-      self.handleError_('Assistant permission must be one of ' +
-          '[NAME, PRECISE_LOCATION, COARSE_LOCATION]');
-      return null;
-    }
-  }
-  // Build an Expected Intent object.
-  let expectedIntent = {
-    intent: self.BuiltInIntent.PERMISSION,
-    input_value_spec: {
-      permission_value_spec: {
-        opt_context: context,
-        permissions: permissions
-      }
-    }
-  };
-  // Send an Ask request to Assistant.
-  let inputPrompt = self.buildInputPrompt(false, 'PLACEHOLDER_FOR_PERMISSION');
-  return self.ask(inputPrompt, [expectedIntent], ['$SchemaOrg_YesNo'],
-      JSON.stringify(dialogState));
-};
-
-/**
- * Asks assistant to guide user to grant a permission, e.g., when agent wants
- * to access user's personal info, agent invokes askForPermissions method,
- * assistant will ask user 'In order to <ActionPhrase>, we need to access your'
- * 'first name, last name, email and current location, is that OK?', once user
- * says 'Yes' or 'No', assistant will fire another intent:
- * assistant.intent.action.PERMISSION with a bool arg: 'permission_granted'. If
- * permission_granted is true, agent can inspect request.user_info for details,
- * otherwise agent needs to change the way it asks user to continue the dialog.
- *
- * @param {string} opt_context context why permission is asked, it's the TTS
- *                 prompt prefix we ask user.
- * @param {string} permission one of permissions assistant supports, each of
- *                 which comes from Assistant.SupportedPermissions.
- * @param {Object} dialogState the opaque dialog state agent wants assistant to
- *                 circulate back.
- *
- * @return A response is sent to assistant to ask for user's permission, for any
- * invalid input, we return null.
- * @actionssdk
- */
-ActionsSdkAssistant.prototype.askForPermission = function (
-    context, permission, dialogState) {
-  debug('askForPermission: context=%s, permission=%s, dialogState=%s',
-    context, permission, dialogState);
-  let self = this;
-  return self.askForPermissions(context, [permission], dialogState);
 };
 
 /**
@@ -1217,6 +1206,36 @@ ActionsSdkAssistant.prototype.extractData_ = function () {
   return data;
 };
 
+/**
+ * Uses a PermissionsValueSpec object to construct and send a
+ * permissions request to user.
+ *
+ * @param {object} permissionsSpec PermissionsValueSpec object containing
+ *                 permissions prefix and permissions requested.
+ * @param {Object} dialogState the opaque dialog state agent wants assistant to
+ *                 circulate back.
+ * @return {Object} HTTP response.
+ * @private
+ * @actionssdk
+ */
+ActionsSdkAssistant.prototype.fulfillPermissionsRequest_ = function (
+  permissionsSpec, dialogState) {
+  debug('fulfillPermissionsRequest_: permissionsSpec=%s, dialogState=%s',
+    JSON.stringify(permissionsSpec), JSON.stringify(dialogState));
+  let self = this;
+  // Build an Expected Intent object.
+  let expectedIntent = {
+    intent: self.StandardIntents.PERMISSION,
+    input_value_spec: {
+      permission_value_spec: permissionsSpec
+    }
+  };
+  // Send an Ask request to Assistant.
+  let inputPrompt = self.buildInputPrompt(false, 'PLACEHOLDER_FOR_PERMISSION');
+  return self.ask(inputPrompt, [expectedIntent], ['$SchemaOrg_YesNo'],
+    JSON.stringify(dialogState));
+};
+
 // ---------------------------------------------------------------------------
 //                   API.ai support
 // ---------------------------------------------------------------------------
@@ -1474,6 +1493,31 @@ ApiAiAssistant.prototype.extractData_ = function () {
   }
 
   return data;
+};
+
+/**
+ * Uses a PermissionsValueSpec object to construct and send a
+ * permissions request to user.
+ *
+ * @param {object} permissionsSpec PermissionsValueSpec object containing
+ *                 permissions prefix and permissions requested.
+ * @return {Object} HTTP response.
+ * @private
+ * @apiai
+ */
+ApiAiAssistant.prototype.fulfillPermissionsRequest_ = function (permissionsSpec) {
+  debug('fulfillPermissionsRequest_: permissionsSpec=%s',
+    JSON.stringify(permissionsSpec));
+  let self = this;
+  let dialogState = {
+    'state': (self.state instanceof State ? self.state.getName() : self.state),
+    'data': self.data
+  };
+  let inputPrompt = 'PLACEHOLDER_FOR_PERMISSION';
+  let response = self.buildResponse_(dialogState, inputPrompt, true);
+  response.data.google.speech_biasing_hints = ['$SchemaOrg_YesNo'];
+  response.data.google.permissions_request = permissionsSpec;
+  return self.doResponse_(response, RESPONSE_CODE_OK);
 };
 
 module.exports = {

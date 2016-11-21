@@ -155,7 +155,10 @@ describe('assistant#tell', function () {
 describe('assistant#ask', function () {
   // Success case test, when the API returns a valid 200 response with the response object
   it('Should return the valid JSON in the response object for the success case.', function () {
-    let headers = {'Content-Type': 'application/json', 'google-assistant-api-version': 'v1'};
+    let headers = {
+      'Content-Type': 'application/json',
+      'google-assistant-api-version': 'v1'
+    };
     let body = {
       'id': '9c4394e3-4f5a-4e68-b1af-088b75ad3071',
       'timestamp': '2016-10-28T03:41:39.957Z',
@@ -207,7 +210,10 @@ describe('assistant#ask', function () {
     const mockRequest = new MockRequest(headers, body);
     const mockResponse = new MockResponse();
 
-    const assistant = new ApiAiAssistant({request: mockRequest, response: mockResponse});
+    const assistant = new ApiAiAssistant({
+      request: mockRequest,
+      response: mockResponse
+    });
 
     function handler (assistant) {
       return new Promise(function (resolve, reject) {
@@ -227,9 +233,7 @@ describe('assistant#ask', function () {
         'google': {
           'expect_user_response': true,
           'is_ssml': false,
-          'no_input_prompts': [
-
-          ],
+          'no_input_prompts': [],
           speech_biasing_hints: []
         }
       },
@@ -237,9 +241,85 @@ describe('assistant#ask', function () {
         {
           'name': '_actions_on_google_',
           'lifespan': 100,
-          'parameters': {
+          'parameters': {}
+        }
+      ]
+    };
+    expect(mockResponse.body).to.deep.equal(expectedResponse);
+  });
+});
 
+/**
+ * Describes the behavior for askForPermissions method.
+ */
+describe('assistant#askForPermissions', function () {
+  // Success case test, when the API returns a valid 200 response with the response object
+  it('Should return the valid JSON in the response object for the success case.', function () {
+    let headers = {'Content-Type': 'application/json', 'google-assistant-api-version': 'v1'};
+    let body = {
+      'id': '9c4394e3-4f5a-4e68-b1af-088b75ad3071',
+      'timestamp': '2016-10-28T03:41:39.957Z',
+      'result': {
+        'source': 'agent',
+        'resolvedQuery': 'Where am I?',
+        'speech': '',
+        'action': 'get_permission',
+        'actionIncomplete': false,
+        'parameters': {},
+        'contexts': [],
+        'metadata': {
+          'intentId': '1e46ffc2-651f-4ac0-a54e-9698feb88880',
+          'webhookUsed': 'true',
+          'intentName': 'give_permission'
+        },
+        'fulfillment': {
+          'speech': ''
+        },
+        'score': 1
+      },
+      'status': {
+        'code': 200,
+        'errorType': 'success'
+      },
+      'sessionId': 'e420f007-501d-4bc8-b551-5d97772bc50c',
+      'originalRequest': null
+    };
+    const mockRequest = new MockRequest(headers, body);
+    const mockResponse = new MockResponse();
+
+    const assistant = new ApiAiAssistant({request: mockRequest, response: mockResponse});
+
+    function handler (assistant) {
+      return new Promise(function (resolve, reject) {
+        resolve(assistant.askForPermissions('To test', ['NAME', 'DEVICE_PRECISE_LOCATION']));
+      });
+    }
+
+    let actionMap = new Map();
+    actionMap.set('get_permission', handler);
+
+    assistant.handleRequest(actionMap);
+
+    // Validating the response object
+    let expectedResponse = {
+      'speech': 'PLACEHOLDER_FOR_PERMISSION',
+      'data': {
+        'google': {
+          'expect_user_response': true,
+          'is_ssml': false,
+          'no_input_prompts': [],
+          'speech_biasing_hints': ['$SchemaOrg_YesNo'],
+          'permissions_request': {
+            'opt_context': 'To test',
+            'permissions': ['NAME', 'DEVICE_PRECISE_LOCATION']
           }
+        }
+      },
+      'contextOut': [
+        {
+          'name': '_actions_on_google_',
+          'lifespan': 100,
+          'parameters': {}
         }
       ]
     };
