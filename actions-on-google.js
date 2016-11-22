@@ -211,8 +211,8 @@ Assistant.prototype.handleRequest = function (handler) {
           self.tell(!reason.message ? ERROR_MESSAGE : reason.message);
         });
     } else {
-      self.handleError_('intent function does not return Promise');
-      self.tell(ERROR_MESSAGE);
+      // Handle functions
+      return;
     }
     return;
   } else if (handler instanceof Map) {
