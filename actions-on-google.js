@@ -41,10 +41,7 @@ const MAX_LIFESPAN = 100;
 const HTTP_CONTENT_TYPE_HEADER = 'Content-Type';
 const HTTP_CONTENT_TYPE_JSON = 'application/json';
 
-/**
- * Configure logging for hosting platforms that only
- * support console.log and console.error
- */
+// Configure logging for hosting platforms that only support console.log and console.error
 debug.log = console.log.bind(console);
 error.log = console.error.bind(console);
 
@@ -78,19 +75,19 @@ function Assistant (options) {
   }
 
   /**
-   * The request cloud function is going to return to Assistant.
+   * The request that the endpoint will return to Assistant.
    * @private {object}
    */
   self.request_ = options.request;
 
   /**
-   * The response cloud function is going to return to Assistant.
+   * The response the endpoint will return to Assistant.
    * @private {object}
    */
   self.response_ = options.response;
 
   /**
-   * Session started callback (optional).
+   * 'sessionStarted' callback (optional).
    * @private {object}
    */
   self.sessionStarted_ = options.sessionStarted;
@@ -154,7 +151,7 @@ function Assistant (options) {
 // ---------------------------------------------------------------------------
 
 /**
- * List of standard intents assistant provides.
+ * List of standard intents that assistant provides.
  */
 Assistant.prototype.StandardIntents = {
   // Assistant fires MAIN intent for queries like [talk to $agent].
@@ -300,8 +297,8 @@ Assistant.prototype.invokeIntentHandler_ = function (handler, intent) {
 };
 
 /**
- * Utility function to detech SSML markup.
- * @param {string} text The text for speech.
+ * Utility function to detect SSML markup.
+ * @param {string} text The text to be checked.
  * @return {boolean} true if SSML markup.
  * @private
  */
@@ -321,7 +318,7 @@ Assistant.prototype.isSsml_ = function (text) {
 
 /**
  * Utility function to handle error message.
- * @param {string} text error message.
+ * @param {string} text The error message.
  * @private
  */
 Assistant.prototype.handleError_ = function (text) {
@@ -412,10 +409,10 @@ State.prototype.getName = function () {
 // ---------------------------------------------------------------------------
 
 /**
- * Constructor for Assistant object.
+ * Constructor for ActionsSdkAssistant object.
  *
  * @example
- * let assistant = new Assistant({request: request, response: response,
+ * let assistant = new ActionsSdkAssistant({request: request, response: response,
  *   sessionStarted:sessionStarted});
  * @param {Object} options JSON configuration: {request, response, sessionStarted}
  * @constructor
@@ -493,7 +490,7 @@ ActionsSdkAssistant.prototype.getRawInput = function () {
 };
 
 /**
- * Gets previous dialog state agent sent to Assistant, or null, e.g., {magic: 5}
+ * Gets previous dialog state that the agent sent to Assistant, or null, e.g., {magic: 5}
  * @return {Object} JSON object developer provided to Google Assistant in prev
  *                  user turn.
  * @actionssdk
@@ -524,8 +521,7 @@ ActionsSdkAssistant.prototype.getUser = function () {
 };
 
 /**
- * Gets the Version Label specified inside the Action Package, used by agent to
- * do version control.
+ * Gets the 'versionLabel' specified inside the Action Package, used by agent to do version control.
  * @return {string} the specified version label or empty if unspecified.
  * @actionssdk
  */
@@ -541,8 +537,8 @@ ActionsSdkAssistant.prototype.getAgentVersionLabel = function () {
 };
 
 /**
- * Gets unique conversation ID. It's a new ID for initial query, and stays the
- * same for the conversation.
+ * Gets unique conversation ID. It's a new ID for initial query, and stays the same until the end of
+ * the conversation.
  * @return {string} conversation ID.
  * @actionssdk
  */
@@ -610,7 +606,8 @@ ActionsSdkAssistant.prototype.getArgument = function (argName) {
  *                 circulate back.
  * @actionssdk
  */
-ActionsSdkAssistant.prototype.ask = function (inputPrompt, possibleIntents, speechBiasingHints, conversationToken) {
+ActionsSdkAssistant.prototype.ask = function (
+    inputPrompt, possibleIntents, speechBiasingHints, conversationToken) {
   debug('ask: inputPrompt=%s, possibleIntents=%s, speechBiasingHints=%s, conversationToken=%s',
     inputPrompt, possibleIntents, speechBiasingHints, conversationToken);
   let self = this;
@@ -823,8 +820,10 @@ ActionsSdkAssistant.prototype.askForSignIn = function (actionPhrase, dialogState
  * @return A response is sent back to Assistant.
  * @actionssdk
  */
-ActionsSdkAssistant.prototype.askNoRuntimeEntities = function (inputPrompt, expectedIntentIds, dialogState, speechBiasingHints) {
-  debug('askNoRuntimeEntities: inputPrompt=%s, expectedIntentIds=%s, dialogState=%s, speechBiasingHints=%s',
+ActionsSdkAssistant.prototype.askNoRuntimeEntities = function (
+    inputPrompt, expectedIntentIds, dialogState, speechBiasingHints) {
+  debug('askNoRuntimeEntities: inputPrompt=%s, expectedIntentIds=%s, '
+    + 'dialogState=%s, speechBiasingHints=%s',
     inputPrompt, expectedIntentIds, dialogState, speechBiasingHints);
   let self = this;
   if (!inputPrompt) {
@@ -845,7 +844,7 @@ ActionsSdkAssistant.prototype.askNoRuntimeEntities = function (inputPrompt, expe
 };
 
 /**
- * Tells Assistant to render the speech response and closes the mic.
+ * Tells Assistant to render the speech response and close the mic.
  * @param {string} speechResponse final spoken response to assistant.
  * @return the response is sent back to Assistant.
  * @actionssdk
@@ -867,13 +866,17 @@ ActionsSdkAssistant.prototype.tell = function (speechResponse) {
 };
 
 /**
- * Builds InputPrompt from initial prompt, no-match prompts, and no-input
- * prompts. Assistant needs one initial prompt, if user provides
- * an input which does not match to agent's expected intents, assistant renders
- * no-match prompt three times to help user to provide the right response. if no
- * user's response, assistant re-opens the mic and issues no-input prompts in
- * the similar fashion. Note that, we highly recommend agent to provide all the
- * prompts requires here in order to ensure a good user experience.
+ * Builds the InputPrompt object from initial prompt, no-match prompts, and no-input
+ * prompts.
+ *
+ * Assistant needs one initial prompt to start the conversation, then if the user provides
+ * an input which does not match to agent's expected intents, assistant renders the
+ * no-match prompts three times (one for each no-match prompt that was configured) to help the user
+ * provide the right response. If no user's response, assistant re-opens the mic and issues no-input
+ * prompts in similar fashion.
+ *
+ * Note: we highly recommend agent to provide all the prompts required here in order to ensure a
+ * good user experience.
  *
  * @param {boolean} isSsml indicates whether the text to speech is SSML or not.
  * @param {string} initialPrompt the initial prompt assistant asks user.
@@ -921,8 +924,9 @@ ActionsSdkAssistant.prototype.buildInputPrompt = function (isSsml, initialPrompt
 };
 
 /**
- * Helper to build an Expected Intent, refers to newRuntimeEntity to create the
- * entities.
+ * Builds an ExpectedIntent object.
+ *
+ * Refer to 'newRuntimeEntity' to create the list of runtime entities required by this method.
  *
  * @param {string} intent developer specified in-dialog intent inside Action
  *                 Package or assistant built-in intent like
@@ -966,8 +970,9 @@ ActionsSdkAssistant.prototype.buildExpectedIntent = function (intent, runtimeEnt
 };
 
 /**
- * Creates a runtime entity including list of items. Mostly this is used to
- * create a runtime entity before agent invokes buildExpectedIntent.
+ * Creates a runtime entity including list of items.
+ *
+ * This method is mostly used to create a runtime entity before agent invokes buildExpectedIntent.
  *
  * @param {string} name the name for this entity, must be matched to a custom
  *                 type defined in Action Package.
@@ -1037,7 +1042,7 @@ ActionsSdkAssistant.prototype.getTopInput_ = function () {
 };
 
 /**
- * Builds response to send back to Assistant.
+ * Builds the response to send back to Assistant.
  *
  * @param {string} conversationToken dialog state.
  * @param {boolean} expectUserResponse expected user response.
@@ -1049,7 +1054,8 @@ ActionsSdkAssistant.prototype.getTopInput_ = function () {
  */
 ActionsSdkAssistant.prototype.buildResponseHelper_ = function (conversationToken,
   expectUserResponse, expectedInput, finalResponse) {
-  debug('buildResponseHelper_: conversationToken=%s, expectUserResponse=%s, expectedInput=%s, finalResponse=%s',
+  debug('buildResponseHelper_: conversationToken=%s, expectUserResponse=%s, expectedInput=%s, '
+    + 'finalResponse=%s',
     conversationToken, expectUserResponse, expectedInput, finalResponse);
   let response = {};
   if (conversationToken) {
@@ -1066,7 +1072,7 @@ ActionsSdkAssistant.prototype.buildResponseHelper_ = function (conversationToken
 };
 
 /**
- * Helper to build an ExpectedIntent object.
+ * Builds an ExpectedIntent object.
  * @private
  * @actionssdk
  */
@@ -1216,10 +1222,10 @@ ActionsSdkAssistant.prototype.extractData_ = function () {
 // ---------------------------------------------------------------------------
 
 /**
- * Constructor for Assistant object.
+ * Constructor for ApiAiAssistant object.
  *
  * @example
- * let assistant = new Assistant({request: request, response: response,
+ * let assistant = new ApiAiAssistant({request: request, response: response,
  *   sessionStarted:sessionStarted});
  * @param {Object} options JSON configuration: {request, response, sessionStarted}
  * @constructor
