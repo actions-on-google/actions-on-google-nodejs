@@ -1251,6 +1251,30 @@ ApiAiAssistant.prototype.getUser = function () {
 };
 
 /**
+ * Verifies whether the request comes from API.AI.
+ *
+ * @param {string} header the header specified by the developer in the
+ *                 API.AI Fulfillment settings of the agent.
+ * @param {string} private_key the private key specified by developer inside the
+ *                 Fulfillment header, only agent and API.AI know this key.
+ * @return {boolean} indicates whether the request comes from API.AI.
+ * @apiai
+ */
+ApiAiAssistant.prototype.isRequestFromApiAi = function (header, privateKey) {
+  debug('isRequestFromApiAi: header=%s, privateKey=%s', header, privateKey);
+  let self = this;
+  if (!header || header === '') {
+    self.handleError_('header must be specified.');
+    return false;
+  }
+  if (!privateKey || privateKey === '') {
+    self.handleError_('privateKey must be specified.');
+    return false;
+  }
+  return self.request_.get(header) === privateKey;
+};
+
+/**
  * Get the current intent.
  * @return {string} intent id.
  * @apiai
