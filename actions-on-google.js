@@ -822,8 +822,8 @@ ActionsSdkAssistant.prototype.askForSignIn = function (actionPhrase, dialogState
  */
 ActionsSdkAssistant.prototype.askNoRuntimeEntities = function (
     inputPrompt, expectedIntentIds, dialogState, speechBiasingHints) {
-  debug('askNoRuntimeEntities: inputPrompt=%s, expectedIntentIds=%s, '
-    + 'dialogState=%s, speechBiasingHints=%s',
+  debug('askNoRuntimeEntities: inputPrompt=%s, expectedIntentIds=%s, ' +
+    'dialogState=%s, speechBiasingHints=%s',
     inputPrompt, expectedIntentIds, dialogState, speechBiasingHints);
   let self = this;
   if (!inputPrompt) {
@@ -1054,8 +1054,8 @@ ActionsSdkAssistant.prototype.getTopInput_ = function () {
  */
 ActionsSdkAssistant.prototype.buildResponseHelper_ = function (conversationToken,
   expectUserResponse, expectedInput, finalResponse) {
-  debug('buildResponseHelper_: conversationToken=%s, expectUserResponse=%s, expectedInput=%s, '
-    + 'finalResponse=%s',
+  debug('buildResponseHelper_: conversationToken=%s, expectUserResponse=%s, ' +
+    'expectedInput=%s, finalResponse=%s',
     conversationToken, expectUserResponse, expectedInput, finalResponse);
   let response = {};
   if (conversationToken) {
