@@ -47,10 +47,8 @@ error.log = console.error.bind(console);
 
 /**
  * Constructor for Assistant object.
+ * Should not be instantiated; rather use {@link ActionsSdkAssistant} or {@link ApiAiAssistant}.
  *
- * @example
- * let assistant = new Assistant({request: request, response: response,
- *   sessionStarted:sessionStarted});
  * @param {Object} options JSON configuration: {request, response, sessionStarted}
  * @constructor
  */
@@ -58,7 +56,7 @@ function Assistant (options) {
   let self = this;
 
   if (!options) {
-    // ignore for inheritance
+    // ignore for JavaScript inheritance to work
     return;
   }
 
@@ -75,13 +73,13 @@ function Assistant (options) {
   }
 
   /**
-   * The request that the endpoint will return to Assistant.
+   * The HTTP request that the endpoint receives from the Assistant.
    * @private {object}
    */
   self.request_ = options.request;
 
   /**
-   * The response the endpoint will return to Assistant.
+   * The HTTP response the endpoint will return to Assistant.
    * @private {object}
    */
   self.response_ = options.response;
@@ -95,14 +93,14 @@ function Assistant (options) {
   debug('Request from Assistant: %s', JSON.stringify(self.request_.body));
 
   /**
-   * The request body contains query semantics and previous dialog state.
+   * The request body contains query JSON and previous session variables.
    * @private {object}
    */
   self.body_ = self.request_.body;
 
   /**
-   * API version describes how Assistant sends request and expects response.
-   * @private {string} valid api_version.
+   * API version describes version of the Assistant request.
+   * @private {string} valid API version.
    */
   self.apiVersion_ = null;
   // Populates API version.
@@ -112,11 +110,21 @@ function Assistant (options) {
   }
 
   /**
-   * Intent handling data structures.
+   * Intent handling data structure.
    * @private {object}
    */
   self.handler_ = null;
+
+  /**
+   * Intent mapping data structure.
+   * @private {object}
+   */
   self.intentMap_ = null;
+
+  /**
+   * Intent state data structure.
+   * @private {object}
+   */
   self.stateMap_ = null;
 
   /**
@@ -143,6 +151,10 @@ function Assistant (options) {
    */
   self.lastErrorMessage_ = null;
 
+  /**
+   * Track if an HTTP response has been sent already.
+   * @private {boolean}
+   */
   self.responded_ = false;
 }
 
@@ -151,21 +163,21 @@ function Assistant (options) {
 // ---------------------------------------------------------------------------
 
 /**
- * List of standard intents that assistant provides.
+ * List of standard intents that the Assistant provides.
  */
 Assistant.prototype.StandardIntents = {
-  // Assistant fires MAIN intent for queries like [talk to $agent].
+  // Assistant fires MAIN intent for queries like [talk to $action].
   MAIN: 'assistant.intent.action.MAIN',
   // Assistant fires TEXT intent when action issues ask intent.
   TEXT: 'assistant.intent.action.TEXT',
-  // Assistant fires PERMISSION intent when agent invokes askForPermission.
+  // Assistant fires PERMISSION intent when action invokes askForPermission.
   PERMISSION: 'assistant.intent.action.PERMISSION',
   // Assistant asks user to sign-in to ensure Assistant has a linked 3P service.
   SIGN_IN: 'assistant.intent.action.SIGN_IN'
 };
 
 /**
- * List of supported permissions agent can ask.
+ * List of supported permissions the Assistant supports.
  */
 Assistant.prototype.SupportedPermissions = {
   NAME: 'NAME',
@@ -181,7 +193,7 @@ Assistant.prototype.BuiltInArgNames = {
 };
 
 /**
- * Handles the incoming assistant request using a handler or map of handlers.
+ * Handles the incoming Assistant request using a handler or map of handlers.
  * @param {Object} handler The handler for the request.
  */
 Assistant.prototype.handleRequest = function (handler) {
@@ -227,27 +239,27 @@ Assistant.prototype.handleRequest = function (handler) {
 };
 
 /**
- * Asks assistant to guide user to grant the permissions, e.g., when agent wants
- * to access user's personal info, agent invokes askForPermissions method,
- * assistant will ask user '<ActionPhrase>, I'll just need to get your '
+ * Asks the Assistant to guide the user to grant the permissions, e.g., when action wants
+ * to access the user's personal info, action invokes askForPermissions method,
+ * the Assistant will ask the user '<ActionPhrase>, I'll just need to get your '
  * 'first name, last name, email and current location, is that OK?', once user
- * says 'Yes' or 'No', assistant will fire another intent:
+ * says 'Yes' or 'No', the Assistant will fire another intent:
  * assistant.intent.action.PERMISSION with a bool arg: 'permission_granted'. If
- * permission_granted is true, agent can inspect request.user_info for details,
- * otherwise agent needs to change the way it asks user to continue the dialog.
+ * permission_granted is true, the action can inspect request.user_info for details,
+ * otherwise the action needs to change the way it asks the user to continue the dialog.
  *
- * @param {string} context context why permission is asked, it's the TTS
- *                 prompt prefix (action phrase) we ask user.
- * @param {Array} permissions list of permissions assistant supports, each of
+ * @param {string} context Context why permission is asked; it's the TTS
+ *                 prompt prefix (action phrase) we ask the user.
+ * @param {Array} permissions List of permissions Assistant supports, each of
  *                which comes from Assistant.SupportedPermissions.
- * @param {Object=} dialogState the opaque dialog state agent wants assistant to
+ * @param {Object=} dialogState The opaque dialog state the action wants Assistant to
  *                 circulate back.
  *
- * @return A response is sent to assistant to ask for user's permission, for any
+ * @return A response is sent to Assistant to ask for the user's permission, for any
  *         invalid input, we return null.
  */
 Assistant.prototype.askForPermissions = function (
-  context, permissions, dialogState = undefined) {
+  context, permissions, dialogState) {
   debug('askForPermissions: context=%s, permissions=%s, dialogState=%s',
     context, permissions, JSON.stringify(dialogState));
   let self = this;
@@ -256,7 +268,7 @@ Assistant.prototype.askForPermissions = function (
     return null;
   }
   if (!permissions || permissions.length === 0) {
-    console.error('At least one permission needed.');
+    self.handleError_('At least one permission needed.');
     return null;
   }
   for (let i = 0; i < permissions.length; i++) {
@@ -277,31 +289,30 @@ Assistant.prototype.askForPermissions = function (
 };
 
 /**
- * Asks assistant to guide user to grant a permission, e.g., when agent wants
- * to access user's personal info, agent invokes askForPermissions method,
- * assistant will ask user '<ActionPhrase>, I'll just need to get your'
+ * Asks the Assistant to guide the user to grant a permission, e.g., when the action
+ * wants to access the user's personal info, action invokes askForPermissions method,
+ * Assistant will ask user '<ActionPhrase>, I'll just need to get your'
  * '<first name, last name, email OR current location>, is that OK?', once user
- * says 'Yes' or 'No', assistant will fire another intent:
+ * says 'Yes' or 'No', Assistant will fire another intent:
  * assistant.intent.action.PERMISSION with a bool arg: 'permission_granted'. If
- * permission_granted is true, agent can inspect request.user_info for details,
- * otherwise agent needs to change the way it asks user to continue the dialog.
+ * permission_granted is true, the action can inspect request.user_info for details,
+ * otherwise action needs to change the way it asks the user to continue the dialog.
  *
- * @param {string} opt_context context why permission is asked, it's the TTS
- *                 prompt prefix (action phrase) we ask user.
- * @param {string} permission one of permissions assistant supports, each of
+ * @param {string} context Context why permission is asked; it's the TTS
+ *                 prompt prefix (action phrase) we ask the user.
+ * @param {string} permission One of the permissions Assistant supports, each of
  *                 which comes from Assistant.SupportedPermissions.
- * @param {Object=} dialogState the opaque dialog state agent wants assistant to
- *                 circulate back. In ApiAiAssistant. use 'data' instead.
+ * @param {Object=} dialogState The opaque dialog state the action wants the Assistant
+ *                 to circulate back. In ApiAiAssistant. use 'data' instead.
  *
- * @return A response is sent to assistant to ask for user's permission, for any
- *         invalid input, we return null.
+ * @return A response is sent to the Assistant to ask for the user's permission,
+ *         for any invalid input, we return null.
  */
 Assistant.prototype.askForPermission = function (
-  context, permission, dialogState = undefined) {
+  context, permission, dialogState) {
   debug('askForPermission: context=%s, permission=%s, dialogState=%s',
     context, permission, JSON.stringify(dialogState));
-  let self = this;
-  return self.askForPermissions(context, [permission], dialogState);
+  return this.askForPermissions(context, [permission], dialogState);
 };
 
 // ---------------------------------------------------------------------------
@@ -420,7 +431,7 @@ Assistant.prototype.handleError_ = function (text) {
 };
 
 /**
- * Utility method to send HTTP response.
+ * Utility method to send an HTTP response.
  * @return {object} response.
  * @private
  */
@@ -449,7 +460,8 @@ Assistant.prototype.doResponse_ = function (response, responseCode) {
 };
 
 /**
- * Extract session data from incoming JSON request.
+ * Extract session data from the incoming JSON request.
+ * Used in subclasses for Actions SDK and API.ai.
  * @return {Object} JSON data values.
  * @private
  */
@@ -505,11 +517,11 @@ function ActionsSdkAssistant (options) {
 ActionsSdkAssistant.prototype = new Assistant();
 
 /**
- * Verifies whether the request comes from Google Assistant.
+ * Verifies that the request is from the Assistant.
  *
- * @param {string} private_key the private key specified by developer inside the
- *                 Action Package, only agent and Google know this key.
- * @return {boolean} indicates whether the request comes from Google Assistant.
+ * @param {string} private_key The private key specified by developer inside the
+ *                 Action Package.
+ * @return {boolean} indicates whether the request comes from the Assistant.
  * @actionssdk
  */
 ActionsSdkAssistant.prototype.isRequestFromAssistant = function (privateKey) {
@@ -525,10 +537,10 @@ ActionsSdkAssistant.prototype.isRequestFromAssistant = function (privateKey) {
     self.handleError_('Failed to get googleSignedSignature');
     return false;
   }
-  // Use HMAC-SHA256 to compute signature of private_key:post_body and verify
+  // Use HMAC-SHA256 to compute the signature of private_key:post_body and verify
   // whether it's the same.
   let hmacSha256 = cryptojs.HmacSHA256(JSON.stringify(self.body_), privateKey);
-  return hmacSha256 === googleSignedSignature;
+  return hmacSha256.toString(cryptojs.enc.Hex) === googleSignedSignature;
 };
 
 /*
@@ -538,12 +550,11 @@ ActionsSdkAssistant.prototype.isRequestFromAssistant = function (privateKey) {
  */
 ActionsSdkAssistant.prototype.getApiVersion = function () {
   debug('getApiVersion');
-  let self = this;
-  return self.apiVersion_;
+  return this.apiVersion_;
 };
 
 /**
- * Gets user's raw input query.
+ * Gets the user's raw input query.
  * @return {string} user's raw query like 'order a pizza'.
  * @actionssdk
  */
@@ -568,7 +579,7 @@ ActionsSdkAssistant.prototype.getRawInput = function () {
 };
 
 /**
- * Gets previous dialog state that the agent sent to Assistant, or null, e.g., {magic: 5}
+ * Gets previous dialog state that the action sent to Assistant, or null, e.g., {magic: 5}
  * @return {Object} JSON object developer provided to Google Assistant in prev
  *                  user turn.
  * @actionssdk
@@ -599,7 +610,7 @@ ActionsSdkAssistant.prototype.getUser = function () {
 };
 
 /**
- * Gets the 'versionLabel' specified inside the Action Package, used by agent to do version control.
+ * Gets the 'versionLabel' specified inside the Action Package, used by action to do version control.
  * @return {string} the specified version label or empty if unspecified.
  * @actionssdk
  */
@@ -615,8 +626,8 @@ ActionsSdkAssistant.prototype.getAgentVersionLabel = function () {
 };
 
 /**
- * Gets unique conversation ID. It's a new ID for initial query, and stays the same until the end of
- * the conversation.
+ * Gets the unique conversation ID. It's a new ID for the initial query,
+ * and stays the same until the end of the conversation.
  * @return {string} conversation ID.
  * @actionssdk
  */
@@ -647,8 +658,8 @@ ActionsSdkAssistant.prototype.getIntent = function () {
 };
 
 /**
- * Get argument value by name from the current intent.
- * @param {string} argName name of the argument.
+ * Get the argument value by name from the current intent.
+ * @param {string} argName Name of the argument.
  * @return {string} argument value.
  * @actionssdk
  */
@@ -669,18 +680,18 @@ ActionsSdkAssistant.prototype.getArgument = function (argName) {
   } else if (argument.raw_text) {
     return argument.raw_text;
   }
-  self.handleError_('Failed to get argument value: %s', argName);
+  debug('Failed to get argument value: %s', argName);
   return null;
 };
 
 /**
- * Asks Assistant to provide an input. A response is built and sent back to
+ * Asks Assistant to collect the user's input. A response is built and sent back to
  * Assistant if succeeded, otherwise an error code 400 is sent back.
  *
- * @param {Object} inputPrompt holding initial, no-match and no-input prompt.
- * @param {array} possibleIntents list of ExpectedIntents.
- * @param {array} speechBiasingHints speech biasing hints.
- * @param {string} conversationToken opaque token agent wants assistant to
+ * @param {Object} inputPrompt Holding initial, no-match and no-input prompts.
+ * @param {array} possibleIntents List of ExpectedIntents.
+ * @param {array} speechBiasingHints Speech biasing hints.
+ * @param {string} conversationToken Opaque token action wants Assistant to
  *                 circulate back.
  * @actionssdk
  */
@@ -718,15 +729,15 @@ ActionsSdkAssistant.prototype.ask = function (
 };
 
 /**
- * Asks assistant to collect user's input, all user's queries need to be sent to
- * agent.
+ * Asks Assistant to collect user's input; all user's queries need to be sent to
+ * action.
  *
  * @param {Object} speechResponse, SpeechResponse including text to speech or
  *                 SSML, note we don't specify no-match, no-input here b/c all
- *                 user's queries will be matched and sent to agent.
+ *                 user's queries will be matched and sent to action.
  * @param {Object} dialogState JSON object representing developer's dialog
  *                 state, it's opaque for Assistant.
- * @param {Array} speechBiasingHints list of speech biasing hints agent wants
+ * @param {Array} speechBiasingHints List of speech biasing hints action wants
  *                Assistant to enforce strong speech biasing.
  *
  * @return A response is sent to Assistant to ask user to provide an input.
@@ -737,7 +748,7 @@ ActionsSdkAssistant.prototype.askForText = function (
   debug('askForText: speechResponse=%s, dialogState=%s, speechBiasingHints=%s',
     speechResponse, dialogState, speechBiasingHints);
   let self = this;
-  let expectedIntent = this.buildExpectedIntent(self.StandardIntent.TEXT, []);
+  let expectedIntent = this.buildExpectedIntent(self.StandardIntents.TEXT, []);
   let isSsml = speechResponse.ssml && speechResponse.ssml !== '';
   let initialPrompt =
       isSsml ? speechResponse.ssml : speechResponse.text_to_speech;
@@ -749,25 +760,25 @@ ActionsSdkAssistant.prototype.askForText = function (
 };
 
 /**
- * Asks Assistant to guide user to sign-in the agent. Once done,
+ * Asks Assistant to guide the user to sign-in the action. Once done,
  * in the subsequent request, Assistant will include user.access_token.
  * Example usage:
  * U: [order a movie ticket]
  * A: [what is the movie]
  * U: [hunger games]
  * A: [To order movie ticket, please go to your Google Home app to sign in
- * movie app agent first, and come back again]  <- movie app agent invokes
+ * movie app action first, and come back again]  <- movie app action invokes
  * askForSignIn('order movie ticket', dialogState); Note that at this stage mic
  * is closed.
  *
  * U: go to Google Home app and log in movie app and retry:
  * U: [order a movie ticket]
- * A: [what is the movie]: assistant passes user.access_token to movie app at
+ * A: [what is the movie]: Assistant passes user.access_token to movie app at
  * this point.
  *
- * @param {string} action_phrase description for the task to guide user to sign
+ * @param {string} action_phrase Description for the task to guide user to sign
  *                 in.
- * @param {Object} dialogState opaque dialog state agent wants assistant to
+ * @param {Object} dialogState Opaque dialog state action wants Assistant to
  *                 circulate back.
  * @actionssdk
  */
@@ -801,11 +812,11 @@ ActionsSdkAssistant.prototype.askForSignIn = function (actionPhrase, dialogState
  *
  * @param {Object} inputPrompt Object holding no-match, no-input prompts, use
  *                 buildInputPrompt to construct it.
- * @param {Array} expectedIntentIds list of intent IDs agent expects,
+ * @param {Array} expectedIntentIds List of intent IDs action expects,
  *                 e.g., ['PROVIDE_LOCATION', 'PROVIDE_DATE'].
- * @param {Object} dialogState JSON object agent uses to hold dialog state, it
+ * @param {Object} dialogState JSON object action uses to hold dialog state, it
  *                 will be circulated back by Assistant, e.g., {magic: 10}.
- * @param {Array} speechBiasingHints list speech biasing hints.
+ * @param {Array} speechBiasingHints List speech biasing hints.
  * @return A response is sent back to Assistant.
  * @actionssdk
  */
@@ -834,7 +845,7 @@ ActionsSdkAssistant.prototype.askNoRuntimeEntities = function (
 
 /**
  * Tells Assistant to render the speech response and close the mic.
- * @param {string} speechResponse final spoken response to assistant.
+ * @param {string} speechResponse Final spoken response to Assistant.
  * @return the response is sent back to Assistant.
  * @actionssdk
  */
@@ -859,24 +870,24 @@ ActionsSdkAssistant.prototype.tell = function (speechResponse) {
  * prompts.
  *
  * Assistant needs one initial prompt to start the conversation, then if the user provides
- * an input which does not match to agent's expected intents, assistant renders the
+ * an input which does not match to action's expected intents, Assistant renders the
  * no-match prompts three times (one for each no-match prompt that was configured) to help the user
- * provide the right response. If no user's response, assistant re-opens the mic and issues no-input
+ * provide the right response. If no user's response, Assistant re-opens the mic and issues no-input
  * prompts in similar fashion.
  *
- * Note: we highly recommend agent to provide all the prompts required here in order to ensure a
+ * Note: we highly recommend action to provide all the prompts required here in order to ensure a
  * good user experience.
  *
- * @param {boolean} isSsml indicates whether the text to speech is SSML or not.
- * @param {string} initialPrompt the initial prompt assistant asks user.
- * @param {string} noMatch1 first re-prompt when user's response mismatches
- *                 agent's expected input.
- * @param {string} noMatch2 second re-prompt when user's response mismatches
- *                 agent's expected input.
- * @param {string} noMatch3 last spoken response before mic is closed.
- * @param {string} noInput1 first re-prompt when user does not respond.
- * @param {string} noInput2 second re-prompt when user does not respond.
- * @param {string} noInput3 last spoken response before mic is closed when
+ * @param {boolean} isSsml Indicates whether the text to speech is SSML or not.
+ * @param {string} initialPrompt The initial prompt Assistant asks the user.
+ * @param {string} noMatch1 First re-prompt when user's response mismatches
+ *                 action's expected input.
+ * @param {string} noMatch2 Second re-prompt when user's response mismatches
+ *                 action's expected input.
+ * @param {string} noMatch3 Last spoken response before mic is closed.
+ * @param {string} noInput1 First re-prompt when user does not respond.
+ * @param {string} noInput2 Second re-prompt when user does not respond.
+ * @param {string} noInput3 Last spoken response before mic is closed when
  *                 user does not respond.
  * @return {Object} an InputPrompt object.
  * @actionssdk
@@ -917,12 +928,12 @@ ActionsSdkAssistant.prototype.buildInputPrompt = function (isSsml, initialPrompt
  *
  * Refer to 'newRuntimeEntity' to create the list of runtime entities required by this method.
  *
- * @param {string} intent developer specified in-dialog intent inside Action
- *                 Package or assistant built-in intent like
+ * @param {string} intent Developer specified in-dialog intent inside Action
+ *                 Package or Assistant built-in intent like
  *                 'assistant.intent.action.TEXT'.
- * @param {Array} runtimeEntities list of runtime entity, each runtime entity
+ * @param {Array} runtimeEntities List of runtime entities, each runtime entity
  *                represents a custom type defined dynamically, e.g., car
- *                agent might return list of available drivers after user says
+ *                action might return list of available drivers after user says
  *                [book a cab]:
  * let options = {
  *   [
@@ -961,11 +972,11 @@ ActionsSdkAssistant.prototype.buildExpectedIntent = function (intent, runtimeEnt
 /**
  * Creates a runtime entity including list of items.
  *
- * This method is mostly used to create a runtime entity before agent invokes buildExpectedIntent.
+ * This method is mostly used to create a runtime entity before action invokes buildExpectedIntent.
  *
- * @param {string} name the name for this entity, must be matched to a custom
+ * @param {string} name The name for this entity, must be matched to a custom
  *                 type defined in Action Package.
- * @param {Array} items list of possible items for this entity.
+ * @param {Array} items List of possible items for this entity.
  * @return {Object} a runtime entity.
  * @actionssdk
  */
@@ -993,9 +1004,9 @@ ActionsSdkAssistant.prototype.newRuntimeEntity = function (name, items) {
 /**
  * Creates a new item with a specific key and list of synonyms.
  * @param {string} key UUID for this item.
- * @param {Array} list of synonyms which can be used by user to refer to this
+ * @param {Array} synonyms List of synonyms which can be used by user to refer to this
  *                item.
- * @return {Object} an Item used to encapsulate this Item, e.g.,
+ * @return {Object} an Item object used to encapsulate this item, e.g.,
  *  {
  *    key: 'CAR_XL'
  *    synonyms: [ 'car XL', 'car large']
@@ -1033,10 +1044,10 @@ ActionsSdkAssistant.prototype.getTopInput_ = function () {
 /**
  * Builds the response to send back to Assistant.
  *
- * @param {string} conversationToken dialog state.
- * @param {boolean} expectUserResponse expected user response.
- * @param {object} expectedInput expected response.
- * @param {boolean} finalResponse final response.
+ * @param {string} conversationToken Dialog state.
+ * @param {boolean} expectUserResponse Expected user response.
+ * @param {object} expectedInput Expected response.
+ * @param {boolean} finalResponse Final response.
  * @return {string} final response returned to server.
  * @private
  * @actionssdk
@@ -1124,7 +1135,7 @@ ActionsSdkAssistant.prototype.getConversationApiSignatureOrEmpty_ = function () 
 
 /**
  * Helper to build prompts from SSML's.
- * @param {array} ssmls list of ssml.
+ * @param {array} ssmls List of ssml.
  * @return {array} list of SpeechResponse objects.
  * @private
  * @actionssdk
@@ -1143,7 +1154,7 @@ ActionsSdkAssistant.prototype.buildPromptsFromSsmlHelper_ = function (ssmls) {
 
 /**
  * Helper to build prompts from plain texts.
- * @param {array} plainTexts list of plain text to speech.
+ * @param {array} plainTexts List of plain text to speech.
  * @return {array} list of SpeechResponse objects.
  * @private
  * @actionssdk
@@ -1162,7 +1173,7 @@ ActionsSdkAssistant.prototype.buildPromptsFromPlainTextHelper_ = function (plain
 
 /**
  * Get argument by name from the current action.
- * @param {string} argName name of the argument.
+ * @param {string} argName Name of the argument.
  * @return {object} argument matching argName.
  * @private
  * @actionssdk
@@ -1184,7 +1195,7 @@ ActionsSdkAssistant.prototype.getArgument_ = function (argName) {
       return input.arguments[i];
     }
   }
-  self.handleError_('Failed to find argument: %s', argName);
+  debug('Failed to find argument: %s', argName);
   return null;
 };
 
@@ -1212,7 +1223,7 @@ ActionsSdkAssistant.prototype.extractData_ = function () {
  *
  * @param {object} permissionsSpec PermissionsValueSpec object containing
  *                 permissions prefix and permissions requested.
- * @param {Object} dialogState the opaque dialog state agent wants assistant to
+ * @param {Object} dialogState The opaque dialog state action wants Assistant to
  *                 circulate back.
  * @return {Object} HTTP response.
  * @private
@@ -1278,11 +1289,11 @@ ApiAiAssistant.prototype.getUser = function () {
 /**
  * Verifies whether the request comes from API.AI.
  *
- * @param {string} header the header specified by the developer in the
- *                 API.AI Fulfillment settings of the agent.
- * @param {string} private_key the private key specified by developer inside the
- *                 Fulfillment header, only agent and API.AI know this key.
- * @return {boolean} indicates whether the request comes from API.AI.
+ * @param {string} header The header specified by the developer in the
+ *                 API.AI Fulfillment settings of the action.
+ * @param {string} private_key The private key specified by the developer inside the
+ *                 fulfillment header.
+ * @return {boolean} indicates Whether the request comes from API.AI.
  * @apiai
  */
 ApiAiAssistant.prototype.isRequestFromApiAi = function (header, privateKey) {
@@ -1316,8 +1327,8 @@ ApiAiAssistant.prototype.getIntent = function () {
 };
 
 /**
- * Get argument value by name from the current intent.
- * @param {string} argName name of the argument.
+ * Get the argument value by name from the current intent.
+ * @param {string} argName Name of the argument.
  * @return {string} argument value.
  * @apiai
  */
@@ -1331,7 +1342,7 @@ ApiAiAssistant.prototype.getArgument = function (argName) {
   if (self.body_.result.parameters) {
     return self.body_.result.parameters[argName];
   }
-  self.handleError_('Failed to get argument value: %s', argName);
+  debug('Failed to get argument value: %s', argName);
   return null;
 };
 
@@ -1339,7 +1350,7 @@ ApiAiAssistant.prototype.getArgument = function (argName) {
  * Asks Assistant to provide an input. A response is built and sent back to
  * Assistant if succeeded, otherwise an error code 400 is sent back.
  *
- * @param {String} inputPrompt.
+ * @param {String} inputPrompt The input prompt.
  * @return {Object} HTTP response.
  * @apiai
  */
@@ -1360,7 +1371,7 @@ ApiAiAssistant.prototype.ask = function (inputPrompt) {
 
 /**
  * Tells Assistant to render the speech response and closes the mic.
- * @param {string} speechResponse final spoken response to assistant.
+ * @param {string} speechResponse Final spoken response to Assistant.
  * @return the response is sent back to Assistant.
  * @apiai
  */
@@ -1377,9 +1388,9 @@ ApiAiAssistant.prototype.tell = function (speechResponse) {
 
 /**
  * Set a new context for the current intent.
- * @param {string} context name of the argument.
- * @param {int} context lifespan.
- * @param {object} context JSON parameters.
+ * @param {string} context Name of the context.
+ * @param {int} lifespan Context lifespan.
+ * @param {object} parameters Context JSON parameters.
  * @apiai
  */
 ApiAiAssistant.prototype.setContext = function (context, lifespan, parameters) {
@@ -1424,7 +1435,7 @@ ApiAiAssistant.prototype.getIntent_ = function () {
 };
 
 /**
- * Builds response from API.ai to send back to Assistant.
+ * Builds response for API.ai to send back to Assistant.
  *
  * @param {object} dialogState Arbitrary object to be circulated between
  * developer API and Server.
@@ -1500,7 +1511,7 @@ ApiAiAssistant.prototype.extractData_ = function () {
  * permissions request to user.
  *
  * @param {object} permissionsSpec PermissionsValueSpec object containing
- *                 permissions prefix and permissions requested.
+ *                 the permissions prefix and permissions requested.
  * @return {Object} HTTP response.
  * @private
  * @apiai
