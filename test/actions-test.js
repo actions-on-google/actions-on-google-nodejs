@@ -24,8 +24,9 @@ process.env.DEBUG = 'actions-on-google:*';
  */
 let winston = require('winston');
 let expect = require('chai').expect;
-let ApiAiAssistant = require('.././actions-on-google').ApiAiAssistant;
-let ActionsSdkAssistant = require('.././actions-on-google').ActionsSdkAssistant;
+let Assistant = require('.././actions-on-google');
+let ApiAiAssistant = Assistant.ApiAiAssistant;
+let ActionsSdkAssistant = Assistant.ActionsSdkAssistant;
 
 // Default logger
 winston.loggers.add('DEFAULT_LOGGER', {
@@ -247,6 +248,146 @@ describe('ApiAiAssistant#ask', function () {
       ]
     };
     expect(mockResponse.body).to.deep.equal(expectedResponse);
+  });
+});
+
+/**
+ * Describes the behavior for ApiAiAssistant getIntent method.
+ */
+describe('ApiAiAssistant#getIntent', function () {
+  // Success case test, when the API returns a valid 200 response with the response object
+  it('Should get the intent value for the success case.', function () {
+    let headers = {
+      'Content-Type': 'application/json',
+      'google-assistant-api-version': 'v1'
+    };
+    let body = {
+      'id': '9c4394e3-4f5a-4e68-b1af-088b75ad3071',
+      'timestamp': '2016-10-28T03:41:39.957Z',
+      'result': {
+        'source': 'agent',
+        'resolvedQuery': '50',
+        'speech': '',
+        'action': 'check_guess',
+        'actionIncomplete': false,
+        'parameters': {
+          'guess': '50'
+        },
+        'contexts': [
+          {
+            'name': 'game',
+            'parameters': {
+              'guess.original': '50',
+              'guess': '50'
+            },
+            'lifespan': 5
+          },
+          {
+            'name': '_assistant_',
+            'parameters': {
+              'answer': 68,
+              'guess.original': '50',
+              'guess': '50'
+            },
+            'lifespan': 99
+          }
+        ],
+        'metadata': {
+          'intentId': '1e46ffc2-651f-4ac0-a54e-9698feb88880',
+          'webhookUsed': 'true',
+          'intentName': 'provide_guess'
+        },
+        'fulfillment': {
+          'speech': ''
+        },
+        'score': 1
+      },
+      'status': {
+        'code': 200,
+        'errorType': 'success'
+      },
+      'sessionId': 'e420f007-501d-4bc8-b551-5d97772bc50c',
+      'originalRequest': null
+    };
+    const mockRequest = new MockRequest(headers, body);
+    const mockResponse = new MockResponse();
+
+    const assistant = new ApiAiAssistant({
+      request: mockRequest,
+      response: mockResponse
+    });
+
+    expect(assistant.getIntent()).to.equal('check_guess');
+  });
+});
+
+/**
+ * Describes the behavior for ApiAiAssistant getArgument method.
+ */
+describe('ApiAiAssistant#getArgument', function () {
+  // Success case test, when the API returns a valid 200 response with the response object
+  it('Should get the argument value for the success case.', function () {
+    let headers = {
+      'Content-Type': 'application/json',
+      'google-assistant-api-version': 'v1'
+    };
+    let body = {
+      'id': '9c4394e3-4f5a-4e68-b1af-088b75ad3071',
+      'timestamp': '2016-10-28T03:41:39.957Z',
+      'result': {
+        'source': 'agent',
+        'resolvedQuery': '50',
+        'speech': '',
+        'action': 'check_guess',
+        'actionIncomplete': false,
+        'parameters': {
+          'guess': '50'
+        },
+        'contexts': [
+          {
+            'name': 'game',
+            'parameters': {
+              'guess.original': '50',
+              'guess': '50'
+            },
+            'lifespan': 5
+          },
+          {
+            'name': '_assistant_',
+            'parameters': {
+              'answer': 68,
+              'guess.original': '50',
+              'guess': '50'
+            },
+            'lifespan': 99
+          }
+        ],
+        'metadata': {
+          'intentId': '1e46ffc2-651f-4ac0-a54e-9698feb88880',
+          'webhookUsed': 'true',
+          'intentName': 'provide_guess'
+        },
+        'fulfillment': {
+          'speech': ''
+        },
+        'score': 1
+      },
+      'status': {
+        'code': 200,
+        'errorType': 'success'
+      },
+      'sessionId': 'e420f007-501d-4bc8-b551-5d97772bc50c',
+      'originalRequest': null
+    };
+    const mockRequest = new MockRequest(headers, body);
+    const mockResponse = new MockResponse();
+
+    const assistant = new ApiAiAssistant({
+      request: mockRequest,
+      response: mockResponse
+    });
+
+    expect(assistant.getArgument('guess')).to.equal('50');
   });
 });
 
@@ -487,5 +628,55 @@ describe('ActionsSdkAssistant#tell', function () {
       }
     };
     expect(mockResponse.body).to.deep.equal(expectedResponse);
+  });
+});
+
+/**
+ * Describes the behavior for ActionsSdkAssistant getRawInput method.
+ */
+describe('ActionsSdkAssistant#getRawInput', function () {
+  // Success case test, when the API returns a valid 200 response with the response object
+  it('Should get the raw user input for the success case.', function () {
+    let headers = {
+      'Content-Type': 'application/json',
+      'google-assistant-api-version': 'v1'
+    };
+    let body = {
+      'user': {
+        'user_id': '11112226094657824893'
+      },
+      'conversation': {
+        'conversation_id': '1480389944033',
+        'type': 2,
+        'conversation_token': '{"state":null,"data":{"state":null,"data":{}}}'
+      },
+      'inputs': [
+        {
+          'intent': 'raw.input',
+          'raw_inputs': [
+            {
+              'input_type': 2,
+              'query': 'bye'
+            }
+          ],
+          'arguments': [
+            {
+              'name': 'raw_text',
+              'raw_text': 'bye',
+              'text_value': 'bye'
+            }
+          ]
+        }
+      ]
+    };
+    const mockRequest = new MockRequest(headers, body);
+    const mockResponse = new MockResponse();
+
+    const assistant = new ActionsSdkAssistant({
+      request: mockRequest,
+      response: mockResponse
+    });
+
+    expect(assistant.getRawInput()).to.equal('bye');
   });
 });
