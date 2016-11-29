@@ -716,9 +716,11 @@ ActionsSdkAssistant.prototype.ask = function (
   }
   let expectedInputs = [{
     input_prompt: inputPrompt,
-    possible_intents: possibleIntents,
-    speech_biasing_hints: speechBiasingHints
+    possible_intents: possibleIntents
   }];
+  if (speechBiasingHints) {
+    expectedInputs.speech_biasing_hints = speechBiasingHints;
+  }
   let response = self.buildResponseHelper_(
     JSON.stringify(dialogState),
     true, // expected_user_response

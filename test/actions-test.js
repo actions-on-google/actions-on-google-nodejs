@@ -25,6 +25,7 @@ process.env.DEBUG = 'actions-on-google:*';
 let winston = require('winston');
 let expect = require('chai').expect;
 let ApiAiAssistant = require('.././actions-on-google').ApiAiAssistant;
+let ActionsSdkAssistant = require('.././actions-on-google').ActionsSdkAssistant;
 
 // Default logger
 winston.loggers.add('DEFAULT_LOGGER', {
@@ -71,9 +72,9 @@ MockResponse.prototype.append = function (header, value) {
 };
 
 /**
- * Describes the behavior for tell method.
+ * Describes the behavior for ApiAiAssistant tell method.
  */
-describe('assistant#tell', function () {
+describe('ApiAiAssistant#tell', function () {
   // Success case test, when the API returns a valid 200 response with the response object
   it('Should return the valid JSON in the response object for the success case.', function () {
     let headers = {'Content-Type': 'application/json', 'google-assistant-api-version': 'v1'};
@@ -150,9 +151,9 @@ describe('assistant#tell', function () {
 });
 
 /**
- * Describes the behavior for ask method.
+ * Describes the behavior for ApiAiAssistant ask method.
  */
-describe('assistant#ask', function () {
+describe('ApiAiAssistant#ask', function () {
   // Success case test, when the API returns a valid 200 response with the response object
   it('Should return the valid JSON in the response object for the success case.', function () {
     let headers = {
@@ -250,9 +251,9 @@ describe('assistant#ask', function () {
 });
 
 /**
- * Describes the behavior for askForPermissions method.
+ * Describes the behavior for ApiAiAssistant askForPermissions method.
  */
-describe('assistant#askForPermissions', function () {
+describe('ApiAiAssistant#askForPermissions', function () {
   // Success case test, when the API returns a valid 200 response with the response object
   it('Should return the valid JSON in the response object for the success case.', function () {
     let headers = {'Content-Type': 'application/json', 'google-assistant-api-version': 'v1'};
@@ -322,6 +323,168 @@ describe('assistant#askForPermissions', function () {
           'parameters': {}
         }
       ]
+    };
+    expect(mockResponse.body).to.deep.equal(expectedResponse);
+  });
+});
+
+/**
+ * Describes the behavior for ActionsSdkAssistant ask method.
+ */
+describe('ActionsSdkAssistant#ask', function () {
+  // Success case test, when the API returns a valid 200 response with the response object
+  it('Should return the valid JSON in the response object for the success case.', function () {
+    let headers = {
+      'Content-Type': 'application/json',
+      'google-assistant-api-version': 'v1'
+    };
+    let body = {
+      'user': {
+        'user_id': '11112226094657824893'
+      },
+      'conversation': {
+        'conversation_id': '1480373842830',
+        'type': 1
+      },
+      'inputs': [
+        {
+          'intent': 'assistant.intent.action.MAIN',
+          'raw_inputs': [
+            {
+              'input_type': 2,
+              'query': 'talk to hello action'
+            }
+          ],
+          'arguments': [
+            {
+              'name': 'agent_info'
+            }
+          ]
+        }
+      ]
+    };
+    const mockRequest = new MockRequest(headers, body);
+    const mockResponse = new MockResponse();
+
+    const assistant = new ActionsSdkAssistant({
+      request: mockRequest,
+      response: mockResponse
+    });
+
+    const RAW_INTENT = 'raw.input';
+
+    function handler (assistant) {
+      return new Promise(function (resolve, reject) {
+        let inputPrompt = assistant.buildInputPrompt(true, '<speak>Hi! <break time="1"/> ' +
+          'I can read out an ordinal like ' +
+          '<say-as interpret-as="ordinal">123</say-as></speak>');
+        assistant.ask(inputPrompt, [{'intent': RAW_INTENT}]);
+      });
+    }
+
+    let actionMap = new Map();
+    actionMap.set(assistant.StandardIntents.MAIN, handler);
+
+    assistant.handleRequest(actionMap);
+
+    // Validating the response object
+    let expectedResponse = {
+      'conversation_token': '{"state":null,"data":{}}',
+      'expect_user_response': true,
+      'expected_inputs': [
+        {
+          'input_prompt': {
+            'initial_prompts': [
+              {
+                'ssml': '<speak>Hi! <break time="1"/> I can read out an ordinal like <say-as interpret-as="ordinal">123</say-as></speak>'
+              }
+            ],
+            'no_match_prompts': [
+
+            ],
+            'no_input_prompts': [
+
+            ]
+          },
+          'possible_intents': [
+            {
+              'intent': 'raw.input'
+            }
+          ]
+        }
+      ]
+    };
+    expect(mockResponse.body).to.deep.equal(expectedResponse);
+  });
+});
+
+/**
+ * Describes the behavior for ActionsSdkAssistant tell method.
+ */
+describe('ActionsSdkAssistant#tell', function () {
+  // Success case test, when the API returns a valid 200 response with the response object
+  it('Should return the valid JSON in the response object for the success case.', function () {
+    let headers = {
+      'Content-Type': 'application/json',
+      'google-assistant-api-version': 'v1'
+    };
+    let body = {
+      'user': {
+        'user_id': '11112226094657824893'
+      },
+      'conversation': {
+        'conversation_id': '1480389944033',
+        'type': 2,
+        'conversation_token': '{"state":null,"data":{"state":null,"data":{}}}'
+      },
+      'inputs': [
+        {
+          'intent': 'raw.input',
+          'raw_inputs': [
+            {
+              'input_type': 2,
+              'query': 'bye'
+            }
+          ],
+          'arguments': [
+            {
+              'name': 'raw_text',
+              'raw_text': 'bye',
+              'text_value': 'bye'
+            }
+          ]
+        }
+      ]
+    };
+    const mockRequest = new MockRequest(headers, body);
+    const mockResponse = new MockResponse();
+
+    const assistant = new ActionsSdkAssistant({
+      request: mockRequest,
+      response: mockResponse
+    });
+
+    const RAW_INTENT = 'raw.input';
+
+    function handler (assistant) {
+      return new Promise(function (resolve, reject) {
+        assistant.tell('Goodbye!');
+      });
+    }
+
+    let actionMap = new Map();
+    actionMap.set(RAW_INTENT, handler);
+
+    assistant.handleRequest(actionMap);
+
+    // Validating the response object
+    let expectedResponse = {
+      'expect_user_response': false,
+      'final_response': {
+        'speech_response': {
+          'text_to_speech': 'Goodbye!'
+        }
+      }
     };
     expect(mockResponse.body).to.deep.equal(expectedResponse);
   });
