@@ -534,8 +534,9 @@ Assistant.prototype.isSsml_ = function (text) {
     self.handleError_('Missing text');
     return false;
   }
-  if (text.trim().toLowerCase().startsWith(SSML_SPEAK_START) &&
-      text.trim().toLowerCase().endsWith(SSML_SPEAK_END)) {
+  text = text.trim().toLowerCase();
+  if (text.startsWith(SSML_SPEAK_START) &&
+      text.endsWith(SSML_SPEAK_END)) {
     return true;
   }
   return false;
@@ -691,6 +692,11 @@ ActionsSdkAssistant.prototype.isRequestFromAssistant = function (privateKey) {
 
 /*
  * Gets the request API version.
+ *
+ * @example
+ * const assistant = new ActionsSdkAssistant({request: request, response: response});
+ * let apiVersion = assistant.getApiVersion();
+ *
  * @return {string} version value.
  * @actionssdk
  */
@@ -703,9 +709,9 @@ ActionsSdkAssistant.prototype.getApiVersion = function () {
  * Gets the user's raw input query.
  *
  * @example
- * function rawInputIntent (assistant) {
- *   assistant.tell('You said ' + assistant.getRawInput());
- * }
+ * const assistant = new ActionsSdkAssistant({request: request, response: response});
+ * assistant.tell('You said ' + assistant.getRawInput());
+ *
  * @return {string} user's raw query like 'order a pizza'.
  * @actionssdk
  */
@@ -731,7 +737,13 @@ ActionsSdkAssistant.prototype.getRawInput = function () {
 
 /**
  * Gets previous dialog state that the action sent to Assistant, or null, e.g., {magic: 5}
- * @return {Object} JSON object developer provided to Google Assistant in prev
+ * Alternatively, use the assistant.data field to store JSON values between requests.
+ *
+ * @example
+ * const assistant = new ActionsSdkAssistant({request: request, response: response});
+ * let dialogState = assistant.getDialogState();
+ *
+ * @return {Object} JSON object developer provided to Google Assistant in previous
  *                  user turn.
  * @actionssdk
  */
@@ -766,24 +778,34 @@ ActionsSdkAssistant.prototype.getUser = function () {
 };
 
 /**
- * Gets the 'versionLabel' specified inside the Action Package, used by action to do version control.
- * @return {string} the specified version label or empty if unspecified.
+ * Gets the "versionLabel" specified inside the Action Package, used by actions to do version control.
+ *
+ * @example
+ * const assistant = new ActionsSdkAssistant({request: request, response: response});
+ * let actionVersionLabel = assistant.getActionVersionLabel();
+ *
+ * @return {string} the specified version label or null if unspecified.
  * @actionssdk
  */
-ActionsSdkAssistant.prototype.getAgentVersionLabel = function () {
-  debug('getAgentVersionLabel');
+ActionsSdkAssistant.prototype.getActionVersionLabel = function () {
+  debug('getActionVersionLabel');
   let self = this;
   let versionLabel = self.request_.get(CONVERSATION_API_AGENT_VERSION_HEADER);
   if (versionLabel) {
     return versionLabel;
   } else {
-    return '';
+    return null;
   }
 };
 
 /**
  * Gets the unique conversation ID. It's a new ID for the initial query,
  * and stays the same until the end of the conversation.
+ *
+ * @example
+ * const assistant = new ActionsSdkAssistant({request: request, response: response});
+ * let conversationId = assistant.getConversationId();
+ *
  * @return {string} conversation ID.
  * @actionssdk
  */
@@ -798,7 +820,29 @@ ActionsSdkAssistant.prototype.getConversationId = function () {
 };
 
 /**
- * Get the current intent.
+ * Get the current intent. Alternatively, using a handler Map for handleRequest,
+ * the client library will automatically handle the incoming intents.
+ *
+ * @example
+ * const assistant = new ActionsSdkAssistant({request: request, response: response});
+ * const RAW_INTENT = 'raw.input';
+ *
+ * function responseHandler (assistant) {
+ *   let intent = assistant.getIntent();
+ *   switch (intent) {
+ *     case assistant.StandardIntents.MAIN:
+ *       let inputPrompt = assistant.buildInputPrompt(false, 'Welcome to action snippets! Say anything.');
+ *       assistant.ask(inputPrompt, [{'intent': RAW_INTENT}]);
+ *       break;
+ *
+ *     case RAW_INTENT:
+ *       assistant.tell('You said ' + assistant.getRawInput());
+ *       break;
+ *   }
+ * }
+ *
+ * assistant.handleRequest(responseHandler);
+ *
  * @return {string} intent id.
  * @actionssdk
  */
@@ -815,6 +859,27 @@ ActionsSdkAssistant.prototype.getIntent = function () {
 
 /**
  * Get the argument value by name from the current intent.
+ *
+ * @example
+ * const assistant = new ActionsSdkAssistant({request: request, response: response});
+ *
+ * function mainIntent (assistant) {
+ *   let inputPrompt = assistant.buildInputPrompt(false, 'Welcome to action snippets! Say a number.',
+ *     'Sorry, say that again?', 'Sorry, that number again?', 'What was that number?',
+ *     'Say any number', 'Pick a number', 'What is the number?');
+ *   assistant.ask(inputPrompt, [{'intent': PROVIDE_NUMBER_INTENT}], ["$SchemaOrg_Number"], {started: true});
+ * }
+ *
+ * function provideNumberIntent (assistant) {
+ *   assistant.tell('You said ' + assistant.getArgument('number'));
+ * }
+ *
+ * let actionMap = new Map();
+ * actionMap.set(assistant.StandardIntents.MAIN, mainIntent);
+ * actionMap.set(PROVIDE_NUMBER_INTENT, provideNumberIntent);
+ *
+ * assistant.handleRequest(actionMap);
+ *
  * @param {string} argName Name of the argument.
  * @return {string} argument value.
  * @actionssdk
@@ -1043,7 +1108,6 @@ ActionsSdkAssistant.prototype.askForSignIn = function (actionPhrase, dialogState
  * const PROVIDE_NUMBER_INTENT = 'PROVIDE_NUMBER';
  *
  * function mainIntent (assistant) {
- *   console.log('mainIntent');
  *   let inputPrompt = assistant.buildInputPrompt(false, 'Welcome to action snippets! Say a number.',
  *     'Sorry, say that again?', 'Sorry, that number again?', 'What was that number?',
  *     'Say any number', 'Pick a number', 'What is the number?');
@@ -1051,7 +1115,6 @@ ActionsSdkAssistant.prototype.askForSignIn = function (actionPhrase, dialogState
  * }
  *
  * function provideNumberIntent (assistant) {
- *   console.log('provideNumberIntent');
  *   assistant.tell('You said ' + assistant.getRawInput());
  * }
  *
@@ -1101,23 +1164,48 @@ ActionsSdkAssistant.prototype.askNoRuntimeEntities = function (
 
 /**
  * Tells Assistant to render the speech response and close the mic.
- * @param {string} speechResponse Final spoken response to Assistant.
+ *
+ * @example
+ * const assistant = new ActionsSdkAssistant({request: request, response: response});
+ *
+ * function mainIntent (assistant) {
+ *   let inputPrompt = assistant.buildInputPrompt(false, 'Welcome to action snippets! Say anything.');
+ *   assistant.ask(inputPrompt, [{'intent': RAW_INTENT}]);
+ * }
+ *
+ * function rawInputIntent (assistant) {
+ *   assistant.tell('You said ' + assistant.getRawInput());
+ * }
+ *
+ * let actionMap = new Map();
+ * actionMap.set(assistant.StandardIntents.MAIN, mainIntent);
+ * actionMap.set(RAW_INTENT, rawInputIntent);
+ *
+ * assistant.handleRequest(actionMap);
+ *
+ * @param {string} textToSpeech Final spoken response to Assistant.
  * @return the response is sent back to Assistant.
  * @actionssdk
  */
-ActionsSdkAssistant.prototype.tell = function (speechResponse) {
-  debug('tell: speechResponse=%s', speechResponse);
+ActionsSdkAssistant.prototype.tell = function (textToSpeech) {
+  debug('tell: textToSpeech=%s', textToSpeech);
   let self = this;
-  if (!speechResponse) {
+  if (!textToSpeech) {
     self.handleError_('Invalid speech response');
     return null;
   }
+  let finalResponse = {};
+  if (self.isSsml_(textToSpeech)) {
+    finalResponse.speech_response = {
+      ssml: textToSpeech
+    };
+  } else {
+    finalResponse.speech_response = {
+      text_to_speech: textToSpeech
+    };
+  }
   let response = self.buildResponseHelper_(
-    null, false, null, {
-      speech_response: {
-        text_to_speech: speechResponse
-      }
-    });
+    null, false, null, finalResponse);
   return self.doResponse_(response, RESPONSE_CODE_OK);
 };
 
@@ -1196,7 +1284,9 @@ ActionsSdkAssistant.prototype.buildInputPrompt = function (isSsml, initialPrompt
  * @param {Array} runtimeEntities List of runtime entities, each runtime entity
  *                represents a custom type defined dynamically, e.g., car
  *                action might return list of available drivers after user says
- *                [book a cab]:
+ *                [book a cab].
+ *
+ * @example
  * let options = {
  *   [
  *     {
@@ -1208,6 +1298,7 @@ ActionsSdkAssistant.prototype.buildInputPrompt = function (isSsml, initialPrompt
  *     }
  *   ]
  *  }
+ *
  * @return {Object} an expected intent encapsulating the intent and options.
  * @actionssdk
  */
@@ -1525,6 +1616,7 @@ ActionsSdkAssistant.prototype.fulfillPermissionsRequest_ = function (
  * let ApiAiAssistant = require('actions-on-google').ApiAiAssistant;
  * const assistant = new ApiAiAssistant({request: request, response: response,
  *   sessionStarted:sessionStarted});
+ *
  * @param {Object} options JSON configuration: {request, response, sessionStarted}
  * @constructor
  * @apiai
