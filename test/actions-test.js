@@ -159,7 +159,7 @@ describe('ApiAiAssistant#ask', function () {
   it('Should return the valid JSON in the response object for the success case.', function () {
     let headers = {
       'Content-Type': 'application/json',
-      'google-assistant-api-version': 'v1'
+      'Google-Assistant-API-Version': 'v1'
     };
     let body = {
       'id': '9c4394e3-4f5a-4e68-b1af-088b75ad3071',
@@ -259,7 +259,7 @@ describe('ApiAiAssistant#getIntent', function () {
   it('Should get the intent value for the success case.', function () {
     let headers = {
       'Content-Type': 'application/json',
-      'google-assistant-api-version': 'v1'
+      'Google-Assistant-API-Version': 'v1'
     };
     let body = {
       'id': '9c4394e3-4f5a-4e68-b1af-088b75ad3071',
@@ -329,7 +329,7 @@ describe('ApiAiAssistant#getArgument', function () {
   it('Should get the argument value for the success case.', function () {
     let headers = {
       'Content-Type': 'application/json',
-      'google-assistant-api-version': 'v1'
+      'Google-Assistant-API-Version': 'v1'
     };
     let body = {
       'id': '9c4394e3-4f5a-4e68-b1af-088b75ad3071',
@@ -477,7 +477,7 @@ describe('ActionsSdkAssistant#ask', function () {
   it('Should return the valid JSON in the response object for the success case.', function () {
     let headers = {
       'Content-Type': 'application/json',
-      'google-assistant-api-version': 'v1'
+      'Google-Assistant-API-Version': 'v1'
     };
     let body = {
       'user': {
@@ -519,8 +519,96 @@ describe('ActionsSdkAssistant#ask', function () {
         let inputPrompt = assistant.buildInputPrompt(true, '<speak>Hi! <break time="1"/> ' +
           'I can read out an ordinal like ' +
           '<say-as interpret-as="ordinal">123</say-as></speak>');
-        assistant.ask(inputPrompt, [{'intent': RAW_INTENT}]);
+        resolve(assistant.ask(inputPrompt, [{'intent': RAW_INTENT}]));
       });
+    }
+
+    let actionMap = new Map();
+    actionMap.set(assistant.StandardIntents.MAIN, handler);
+
+    assistant.handleRequest(actionMap);
+
+    // Validating the response object
+    let expectedResponse = {
+      'conversation_token': '{"state":null,"data":{}}',
+      'expect_user_response': true,
+      'expected_inputs': [
+        {
+          'input_prompt': {
+            'initial_prompts': [
+              {
+                'ssml': '<speak>Hi! <break time="1"/> I can read out an ordinal like <say-as interpret-as="ordinal">123</say-as></speak>'
+              }
+            ],
+            'no_match_prompts': [
+
+            ],
+            'no_input_prompts': [
+
+            ]
+          },
+          'possible_intents': [
+            {
+              'intent': 'raw.input'
+            }
+          ]
+        }
+      ]
+    };
+    expect(mockResponse.body).to.deep.equal(expectedResponse);
+  });
+});
+
+/**
+ * Describes the behavior for ActionsSdkAssistant ask method with function handler.
+ */
+describe('ActionsSdkAssistant#ask', function () {
+  // Success case test, when the API returns a valid 200 response with the response object
+  it('Should return the valid JSON in the response object for the success case.', function () {
+    let headers = {
+      'Content-Type': 'application/json',
+      'Google-Assistant-API-Version': 'v1'
+    };
+    let body = {
+      'user': {
+        'user_id': '11112226094657824893'
+      },
+      'conversation': {
+        'conversation_id': '1480373842830',
+        'type': 1
+      },
+      'inputs': [
+        {
+          'intent': 'assistant.intent.action.MAIN',
+          'raw_inputs': [
+            {
+              'input_type': 2,
+              'query': 'talk to hello action'
+            }
+          ],
+          'arguments': [
+            {
+              'name': 'agent_info'
+            }
+          ]
+        }
+      ]
+    };
+    const mockRequest = new MockRequest(headers, body);
+    const mockResponse = new MockResponse();
+
+    const assistant = new ActionsSdkAssistant({
+      request: mockRequest,
+      response: mockResponse
+    });
+
+    const RAW_INTENT = 'raw.input';
+
+    function handler (assistant) {
+      let inputPrompt = assistant.buildInputPrompt(true, '<speak>Hi! <break time="1"/> ' +
+        'I can read out an ordinal like ' +
+        '<say-as interpret-as="ordinal">123</say-as></speak>');
+      assistant.ask(inputPrompt, [{'intent': RAW_INTENT}]);
     }
 
     let actionMap = new Map();
@@ -567,7 +655,7 @@ describe('ActionsSdkAssistant#tell', function () {
   it('Should return the valid JSON in the response object for the success case.', function () {
     let headers = {
       'Content-Type': 'application/json',
-      'google-assistant-api-version': 'v1'
+      'Google-Assistant-API-Version': 'v1'
     };
     let body = {
       'user': {
@@ -609,7 +697,7 @@ describe('ActionsSdkAssistant#tell', function () {
 
     function handler (assistant) {
       return new Promise(function (resolve, reject) {
-        assistant.tell('Goodbye!');
+        resolve(assistant.tell('Goodbye!'));
       });
     }
 
@@ -639,7 +727,7 @@ describe('ActionsSdkAssistant#getRawInput', function () {
   it('Should get the raw user input for the success case.', function () {
     let headers = {
       'Content-Type': 'application/json',
-      'google-assistant-api-version': 'v1'
+      'Google-Assistant-API-Version': 'v1'
     };
     let body = {
       'user': {
@@ -678,5 +766,492 @@ describe('ActionsSdkAssistant#getRawInput', function () {
     });
 
     expect(assistant.getRawInput()).to.equal('bye');
+  });
+});
+
+/**
+ * Describes the behavior for ActionsSdkAssistant askForText method.
+ */
+describe('ActionsSdkAssistant#askForText', function () {
+  // Success case test, when the API returns a valid 200 response with the response object
+  it('Should return the valid JSON in the response object for the success case.', function () {
+    let headers = {
+      'Content-Type': 'application/json',
+      'Google-Assistant-API-Version': 'v1'
+    };
+    let body = {
+      'user': {
+        'user_id': '11112226094657824893'
+      },
+      'conversation': {
+        'conversation_id': '1480463613280',
+        'type': 1
+      },
+      'inputs': [
+        {
+          'intent': 'assistant.intent.action.MAIN',
+          'raw_inputs': [
+            {
+              'input_type': 2,
+              'query': 'talk to action snippets'
+            }
+          ],
+          'arguments': [
+            {
+              'name': 'agent_info'
+            }
+          ]
+        }
+      ]
+    };
+    const mockRequest = new MockRequest(headers, body);
+    const mockResponse = new MockResponse();
+
+    const assistant = new ActionsSdkAssistant({
+      request: mockRequest,
+      response: mockResponse
+    });
+
+    function handler (assistant) {
+      return new Promise(function (resolve, reject) {
+        resolve(assistant.askForText({
+          'text_to_speech': 'What can I help you with?'
+        }));
+      });
+    }
+
+    let actionMap = new Map();
+    actionMap.set(assistant.StandardIntents.MAIN, handler);
+
+    assistant.handleRequest(actionMap);
+
+    // Validating the response object
+    let expectedResponse = {
+      'conversation_token': '{"state":null,"data":{}}',
+      'expect_user_response': true,
+      'expected_inputs': [
+        {
+          'input_prompt': {
+            'initial_prompts': [
+              {
+                'text_to_speech': 'What can I help you with?'
+              }
+            ],
+            'no_match_prompts': [
+
+            ],
+            'no_input_prompts': [
+
+            ]
+          },
+          'possible_intents': [
+            {
+              'intent': 'assistant.intent.action.TEXT'
+            }
+          ]
+        }
+      ]
+    };
+    expect(mockResponse.body).to.deep.equal(expectedResponse);
+  });
+});
+
+/**
+ * Describes the behavior for ActionsSdkAssistant askForText method.
+ */
+describe('ActionsSdkAssistant#askForText', function () {
+  // Success case test, when the API returns a valid 200 response with the response object
+  it('Should return the valid JSON in the response object for the success case.', function () {
+    let headers = {
+      'Content-Type': 'application/json',
+      'Google-Assistant-API-Version': 'v1'
+    };
+    let body = {
+      'user': {
+        'user_id': '11112226094657824893'
+      },
+      'conversation': {
+        'conversation_id': '1480464628054',
+        'type': 1
+      },
+      'inputs': [
+        {
+          'intent': 'assistant.intent.action.MAIN',
+          'raw_inputs': [
+            {
+              'input_type': 2,
+              'query': 'talk to action snippets'
+            }
+          ],
+          'arguments': [
+            {
+              'name': 'agent_info'
+            }
+          ]
+        }
+      ]
+    };
+    const mockRequest = new MockRequest(headers, body);
+    const mockResponse = new MockResponse();
+
+    const assistant = new ActionsSdkAssistant({
+      request: mockRequest,
+      response: mockResponse
+    });
+
+    function handler (assistant) {
+      return new Promise(function (resolve, reject) {
+        resolve(assistant.askForText({
+          'ssml': '<speak>What <break time="1"/> can I help you with?</speak>'
+        }));
+      });
+    }
+
+    let actionMap = new Map();
+    actionMap.set(assistant.StandardIntents.MAIN, handler);
+
+    assistant.handleRequest(actionMap);
+
+    // Validating the response object
+    let expectedResponse = {
+      'conversation_token': '{"state":null,"data":{}}',
+      'expect_user_response': true,
+      'expected_inputs': [
+        {
+          'input_prompt': {
+            'initial_prompts': [
+              {
+                'ssml': '<speak>What <break time="1"/> can I help you with?</speak>'
+              }
+            ],
+            'no_match_prompts': [
+
+            ],
+            'no_input_prompts': [
+
+            ]
+          },
+          'possible_intents': [
+            {
+              'intent': 'assistant.intent.action.TEXT'
+            }
+          ]
+        }
+      ]
+    };
+    expect(mockResponse.body).to.deep.equal(expectedResponse);
+  });
+});
+
+/**
+ * Describes the behavior for ActionsSdkAssistant isRequestFromAssistant method.
+ */
+describe('ActionsSdkAssistant#isRequestFromAssistant', function () {
+  // Success case test, when the API returns a valid 200 response with the response object
+  it('Should validate assistant request.', function () {
+    let headers = {
+      'Content-Type': 'application/json',
+      'Google-Assistant-API-Version': 'v1',
+      'Google-Assistant-Signature': '5956c41c575331618d7d7b4b50203df8b7b2cb6129a967e15462349e36db7f29'
+    };
+    let body = {
+      'user': {
+        'user_id': '11112226094657824893'
+      },
+      'conversation': {
+        'conversation_id': '1480476553943',
+        'type': 1
+      },
+      'inputs': [
+        {
+          'intent': 'assistant.intent.action.MAIN',
+          'raw_inputs': [
+            {
+              'input_type': 2,
+              'query': 'talk to action snippets'
+            }
+          ],
+          'arguments': [
+            {
+              'name': 'agent_info'
+            }
+          ]
+        }
+      ]
+    };
+    const mockRequest = new MockRequest(headers, body);
+    const mockResponse = new MockResponse();
+
+    const assistant = new ActionsSdkAssistant({
+      request: mockRequest,
+      response: mockResponse
+    });
+
+    expect(assistant.isRequestFromAssistant('MY_SECRET_KEY')).to.equal(true);
+  });
+});
+
+/**
+ * Describes the behavior for ActionsSdkAssistant getUser method.
+ */
+describe('ActionsSdkAssistant#getUser', function () {
+  // Success case test, when the API returns a valid 200 response with the response object
+  it('Should validate assistant request user.', function () {
+    let headers = {
+      'Content-Type': 'application/json',
+      'Google-Assistant-API-Version': 'v1'
+    };
+    let body = {
+      'user': {
+        'user_id': '11112226094657824893'
+      },
+      'conversation': {
+        'conversation_id': '1480476553943',
+        'type': 1
+      },
+      'inputs': [
+        {
+          'intent': 'assistant.intent.action.MAIN',
+          'raw_inputs': [
+            {
+              'input_type': 2,
+              'query': 'talk to action snippets'
+            }
+          ],
+          'arguments': [
+            {
+              'name': 'agent_info'
+            }
+          ]
+        }
+      ]
+    };
+    const mockRequest = new MockRequest(headers, body);
+    const mockResponse = new MockResponse();
+
+    const assistant = new ActionsSdkAssistant({
+      request: mockRequest,
+      response: mockResponse
+    });
+
+    expect(assistant.getUser().user_id).to.equal('11112226094657824893');
+  });
+});
+
+/**
+ * Describes the behavior for ActionsSdkAssistant ask (advanced usage) method.
+ */
+describe('ActionsSdkAssistant#ask', function () {
+  // Success case test, when the API returns a valid 200 response with the response object
+  it('Should return the valid JSON in the response object for the success case.', function () {
+    let headers = {
+      'Content-Type': 'application/json',
+      'Google-Assistant-API-Version': 'v1'
+    };
+    let body = {
+      'user': {
+
+      },
+      'conversation': {
+        'conversation_id': '1480528109466',
+        'type': 1
+      },
+      'inputs': [
+        {
+          'intent': 'assistant.intent.action.MAIN',
+          'raw_inputs': [
+            {
+              'input_type': 2,
+              'query': 'talk to action snippets'
+            }
+          ],
+          'arguments': [
+
+          ]
+        }
+      ]
+    };
+    const mockRequest = new MockRequest(headers, body);
+    const mockResponse = new MockResponse();
+
+    const assistant = new ActionsSdkAssistant({
+      request: mockRequest,
+      response: mockResponse
+    });
+
+    const PROVIDE_NUMBER_INTENT = 'PROVIDE_NUMBER';
+
+    function handler (assistant) {
+      return new Promise(function (resolve, reject) {
+        let inputPrompt = assistant.buildInputPrompt(false, 'Welcome to action snippets! Say a number.',
+          'Sorry, say that again?', 'Sorry, that number again?', 'What was that number?',
+          'Say any number', 'Pick a number', 'What is the number?');
+        resolve(assistant.ask(inputPrompt, [{'intent': PROVIDE_NUMBER_INTENT}], ['$SchemaOrg_Number'], {started: true}));
+      });
+    }
+
+    function provideNumberIntent (assistant) {
+      console.log('provideNumberIntent');
+      assistant.tell('You said ' + assistant.getRawInput());
+    }
+
+    let actionMap = new Map();
+    actionMap.set(assistant.StandardIntents.MAIN, handler);
+    actionMap.set(PROVIDE_NUMBER_INTENT, provideNumberIntent);
+
+    assistant.handleRequest(actionMap);
+
+    // Validating the response object
+    let expectedResponse = {
+      'conversation_token': '{"started":true}',
+      'expect_user_response': true,
+      'expected_inputs': [
+        {
+          'input_prompt': {
+            'initial_prompts': [
+              {
+                'text_to_speech': 'Welcome to action snippets! Say a number.'
+              }
+            ],
+            'no_match_prompts': [
+              {
+                'text_to_speech': 'Sorry, say that again?'
+              },
+              {
+                'text_to_speech': 'Sorry, that number again?'
+              },
+              {
+                'text_to_speech': 'What was that number?'
+              }
+            ],
+            'no_input_prompts': [
+              {
+                'text_to_speech': 'Say any number'
+              },
+              {
+                'text_to_speech': 'Pick a number'
+              },
+              {
+                'text_to_speech': 'What is the number?'
+              }
+            ]
+          },
+          'possible_intents': [
+            {
+              'intent': 'PROVIDE_NUMBER'
+            }
+          ]
+        }
+      ]
+    };
+    expect(JSON.stringify(mockResponse.body)).to.equal(JSON.stringify(expectedResponse));
+  });
+});
+
+/**
+ * Describes the behavior for ActionsSdkAssistant askNoRuntimeEntities method.
+ */
+describe('ActionsSdkAssistant#askNoRuntimeEntities', function () {
+  // Success case test, when the API returns a valid 200 response with the response object
+  it('Should return the valid JSON in the response object for the success case.', function () {
+    let headers = {
+      'Content-Type': 'application/json',
+      'Google-Assistant-API-Version': 'v1'
+    };
+    let body = {
+      'user': {
+
+      },
+      'conversation': {
+        'conversation_id': '1480532856956',
+        'type': 1
+      },
+      'inputs': [
+        {
+          'intent': 'assistant.intent.action.MAIN',
+          'raw_inputs': [
+            {
+              'input_type': 2,
+              'query': 'talk to action snippets'
+            }
+          ],
+          'arguments': [
+
+          ]
+        }
+      ]
+    };
+    const mockRequest = new MockRequest(headers, body);
+    const mockResponse = new MockResponse();
+
+    const assistant = new ActionsSdkAssistant({
+      request: mockRequest,
+      response: mockResponse
+    });
+
+    const PROVIDE_NUMBER_INTENT = 'PROVIDE_NUMBER';
+
+    function handler (assistant) {
+      let inputPrompt = assistant.buildInputPrompt(false, 'Welcome to action snippets! Say a number.',
+        'Sorry, say that again?', 'Sorry, that number again?', 'What was that number?',
+        'Say any number', 'Pick a number', 'What is the number?');
+      assistant.askNoRuntimeEntities(inputPrompt, [PROVIDE_NUMBER_INTENT], ['$SchemaOrg_Number'], {started: true});
+    }
+
+    function provideNumberIntent (assistant) {
+      console.log('provideNumberIntent');
+      assistant.tell('You said ' + assistant.getRawInput());
+    }
+
+    let actionMap = new Map();
+    actionMap.set(assistant.StandardIntents.MAIN, handler);
+    actionMap.set(PROVIDE_NUMBER_INTENT, provideNumberIntent);
+
+    assistant.handleRequest(actionMap);
+
+    // Validating the response object
+    let expectedResponse = {
+      'conversation_token': '{"started":true}',
+      'expect_user_response': true,
+      'expected_inputs': [
+        {
+          'input_prompt': {
+            'initial_prompts': [
+              {
+                'text_to_speech': 'Welcome to action snippets! Say a number.'
+              }
+            ],
+            'no_match_prompts': [
+              {
+                'text_to_speech': 'Sorry, say that again?'
+              },
+              {
+                'text_to_speech': 'Sorry, that number again?'
+              },
+              {
+                'text_to_speech': 'What was that number?'
+              }
+            ],
+            'no_input_prompts': [
+              {
+                'text_to_speech': 'Say any number'
+              },
+              {
+                'text_to_speech': 'Pick a number'
+              },
+              {
+                'text_to_speech': 'What is the number?'
+              }
+            ]
+          },
+          'possible_intents': [
+            {
+              'intent': 'PROVIDE_NUMBER'
+            }
+          ]
+        }
+      ]
+    };
+    expect(JSON.stringify(mockResponse.body)).to.equal(JSON.stringify(expectedResponse));
   });
 });
