@@ -72,6 +72,10 @@ MockResponse.prototype.append = function (header, value) {
   return this;
 };
 
+// ---------------------------------------------------------------------------
+//                   API.ai support
+// ---------------------------------------------------------------------------
+
 /**
  * Describes the behavior for ApiAiAssistant tell method.
  */
@@ -392,6 +396,310 @@ describe('ApiAiAssistant#getArgument', function () {
 });
 
 /**
+ * Describes the behavior for ApiAiAssistant isRequestFromApiAi method.
+ */
+describe('ApiAiAssistant#isRequestFromApiAi', function () {
+  // Success case test, when the API returns a valid 200 response with the response object
+  it('Should confirm request is from API.ai.', function () {
+    let headers = {
+      'Content-Type': 'application/json',
+      'Google-Assistant-API-Version': 'v1',
+      'Google-Assistant-Signature': 'YOUR_PRIVATE_KEY'
+    };
+    let body = {
+      'id': '93ada919-582d-4694-a965-4278453a6503',
+      'timestamp': '2016-12-01T17:36:16.886Z',
+      'result': {
+        'source': 'agent',
+        'resolvedQuery': 'talk to action snippets',
+        'speech': '',
+        'action': 'input.welcome',
+        'actionIncomplete': false,
+        'parameters': {
+
+        },
+        'contexts': [
+          {
+            'name': 'number',
+            'lifespan': 5
+          },
+          {
+            'name': '_actions_on_google_',
+            'lifespan': 99
+          }
+        ],
+        'metadata': {
+          'intentId': '1b1f35cb-ef66-41c4-9703-89446c00cfe8',
+          'webhookUsed': 'true',
+          'webhookForSlotFillingUsed': 'false',
+          'intentName': 'Default Welcome Intent'
+        },
+        'fulfillment': {
+          'speech': 'Good day!',
+          'messages': [
+            {
+              'type': 0,
+              'speech': 'Hello!'
+            }
+          ]
+        },
+        'score': 1
+      },
+      'status': {
+        'code': 200,
+        'errorType': 'success'
+      },
+      'sessionId': 'f23e77a5-8b09-495d-b9b3-6835d737abf3',
+      'originalRequest': null
+    };
+    const mockRequest = new MockRequest(headers, body);
+    const mockResponse = new MockResponse();
+
+    const assistant = new ApiAiAssistant({
+      request: mockRequest,
+      response: mockResponse
+    });
+
+    const HEADER_KEY = 'Google-Assistant-Signature';
+    const HEADER_VALUE = 'YOUR_PRIVATE_KEY';
+
+    expect(assistant.isRequestFromApiAi(HEADER_KEY, HEADER_VALUE)).to.equal(true);
+  });
+});
+
+/**
+ * Describes the behavior for ApiAiAssistant isRequestFromApiAi method.
+ */
+describe('ApiAiAssistant#isRequestFromApiAi', function () {
+  // Success case test, when the API returns a valid 200 response with the response object
+  it('Should confirm request is NOT from API.ai.', function () {
+    let headers = {
+      'Content-Type': 'application/json',
+      'Google-Assistant-API-Version': 'v1'
+    };
+    let body = {
+      'user': {
+        'user_id': '11112226094657824893'
+      },
+      'conversation': {
+        'conversation_id': '1480373842830',
+        'type': 1
+      },
+      'inputs': [
+        {
+          'intent': 'assistant.intent.action.MAIN',
+          'raw_inputs': [
+            {
+              'input_type': 2,
+              'query': 'talk to hello action'
+            }
+          ],
+          'arguments': [
+            {
+              'name': 'agent_info'
+            }
+          ]
+        }
+      ]
+    };
+    const mockRequest = new MockRequest(headers, body);
+    const mockResponse = new MockResponse();
+
+    const assistant = new ApiAiAssistant({
+      request: mockRequest,
+      response: mockResponse
+    });
+
+    const HEADER_KEY = 'Google-Assistant-Signature';
+    const HEADER_VALUE = 'YOUR_PRIVATE_KEY';
+
+    expect(assistant.isRequestFromApiAi(HEADER_KEY, HEADER_VALUE)).to.equal(false);
+  });
+});
+
+/**
+ * Describes the behavior for ApiAiAssistant getRawInput method.
+ */
+describe('ApiAiAssistant#getRawInput', function () {
+  // Success case test, when the API returns a valid 200 response with the response object
+  it('Should raw input from API.ai.', function () {
+    let headers = {
+      'Content-Type': 'application/json',
+      'Google-Assistant-API-Version': 'v1',
+      'Google-Assistant-Signature': 'YOUR_PRIVATE_KEY'
+    };
+    let body = {
+      'id': 'fdeca0bc-264a-4152-81fe-7d3c3d92bdfb',
+      'timestamp': '2016-12-01T19:02:49.021Z',
+      'result': {
+        'source': 'agent',
+        'resolvedQuery': 'is it 667',
+        'speech': '',
+        'action': 'input.number',
+        'actionIncomplete': false,
+        'parameters': {
+          'number': '667'
+        },
+        'contexts': [
+          {
+            'name': 'number',
+            'parameters': {
+              'number': '667',
+              'number.original': '667'
+            },
+            'lifespan': 5
+          },
+          {
+            'name': '_actions_on_google_',
+            'parameters': {
+              'number': '667',
+              'number.original': '667'
+            },
+            'lifespan': 99
+          }
+        ],
+        'metadata': {
+          'intentId': '18ac04d6-9e5d-43ae-ab46-7b51a8658746',
+          'webhookUsed': 'true',
+          'webhookForSlotFillingUsed': 'false',
+          'intentName': 'number_intent'
+        },
+        'fulfillment': {
+          'speech': '',
+          'messages': [
+            {
+              'type': 0,
+              'speech': ''
+            }
+          ]
+        },
+        'score': 1
+      },
+      'status': {
+        'code': 200,
+        'errorType': 'success'
+      },
+      'sessionId': 'f23e77a5-8b09-495d-b9b3-6835d737abf3',
+      'originalRequest': null
+    };
+    const mockRequest = new MockRequest(headers, body);
+    const mockResponse = new MockResponse();
+
+    const assistant = new ApiAiAssistant({
+      request: mockRequest,
+      response: mockResponse
+    });
+
+    expect(assistant.getRawInput()).to.equal('is it 667');
+  });
+});
+
+/**
+ * Describes the behavior for ApiAiAssistant setContext method.
+ */
+describe('ApiAiAssistant#setContext', function () {
+  // Success case test, when the API returns a valid 200 response with the response object
+  it('Should return the valid JSON in the response object for the success case.', function () {
+    let headers = {
+      'Content-Type': 'application/json',
+      'Google-Assistant-API-Version': 'v1'
+    };
+    let body = {
+      'id': '4bef6e67-c09d-4a43-ae7b-97c4457582c7',
+      'timestamp': '2016-12-01T19:27:58.837Z',
+      'result': {
+        'source': 'agent',
+        'resolvedQuery': 'talk to action snippets',
+        'speech': '',
+        'action': 'input.welcome',
+        'actionIncomplete': false,
+        'parameters': {
+
+        },
+        'contexts': [
+          {
+            'name': 'number',
+            'lifespan': 5
+          }
+        ],
+        'metadata': {
+          'intentId': '1b1f35cb-ef66-41c4-9703-89446c00cfe8',
+          'webhookUsed': 'true',
+          'webhookForSlotFillingUsed': 'false',
+          'intentName': 'Default Welcome Intent'
+        },
+        'fulfillment': {
+          'speech': 'Good day!',
+          'messages': [
+            {
+              'type': 0,
+              'speech': 'Hi!'
+            }
+          ]
+        },
+        'score': 1
+      },
+      'status': {
+        'code': 200,
+        'errorType': 'success'
+      },
+      'sessionId': 'f23e77a5-8b09-495d-b9b3-6835d737abf3',
+      'originalRequest': null
+    };
+    const mockRequest = new MockRequest(headers, body);
+    const mockResponse = new MockResponse();
+
+    const assistant = new ApiAiAssistant({
+      request: mockRequest,
+      response: mockResponse
+    });
+
+    const CONTEXT_NUMBER = 'number';
+
+    function handler (assistant) {
+      assistant.setContext(CONTEXT_NUMBER);
+      assistant.ask('Welcome to action snippets! Say a number.');
+    }
+
+    let actionMap = new Map();
+    actionMap.set('input.welcome', handler);
+
+    assistant.handleRequest(actionMap);
+
+    // Validating the response object
+    let expectedResponse = {
+      'speech': 'Welcome to action snippets! Say a number.',
+      'data': {
+        'google': {
+          'expect_user_response': true,
+          'speech_biasing_hints': [
+
+          ],
+          'is_ssml': false,
+          'no_input_prompts': [
+
+          ]
+        }
+      },
+      'contextOut': [
+        {
+          'name': '_actions_on_google_',
+          'lifespan': 100,
+          'parameters': {
+
+          }
+        },
+        {
+          'name': 'number',
+          'lifespan': 1
+        }
+      ]
+    };
+    expect(mockResponse.body).to.deep.equal(expectedResponse);
+  });
+});
+
+/**
  * Describes the behavior for ApiAiAssistant askForPermissions method.
  */
 describe('ApiAiAssistant#askForPermissions', function () {
@@ -469,6 +777,10 @@ describe('ApiAiAssistant#askForPermissions', function () {
   });
 });
 
+// ---------------------------------------------------------------------------
+//                   Actions SDK support
+// ---------------------------------------------------------------------------
+
 /**
  * Describes the behavior for ActionsSdkAssistant ask method.
  */
@@ -519,7 +831,8 @@ describe('ActionsSdkAssistant#ask', function () {
         let inputPrompt = assistant.buildInputPrompt(true, '<speak>Hi! <break time="1"/> ' +
           'I can read out an ordinal like ' +
           '<say-as interpret-as="ordinal">123</say-as></speak>');
-        resolve(assistant.ask(inputPrompt, [{'intent': RAW_INTENT}]));
+        let expectedIntent = assistant.buildExpectedIntent(RAW_INTENT);
+        resolve(assistant.ask(inputPrompt, [expectedIntent]));
       });
     }
 
@@ -608,7 +921,8 @@ describe('ActionsSdkAssistant#ask', function () {
       let inputPrompt = assistant.buildInputPrompt(true, '<speak>Hi! <break time="1"/> ' +
         'I can read out an ordinal like ' +
         '<say-as interpret-as="ordinal">123</say-as></speak>');
-      assistant.ask(inputPrompt, [{'intent': RAW_INTENT}]);
+      let expectedIntent = assistant.buildExpectedIntent(RAW_INTENT);
+      assistant.ask(inputPrompt, [expectedIntent]);
     }
 
     let actionMap = new Map();
@@ -1084,14 +1398,14 @@ describe('ActionsSdkAssistant#ask', function () {
     function handler (assistant) {
       return new Promise(function (resolve, reject) {
         let inputPrompt = assistant.buildInputPrompt(false, 'Welcome to action snippets! Say a number.',
-          'Sorry, say that again?', 'Sorry, that number again?', 'What was that number?',
-          'Say any number', 'Pick a number', 'What is the number?');
-        resolve(assistant.ask(inputPrompt, [{'intent': PROVIDE_NUMBER_INTENT}], ['$SchemaOrg_Number'], {started: true}));
+          ['Sorry, say that again?', 'Sorry, that number again?', 'What was that number?'],
+          ['Say any number', 'Pick a number', 'What is the number?']);
+        let expectedIntent = assistant.buildExpectedIntent(PROVIDE_NUMBER_INTENT);
+        resolve(assistant.ask(inputPrompt, [expectedIntent], ['$SchemaOrg_Number'], {started: true}));
       });
     }
 
     function provideNumberIntent (assistant) {
-      console.log('provideNumberIntent');
       assistant.tell('You said ' + assistant.getRawInput());
     }
 
@@ -1193,13 +1507,12 @@ describe('ActionsSdkAssistant#askNoRuntimeEntities', function () {
 
     function handler (assistant) {
       let inputPrompt = assistant.buildInputPrompt(false, 'Welcome to action snippets! Say a number.',
-        'Sorry, say that again?', 'Sorry, that number again?', 'What was that number?',
-        'Say any number', 'Pick a number', 'What is the number?');
+        ['Sorry, say that again?', 'Sorry, that number again?', 'What was that number?'],
+        ['Say any number', 'Pick a number', 'What is the number?']);
       assistant.askNoRuntimeEntities(inputPrompt, [PROVIDE_NUMBER_INTENT], ['$SchemaOrg_Number'], {started: true});
     }
 
     function provideNumberIntent (assistant) {
-      console.log('provideNumberIntent');
       assistant.tell('You said ' + assistant.getRawInput());
     }
 
@@ -1555,9 +1868,10 @@ describe('ActionsSdkAssistant#getArgument', function () {
 
     function mainIntent (assistant) {
       let inputPrompt = assistant.buildInputPrompt(false, 'Welcome to action snippets! Say a number.',
-        'Sorry, say that again?', 'Sorry, that number again?', 'What was that number?',
-        'Say any number', 'Pick a number', 'What is the number?');
-      assistant.ask(inputPrompt, [{'intent': PROVIDE_NUMBER_INTENT}], ['$SchemaOrg_Number'], {started: true});
+        ['Sorry, say that again?', 'Sorry, that number again?', 'What was that number?'],
+        ['Say any number', 'Pick a number', 'What is the number?']);
+      let expectedIntent = assistant.buildExpectedIntent(PROVIDE_NUMBER_INTENT);
+      assistant.ask(inputPrompt, [expectedIntent], ['$SchemaOrg_Number'], {started: true});
     }
 
     function provideNumberIntent (assistant) {
@@ -1623,13 +1937,12 @@ describe('ActionsSdkAssistant#tell', function () {
     const RAW_INTENT = 'raw.input';
 
     function mainIntent (assistant) {
-      console.log('mainIntent');
       let inputPrompt = assistant.buildInputPrompt(false, 'Welcome to action snippets! Say anything.');
-      assistant.ask(inputPrompt, [{'intent': RAW_INTENT}]);
+      let expectedIntent = assistant.buildExpectedIntent(RAW_INTENT);
+      assistant.ask(inputPrompt, [expectedIntent]);
     }
 
     function rawInputIntent (assistant) {
-      console.log('rawInput');
       assistant.tell('<speak>You said <break time="2"/>' + assistant.getRawInput() + '</speak>');
     }
 

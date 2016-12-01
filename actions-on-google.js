@@ -202,7 +202,8 @@ Assistant.prototype.BuiltInArgNames = {
  *
  * function mainIntent (assistant) {
  *   let inputPrompt = assistant.buildInputPrompt(false, 'Welcome to action snippets! Say anything.');
- *   assistant.ask(inputPrompt, [{'intent': RAW_INTENT}]);
+ *   let expectedIntent = assistant.buildExpectedIntent(RAW_INTENT);
+ *   assistant.ask(inputPrompt, [expectedIntent]);
  * }
  *
  * function rawInputIntent (assistant) {
@@ -346,7 +347,7 @@ Assistant.prototype.handleRequest = function (handler) {
  *         invalid input, we return null.
  */
 Assistant.prototype.askForPermissions = function (
-  context, permissions, dialogState) {
+    context, permissions, dialogState) {
   debug('askForPermissions: context=%s, permissions=%s, dialogState=%s',
     context, permissions, JSON.stringify(dialogState));
   let self = this;
@@ -445,7 +446,7 @@ Assistant.prototype.askForPermissions = function (
  *         for any invalid input, we return null.
  */
 Assistant.prototype.askForPermission = function (
-  context, permission, dialogState) {
+    context, permission, dialogState) {
   debug('askForPermission: context=%s, permission=%s, dialogState=%s',
     context, permission, JSON.stringify(dialogState));
   return this.askForPermissions(context, [permission], dialogState);
@@ -697,7 +698,7 @@ ActionsSdkAssistant.prototype.isRequestFromAssistant = function (privateKey) {
  * const assistant = new ActionsSdkAssistant({request: request, response: response});
  * let apiVersion = assistant.getApiVersion();
  *
- * @return {string} version value.
+ * @return {string} version value or null if no value.
  * @actionssdk
  */
 ActionsSdkAssistant.prototype.getApiVersion = function () {
@@ -712,7 +713,7 @@ ActionsSdkAssistant.prototype.getApiVersion = function () {
  * const assistant = new ActionsSdkAssistant({request: request, response: response});
  * assistant.tell('You said ' + assistant.getRawInput());
  *
- * @return {string} user's raw query like 'order a pizza'.
+ * @return {string} user's raw query or null if no value.
  * @actionssdk
  */
 ActionsSdkAssistant.prototype.getRawInput = function () {
@@ -743,8 +744,8 @@ ActionsSdkAssistant.prototype.getRawInput = function () {
  * const assistant = new ActionsSdkAssistant({request: request, response: response});
  * let dialogState = assistant.getDialogState();
  *
- * @return {Object} JSON object developer provided to Google Assistant in previous
- *                  user turn.
+ * @return {Object} JSON object provided to Google Assistant in previous
+ *                  user turn or {} if no value.
  * @actionssdk
  */
 ActionsSdkAssistant.prototype.getDialogState = function () {
@@ -764,7 +765,7 @@ ActionsSdkAssistant.prototype.getDialogState = function () {
  * const assistant = new ActionsSdkAssistant({request: request, response: response});
  * let userId = assistant.getUser().user_id;
  *
- * @return {object} user info.
+ * @return {object} user info or null if no value.
  * @actionssdk
  */
 ActionsSdkAssistant.prototype.getUser = function () {
@@ -806,7 +807,7 @@ ActionsSdkAssistant.prototype.getActionVersionLabel = function () {
  * const assistant = new ActionsSdkAssistant({request: request, response: response});
  * let conversationId = assistant.getConversationId();
  *
- * @return {string} conversation ID.
+ * @return {string} conversation ID or null if no value.
  * @actionssdk
  */
 ActionsSdkAssistant.prototype.getConversationId = function () {
@@ -832,7 +833,8 @@ ActionsSdkAssistant.prototype.getConversationId = function () {
  *   switch (intent) {
  *     case assistant.StandardIntents.MAIN:
  *       let inputPrompt = assistant.buildInputPrompt(false, 'Welcome to action snippets! Say anything.');
- *       assistant.ask(inputPrompt, [{'intent': RAW_INTENT}]);
+ *       let expectedIntent = assistant.buildExpectedIntent(RAW_INTENT);
+ *       assistant.ask(inputPrompt, [expectedIntent]);
  *       break;
  *
  *     case RAW_INTENT:
@@ -843,7 +845,7 @@ ActionsSdkAssistant.prototype.getConversationId = function () {
  *
  * assistant.handleRequest(responseHandler);
  *
- * @return {string} intent id.
+ * @return {string} intent id or null if no value.
  * @actionssdk
  */
 ActionsSdkAssistant.prototype.getIntent = function () {
@@ -865,9 +867,10 @@ ActionsSdkAssistant.prototype.getIntent = function () {
  *
  * function mainIntent (assistant) {
  *   let inputPrompt = assistant.buildInputPrompt(false, 'Welcome to action snippets! Say a number.',
- *     'Sorry, say that again?', 'Sorry, that number again?', 'What was that number?',
- *     'Say any number', 'Pick a number', 'What is the number?');
- *   assistant.ask(inputPrompt, [{'intent': PROVIDE_NUMBER_INTENT}], ["$SchemaOrg_Number"], {started: true});
+ *     ['Sorry, say that again?', 'Sorry, that number again?', 'What was that number?'],
+ *     ['Say any number', 'Pick a number', 'What is the number?']);
+ *   let expectedIntent = assistant.buildExpectedIntent(PROVIDE_NUMBER_INTENT);
+ *   assistant.ask(inputPrompt, [expectedIntent], ["$SchemaOrg_Number"], {started: true});
  * }
  *
  * function provideNumberIntent (assistant) {
@@ -881,7 +884,7 @@ ActionsSdkAssistant.prototype.getIntent = function () {
  * assistant.handleRequest(actionMap);
  *
  * @param {string} argName Name of the argument.
- * @return {string} argument value.
+ * @return {string} argument value or null if no value.
  * @actionssdk
  */
 ActionsSdkAssistant.prototype.getArgument = function (argName) {
@@ -906,17 +909,17 @@ ActionsSdkAssistant.prototype.getArgument = function (argName) {
 };
 
 /**
- * Asks Assistant to collect the user's input. A response is built and sent back to
- * Assistant if succeeded, otherwise an error code 400 is sent back.
+ * Asks Assistant to collect the user's input.
  *
  * @example
- * // Basic ask usage
+ * // Basic 'ask' usage
  * const assistant = new ActionsSdkAssistant({request: request, response: response});
  * const RAW_INTENT = 'raw.input';
  *
  * function mainIntent (assistant) {
  *   let inputPrompt = assistant.buildInputPrompt(false, 'Welcome to action snippets! Say anything.');
- *   assistant.ask(inputPrompt, [{'intent': RAW_INTENT}]);
+ *   let expectedIntent = assistant.buildExpectedIntent(RAW_INTENT);
+ *   assistant.ask(inputPrompt, [expectedIntent]);
  * }
  *
  * function rawInputIntent (assistant) {
@@ -929,15 +932,16 @@ ActionsSdkAssistant.prototype.getArgument = function (argName) {
  *
  * assistant.handleRequest(actionMap);
  *
- * // Advanced ask usage
+ * // Advanced 'ask' usage
  * const assistant = new ActionsSdkAssistant({request: request, response: response});
  * const PROVIDE_NUMBER_INTENT = 'PROVIDE_NUMBER';
  *
  * function mainIntent (assistant) {
  *   let inputPrompt = assistant.buildInputPrompt(false, 'Welcome to action snippets! Say a number.',
- *     'Sorry, say that again?', 'Sorry, that number again?', 'What was that number?',
- *     'Say any number', 'Pick a number', 'What is the number?');
- *   assistant.ask(inputPrompt, [{'intent': PROVIDE_NUMBER_INTENT}], ["$SchemaOrg_Number"], {started: true});
+ *     ['Sorry, say that again?', 'Sorry, that number again?', 'What was that number?'],
+ *     ['Say any number', 'Pick a number', 'What is the number?']);
+ *   let expectedIntent = assistant.buildExpectedIntent(PROVIDE_NUMBER_INTENT);
+ *   assistant.ask(inputPrompt, [expectedIntent], ["$SchemaOrg_Number"], {started: true});
  * }
  *
  * function provideNumberIntent (assistant) {
@@ -993,7 +997,7 @@ ActionsSdkAssistant.prototype.ask = function (
 
 /**
  * Asks Assistant to collect user's input; all user's queries need to be sent to
- * action.
+ * the action.
  *
  * @example
  * const assistant = new ActionsSdkAssistant({request: request, response: response});
@@ -1100,8 +1104,8 @@ ActionsSdkAssistant.prototype.askForSignIn = function (actionPhrase, dialogState
 };
 
 /**
- * Similar to ask method but developer only provides a list of raw values for expected
- * intent IDs, this means there is no runtime entities provided.
+ * Similar to ask method but only uses a list of raw values for expected
+ * intent IDs; no runtime entities are provided.
  *
  * @example
  * const assistant = new ActionsSdkAssistant({request: request, response: response});
@@ -1109,8 +1113,8 @@ ActionsSdkAssistant.prototype.askForSignIn = function (actionPhrase, dialogState
  *
  * function mainIntent (assistant) {
  *   let inputPrompt = assistant.buildInputPrompt(false, 'Welcome to action snippets! Say a number.',
- *     'Sorry, say that again?', 'Sorry, that number again?', 'What was that number?',
- *     'Say any number', 'Pick a number', 'What is the number?');
+ *     ['Sorry, say that again?', 'Sorry, that number again?', 'What was that number?'],
+ *     ['Say any number', 'Pick a number', 'What is the number?']);
  *   assistant.askNoRuntimeEntities(inputPrompt, [PROVIDE_NUMBER_INTENT], ["$SchemaOrg_Number"], {started: true});
  * }
  *
@@ -1147,7 +1151,7 @@ ActionsSdkAssistant.prototype.askNoRuntimeEntities = function (
   let expectedIntents = [];
   if (expectedIntentIds) {
     for (let i = 0; i < expectedIntentIds.length; i++) {
-      let intent = self.buildExpectedIntentHelper_(expectedIntentIds[i], null);
+      let intent = self.buildExpectedIntent(expectedIntentIds[i], null);
       if (intent) {
         expectedIntents.push(intent);
       }
@@ -1170,7 +1174,8 @@ ActionsSdkAssistant.prototype.askNoRuntimeEntities = function (
  *
  * function mainIntent (assistant) {
  *   let inputPrompt = assistant.buildInputPrompt(false, 'Welcome to action snippets! Say anything.');
- *   assistant.ask(inputPrompt, [{'intent': RAW_INTENT}]);
+ *   let expectedIntent = assistant.buildExpectedIntent(RAW_INTENT);
+ *   assistant.ask(inputPrompt, [expectedIntent]);
  * }
  *
  * function rawInputIntent (assistant) {
@@ -1198,11 +1203,11 @@ ActionsSdkAssistant.prototype.tell = function (textToSpeech) {
   if (self.isSsml_(textToSpeech)) {
     finalResponse.speech_response = {
       ssml: textToSpeech
-    };
+    }
   } else {
     finalResponse.speech_response = {
       text_to_speech: textToSpeech
-    };
+    }
   }
   let response = self.buildResponseHelper_(
     null, false, null, finalResponse);
@@ -1224,40 +1229,45 @@ ActionsSdkAssistant.prototype.tell = function (textToSpeech) {
  *
  * @example
  * let inputPrompt = assistant.buildInputPrompt(false, 'Welcome to action snippets! Say a number.',
- *     'Sorry, say that again?', 'Sorry, that number again?', 'What was that number?',
- *     'Say any number', 'Pick a number', 'What is the number?');
- *   assistant.ask(inputPrompt, [{'intent': PROVIDE_NUMBER_INTENT}], ["$SchemaOrg_Number"], {started: true});
+ *     ['Sorry, say that again?', 'Sorry, that number again?', 'What was that number?'],
+ *     ['Say any number', 'Pick a number', 'What is the number?']);
+ *   let expectedIntent = assistant.buildExpectedIntent(PROVIDE_NUMBER_INTENT);
+ *   assistant.ask(inputPrompt, [expectedIntent], ["$SchemaOrg_Number"], {started: true});
  *
  * @param {boolean} isSsml Indicates whether the text to speech is SSML or not.
  * @param {string} initialPrompt The initial prompt Assistant asks the user.
- * @param {string} noMatch1 First re-prompt when user's response mismatches
- *                 action's expected input.
- * @param {string} noMatch2 Second re-prompt when user's response mismatches
- *                 action's expected input.
- * @param {string} noMatch3 Last spoken response before mic is closed.
- * @param {string} noInput1 First re-prompt when user does not respond.
- * @param {string} noInput2 Second re-prompt when user does not respond.
- * @param {string} noInput3 Last spoken response before mic is closed when
- *                 user does not respond.
+ * @param {string} noMatches Array of re-prompts when user's response mismatches
+ *                 action's expected input (max 3).
+ * @param {string} noInputs Array of re-prompt when user does not respond (max 3).
  * @return {Object} an InputPrompt object.
  * @actionssdk
  */
 ActionsSdkAssistant.prototype.buildInputPrompt = function (isSsml, initialPrompt,
-  noMatch1, noMatch2, noMatch3, noInput1, noInput2, noInput3) {
-  debug('buildInputPrompt: isSsml=%s, initialPrompt=%s, noMatch1=%s, noMatch2=%s, noMatch3=%s, noInput1=%s, noInput2=%s, noInput3=%s',
-    isSsml, initialPrompt, noMatch1, noMatch2, noMatch3, noInput1, noInput2, noInput3);
+    noMatches, noInputs) {
+  debug('buildInputPrompt: isSsml=%s, initialPrompt=%s, noMatches=%s, noInputs=%s',
+    isSsml, initialPrompt, noMatches, noInputs);
   let self = this;
   let initials = [];
-  let noMatches = [];
-  let noInputs = [];
+
+  if (noMatches) {
+    if (noMatches.length > 3) {
+      self.handleError_('Invalid number of no matches');
+      return null;
+    }
+  } else {
+    noMatches = [];
+  }
+
+  if (noInputs) {
+    if (noInputs.length > 3) {
+      self.handleError_('Invalid number of no inputs');
+      return null;
+    }
+  } else {
+    noInputs = [];
+  }
 
   self.maybeAddItemToArray_(initialPrompt, initials);
-  self.maybeAddItemToArray_(noMatch1, noMatches);
-  self.maybeAddItemToArray_(noMatch2, noMatches);
-  self.maybeAddItemToArray_(noMatch3, noMatches);
-  self.maybeAddItemToArray_(noInput1, noInputs);
-  self.maybeAddItemToArray_(noInput2, noInputs);
-  self.maybeAddItemToArray_(noInput3, noInputs);
   if (isSsml) {
     return {
       initial_prompts: self.buildPromptsFromSsmlHelper_(initials),
@@ -1406,7 +1416,7 @@ ActionsSdkAssistant.prototype.getTopInput_ = function () {
  * @actionssdk
  */
 ActionsSdkAssistant.prototype.buildResponseHelper_ = function (conversationToken,
-  expectUserResponse, expectedInput, finalResponse) {
+    expectUserResponse, expectedInput, finalResponse) {
   debug('buildResponseHelper_: conversationToken=%s, expectUserResponse=%s, ' +
     'expectedInput=%s, finalResponse=%s',
     conversationToken, expectUserResponse, expectedInput, finalResponse);
@@ -1422,31 +1432,6 @@ ActionsSdkAssistant.prototype.buildResponseHelper_ = function (conversationToken
     response.final_response = finalResponse;
   }
   return response;
-};
-
-/**
- * Builds an ExpectedIntent object.
- * @private
- * @actionssdk
- */
-ActionsSdkAssistant.prototype.buildExpectedIntentHelper_ = function (intent, options) {
-  debug('buildExpectedIntentHelper_: intent=%s, options=%s', intent, options);
-  let self = this;
-  if (!intent || intent === '') {
-    self.handleError_('Missing intent');
-    return null;
-  }
-  let expectedIntent = {
-    intent: intent
-  };
-  if (options && options.length) {
-    expectedIntent.input_value_spec = {
-      option_value_spec: {
-        options: options
-      }
-    };
-  }
-  return expectedIntent;
 };
 
 /**
@@ -1583,7 +1568,7 @@ ActionsSdkAssistant.prototype.extractData_ = function () {
  * @actionssdk
  */
 ActionsSdkAssistant.prototype.fulfillPermissionsRequest_ = function (
-  permissionsSpec, dialogState) {
+    permissionsSpec, dialogState) {
   debug('fulfillPermissionsRequest_: permissionsSpec=%s, dialogState=%s',
     JSON.stringify(permissionsSpec), JSON.stringify(dialogState));
   let self = this;
@@ -1623,8 +1608,7 @@ ActionsSdkAssistant.prototype.fulfillPermissionsRequest_ = function (
  */
 function ApiAiAssistant (options) {
   debug('ApiAiAssistant constructor');
-  let self = this;
-  Assistant.call(self, options);
+  Assistant.call(this, options);
 }
 
 ApiAiAssistant.prototype = new Assistant();
@@ -1636,7 +1620,7 @@ ApiAiAssistant.prototype = new Assistant();
  * const assistant = new ApiAiAssistant({request: request, response: response});
  * let userId = assistant.getUser().user_id;
  *
- * @return {object} user info.
+ * @return {object} user info or null if no value.
  * @apiai
  */
 ApiAiAssistant.prototype.getUser = function () {
@@ -1652,32 +1636,64 @@ ApiAiAssistant.prototype.getUser = function () {
 };
 
 /**
- * Verifies whether the request comes from API.AI.
+ * Verifies whether the request comes from API.AI. The key and value need to be
+ * configured in the API.ai project at Fulfillment/Webhook/Headers.
  *
- * @param {string} header The header specified by the developer in the
+ * @example
+ * const assistant = new ApiAiAssistant({request: request, response: response});
+ * const HEADER_KEY = 'Google-Assistant-Signature';
+ * const HEADER_VALUE = 'YOUR_PRIVATE_KEY';
+ *
+ * if (!assistant.isRequestFromApiAi(HEADER_KEY, HEADER_VALUE)) {
+ *   console.log('Request is not from trusted source (API.AI)');
+ *   return;
+ * }
+ *
+ * @param {string} key The header key specified by the developer in the
  *                 API.AI Fulfillment settings of the action.
- * @param {string} private_key The private key specified by the developer inside the
+ * @param {string} value The private value specified by the developer inside the
  *                 fulfillment header.
- * @return {boolean} indicates Whether the request comes from API.AI.
+ * @return {boolean} indicates whether the request comes from API.AI.
  * @apiai
  */
-ApiAiAssistant.prototype.isRequestFromApiAi = function (header, privateKey) {
-  debug('isRequestFromApiAi: header=%s, privateKey=%s', header, privateKey);
+ApiAiAssistant.prototype.isRequestFromApiAi = function (key, value) {
+  debug('isRequestFromApiAi: key=%s, value=%s', key, value);
   let self = this;
-  if (!header || header === '') {
-    self.handleError_('header must be specified.');
+  if (!key || key === '') {
+    self.handleError_('key must be specified.');
     return false;
   }
-  if (!privateKey || privateKey === '') {
-    self.handleError_('privateKey must be specified.');
+  if (!value || value === '') {
+    self.handleError_('value must be specified.');
     return false;
   }
-  return self.request_.get(header) === privateKey;
+  return self.request_.get(key) === value;
 };
 
 /**
- * Get the current intent.
- * @return {string} intent id.
+ * Get the current intent. Alternatively, using a handler Map for handleRequest,
+ * the client library will automatically handle the incoming intents.
+ *
+ * @example
+ * const assistant = new ApiAiAssistant({request: request, response: response});
+ *
+ * function responseHandler (assistant) {
+ *   let intent = assistant.getIntent();
+ *   switch (intent) {
+ *     case WELCOME_INTENT:
+ *       assistant.ask('Welcome to action snippets! Say a number.');
+ *       break;
+ *
+ *     case NUMBER_INTENT:
+ *       let number = assistant.getArgument(NUMBER_ARGUMENT);
+ *       assistant.tell('You said ' + number);
+ *       break;
+ *   }
+ * }
+ *
+ * assistant.handleRequest(responseHandler);
+ *
+ * @return {string} intent id or null if no value.
  * @apiai
  */
 ApiAiAssistant.prototype.getIntent = function () {
@@ -1693,8 +1709,28 @@ ApiAiAssistant.prototype.getIntent = function () {
 
 /**
  * Get the argument value by name from the current intent.
+ *
+ * @example
+ * const assistant = new ApiAiAssistant({request: request, response: response});
+ * const WELCOME_INTENT = 'input.welcome';
+ * const NUMBER_INTENT = 'input.number';
+ *
+ * function welcomeIntent (assistant) {
+ *   assistant.ask('Welcome to action snippets! Say a number.');
+ * }
+ *
+ * function numberIntent (assistant) {
+ *   let number = assistant.getArgument(NUMBER_ARGUMENT);
+ *   assistant.tell('You said ' + number);
+ * }
+ *
+ * let actionMap = new Map();
+ * actionMap.set(WELCOME_INTENT, welcomeIntent);
+ * actionMap.set(NUMBER_INTENT, numberIntent);
+ * assistant.handleRequest(actionMap);
+ *
  * @param {string} argName Name of the argument.
- * @return {string} argument value.
+ * @return {string} argument value or null if no value.
  * @apiai
  */
 ApiAiAssistant.prototype.getArgument = function (argName) {
@@ -1712,8 +1748,26 @@ ApiAiAssistant.prototype.getArgument = function (argName) {
 };
 
 /**
- * Asks Assistant to provide an input. A response is built and sent back to
- * Assistant if succeeded, otherwise an error code 400 is sent back.
+ * Asks Assistant to provide an input.
+ *
+ * @example
+ * const assistant = new ApiAiAssistant({request: request, response: response});
+ * const WELCOME_INTENT = 'input.welcome';
+ * const NUMBER_INTENT = 'input.number';
+ *
+ * function welcomeIntent (assistant) {
+ *   assistant.ask('Welcome to action snippets! Say a number.');
+ * }
+ *
+ * function numberIntent (assistant) {
+ *   let number = assistant.getArgument(NUMBER_ARGUMENT);
+ *   assistant.tell('You said ' + number);
+ * }
+ *
+ * let actionMap = new Map();
+ * actionMap.set(WELCOME_INTENT, welcomeIntent);
+ * actionMap.set(NUMBER_INTENT, numberIntent);
+ * assistant.handleRequest(actionMap);
  *
  * @param {String} inputPrompt The input prompt.
  * @return {Object} HTTP response.
@@ -1735,7 +1789,27 @@ ApiAiAssistant.prototype.ask = function (inputPrompt) {
 };
 
 /**
- * Tells Assistant to render the speech response and closes the mic.
+ * Tells Assistant to render the speech response and close the mic.
+ *
+ * @example
+ * const assistant = new ApiAiAssistant({request: request, response: response});
+ * const WELCOME_INTENT = 'input.welcome';
+ * const NUMBER_INTENT = 'input.number';
+ *
+ * function welcomeIntent (assistant) {
+ *   assistant.ask('Welcome to action snippets! Say a number.');
+ * }
+ *
+ * function numberIntent (assistant) {
+ *   let number = assistant.getArgument(NUMBER_ARGUMENT);
+ *   assistant.tell('You said ' + number);
+ * }
+ *
+ * let actionMap = new Map();
+ * actionMap.set(WELCOME_INTENT, welcomeIntent);
+ * actionMap.set(NUMBER_INTENT, numberIntent);
+ * assistant.handleRequest(actionMap);
+ *
  * @param {string} speechResponse Final spoken response to Assistant.
  * @return the response is sent back to Assistant.
  * @apiai
@@ -1753,6 +1827,26 @@ ApiAiAssistant.prototype.tell = function (speechResponse) {
 
 /**
  * Set a new context for the current intent.
+ *
+ * @example
+ * const assistant = new ApiAiAssistant({request: request, response: response});
+ * const CONTEXT_NUMBER = 'number';
+ *
+ * function welcomeIntent (assistant) {
+ *   assistant.setContext(CONTEXT_NUMBER);
+ *   assistant.ask('Welcome to action snippets! Say a number.');
+ * }
+ *
+ * function numberIntent (assistant) {
+ *   let number = assistant.getArgument(NUMBER_ARGUMENT);
+ *   assistant.tell('You said ' + number);
+ * }
+ *
+ * let actionMap = new Map();
+ * actionMap.set(WELCOME_INTENT, welcomeIntent);
+ * actionMap.set(NUMBER_INTENT, numberIntent);
+ * assistant.handleRequest(actionMap);
+ *
  * @param {string} context Name of the context.
  * @param {int} lifespan Context lifespan.
  * @param {object} parameters Context JSON parameters.
@@ -1776,6 +1870,27 @@ ApiAiAssistant.prototype.setContext = function (context, lifespan, parameters) {
     newContext.parameters = parameters;
   }
   self.contexts_[context] = newContext;
+};
+
+/**
+ * Gets the user's raw input query.
+ *
+ * @example
+ * const assistant = new ApiAiAssistant({request: request, response: response});
+ * assistant.tell('You said ' + assistant.getRawInput());
+ *
+ * @return {string} user's raw query or null if no value.
+ * @apiai
+ */
+ApiAiAssistant.prototype.getRawInput = function () {
+  debug('getRawInput');
+  let self = this;
+  if (!self.body_.result ||
+      !self.body_.result.resolvedQuery) {
+    self.handleError_('No raw input');
+    return null;
+  }
+  return self.body_.result.resolvedQuery;
 };
 
 // ---------------------------------------------------------------------------
