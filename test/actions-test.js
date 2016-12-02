@@ -82,7 +82,10 @@ MockResponse.prototype.append = function (header, value) {
 describe('ApiAiAssistant#tell', function () {
   // Success case test, when the API returns a valid 200 response with the response object
   it('Should return the valid JSON in the response object for the success case.', function () {
-    let headers = {'Content-Type': 'application/json', 'google-assistant-api-version': 'v1'};
+    let headers = {
+      'Content-Type': 'application/json',
+      'google-assistant-api-version': 'v1'
+    };
     let body = {
       'id': 'ce7295cc-b042-42d8-8d72-14b83597ac1e',
       'timestamp': '2016-10-28T03:05:34.288Z',
@@ -252,6 +255,223 @@ describe('ApiAiAssistant#ask', function () {
       ]
     };
     expect(mockResponse.body).to.deep.equal(expectedResponse);
+  });
+});
+
+/**
+ * Describes the behavior for ApiAiAssistant askForPermissions method.
+ */
+describe('ApiAiAssistant#askForPermissions', function () {
+  // Success case test, when the API returns a valid 200 response with the response object
+  it('Should return the valid JSON in the response object for the success case.', function () {
+    let headers = {'Content-Type': 'application/json', 'google-assistant-api-version': 'v1'};
+    let body = {
+      'id': '9c4394e3-4f5a-4e68-b1af-088b75ad3071',
+      'timestamp': '2016-10-28T03:41:39.957Z',
+      'result': {
+        'source': 'agent',
+        'resolvedQuery': 'Where am I?',
+        'speech': '',
+        'action': 'get_permission',
+        'actionIncomplete': false,
+        'parameters': {},
+        'contexts': [],
+        'metadata': {
+          'intentId': '1e46ffc2-651f-4ac0-a54e-9698feb88880',
+          'webhookUsed': 'true',
+          'intentName': 'give_permission'
+        },
+        'fulfillment': {
+          'speech': ''
+        },
+        'score': 1
+      },
+      'status': {
+        'code': 200,
+        'errorType': 'success'
+      },
+      'sessionId': 'e420f007-501d-4bc8-b551-5d97772bc50c',
+      'originalRequest': null
+    };
+    const mockRequest = new MockRequest(headers, body);
+    const mockResponse = new MockResponse();
+
+    const assistant = new ApiAiAssistant({request: mockRequest, response: mockResponse});
+
+    function handler (assistant) {
+      return new Promise(function (resolve, reject) {
+        resolve(assistant.askForPermissions('To test', ['NAME', 'DEVICE_PRECISE_LOCATION']));
+      });
+    }
+
+    let actionMap = new Map();
+    actionMap.set('get_permission', handler);
+
+    assistant.handleRequest(actionMap);
+
+    // Validating the response object
+    let expectedResponse = {
+      'speech': 'PLACEHOLDER_FOR_PERMISSION',
+      'data': {
+        'google': {
+          'expect_user_response': true,
+          'is_ssml': false,
+          'no_input_prompts': [],
+          'speech_biasing_hints': ['$SchemaOrg_YesNo'],
+          'permissions_request': {
+            'opt_context': 'To test',
+            'permissions': ['NAME', 'DEVICE_PRECISE_LOCATION']
+          }
+        }
+      },
+      'contextOut': [
+        {
+          'name': '_actions_on_google_',
+          'lifespan': 100,
+          'parameters': {}
+        }
+      ]
+    };
+    expect(mockResponse.body).to.deep.equal(expectedResponse);
+  });
+});
+
+/**
+ * Describes the behavior for ApiAiAssistant getUser method.
+ */
+describe('ApiAiAssistant#getUser', function () {
+  // Success case test, when the API returns a valid 200 response with the response object
+  it('Should validate assistant request user.', function () {
+    let headers = {
+      'Content-Type': 'application/json',
+      'google-assistant-api-version': 'v1'
+    };
+    let body = {
+      'id': 'ce7295cc-b042-42d8-8d72-14b83597ac1e',
+      'timestamp': '2016-10-28T03:05:34.288Z',
+      'result': {
+        'source': 'agent',
+        'resolvedQuery': 'start guess a number game',
+        'speech': '',
+        'action': 'generate_answer',
+        'actionIncomplete': false,
+        'parameters': {
+
+        },
+        'contexts': [
+
+        ],
+        'metadata': {
+          'intentId': '56da4637-0419-46b2-b851-d7bf726b1b1b',
+          'webhookUsed': 'true',
+          'intentName': 'start_game'
+        },
+        'fulfillment': {
+          'speech': ''
+        },
+        'score': 1
+      },
+      'status': {
+        'code': 200,
+        'errorType': 'success'
+      },
+      'sessionId': 'e420f007-501d-4bc8-b551-5d97772bc50c',
+      'originalRequest': {
+        'data': {
+          'user': {
+            'user_id': '11112226094657824893'
+          }
+        }
+      }
+    };
+
+    let mockRequest = new MockRequest(headers, body);
+    let mockResponse = new MockResponse();
+
+    let assistant = new ApiAiAssistant({
+      request: mockRequest,
+      response: mockResponse
+    });
+
+    expect(assistant.getUser().user_id).to.equal('11112226094657824893');
+  });
+});
+
+/**
+ * Describes the behavior for ApiAiAssistant isPermissionGranted method.
+ */
+describe('ApiAiAssistant#isPermissionGranted', function () {
+  // Success case test, when the API returns a valid 200 response with the response object
+  it('Should validate assistant request user.', function () {
+    let headers = {
+      'Content-Type': 'application/json',
+      'google-assistant-api-version': 'v1'
+    };
+    let body = {
+      'id': 'ce7295cc-b042-42d8-8d72-14b83597ac1e',
+      'timestamp': '2016-10-28T03:05:34.288Z',
+      'result': {
+        'source': 'agent',
+        'resolvedQuery': 'start guess a number game',
+        'speech': '',
+        'action': 'generate_answer',
+        'actionIncomplete': false,
+        'parameters': {
+
+        },
+        'contexts': [
+
+        ],
+        'metadata': {
+          'intentId': '56da4637-0419-46b2-b851-d7bf726b1b1b',
+          'webhookUsed': 'true',
+          'intentName': 'start_game'
+        },
+        'fulfillment': {
+          'speech': ''
+        },
+        'score': 1
+      },
+      'status': {
+        'code': 200,
+        'errorType': 'success'
+      },
+      'sessionId': 'e420f007-501d-4bc8-b551-5d97772bc50c',
+      'originalRequest': {
+        'data': {
+          'inputs': [{
+            'arguments': [{
+              'name': 'permission_granted',
+              'text_value': 'true'
+            }]
+          }]
+        }
+      }
+    };
+
+    let mockRequest = new MockRequest(headers, body);
+    let mockResponse = new MockResponse();
+
+    let assistant = new ApiAiAssistant({
+      request: mockRequest,
+      response: mockResponse
+    });
+
+    expect(assistant.isPermissionGranted()).to.equal(true);
+
+    // Test the false case
+
+    body.originalRequest.data.inputs[0].arguments[0].text_value = false;
+
+    mockRequest = new MockRequest(headers, body);
+    mockResponse = new MockResponse();
+
+    assistant = new ApiAiAssistant({
+      request: mockRequest,
+      response: mockResponse
+    });
+
+    expect(assistant.isPermissionGranted()).to.equal(false);
   });
 });
 
@@ -699,84 +919,6 @@ describe('ApiAiAssistant#setContext', function () {
   });
 });
 
-/**
- * Describes the behavior for ApiAiAssistant askForPermissions method.
- */
-describe('ApiAiAssistant#askForPermissions', function () {
-  // Success case test, when the API returns a valid 200 response with the response object
-  it('Should return the valid JSON in the response object for the success case.', function () {
-    let headers = {'Content-Type': 'application/json', 'google-assistant-api-version': 'v1'};
-    let body = {
-      'id': '9c4394e3-4f5a-4e68-b1af-088b75ad3071',
-      'timestamp': '2016-10-28T03:41:39.957Z',
-      'result': {
-        'source': 'agent',
-        'resolvedQuery': 'Where am I?',
-        'speech': '',
-        'action': 'get_permission',
-        'actionIncomplete': false,
-        'parameters': {},
-        'contexts': [],
-        'metadata': {
-          'intentId': '1e46ffc2-651f-4ac0-a54e-9698feb88880',
-          'webhookUsed': 'true',
-          'intentName': 'give_permission'
-        },
-        'fulfillment': {
-          'speech': ''
-        },
-        'score': 1
-      },
-      'status': {
-        'code': 200,
-        'errorType': 'success'
-      },
-      'sessionId': 'e420f007-501d-4bc8-b551-5d97772bc50c',
-      'originalRequest': null
-    };
-    const mockRequest = new MockRequest(headers, body);
-    const mockResponse = new MockResponse();
-
-    const assistant = new ApiAiAssistant({request: mockRequest, response: mockResponse});
-
-    function handler (assistant) {
-      return new Promise(function (resolve, reject) {
-        resolve(assistant.askForPermissions('To test', ['NAME', 'DEVICE_PRECISE_LOCATION']));
-      });
-    }
-
-    let actionMap = new Map();
-    actionMap.set('get_permission', handler);
-
-    assistant.handleRequest(actionMap);
-
-    // Validating the response object
-    let expectedResponse = {
-      'speech': 'PLACEHOLDER_FOR_PERMISSION',
-      'data': {
-        'google': {
-          'expect_user_response': true,
-          'is_ssml': false,
-          'no_input_prompts': [],
-          'speech_biasing_hints': ['$SchemaOrg_YesNo'],
-          'permissions_request': {
-            'opt_context': 'To test',
-            'permissions': ['NAME', 'DEVICE_PRECISE_LOCATION']
-          }
-        }
-      },
-      'contextOut': [
-        {
-          'name': '_actions_on_google_',
-          'lifespan': 100,
-          'parameters': {}
-        }
-      ]
-    };
-    expect(mockResponse.body).to.deep.equal(expectedResponse);
-  });
-});
-
 // ---------------------------------------------------------------------------
 //                   Actions SDK support
 // ---------------------------------------------------------------------------
@@ -1171,7 +1313,7 @@ describe('ActionsSdkAssistant#askForText', function () {
 });
 
 /**
- * Describes the behavior for ActionsSdkAssistant askForText method.
+ * Describes the behavior for ActionsSdkAssistant askForText method with SSML.
  */
 describe('ActionsSdkAssistant#askForText', function () {
   // Success case test, when the API returns a valid 200 response with the response object
@@ -1254,53 +1396,6 @@ describe('ActionsSdkAssistant#askForText', function () {
       ]
     };
     expect(mockResponse.body).to.deep.equal(expectedResponse);
-  });
-});
-
-/**
- * Describes the behavior for ActionsSdkAssistant getUser method.
- */
-describe('ActionsSdkAssistant#getUser', function () {
-  // Success case test, when the API returns a valid 200 response with the response object
-  it('Should validate assistant request user.', function () {
-    let headers = {
-      'Content-Type': 'application/json',
-      'Google-Assistant-API-Version': 'v1'
-    };
-    let body = {
-      'user': {
-        'user_id': '11112226094657824893'
-      },
-      'conversation': {
-        'conversation_id': '1480476553943',
-        'type': 1
-      },
-      'inputs': [
-        {
-          'intent': 'assistant.intent.action.MAIN',
-          'raw_inputs': [
-            {
-              'input_type': 2,
-              'query': 'talk to action snippets'
-            }
-          ],
-          'arguments': [
-            {
-              'name': 'agent_info'
-            }
-          ]
-        }
-      ]
-    };
-    const mockRequest = new MockRequest(headers, body);
-    const mockResponse = new MockResponse();
-
-    const assistant = new ActionsSdkAssistant({
-      request: mockRequest,
-      response: mockResponse
-    });
-
-    expect(assistant.getUser().user_id).to.equal('11112226094657824893');
   });
 });
 
@@ -1522,6 +1617,99 @@ describe('ActionsSdkAssistant#askNoRuntimeEntities', function () {
 });
 
 /**
+ * Describes the behavior for ActionsSdkAssistant askForPermissions method.
+ */
+describe('ActionsSdkAssistant#askForPermissions', function () {
+  // Success case test, when the API returns a valid 200 response with the response object
+  it('Should return the valid JSON in the response object for the success case.', function () {
+    let headers = {
+      'Content-Type': 'application/json',
+      'Google-Assistant-API-Version': 'v1'
+    };
+    let body = {
+      'user': {
+
+      },
+      'conversation': {
+        'conversation_id': '1480532856956',
+        'type': 1
+      },
+      'inputs': [
+        {
+          'intent': 'GET_RIDE',
+          'raw_inputs': [
+            {
+              'input_type': 2,
+              'query': 'get me a ride in a big car'
+            }
+          ],
+          'arguments': [
+
+          ]
+        }
+      ]
+    };
+    const mockRequest = new MockRequest(headers, body);
+    const mockResponse = new MockResponse();
+
+    const assistant = new ActionsSdkAssistant({
+      request: mockRequest,
+      response: mockResponse
+    });
+
+    const GET_RIDE = 'GET_RIDE';
+
+    function getRide (assistant) {
+      assistant.askForPermissions('To get you a ride', [
+        assistant.SupportedPermissions.NAME,
+        assistant.SupportedPermissions.PRECISE_LOCATION
+      ], {
+        carType: 'big'
+      });
+    }
+
+    let actionMap = new Map();
+    actionMap.set(GET_RIDE, getRide);
+
+    assistant.handleRequest(actionMap);
+
+    // Validating the response object
+    let expectedResponse = {
+      'conversation_token': '{"carType":"big"}',
+      'expect_user_response': true,
+      'expected_inputs': [
+        {
+          'input_prompt': {
+            'initial_prompts': [
+              {
+                'text_to_speech': 'PLACEHOLDER_FOR_PERMISSION'
+              }
+            ],
+            'no_match_prompts': [
+            ],
+            'no_input_prompts': [
+            ]
+          },
+          'possible_intents': [
+            {
+              'intent': 'assistant.intent.action.PERMISSION',
+              'input_value_spec': {
+                'permission_value_spec': {
+                  'opt_context': 'To get you a ride',
+                  'permissions': ['NAME', 'DEVICE_PRECISE_LOCATION']
+                }
+              }
+            }
+          ]
+        }
+      ]
+    };
+
+    expect(JSON.stringify(mockResponse.body)).to.equal(JSON.stringify(expectedResponse));
+  });
+});
+
+/**
  * Describes the behavior for ActionsSdkAssistant getUser method.
  */
 describe('ActionsSdkAssistant#getUser', function () {
@@ -1565,6 +1753,68 @@ describe('ActionsSdkAssistant#getUser', function () {
     });
 
     expect(assistant.getUser().user_id).to.equal('11112226094657824893');
+  });
+});
+
+/**
+ * Describes the behavior for ActionsSdkAssistant isPermissionGranted method.
+ */
+describe('ActionsSdkAssistant#isPermissionGranted', function () {
+  // Success case test, when the API returns a valid 200 response with the response object
+  it('Should validate assistant request user.', function () {
+    let headers = {
+      'Content-Type': 'application/json',
+      'Google-Assistant-API-Version': 'v1'
+    };
+    let body = {
+      'user': {
+        'user_id': '11112226094657824893'
+      },
+      'conversation': {
+        'conversation_id': '1480476553943',
+        'type': 1
+      },
+      'inputs': [
+        {
+          'intent': 'assistant.intent.action.MAIN',
+          'raw_inputs': [
+            {
+              'input_type': 2,
+              'query': 'talk to action snippets'
+            }
+          ],
+          'arguments': [
+            {
+              'name': 'permission_granted',
+              'text_value': 'true'
+            }
+          ]
+        }
+      ]
+    };
+    let mockRequest = new MockRequest(headers, body);
+    let mockResponse = new MockResponse();
+
+    let assistant = new ActionsSdkAssistant({
+      request: mockRequest,
+      response: mockResponse
+    });
+
+    expect(assistant.isPermissionGranted()).to.equal(true);
+
+    // Test the false case
+
+    body.inputs[0].arguments[0].text_value = false;
+
+    mockRequest = new MockRequest(headers, body);
+    mockResponse = new MockResponse();
+
+    assistant = new ActionsSdkAssistant({
+      request: mockRequest,
+      response: mockResponse
+    });
+
+    expect(assistant.isPermissionGranted()).to.equal(false);
   });
 });
 
