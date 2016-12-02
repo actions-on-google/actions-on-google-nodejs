@@ -1060,7 +1060,7 @@ ActionsSdkAssistant.prototype.askForSignIn = function (actionPhrase, dialogState
   }
   // Build an expected intent for SIGN_IN.
   let expectedIntent = {
-    intent: self.BuiltInIntent.SIGN_IN,
+    intent: self.StandardIntents.SIGN_IN,
     input_value_spec: {
       sign_in_value_spec: {
         action_phrase: actionPhrase
