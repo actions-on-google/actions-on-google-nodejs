@@ -37,7 +37,6 @@
     ]
   },
   "dependencies": {
-    "crypto-js": "~3.1.7",
     "debug": "^2.2.0"
   },
   "devDependencies": {

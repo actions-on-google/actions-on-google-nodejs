@@ -1258,54 +1258,6 @@ describe('ActionsSdkAssistant#askForText', function () {
 });
 
 /**
- * Describes the behavior for ActionsSdkAssistant isRequestFromAssistant method.
- */
-describe('ActionsSdkAssistant#isRequestFromAssistant', function () {
-  // Success case test, when the API returns a valid 200 response with the response object
-  it('Should validate assistant request.', function () {
-    let headers = {
-      'Content-Type': 'application/json',
-      'Google-Assistant-API-Version': 'v1',
-      'Google-Assistant-Signature': '5956c41c575331618d7d7b4b50203df8b7b2cb6129a967e15462349e36db7f29'
-    };
-    let body = {
-      'user': {
-        'user_id': '11112226094657824893'
-      },
-      'conversation': {
-        'conversation_id': '1480476553943',
-        'type': 1
-      },
-      'inputs': [
-        {
-          'intent': 'assistant.intent.action.MAIN',
-          'raw_inputs': [
-            {
-              'input_type': 2,
-              'query': 'talk to action snippets'
-            }
-          ],
-          'arguments': [
-            {
-              'name': 'agent_info'
-            }
-          ]
-        }
-      ]
-    };
-    const mockRequest = new MockRequest(headers, body);
-    const mockResponse = new MockResponse();
-
-    const assistant = new ActionsSdkAssistant({
-      request: mockRequest,
-      response: mockResponse
-    });
-
-    expect(assistant.isRequestFromAssistant('MY_SECRET_KEY')).to.equal(true);
-  });
-});
-
-/**
  * Describes the behavior for ActionsSdkAssistant getUser method.
  */
 describe('ActionsSdkAssistant#getUser', function () {

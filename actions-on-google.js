@@ -24,7 +24,6 @@
 let Debug = require('debug');
 let debug = Debug('actions-on-google:debug');
 let error = Debug('actions-on-google:error');
-let cryptojs = require('crypto-js');
 
 // Constants
 const ERROR_MESSAGE = 'Sorry, I am unable to process your request.';
@@ -668,41 +667,6 @@ function ActionsSdkAssistant (options) {
 
 ActionsSdkAssistant.prototype = new Assistant();
 
-/**
- * Verifies that the request is from the Assistant.
- *
- * @example
- * const assistant = new ActionsSdkAssistant({request: request, response: response});
- *
- * if (!assistant.isRequestFromAssistant('MY_SECRET_KEY')) {
- *   console.log('Request is NOT from assistant');
- *   return;
- * }
- *
- * @param {string} private_key The private key specified by developer inside the
- *                 Action Package: "privateKey"
- * @return {boolean} indicates whether the request comes from the Assistant.
- * @actionssdk
- */
-ActionsSdkAssistant.prototype.isRequestFromAssistant = function (privateKey) {
-  debug('isRequestFromAssistant: privateKey=%s', privateKey);
-  let self = this;
-  if (!privateKey || privateKey === '') {
-    self.handleError_('privateKey must be specified.');
-    return false;
-  }
-  // Google-Assistant-Signature must exist.
-  let googleSignedSignature = self.getConversationApiSignatureOrEmpty_();
-  if (!googleSignedSignature || googleSignedSignature === '') {
-    self.handleError_('Failed to get googleSignedSignature');
-    return false;
-  }
-  // Use HMAC-SHA256 to compute the signature of private_key:post_body
-  // and verify whether it's the same.
-  let hmacSha256 = cryptojs.HmacSHA256(JSON.stringify(self.body_), privateKey);
-  return hmacSha256.toString(cryptojs.enc.Hex) === googleSignedSignature;
-};
-
 /*
  * Gets the request API version.
  *
@@ -1215,11 +1179,11 @@ ActionsSdkAssistant.prototype.tell = function (textToSpeech) {
   if (self.isSsml_(textToSpeech)) {
     finalResponse.speech_response = {
       ssml: textToSpeech
-    }
+    };
   } else {
     finalResponse.speech_response = {
       text_to_speech: textToSpeech
-    }
+    };
   }
   let response = self.buildResponseHelper_(
     null, false, null, finalResponse);
