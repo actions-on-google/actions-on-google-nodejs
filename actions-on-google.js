@@ -609,6 +609,18 @@ Assistant.prototype.extractData_ = function () {
 };
 
 /**
+ * Uses a PermissionsValueSpec object to construct and send a
+ * permissions request to user.
+ * Used in subclasses for Actions SDK and API.ai.
+ * @return {Object} HTTP response.
+ * @private
+ */
+Assistant.prototype.fulfillPermissionsRequest_ = function () {
+  debug('fulfillPermissionsRequest_');
+  return {};
+};
+
+/**
  * Utility class for representing intents by name.
  * @private
  */
