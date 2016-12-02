@@ -1,7 +1,7 @@
 /**
  * Copyright 2016 Google Inc. All Rights Reserved.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
+ * Licensed under the Apache License, Version 2.0 (the 'License');
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
@@ -1270,9 +1270,7 @@ describe('ActionsSdkAssistant#askForText', function () {
 
     function handler (assistant) {
       return new Promise(function (resolve, reject) {
-        resolve(assistant.askForText({
-          'text_to_speech': 'What can I help you with?'
-        }));
+        resolve(assistant.askForText('What can I help you with?'));
       });
     }
 
@@ -1357,9 +1355,7 @@ describe('ActionsSdkAssistant#askForText', function () {
 
     function handler (assistant) {
       return new Promise(function (resolve, reject) {
-        resolve(assistant.askForText({
-          'ssml': '<speak>What <break time="1"/> can I help you with?</speak>'
-        }));
+        resolve(assistant.askForText('<speak>What <break time="1"/> can I help you with?</speak>'));
       });
     }
 
@@ -2162,6 +2158,196 @@ describe('ActionsSdkAssistant#tell', function () {
           'ssml': '<speak>You said <break time="2"/>45</speak>'
         }
       }
+    };
+    expect(JSON.stringify(mockResponse.body)).to.equal(JSON.stringify(expectedResponse));
+  });
+});
+
+/**
+ * Describes the behavior for ActionsSdkAssistant getArgument method.
+ */
+describe('ActionsSdkAssistant#getArgument', function () {
+  // Success case test, when the API returns a valid 200 response with the response object
+  it('Should validate assistant intent.', function () {
+    let headers = {
+      'Content-Type': 'application/json',
+      'Google-Assistant-API-Version': 'v1',
+      'Agent-Version-Label': '1.0.0'
+    };
+    let body = {
+      'user': {
+        'user_id': '11112226094657824893'
+      },
+      'conversation': {
+        'conversation_id': '1480543005681',
+        'type': 2,
+        'conversation_token': '{"started":true}'
+      },
+      'inputs': [
+        {
+          'intent': 'PROVIDE_NUMBER',
+          'raw_inputs': [
+            {
+              'input_type': 2,
+              'query': '45'
+            }
+          ],
+          'arguments': [
+            {
+              'name': 'number',
+              'raw_text': '45',
+              'text_value': '45'
+            }
+          ]
+        }
+      ]
+    };
+    const mockRequest = new MockRequest(headers, body);
+    const mockResponse = new MockResponse();
+
+    const assistant = new ActionsSdkAssistant({
+      request: mockRequest,
+      response: mockResponse
+    });
+
+    const PROVIDE_NUMBER_INTENT = 'PROVIDE_NUMBER';
+
+    function mainIntent (assistant) {
+      let inputPrompt = assistant.buildInputPrompt(false, 'Welcome to action snippets! Say a number.',
+        ['Sorry, say that again?', 'Sorry, that number again?', 'What was that number?'],
+        ['Say any number', 'Pick a number', 'What is the number?']);
+      let expectedIntent = assistant.buildExpectedIntent(PROVIDE_NUMBER_INTENT);
+      assistant.ask(inputPrompt, [expectedIntent], ['$SchemaOrg_Number'], {started: true});
+    }
+
+    function provideNumberIntent (assistant) {
+      expect(assistant.getArgument('number')).to.equal('45');
+      assistant.tell('You said ' + assistant.getArgument('number'));
+    }
+
+    let actionMap = new Map();
+    actionMap.set(assistant.StandardIntents.MAIN, mainIntent);
+    actionMap.set(PROVIDE_NUMBER_INTENT, provideNumberIntent);
+
+    assistant.handleRequest(actionMap);
+  });
+});
+
+/**
+ * Describes the behavior for ActionsSdkAssistant buildExpectedIntent method.
+ */
+describe('ActionsSdkAssistant#buildExpectedIntent', function () {
+  // Success case test, when the API returns a valid 200 response with the response object
+  it('Should validate assistant runtime entity request.', function () {
+    let headers = {
+      'Content-Type': 'application/json',
+      'Google-Assistant-API-Version': 'v1',
+      'Agent-Version-Label': '1.0.0'
+    };
+    let body = {
+      'user': {
+        'user_id': '11112226094657824893'
+      },
+      'conversation': {
+        'conversation_id': '1480714814340',
+        'type': 1
+      },
+      'inputs': [
+        {
+          'intent': 'assistant.intent.action.MAIN',
+          'raw_inputs': [
+            {
+              'input_type': 2,
+              'query': 'talk to action snippets'
+            }
+          ],
+          'arguments': [
+
+          ]
+        }
+      ]
+    };
+    const mockRequest = new MockRequest(headers, body);
+    const mockResponse = new MockResponse();
+
+    const assistant = new ActionsSdkAssistant({
+      request: mockRequest,
+      response: mockResponse
+    });
+
+    const PROVIDE_TIME_INTENT = 'PROVIDE_TIME';
+
+    function mainIntent (assistant) {
+      let runtimeEntity = assistant.newRuntimeEntity('$CustomTypeTime',
+        [assistant.newItem('18:00:00', ['six', '6 pm']),
+         assistant.newItem('19:00:00', ['seven', '7 pm'])]);
+
+      let inputPrompt = assistant.buildInputPrompt(false, 'Welcome to action snippets! Say a time.');
+      let expectedIntent = assistant.buildExpectedIntent(PROVIDE_TIME_INTENT, [runtimeEntity]);
+      assistant.ask(inputPrompt, [expectedIntent]);
+    }
+
+    function provideTimeIntent (assistant) {
+      assistant.tell('You said ' + assistant.getArgument('time'));
+    }
+
+    let actionMap = new Map();
+    actionMap.set(assistant.StandardIntents.MAIN, mainIntent);
+    actionMap.set(PROVIDE_TIME_INTENT, provideTimeIntent);
+
+    assistant.handleRequest(actionMap);
+
+    // Validating the response object
+    let expectedResponse = {
+      'conversation_token': '{"state":null,"data":{}}',
+      'expect_user_response': true,
+      'expected_inputs': [
+        {
+          'input_prompt': {
+            'initial_prompts': [
+              {
+                'text_to_speech': 'Welcome to action snippets! Say a time.'
+              }
+            ],
+            'no_match_prompts': [
+
+            ],
+            'no_input_prompts': [
+
+            ]
+          },
+          'possible_intents': [
+            {
+              'intent': 'PROVIDE_TIME',
+              'input_value_spec': {
+                'option_value_spec': {
+                  'options': [
+                    {
+                      'name': '$CustomTypeTime',
+                      'items': [
+                        {
+                          'key': '18:00:00',
+                          'synonyms': [
+                            'six',
+                            '6 pm'
+                          ]
+                        },
+                        {
+                          'key': '19:00:00',
+                          'synonyms': [
+                            'seven',
+                            '7 pm'
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      ]
     };
     expect(JSON.stringify(mockResponse.body)).to.equal(JSON.stringify(expectedResponse));
   });

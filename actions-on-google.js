@@ -966,9 +966,7 @@ ActionsSdkAssistant.prototype.ask = function (
  * const assistant = new ActionsSdkAssistant({request: request, response: response});
  *
  * function askForTextIntent (assistant) {
- *   assistant.askForText({
- *     'text_to_speech': 'What can I help you with?'
- *   });
+ *   assistant.askForText('What can I help you with?');
  * }
  *
  * function rawInputIntent (assistant) {
@@ -981,10 +979,7 @@ ActionsSdkAssistant.prototype.ask = function (
  *
  * assistant.handleRequest(actionMap);
  *
- * @param {Object} speechResponse, SpeechResponse including text to speech or
- *                 SSML: {text_to_speech: 'text', ssml: '<speak>text</speak>'}
- *                 Note we don't specify no-match, no-input here b/c all
- *                 user's queries will be matched and sent to the action.
+ * @param {string} textToSpeech text to speech value.
  * @param {Array} speechBiasingHints List of speech biasing hints action wants
  *                Assistant to enforce strong speech biasing, e.g. ["$SchemaOrg_Number"]
  * @param {Object} dialogState JSON object the action uses to hold dialog state that
@@ -994,17 +989,14 @@ ActionsSdkAssistant.prototype.ask = function (
  * @actionssdk
  */
 ActionsSdkAssistant.prototype.askForText = function (
-    speechResponse, speechBiasingHints, dialogState) {
-  debug('askForText: speechResponse=%s,  speechBiasingHints=%s, dialogState=%s',
-    JSON.stringify(speechResponse), JSON.stringify(speechBiasingHints), JSON.stringify(dialogState));
+    textToSpeech, speechBiasingHints, dialogState) {
+  debug('askForText: textToSpeech=%s,  speechBiasingHints=%s, dialogState=%s',
+    textToSpeech, JSON.stringify(speechBiasingHints), JSON.stringify(dialogState));
   let self = this;
   let expectedIntent = this.buildExpectedIntent(self.StandardIntents.TEXT, []);
-  let isSsml = speechResponse.ssml && speechResponse.ssml !== '';
-  let initialPrompt =
-      isSsml ? speechResponse.ssml : speechResponse.text_to_speech;
   // We don't provide no-match and no-input prompt b/c user's query will always
   // be matched.
-  let inputPrompt = self.buildInputPrompt(isSsml, initialPrompt);
+  let inputPrompt = self.buildInputPrompt(self.isSsml_(textToSpeech), textToSpeech);
   if (!dialogState) {
     dialogState = {
       'state': (self.state instanceof State ? self.state.getName() : self.state),
@@ -1247,9 +1239,32 @@ ActionsSdkAssistant.prototype.buildInputPrompt = function (isSsml, initialPrompt
 };
 
 /**
- * Builds an ExpectedIntent object.
+ * Builds an ExpectedIntent object. Refer to {@link newRuntimeEntity} to create the list
+ * of runtime entities required by this method. Runtime entities need to be defined in
+ * the Action Package.
  *
- * Refer to 'newRuntimeEntity' to create the list of runtime entities required by this method.
+ * @example
+ * const assistant = new ActionsSdkAssistant({request: request, response: response});
+ *
+ * function mainIntent (assistant) {
+ *   let runtimeEntity = assistant.newRuntimeEntity('$CustomTypeTime',
+ *     [assistant.newItem('18:00:00', ['six', '6 pm']),
+ *      assistant.newItem('19:00:00', ['seven', '7 pm'])])
+ *
+ *   let inputPrompt = assistant.buildInputPrompt(false, 'Welcome to action snippets! Say a time.');
+ *   let expectedIntent = assistant.buildExpectedIntent(PROVIDE_TIME_INTENT, [runtimeEntity]);
+ *   assistant.ask(inputPrompt, [expectedIntent]);
+ * }
+ *
+ * function provideTimeIntent (assistant) {
+ *   assistant.tell('You said ' + assistant.getArgument('time'));
+ * }
+ *
+ * let actionMap = new Map();
+ * actionMap.set(assistant.StandardIntents.MAIN, mainIntent);
+ * actionMap.set(PROVIDE_TIME_INTENT, provideTimeIntent);
+ *
+ * assistant.handleRequest(actionMap);
  *
  * @param {string} intent Developer specified in-dialog intent inside Action
  *                 Package or Assistant built-in intent like
@@ -1258,19 +1273,6 @@ ActionsSdkAssistant.prototype.buildInputPrompt = function (isSsml, initialPrompt
  *                represents a custom type defined dynamically, e.g., car
  *                action might return list of available drivers after user says
  *                [book a cab].
- *
- * @example
- * let options = {
- *   [
- *     {
- *       name: '$RuntimeDriver'
- *       items: [
- *         { key: 'S', synonyms: ['car S', 'car small'] },
- *         { key: 'XL', synonyms: ['car XL', 'car large'] }
- *       ]
- *     }
- *   ]
- *  }
  *
  * @return {Object} an expected intent encapsulating the intent and options.
  * @actionssdk
@@ -1296,7 +1298,31 @@ ActionsSdkAssistant.prototype.buildExpectedIntent = function (intent, runtimeEnt
 };
 
 /**
- * Creates a runtime entity including list of items.
+ * Creates a runtime entity including list of items. Refer to {@link buildExpectedIntent}
+ * on the use of runtime entities. Runtime entities need to be defined in the Action Package.
+ *
+ * @example
+ * const assistant = new ActionsSdkAssistant({request: request, response: response});
+ *
+ * function mainIntent (assistant) {
+ *   let runtimeEntity = assistant.newRuntimeEntity('$CustomTypeTime',
+ *     [assistant.newItem('18:00:00', ['six', '6 pm']),
+ *      assistant.newItem('19:00:00', ['seven', '7 pm'])])
+ *
+ *   let inputPrompt = assistant.buildInputPrompt(false, 'Welcome to action snippets! Say a time.');
+ *   let expectedIntent = assistant.buildExpectedIntent(PROVIDE_TIME_INTENT, [runtimeEntity]);
+ *   assistant.ask(inputPrompt, [expectedIntent]);
+ * }
+ *
+ * function provideTimeIntent (assistant) {
+ *   assistant.tell('You said ' + assistant.getArgument('time'));
+ * }
+ *
+ * let actionMap = new Map();
+ * actionMap.set(assistant.StandardIntents.MAIN, mainIntent);
+ * actionMap.set(PROVIDE_TIME_INTENT, provideTimeIntent);
+ *
+ * assistant.handleRequest(actionMap);
  *
  * This method is mostly used to create a runtime entity before action invokes buildExpectedIntent.
  *
@@ -1328,15 +1354,36 @@ ActionsSdkAssistant.prototype.newRuntimeEntity = function (name, items) {
 };
 
 /**
- * Creates a new item with a specific key and list of synonyms.
+ * Creates a new item with a specific key and list of synonyms. Refer to {@link newRuntimeEntity}
+ * to create a list of runtime entities. Runtime entities need to be defined in the Action Package.
+ *
+ * @example
+ * const assistant = new ActionsSdkAssistant({request: request, response: response});
+ *
+ * function mainIntent (assistant) {
+ *   let runtimeEntity = assistant.newRuntimeEntity('$CustomTypeTime',
+ *     [assistant.newItem('18:00:00', ['six', '6 pm']),
+ *      assistant.newItem('19:00:00', ['seven', '7 pm'])])
+ *
+ *   let inputPrompt = assistant.buildInputPrompt(false, 'Welcome to action snippets! Say a time.');
+ *   let expectedIntent = assistant.buildExpectedIntent(PROVIDE_TIME_INTENT, [runtimeEntity]);
+ *   assistant.ask(inputPrompt, [expectedIntent]);
+ * }
+ *
+ * function provideTimeIntent (assistant) {
+ *   assistant.tell('You said ' + assistant.getArgument('time'));
+ * }
+ *
+ * let actionMap = new Map();
+ * actionMap.set(assistant.StandardIntents.MAIN, mainIntent);
+ * actionMap.set(PROVIDE_TIME_INTENT, provideTimeIntent);
+ *
+ * assistant.handleRequest(actionMap);
+ *
  * @param {string} key UUID for this item.
- * @param {Array} synonyms List of synonyms which can be used by user to refer to this
- *                item.
- * @return {Object} an Item object used to encapsulate this item, e.g.,
- *  {
- *    key: 'CAR_XL'
- *    synonyms: [ 'car XL', 'car large']
- *  }
+ * @param {Array} synonyms List of synonyms which can be used by user
+                  to refer to this item.
+ * @return {Object} an Item object used to encapsulate this item.
  * @actionssdk
  */
 ActionsSdkAssistant.prototype.newItem = function (key, synonyms) {
