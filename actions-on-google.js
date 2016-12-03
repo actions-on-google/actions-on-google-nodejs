@@ -170,9 +170,7 @@ Assistant.prototype.StandardIntents = {
   // Assistant fires TEXT intent when action issues ask intent.
   TEXT: 'assistant.intent.action.TEXT',
   // Assistant fires PERMISSION intent when action invokes askForPermission.
-  PERMISSION: 'assistant.intent.action.PERMISSION',
-  // Assistant asks user to sign-in to ensure Assistant has a linked 3P service.
-  SIGN_IN: 'assistant.intent.action.SIGN_IN'
+  PERMISSION: 'assistant.intent.action.PERMISSION'
 };
 
 /**
@@ -1004,58 +1002,6 @@ ActionsSdkAssistant.prototype.askForText = function (
     };
   }
   return self.ask(inputPrompt, [expectedIntent], speechBiasingHints, dialogState);
-};
-
-/**
- * Asks Assistant to guide the user to sign-in the action. Once done,
- * in the subsequent request, Assistant will include user.access_token.
- * Example usage:
- * U: [order a movie ticket]
- * A: [what is the movie]
- * U: [hunger games]
- * A: [To order movie ticket, please go to your Google Home app to sign in
- * movie app action first, and come back again]  <- movie app action invokes
- * askForSignIn('order movie ticket', dialogState); Note that at this stage mic
- * is closed.
- *
- * U: go to Google Home app and log in movie app and retry:
- * U: [order a movie ticket]
- * A: [what is the movie]: Assistant passes user.access_token to movie app at
- * this point.
- *
- * @param {string} action_phrase Description for the task to guide user to sign
- *                 in.
- * @param {Object} dialogState JSON object the action uses to hold dialog state that
- *                 will be circulated back by Assistant, e.g., {magic: 10}.
- * @actionssdk
- */
-ActionsSdkAssistant.prototype.askForSignIn = function (actionPhrase, dialogState) {
-  debug('askForSignIn: actionPhrase=%s, dialogState=%s',
-    actionPhrase, JSON.stringify(dialogState));
-  let self = this;
-  if (!actionPhrase || actionPhrase === '') {
-    self.handleError_('Action phrase should not be empty.');
-    return null;
-  }
-  // Build an expected intent for SIGN_IN.
-  let expectedIntent = {
-    intent: self.StandardIntents.SIGN_IN,
-    input_value_spec: {
-      sign_in_value_spec: {
-        action_phrase: actionPhrase
-      }
-    }
-  };
-  // Build a dummy input prompt which will not be used. The actual text to
-  // speech would be based on the requested intent.
-  let inputPrompt = self.buildInputPrompt(false, 'PLACEHOLDER_FOR_SIGN_IN');
-  if (!dialogState) {
-    dialogState = {
-      'state': (self.state instanceof State ? self.state.getName() : self.state),
-      'data': self.data
-    };
-  }
-  self.ask(inputPrompt, [expectedIntent], ['$SchemaOrg_YesNo'], dialogState);
 };
 
 /**
