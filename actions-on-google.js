@@ -831,7 +831,7 @@ ActionsSdkAssistant.prototype.getIntent = function () {
  *     ['Sorry, say that again?', 'Sorry, that number again?', 'What was that number?'],
  *     ['Say any number', 'Pick a number', 'What is the number?']);
  *   let expectedIntent = assistant.buildExpectedIntent(PROVIDE_NUMBER_INTENT);
- *   assistant.ask(inputPrompt, [expectedIntent], ["$SchemaOrg_Number"], {started: true});
+ *   assistant.ask(inputPrompt, [expectedIntent], {started: true});
  * }
  *
  * function provideNumberIntent (assistant) {
@@ -902,7 +902,7 @@ ActionsSdkAssistant.prototype.getArgument = function (argName) {
  *     ['Sorry, say that again?', 'Sorry, that number again?', 'What was that number?'],
  *     ['Say any number', 'Pick a number', 'What is the number?']);
  *   let expectedIntent = assistant.buildExpectedIntent(PROVIDE_NUMBER_INTENT);
- *   assistant.ask(inputPrompt, [expectedIntent], ["$SchemaOrg_Number"], {started: true});
+ *   assistant.ask(inputPrompt, [expectedIntent], {started: true});
  * }
  *
  * function provideNumberIntent (assistant) {
@@ -917,15 +917,14 @@ ActionsSdkAssistant.prototype.getArgument = function (argName) {
  *
  * @param {Object} inputPrompt Holding initial, no-match and no-input prompts.
  * @param {array} possibleIntents List of ExpectedIntents.
- * @param {array} speechBiasingHints Speech biasing hints, e.g. ["$SchemaOrg_Number"]
  * @param {Object} dialogState JSON object the action uses to hold dialog state that
  *                 will be circulated back by Assistant, e.g., {magic: 10}.
  * @actionssdk
  */
 ActionsSdkAssistant.prototype.ask = function (
-    inputPrompt, possibleIntents, speechBiasingHints, dialogState) {
-  debug('ask: inputPrompt=%s, possibleIntents=%s, speechBiasingHints=%s, dialogState=%s',
-    inputPrompt, possibleIntents, speechBiasingHints, dialogState);
+    inputPrompt, possibleIntents, dialogState) {
+  debug('ask: inputPrompt=%s, possibleIntents=%s,  dialogState=%s',
+    inputPrompt, possibleIntents, dialogState);
   let self = this;
   if (!inputPrompt) {
     self.handleError_('Invalid input prompt');
@@ -944,9 +943,6 @@ ActionsSdkAssistant.prototype.ask = function (
     input_prompt: inputPrompt,
     possible_intents: possibleIntents
   }];
-  if (speechBiasingHints) {
-    expectedInputs.speech_biasing_hints = speechBiasingHints;
-  }
   let response = self.buildResponseHelper_(
     JSON.stringify(dialogState),
     true, // expected_user_response
@@ -978,8 +974,6 @@ ActionsSdkAssistant.prototype.ask = function (
  * assistant.handleRequest(actionMap);
  *
  * @param {string} textToSpeech text to speech value.
- * @param {Array} speechBiasingHints List of speech biasing hints action wants
- *                Assistant to enforce strong speech biasing, e.g. ["$SchemaOrg_Number"]
  * @param {Object} dialogState JSON object the action uses to hold dialog state that
  *                 will be circulated back by Assistant, e.g., {magic: 10}.
  *
@@ -987,9 +981,9 @@ ActionsSdkAssistant.prototype.ask = function (
  * @actionssdk
  */
 ActionsSdkAssistant.prototype.askForText = function (
-    textToSpeech, speechBiasingHints, dialogState) {
-  debug('askForText: textToSpeech=%s,  speechBiasingHints=%s, dialogState=%s',
-    textToSpeech, JSON.stringify(speechBiasingHints), JSON.stringify(dialogState));
+    textToSpeech, dialogState) {
+  debug('askForText: textToSpeech=%s, dialogState=%s',
+    textToSpeech, JSON.stringify(dialogState));
   let self = this;
   let expectedIntent = this.buildExpectedIntent(self.StandardIntents.TEXT, []);
   // We don't provide no-match and no-input prompt b/c user's query will always
@@ -1001,7 +995,7 @@ ActionsSdkAssistant.prototype.askForText = function (
       'data': self.data
     };
   }
-  return self.ask(inputPrompt, [expectedIntent], speechBiasingHints, dialogState);
+  return self.ask(inputPrompt, [expectedIntent], dialogState);
 };
 
 /**
@@ -1016,7 +1010,7 @@ ActionsSdkAssistant.prototype.askForText = function (
  *   let inputPrompt = assistant.buildInputPrompt(false, 'Welcome to action snippets! Say a number.',
  *     ['Sorry, say that again?', 'Sorry, that number again?', 'What was that number?'],
  *     ['Say any number', 'Pick a number', 'What is the number?']);
- *   assistant.askNoRuntimeEntities(inputPrompt, [PROVIDE_NUMBER_INTENT], ["$SchemaOrg_Number"], {started: true});
+ *   assistant.askNoRuntimeEntities(inputPrompt, [PROVIDE_NUMBER_INTENT], {started: true});
  * }
  *
  * function provideNumberIntent (assistant) {
@@ -1033,17 +1027,16 @@ ActionsSdkAssistant.prototype.askForText = function (
  *                 buildInputPrompt to construct it.
  * @param {Array} expectedIntentIds List of intent IDs action expects,
  *                 e.g., ['PROVIDE_LOCATION', 'PROVIDE_DATE'].
- * @param {Array} speechBiasingHints List speech biasing hints, e.g. ["$SchemaOrg_Number"]
  * @param {Object} dialogState JSON object the action uses to hold dialog state that
  *                 will be circulated back by Assistant, e.g., {magic: 10}.
  * @return A response is sent back to Assistant.
  * @actionssdk
  */
 ActionsSdkAssistant.prototype.askNoRuntimeEntities = function (
-    inputPrompt, expectedIntentIds, speechBiasingHints, dialogState) {
+    inputPrompt, expectedIntentIds, dialogState) {
   debug('askNoRuntimeEntities: inputPrompt=%s, expectedIntentIds=%s, ' +
-    'speechBiasingHints=%s, dialogState=%s',
-    inputPrompt, expectedIntentIds, JSON.stringify(speechBiasingHints), JSON.stringify(dialogState));
+    'dialogState=%s',
+    inputPrompt, expectedIntentIds, JSON.stringify(dialogState));
   let self = this;
   if (!inputPrompt) {
     self.handleError_('Invalid input prompt');
@@ -1064,7 +1057,7 @@ ActionsSdkAssistant.prototype.askNoRuntimeEntities = function (
       'data': self.data
     };
   }
-  return self.ask(inputPrompt, expectedIntents, speechBiasingHints, dialogState);
+  return self.ask(inputPrompt, expectedIntents, dialogState);
 };
 
 /**
@@ -1133,7 +1126,7 @@ ActionsSdkAssistant.prototype.tell = function (textToSpeech) {
  *     ['Sorry, say that again?', 'Sorry, that number again?', 'What was that number?'],
  *     ['Say any number', 'Pick a number', 'What is the number?']);
  *   let expectedIntent = assistant.buildExpectedIntent(PROVIDE_NUMBER_INTENT);
- *   assistant.ask(inputPrompt, [expectedIntent], ["$SchemaOrg_Number"], {started: true});
+ *   assistant.ask(inputPrompt, [expectedIntent], {started: true});
  *
  * @param {boolean} isSsml Indicates whether the text to speech is SSML or not.
  * @param {string} initialPrompt The initial prompt Assistant asks the user.
@@ -1543,7 +1536,7 @@ ActionsSdkAssistant.prototype.fulfillPermissionsRequest_ = function (
       'data': self.data
     };
   }
-  return self.ask(inputPrompt, [expectedIntent], ['$SchemaOrg_YesNo'], dialogState);
+  return self.ask(inputPrompt, [expectedIntent], dialogState);
 };
 
 // ---------------------------------------------------------------------------
@@ -1918,7 +1911,6 @@ ApiAiAssistant.prototype.buildResponse_ = function (dialogState,
     data: {
       google: {
         expect_user_response: expectUserResponse,
-        speech_biasing_hints: [],
         is_ssml: self.isSsml_(textToSpeech),
         no_input_prompts: []
       }
@@ -1985,7 +1977,6 @@ ApiAiAssistant.prototype.fulfillPermissionsRequest_ = function (permissionsSpec)
   };
   let inputPrompt = 'PLACEHOLDER_FOR_PERMISSION';
   let response = self.buildResponse_(dialogState, inputPrompt, true);
-  response.data.google.speech_biasing_hints = ['$SchemaOrg_YesNo'];
   response.data.google.permissions_request = permissionsSpec;
   return self.doResponse_(response, RESPONSE_CODE_OK);
 };

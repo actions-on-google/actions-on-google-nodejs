@@ -146,8 +146,7 @@ describe('ApiAiAssistant#tell', function () {
           'is_ssml': false,
           'no_input_prompts': [
 
-          ],
-          speech_biasing_hints: []
+          ]
         }
       },
       contextOut: [
@@ -242,8 +241,7 @@ describe('ApiAiAssistant#ask', function () {
         'google': {
           'expect_user_response': true,
           'is_ssml': false,
-          'no_input_prompts': [],
-          speech_biasing_hints: []
+          'no_input_prompts': []
         }
       },
       'contextOut': [
@@ -317,7 +315,6 @@ describe('ApiAiAssistant#askForPermissions', function () {
           'expect_user_response': true,
           'is_ssml': false,
           'no_input_prompts': [],
-          'speech_biasing_hints': ['$SchemaOrg_YesNo'],
           'permissions_request': {
             'opt_context': 'To test',
             'permissions': ['NAME', 'DEVICE_PRECISE_LOCATION']
@@ -892,9 +889,6 @@ describe('ApiAiAssistant#setContext', function () {
       'data': {
         'google': {
           'expect_user_response': true,
-          'speech_biasing_hints': [
-
-          ],
           'is_ssml': false,
           'no_input_prompts': [
 
@@ -1444,7 +1438,7 @@ describe('ActionsSdkAssistant#ask', function () {
           ['Sorry, say that again?', 'Sorry, that number again?', 'What was that number?'],
           ['Say any number', 'Pick a number', 'What is the number?']);
         let expectedIntent = assistant.buildExpectedIntent(PROVIDE_NUMBER_INTENT);
-        resolve(assistant.ask(inputPrompt, [expectedIntent], ['$SchemaOrg_Number'], {started: true}));
+        resolve(assistant.ask(inputPrompt, [expectedIntent], {started: true}));
       });
     }
 
@@ -1552,7 +1546,7 @@ describe('ActionsSdkAssistant#askNoRuntimeEntities', function () {
       let inputPrompt = assistant.buildInputPrompt(false, 'Welcome to action snippets! Say a number.',
         ['Sorry, say that again?', 'Sorry, that number again?', 'What was that number?'],
         ['Say any number', 'Pick a number', 'What is the number?']);
-      assistant.askNoRuntimeEntities(inputPrompt, [PROVIDE_NUMBER_INTENT], ['$SchemaOrg_Number'], {started: true});
+      assistant.askNoRuntimeEntities(inputPrompt, [PROVIDE_NUMBER_INTENT], {started: true});
     }
 
     function provideNumberIntent (assistant) {
@@ -2069,7 +2063,7 @@ describe('ActionsSdkAssistant#getArgument', function () {
         ['Sorry, say that again?', 'Sorry, that number again?', 'What was that number?'],
         ['Say any number', 'Pick a number', 'What is the number?']);
       let expectedIntent = assistant.buildExpectedIntent(PROVIDE_NUMBER_INTENT);
-      assistant.ask(inputPrompt, [expectedIntent], ['$SchemaOrg_Number'], {started: true});
+      assistant.ask(inputPrompt, [expectedIntent], {started: true});
     }
 
     function provideNumberIntent (assistant) {
