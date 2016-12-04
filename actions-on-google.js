@@ -293,8 +293,8 @@ Assistant.prototype.handleRequest = function (handler) {
 /**
  * Asks the Assistant to guide the user to grant the permissions, e.g., when action wants
  * to access the user's personal info, the action invokes the askForPermissions method,
- * the Assistant will ask the user '<ActionPhrase>, I'll just need to get your '
- * 'first name, last name, email and current location, is that OK?'. Once the user
+ * the Assistant will ask the user '<context>, I'll just need to get your '
+ * 'name and <street address OR zip code>', is that OK?'. Once the user
  * says 'Yes' or 'No', the Assistant will fire another intent:
  * assistant.intent.action.PERMISSION with a bool arg: 'permission_granted'. If
  * permission_granted is true, the action can inspect request.user_info for details,
@@ -303,32 +303,30 @@ Assistant.prototype.handleRequest = function (handler) {
  * @example
  * const assistant = new ApiAiAssistant({request: req, response: res});
  * const REQUEST_PERMISSION_ACTION = 'request_permission';
- * const READ_MIND_ACTION = 'read_mind';
+ * const GET_RIDE_ACTION = 'get_ride';
  *
  * function requestPermission (assistant) {
- *   let permission = assistant.SupportedPermissions.NAME;
- *   assistant.askForPermissions('To read your mind', [permission]);
+ *   let permission = [
+ *     assistant.SupportedPermissions.NAME,
+ *     assistant.SupportedPermissions.PRECISE_LOCATION
+ *   ];
+ *   assistant.askForPermissions('To pick you up', permissions);
  * }
  *
- * function readMind (assistant) {
+ * function sendRide (assistant) {
  *   if (assistant.isPermissionGranted()) {
- *     if (assistant.getUser() && assistant.getUser().profile) {
- *       let userId = assistant.getUser().user_id;
- *       let displayName = assistant.getUser().profile.display_name;
- *
- *       assistant.tell(sayName(displayName));
- *       return;
- *     }
+ *     let displayName = assistant.getUserName().displayName;
+ *     let address = assistant.getDeviceLocation().address;
+ *     assistant.tell('I will tell your driver to pick up ' + displayName +
+ *         ' at ' + address);
  *   } else {
  *     // Response shows that user did not grant permission
- *     assistant.tell('<speak>Wow! <break time="1s"/> This has never ' +
- *       'happened before. I can\'t read your mind. I need more practice. ' +
- *       'Ask me again later.</speak>');
+ *     assistant.tell('Sorry, I could not figure out where to pick you up.');
  *   }
  * }
  * let actionMap = new Map();
  * actionMap.set(REQUEST_PERMISSION_ACTION, requestPermission);
- * actionMap.set(READ_MIND_ACTION, readMind);
+ * actionMap.set(GET_RIDE_ACTION, sendRide);
  * assistant.handleRequest(actionMap);
  *
  * @param {string} context Context why the permission is being asked; it's the TTS
@@ -381,8 +379,8 @@ Assistant.prototype.askForPermissions = function (
 /**
  * Asks the Assistant to guide the user to grant a permission, e.g., when the action
  * wants to access the user's personal info, the action invokes the askForPermissions
- * method, the Assistant will ask user '<ActionPhrase>, I'll just need to get your'
- * '<first name, last name, email OR current location>, is that OK?'. Once the user
+ * method, the Assistant will ask user '<context>, I'll just need to get your'
+ * '<name, zip code OR street address>, is that OK?'. Once the user
  * says 'Yes' or 'No', the Assistant will fire another intent:
  * assistant.intent.action.PERMISSION with a bool arg: 'permission_granted'. If
  * permission_granted is true, the action can inspect request.user_info for details,
@@ -391,32 +389,25 @@ Assistant.prototype.askForPermissions = function (
  * @example
  * const assistant = new ApiAiAssistant({request: req, response: res});
  * const REQUEST_PERMISSION_ACTION = 'request_permission';
- * const READ_MIND_ACTION = 'read_mind';
+ * const GET_RIDE_ACTION = 'get_ride';
  *
  * function requestPermission (assistant) {
  *   let permission = assistant.SupportedPermissions.NAME;
- *   assistant.askForPermission('To read your mind', permission);
+ *   assistant.askForPermission('To pick you up', permission);
  * }
  *
- * function readMind (assistant) {
+ * function sendRide (assistant) {
  *   if (assistant.isPermissionGranted()) {
- *     if (assistant.getUser() && assistant.getUser().profile) {
- *       let userId = assistant.getUser().user_id;
- *       let displayName = assistant.getUser().profile.display_name;
- *
- *       assistant.tell(sayName(displayName));
- *       return;
- *     }
+ *     let displayName = assistant.getUserName().displayName;
+ *     assistant.tell('I will tell your driver to pick up ' + displayName);
  *   } else {
  *     // Response shows that user did not grant permission
- *     assistant.tell('<speak>Wow! <break time="1s"/> This has never ' +
- *       'happened before. I can\'t read your mind. I need more practice. ' +
- *       'Ask me again later.</speak>');
+ *     assistant.tell('Sorry, I could not figure out who to pick up.');
  *   }
  * }
  * let actionMap = new Map();
  * actionMap.set(REQUEST_PERMISSION_ACTION, requestPermission);
- * actionMap.set(READ_MIND_ACTION, readMind);
+ * actionMap.set(GET_RIDE_ACTION, sendRide);
  * assistant.handleRequest(actionMap);
  *
  * @param {string} context Context why permission is asked; it's the TTS
@@ -432,10 +423,78 @@ Assistant.prototype.askForPermissions = function (
  * @apiai
  */
 Assistant.prototype.askForPermission = function (
-    context, permission, dialogState) {
+  context, permission, dialogState) {
   debug('askForPermission: context=%s, permission=%s, dialogState=%s',
     context, permission, JSON.stringify(dialogState));
   return this.askForPermissions(context, [permission], dialogState);
+};
+
+/**
+ * User's permissioned name info.
+ * @typedef {Object} UserName
+ * @property {string} displayName
+ * @property {boolean} givenName
+ * @property {boolean} familyName
+ */
+
+/**
+ * User's permissioned device location.
+ * @typedef {Object} DeviceLocation
+ * @property {Object} coordinates - {latitude, longitude}. Requested with
+ *                                  SupportedPermissions.PRECISE_LOCATION
+ * @property {string} address - Full, formatted street address. Requested with
+ *                              SupportedPermissions.PRECISE_LOCATION.
+ * @property {string} zipCode - Zip code. Requested with
+ *                              SupportedPermissions.COARSE_LOCATION.
+ * @property {string} city - Device city. Requested with
+ *                           SupportedPermissions.COARSE_LOCATION
+ */
+
+/**
+ * If granted permission to user's name in previous intent, returns user's
+ * display name, family name, and given name. If name info is unavailable,
+ * returns null.
+ *
+ * @example
+ * const assistant = new ApiAiAssistant({request: req, response: res});
+ * const REQUEST_PERMISSION_ACTION = 'request_permission';
+ * const SAY_NAME_ACTION = 'get_name';
+ *
+ * function requestPermission (assistant) {
+ *   let permission = assistant.SupportedPermissions.NAME;
+ *   assistant.askForPermission('To know who you are', permission);
+ * }
+ *
+ * function sayName (assistant) {
+ *   if (assistant.isPermissionGranted()) {
+ *     assistant.tell('Your name is ' + assistant.getUserName().displayName));
+ *   } else {
+ *     // Response shows that user did not grant permission
+ *     assistant.tell('Sorry, I could not get your name.');
+ *   }
+ * }
+ * let actionMap = new Map();
+ * actionMap.set(REQUEST_PERMISSION_ACTION, requestPermission);
+ * actionMap.set(SAY_NAME_ACTION, sayName);
+ * assistant.handleRequest(actionMap);
+ *
+ * @return {UserName} Container for user's display name, first name, given name.
+ *                    Null if name permission is not granted.
+ * @actionssdk
+ * @apiai
+ */
+Assistant.prototype.getUserName = function () {
+  debug('getUserName');
+  let self = this;
+  if (!self.getUser().profile) {
+    return null;
+  }
+  let userName = {
+    displayName: self.getUser().profile.display_name,
+    givenName: self.getUser().profile.given_name,
+    familyName: self.getUser().profile.family_name
+  };
+  return userName;
 };
 
 // ---------------------------------------------------------------------------
@@ -751,6 +810,39 @@ ActionsSdkAssistant.prototype.getUser = function () {
     return null;
   }
   return self.body_.user;
+};
+
+/**
+ * If granted permission to user's location in previous intent, returns device's
+ * location. If device info is unavailable, returns null.
+ *
+ * @example
+ * const assistant = new ActionsSdkAssistant({request: req, response: res});
+ * assistant.askForPermission("To get you a ride",
+ *   assistant.SupportedPermissions.PRECISE_LOCATION);
+ * // ...
+ * // In response handler for subsequent intent:
+ * if (assistant.isPermissionGranted()) {
+ *   sendCarTo(assistant.getDeviceLocation().coordinates);
+ * }
+ *
+ * @return {DeviceLocation} Container for user's location data. Null if name
+ *                          permission is not granted.
+ * @actionssdk
+ */
+ActionsSdkAssistant.prototype.getDeviceLocation = function () {
+  debug('getDeviceLocation');
+  let self = this;
+  if (!self.body_.device || !self.body_.device.location) {
+    return null;
+  }
+  let deviceLocation = {
+    coordinates: self.body_.device.location.coordinates,
+    address: self.body_.device.location.formatted_address,
+    zipCode: self.body_.device.location.zip_code,
+    city: self.body_.device.location.city
+  };
+  return deviceLocation;
 };
 
 /**
@@ -1620,6 +1712,39 @@ ApiAiAssistant.prototype.getUser = function () {
 };
 
 /**
+ * If granted permission to user's location in previous intent, returns device's
+ * location. If device info is unavailable, returns null.
+ *
+ * @example
+ * const assistant = new ApiAiAssistant({request: req, response: res});
+ * assistant.askForPermission("To get you a ride",
+ *   assistant.SupportedPermissions.PRECISE_LOCATION);
+ * // ...
+ * // In response handler for permissions fallback intent:
+ * if (assistant.isPermissionGranted()) {
+ *   sendCarTo(assistant.getDeviceLocation().coordinates);
+ * }
+ *
+ * @return {DeviceLocation} Container for user's location data. Null if name
+ *                          permission is not granted.
+ * @apiai
+ */
+ApiAiAssistant.prototype.getDeviceLocation = function () {
+  debug('getDeviceLocation');
+  let self = this;
+  if (!self.body_.originalRequest.data.device || !self.body_.originalRequest.data.device.location) {
+    return null;
+  }
+  let deviceLocation = {
+    coordinates: self.body_.originalRequest.data.device.location.coordinates,
+    address: self.body_.originalRequest.data.device.location.formatted_address,
+    zipCode: self.body_.originalRequest.data.device.location.zip_code,
+    city: self.body_.originalRequest.data.device.location.city
+  };
+  return deviceLocation;
+};
+
+/**
  * Returns true if the request follows a previous request asking for
  * permission from the user and the user granted the permission(s). Otherwise,
  * false. Use with {@link askForPermissions}.
@@ -1631,7 +1756,7 @@ ApiAiAssistant.prototype.getUser = function () {
  *   assistant.SupportedPermissions.PRECISE_LOCATION
  * ]);
  * // ...
- * // In response handler for subsequent intent:
+ * // In response handler for permissions fallback intent:
  * if (assistant.isPermissionGranted()) {
  *  // Use the requested permission(s) to get the user a ride
  * }

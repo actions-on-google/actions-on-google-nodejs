@@ -395,6 +395,180 @@ describe('ApiAiAssistant#getUser', function () {
 });
 
 /**
+ * Describes the behavior for ApiAiAssistant getUserName method.
+ */
+describe('ApiAiAssistant#getUserName', function () {
+  // Success case test, when the API returns a valid 200 response with the response object
+  it('Should validate assistant request user.', function () {
+    let headers = {
+      'Content-Type': 'application/json',
+      'google-assistant-api-version': 'v1'
+    };
+    let body = {
+      'id': 'ce7295cc-b042-42d8-8d72-14b83597ac1e',
+      'timestamp': '2016-10-28T03:05:34.288Z',
+      'result': {
+        'source': 'agent',
+        'resolvedQuery': 'start guess a number game',
+        'speech': '',
+        'action': 'generate_answer',
+        'actionIncomplete': false,
+        'parameters': {
+
+        },
+        'contexts': [
+
+        ],
+        'metadata': {
+          'intentId': '56da4637-0419-46b2-b851-d7bf726b1b1b',
+          'webhookUsed': 'true',
+          'intentName': 'start_game'
+        },
+        'fulfillment': {
+          'speech': ''
+        },
+        'score': 1
+      },
+      'status': {
+        'code': 200,
+        'errorType': 'success'
+      },
+      'sessionId': 'e420f007-501d-4bc8-b551-5d97772bc50c',
+      'originalRequest': {
+        'data': {
+          'user': {
+            'user_id': '11112226094657824893',
+            'profile': {
+              'display_name': 'John Smith',
+              'given_name': 'John',
+              'family_name': 'Smith'
+            }
+          }
+        }
+      }
+    };
+    let mockRequest = new MockRequest(headers, body);
+    let mockResponse = new MockResponse();
+
+    let assistant = new ApiAiAssistant({
+      request: mockRequest,
+      response: mockResponse
+    });
+
+    expect(assistant.getUserName().displayName).to.equal('John Smith');
+    expect(assistant.getUserName().givenName).to.equal('John');
+    expect(assistant.getUserName().familyName).to.equal('Smith');
+
+    // Test the false case
+
+    body.originalRequest.data.user.profile = undefined;
+
+    mockRequest = new MockRequest(headers, body);
+    mockResponse = new MockResponse();
+
+    assistant = new ApiAiAssistant({
+      request: mockRequest,
+      response: mockResponse
+    });
+
+    expect(assistant.getUserName()).to.equal(null);
+  });
+});
+
+/**
+ * Describes the behavior for ApiAiAssistant getDeviceLocation method.
+ */
+describe('ApiAiAssistant#getDeviceLocation', function () {
+  // Success case test, when the API returns a valid 200 response with the response object
+  it('Should validate assistant request user.', function () {
+    let headers = {
+      'Content-Type': 'application/json',
+      'google-assistant-api-version': 'v1'
+    };
+    let body = {
+      'id': 'ce7295cc-b042-42d8-8d72-14b83597ac1e',
+      'timestamp': '2016-10-28T03:05:34.288Z',
+      'result': {
+        'source': 'agent',
+        'resolvedQuery': 'start guess a number game',
+        'speech': '',
+        'action': 'generate_answer',
+        'actionIncomplete': false,
+        'parameters': {
+
+        },
+        'contexts': [
+
+        ],
+        'metadata': {
+          'intentId': '56da4637-0419-46b2-b851-d7bf726b1b1b',
+          'webhookUsed': 'true',
+          'intentName': 'start_game'
+        },
+        'fulfillment': {
+          'speech': ''
+        },
+        'score': 1
+      },
+      'status': {
+        'code': 200,
+        'errorType': 'success'
+      },
+      'sessionId': 'e420f007-501d-4bc8-b551-5d97772bc50c',
+      'originalRequest': {
+        'data': {
+          'user': {
+            'user_id': '11112226094657824893'
+          },
+          'device': {
+            'location': {
+              'coordinates': {
+                'latitude': 37.3861,
+                'longitude': 122.0839
+              },
+              'formatted_address': '123 Main St, Anytown, CA 12345, United States',
+              'zip_code': '12345',
+              'city': 'Anytown'
+            }
+          }
+        }
+      }
+    };
+
+    let mockRequest = new MockRequest(headers, body);
+    let mockResponse = new MockResponse();
+
+    let assistant = new ApiAiAssistant({
+      request: mockRequest,
+      response: mockResponse
+    });
+
+    expect(assistant.getDeviceLocation().coordinates).to.deep.equal({
+      latitude: 37.3861,
+      longitude: 122.0839
+    });
+    expect(assistant.getDeviceLocation().address)
+      .to.equal('123 Main St, Anytown, CA 12345, United States');
+    expect(assistant.getDeviceLocation().zipCode).to.equal('12345');
+    expect(assistant.getDeviceLocation().city).to.equal('Anytown');
+
+    // Test the false case
+
+    body.originalRequest.data.device = undefined;
+
+    mockRequest = new MockRequest(headers, body);
+    mockResponse = new MockResponse();
+
+    assistant = new ApiAiAssistant({
+      request: mockRequest,
+      response: mockResponse
+    });
+
+    expect(assistant.getDeviceLocation()).to.equal(null);
+  });
+});
+
+/**
  * Describes the behavior for ApiAiAssistant isPermissionGranted method.
  */
 describe('ApiAiAssistant#isPermissionGranted', function () {
@@ -1743,6 +1917,155 @@ describe('ActionsSdkAssistant#getUser', function () {
     });
 
     expect(assistant.getUser().user_id).to.equal('11112226094657824893');
+  });
+});
+
+/**
+ * Describes the behavior for ActionsSdkAssistant getUserName method.
+ */
+describe('ActionsSdkAssistant#getUserName', function () {
+  // Success case test, when the API returns a valid 200 response with the response object
+  it('Should validate assistant request user.', function () {
+    let headers = {
+      'Content-Type': 'application/json',
+      'Google-Assistant-API-Version': 'v1'
+    };
+    let body = {
+      'user': {
+        'user_id': '11112226094657824893',
+        'profile': {
+          'display_name': 'John Smith',
+          'given_name': 'John',
+          'family_name': 'Smith'
+        }
+      },
+      'conversation': {
+        'conversation_id': '1480476553943',
+        'type': 1
+      },
+      'inputs': [
+        {
+          'intent': 'assistant.intent.action.MAIN',
+          'raw_inputs': [
+            {
+              'input_type': 2,
+              'query': 'talk to action snippets'
+            }
+          ],
+          'arguments': [
+            {
+              'name': 'permission_granted',
+              'text_value': 'true'
+            }
+          ]
+        }
+      ]
+    };
+    let mockRequest = new MockRequest(headers, body);
+    let mockResponse = new MockResponse();
+
+    let assistant = new ActionsSdkAssistant({
+      request: mockRequest,
+      response: mockResponse
+    });
+
+    expect(assistant.getUserName().displayName).to.equal('John Smith');
+    expect(assistant.getUserName().givenName).to.equal('John');
+    expect(assistant.getUserName().familyName).to.equal('Smith');
+
+    // Test the false case
+
+    body.user.profile = undefined;
+
+    mockRequest = new MockRequest(headers, body);
+    mockResponse = new MockResponse();
+
+    assistant = new ActionsSdkAssistant({
+      request: mockRequest,
+      response: mockResponse
+    });
+
+    expect(assistant.getUserName()).to.equal(null);
+  });
+});
+
+/**
+ * Describes the behavior for ActionsSdkAssistant getDeviceLocation method.
+ */
+describe('ActionsSdkAssistant#getDeviceLocation', function () {
+  // Success case test, when the API returns a valid 200 response with the response object
+  it('Should validate assistant request user.', function () {
+    let headers = {
+      'Content-Type': 'application/json',
+      'Google-Assistant-API-Version': 'v1'
+    };
+    let body = {
+      'user': {
+        'user_id': '11112226094657824893'
+      },
+      'conversation': {
+        'conversation_id': '1480476553943',
+        'type': 1
+      },
+      'inputs': [
+        {
+          'intent': 'assistant.intent.action.MAIN',
+          'raw_inputs': [
+            {
+              'input_type': 2,
+              'query': 'talk to action snippets'
+            }
+          ],
+          'arguments': [
+            {
+              'name': 'permission_granted',
+              'text_value': 'true'
+            }
+          ]
+        }
+      ],
+      'device': {
+        'location': {
+          'coordinates': {
+            'latitude': 37.3861,
+            'longitude': 122.0839
+          },
+          'formatted_address': '123 Main St, Anytown, CA 12345, United States',
+          'zip_code': '12345',
+          'city': 'Anytown'
+        }
+      }
+    };
+    let mockRequest = new MockRequest(headers, body);
+    let mockResponse = new MockResponse();
+
+    let assistant = new ActionsSdkAssistant({
+      request: mockRequest,
+      response: mockResponse
+    });
+
+    expect(assistant.getDeviceLocation().coordinates).to.deep.equal({
+      latitude: 37.3861,
+      longitude: 122.0839
+    });
+    expect(assistant.getDeviceLocation().address)
+      .to.equal('123 Main St, Anytown, CA 12345, United States');
+    expect(assistant.getDeviceLocation().zipCode).to.equal('12345');
+    expect(assistant.getDeviceLocation().city).to.equal('Anytown');
+
+    // Test the false case
+
+    body.device = undefined;
+
+    mockRequest = new MockRequest(headers, body);
+    mockResponse = new MockResponse();
+
+    assistant = new ActionsSdkAssistant({
+      request: mockRequest,
+      response: mockResponse
+    });
+
+    expect(assistant.getDeviceLocation()).to.equal(null);
   });
 });
 
