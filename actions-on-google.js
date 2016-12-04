@@ -38,6 +38,7 @@ const SSML_SPEAK_END = '</speak>';
 const MAX_LIFESPAN = 100;
 const HTTP_CONTENT_TYPE_HEADER = 'Content-Type';
 const HTTP_CONTENT_TYPE_JSON = 'application/json';
+const INPUTS_MAX = 3;
 
 // Configure logging for hosting platforms that only support console.log and console.error
 debug.log = console.log.bind(console);
@@ -671,6 +672,44 @@ Assistant.prototype.fulfillPermissionsRequest_ = function () {
 };
 
 /**
+ * Helper to build prompts from SSML's.
+ *
+ * @param {array} ssmls List of ssml.
+ * @return {array} list of SpeechResponse objects.
+ * @private
+ */
+Assistant.prototype.buildPromptsFromSsmlHelper_ = function (ssmls) {
+  debug('buildPromptsFromSsmlHelper_: ssmls=%s', ssmls);
+  let prompts = [];
+  for (let i = 0; i < ssmls.length; i++) {
+    let prompt = {
+      ssml: ssmls[i]
+    };
+    prompts.push(prompt);
+  }
+  return prompts;
+};
+
+/**
+ * Helper to build prompts from plain texts.
+ *
+ * @param {array} plainTexts List of plain text to speech.
+ * @return {array} list of SpeechResponse objects.
+ * @private
+ */
+Assistant.prototype.buildPromptsFromPlainTextHelper_ = function (plainTexts) {
+  debug('buildPromptsFromPlainTextHelper_: plainTexts=%s', plainTexts);
+  let prompts = [];
+  for (let i = 0; i < plainTexts.length; i++) {
+    let prompt = {
+      text_to_speech: plainTexts[i]
+    };
+    prompts.push(prompt);
+  }
+  return prompts;
+};
+
+/**
  * Utility class for representing intents by name.
  *
  * @private
@@ -1262,9 +1301,9 @@ ActionsSdkAssistant.prototype.tell = function (textToSpeech) {
  *
  * @param {boolean} isSsml Indicates whether the text to speech is SSML or not.
  * @param {string} initialPrompt The initial prompt the Assistant asks the user.
- * @param {string} noMatches Array of re-prompts when user's response mismatches
+ * @param {array} noMatches Array of re-prompts when user's response mismatches
  *                 the action's expected input (max 3).
- * @param {string} noInputs Array of re-prompts when the user does not respond (max 3).
+ * @param {array} noInputs Array of re-prompts when the user does not respond (max 3).
  * @return {Object} an InputPrompt object.
  * @actionssdk
  */
@@ -1276,7 +1315,7 @@ ActionsSdkAssistant.prototype.buildInputPrompt = function (isSsml, initialPrompt
   let initials = [];
 
   if (noMatches) {
-    if (noMatches.length > 3) {
+    if (noMatches.length > INPUTS_MAX) {
       self.handleError_('Invalid number of no matches');
       return null;
     }
@@ -1285,7 +1324,7 @@ ActionsSdkAssistant.prototype.buildInputPrompt = function (isSsml, initialPrompt
   }
 
   if (noInputs) {
-    if (noInputs.length > 3) {
+    if (noInputs.length > INPUTS_MAX) {
       self.handleError_('Invalid number of no inputs');
       return null;
     }
@@ -1535,46 +1574,6 @@ ActionsSdkAssistant.prototype.maybeAddItemToArray_ = function (item, array) {
     return;
   }
   array.push(item);
-};
-
-/**
- * Helper to build prompts from SSML's.
- *
- * @param {array} ssmls List of ssml.
- * @return {array} list of SpeechResponse objects.
- * @private
- * @actionssdk
- */
-ActionsSdkAssistant.prototype.buildPromptsFromSsmlHelper_ = function (ssmls) {
-  debug('buildPromptsFromSsmlHelper_: ssmls=%s', ssmls);
-  let prompts = [];
-  for (let i = 0; i < ssmls.length; i++) {
-    let prompt = {
-      ssml: ssmls[i]
-    };
-    prompts.push(prompt);
-  }
-  return prompts;
-};
-
-/**
- * Helper to build prompts from plain texts.
- *
- * @param {array} plainTexts List of plain text to speech.
- * @return {array} list of SpeechResponse objects.
- * @private
- * @actionssdk
- */
-ActionsSdkAssistant.prototype.buildPromptsFromPlainTextHelper_ = function (plainTexts) {
-  debug('buildPromptsFromPlainTextHelper_: plainTexts=%s', plainTexts);
-  let prompts = [];
-  for (let i = 0; i < plainTexts.length; i++) {
-    let prompt = {
-      text_to_speech: plainTexts[i]
-    };
-    prompts.push(prompt);
-  }
-  return prompts;
 };
 
 /**
@@ -1889,7 +1888,8 @@ ApiAiAssistant.prototype.getArgument = function (argName) {
  * const NUMBER_INTENT = 'input.number';
  *
  * function welcomeIntent (assistant) {
- *   assistant.ask('Welcome to action snippets! Say a number.');
+ *   assistant.ask('Welcome to action snippets! Say a number.',
+ *     ['Say any number', 'Pick a number', 'What is the number?']);
  * }
  *
  * function numberIntent (assistant) {
@@ -1903,11 +1903,12 @@ ApiAiAssistant.prototype.getArgument = function (argName) {
  * assistant.handleRequest(actionMap);
  *
  * @param {String} inputPrompt The input prompt text.
+ * @param {array} noInputs Array of re-prompts when the user does not respond (max 3).
  * @return {Object} HTTP response.
  * @apiai
  */
-ApiAiAssistant.prototype.ask = function (inputPrompt) {
-  debug('ask: inputPrompt=%s', inputPrompt);
+ApiAiAssistant.prototype.ask = function (inputPrompt, noInputs) {
+  debug('ask: inputPrompt=%s, noInputs=%s', inputPrompt, noInputs);
   let self = this;
   if (!inputPrompt) {
     self.handleError_('Invalid input prompt');
@@ -1917,7 +1918,7 @@ ApiAiAssistant.prototype.ask = function (inputPrompt) {
     'state': (self.state instanceof State ? self.state.getName() : self.state),
     'data': self.data
   };
-  let response = self.buildResponse_(dialogState, inputPrompt, true);
+  let response = self.buildResponse_(dialogState, inputPrompt, true, noInputs);
   return self.doResponse_(response, RESPONSE_CODE_OK);
 };
 
@@ -2055,18 +2056,32 @@ ApiAiAssistant.prototype.getIntent_ = function () {
  *                 will be circulated back by Assistant.
  * @param {string} textToSpeech TTS spoken to end user.
  * @param {boolean} expectUserResponse true if the user response is expected.
+ * @param {array} noInputs Array of re-prompts when the user does not respond (max 3).
  * @return {object} the final response returned to Assistant.
  * @private
  * @apiai
  */
 ApiAiAssistant.prototype.buildResponse_ = function (dialogState,
-    textToSpeech, expectUserResponse) {
-  debug('buildResponse_: dialogState=%s, textToSpeech=%s, expectUserResponse=%s',
-    JSON.stringify(dialogState), textToSpeech, expectUserResponse);
+    textToSpeech, expectUserResponse, noInputs) {
+  debug('buildResponse_: dialogState=%s, textToSpeech=%s, expectUserResponse=%s, noInputs=%s',
+    JSON.stringify(dialogState), textToSpeech, expectUserResponse, noInputs);
   let self = this;
   if (!textToSpeech === undefined) {
     self.handleError_('Invalid text to speech');
     return null;
+  }
+  if (noInputs) {
+    if (noInputs.length > INPUTS_MAX) {
+      self.handleError_('Invalid number of no inputs');
+      return null;
+    }
+    if (self.isSsml_(textToSpeech)) {
+      noInputs = self.buildPromptsFromSsmlHelper_(noInputs);
+    } else {
+      noInputs = self.buildPromptsFromPlainTextHelper_(noInputs);
+    }
+  } else {
+    noInputs = [];
   }
   let response = {
     speech: textToSpeech,
@@ -2074,7 +2089,7 @@ ApiAiAssistant.prototype.buildResponse_ = function (dialogState,
       google: {
         expect_user_response: expectUserResponse,
         is_ssml: self.isSsml_(textToSpeech),
-        no_input_prompts: []
+        no_input_prompts: noInputs
       }
     },
     contextOut: []

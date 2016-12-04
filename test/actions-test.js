@@ -1087,6 +1087,120 @@ describe('ApiAiAssistant#setContext', function () {
   });
 });
 
+/**
+ * Describes the behavior for ApiAiAssistant ask with no inputs method.
+ */
+describe('ApiAiAssistant#ask', function () {
+  // Success case test, when the API returns a valid 200 response with the response object
+  it('Should return the valid JSON in the response object for the success case.', function () {
+    let headers = {
+      'Content-Type': 'application/json',
+      'Google-Assistant-API-Version': 'v1'
+    };
+    let body = {
+      'id': '2a8b7faa-29c0-4ccf-a973-726f9eaf3e2c',
+      'timestamp': '2016-12-04T18:34:31.218Z',
+      'result': {
+        'source': 'agent',
+        'resolvedQuery': 'talk to action snippets',
+        'speech': '',
+        'action': 'input.welcome',
+        'actionIncomplete': false,
+        'parameters': {
+
+        },
+        'contexts': [
+          {
+            'name': 'number',
+            'parameters': {
+
+            },
+            'lifespan': 5
+          },
+          {
+            'name': '_actions_on_google_',
+            'parameters': {
+
+            },
+            'lifespan': 99
+          }
+        ],
+        'metadata': {
+          'intentId': '1b1f35cb-ef66-41c4-9703-89446c00cfe8',
+          'webhookUsed': 'true',
+          'webhookForSlotFillingUsed': 'false',
+          'intentName': 'Default Welcome Intent'
+        },
+        'fulfillment': {
+          'speech': 'Hello!',
+          'messages': [
+            {
+              'type': 0,
+              'speech': 'Hello!'
+            }
+          ]
+        },
+        'score': 1
+      },
+      'status': {
+        'code': 200,
+        'errorType': 'success'
+      },
+      'sessionId': 'f23e77a5-8b09-495d-b9b3-6835d737abf3',
+      'originalRequest': null
+    };
+    const mockRequest = new MockRequest(headers, body);
+    const mockResponse = new MockResponse();
+
+    const assistant = new ApiAiAssistant({
+      request: mockRequest,
+      response: mockResponse
+    });
+
+    function handler (assistant) {
+      assistant.ask('Welcome to action snippets! Say a number.',
+        ['Say any number', 'Pick a number', 'What is the number?']);
+    }
+
+    let actionMap = new Map();
+    actionMap.set('input.welcome', handler);
+
+    assistant.handleRequest(actionMap);
+
+    // Validating the response object
+    let expectedResponse = {
+      'speech': 'Welcome to action snippets! Say a number.',
+      'data': {
+        'google': {
+          'expect_user_response': true,
+          'is_ssml': false,
+          'no_input_prompts': [
+            {
+              'text_to_speech': 'Say any number'
+            },
+            {
+              'text_to_speech': 'Pick a number'
+            },
+            {
+              'text_to_speech': 'What is the number?'
+            }
+          ]
+        }
+      },
+      'contextOut': [
+        {
+          'name': '_actions_on_google_',
+          'lifespan': 100,
+          'parameters': {
+
+          }
+        }
+      ]
+    };
+    expect(mockResponse.body).to.deep.equal(expectedResponse);
+  });
+});
+
 // ---------------------------------------------------------------------------
 //                   Actions SDK support
 // ---------------------------------------------------------------------------
