@@ -255,7 +255,7 @@ Assistant.prototype.handleRequest = function (handler) {
     self.handleError_('invalid request handler');
     return;
   }
-  self.data = self.extractData_();
+  self.extractData_();
   if (typeof handler === 'function') {
     debug('handleRequest: function');
     // simple function handler
@@ -444,6 +444,7 @@ Assistant.prototype.askForPermission = function (
 
 /**
  * Utility function to invoke an intent handler.
+ *
  * @param {Object} handler The handler for the request.
  * @param {string} intent The intent to handle.
  * @return {boolean} true if the handler was invoked.
@@ -510,6 +511,7 @@ Assistant.prototype.invokeIntentHandler_ = function (handler, intent) {
 
 /**
  * Utility function to detect SSML markup.
+ *
  * @param {string} text The text to be checked.
  * @return {boolean} true if text is SSML markup.
  * @private
@@ -531,6 +533,7 @@ Assistant.prototype.isSsml_ = function (text) {
 
 /**
  * Utility function to handle error messages.
+ *
  * @param {string} text The error message.
  * @private
  */
@@ -556,6 +559,7 @@ Assistant.prototype.handleError_ = function (text) {
 
 /**
  * Utility method to send an HTTP response.
+ *
  * @return {object} response.
  * @private
  */
@@ -585,18 +589,19 @@ Assistant.prototype.doResponse_ = function (response, responseCode) {
 
 /**
  * Extract session data from the incoming JSON request.
+ *
  * Used in subclasses for Actions SDK and API.ai.
- * @return {Object} JSON data values.
  * @private
  */
 Assistant.prototype.extractData_ = function () {
   debug('extractData_');
-  return {};
+  this.data = {};
 };
 
 /**
  * Uses a PermissionsValueSpec object to construct and send a
  * permissions request to user.
+ *
  * Used in subclasses for Actions SDK and API.ai.
  * @return {Object} HTTP response.
  * @private
@@ -608,6 +613,7 @@ Assistant.prototype.fulfillPermissionsRequest_ = function () {
 
 /**
  * Utility class for representing intents by name.
+ *
  * @private
  */
 let Intent = function (name) {
@@ -620,6 +626,7 @@ Intent.prototype.getName = function () {
 
 /**
  * Utility class for representing states by name.
+ *
  * @private
  */
 let State = function (name) {
@@ -879,7 +886,8 @@ ActionsSdkAssistant.prototype.getIntent = function () {
  * assistant.handleRequest(actionMap);
  *
  * @param {string} argName Name of the argument.
- * @return {string} argument value or null if no value.
+ * @return {object} argument value matching argName
+                    or null if no matching argument.
  * @actionssdk
  */
 ActionsSdkAssistant.prototype.getArgument = function (argName) {
@@ -1481,7 +1489,8 @@ ActionsSdkAssistant.prototype.buildPromptsFromPlainTextHelper_ = function (plain
  * Get the argument by name from the current action.
  *
  * @param {string} argName Name of the argument.
- * @return {object} argument matching argName.
+ * @return {object} argument value matching argName
+                    or null if no matching argument.
  * @private
  * @actionssdk
  */
@@ -1509,20 +1518,20 @@ ActionsSdkAssistant.prototype.getArgument_ = function (argName) {
 /**
  * Extract session data from the incoming JSON request.
  *
- * @return {Object} JSON data values.
  * @private
  * @actionssdk
  */
 ActionsSdkAssistant.prototype.extractData_ = function () {
   debug('extractData_');
   let self = this;
-  let data = {};
   if (self.body_.conversation &&
     self.body_.conversation.conversation_token) {
-    data = JSON.parse(this.body_.conversation.conversation_token);
+    let json = JSON.parse(this.body_.conversation.conversation_token);
+    self.data = json.data;
+    self.state = json.state;
+  } else {
+    self.data = {};
   }
-
-  return data;
 };
 
 /**
@@ -1728,7 +1737,8 @@ ApiAiAssistant.prototype.getIntent = function () {
  * assistant.handleRequest(actionMap);
  *
  * @param {string} argName Name of the argument.
- * @return {string} argument value or null if no value.
+ * @return {object} argument value matching argName
+                    or null if no matching argument.
  * @apiai
  */
 ApiAiAssistant.prototype.getArgument = function (argName) {
@@ -1960,29 +1970,27 @@ ApiAiAssistant.prototype.buildResponse_ = function (dialogState,
 /**
  * Extract the session data from the incoming JSON request.
  *
- * @return {Object} JSON data values.
  * @private
  * @apiai
  */
 ApiAiAssistant.prototype.extractData_ = function () {
   debug('extractData_');
   let self = this;
-  let data = {};
   if (self.body_.result && self.body_.result.contexts.length > 0) {
     for (let i = 0; i < self.body_.result.contexts.length; i++) {
       if (self.body_.result.contexts[i].name === ACTIONS_API_AI_CONTEXT) {
         let parameters = self.body_.result.contexts[i].parameters;
         if (parameters) {
-          data = parameters;
+          self.data = parameters;
         } else {
-          data = {};
+          self.data = {};
         }
         break;
       }
     }
+  } else {
+    self.data = {};
   }
-
-  return data;
 };
 
 /**
