@@ -172,11 +172,11 @@ function Assistant (options) {
  * @apiai
  */
 Assistant.prototype.StandardIntents = {
-  // Assistant fires MAIN intent for queries like [talk to $action].
+  /** Assistant fires MAIN intent for queries like [talk to $action]. */
   MAIN: 'assistant.intent.action.MAIN',
-  // Assistant fires TEXT intent when action issues ask intent.
+  /** Assistant fires TEXT intent when action issues ask intent. */
   TEXT: 'assistant.intent.action.TEXT',
-  // Assistant fires PERMISSION intent when action invokes askForPermission.
+  /** Assistant fires PERMISSION intent when action invokes askForPermission. */
   PERMISSION: 'assistant.intent.action.PERMISSION'
 };
 
@@ -188,8 +188,11 @@ Assistant.prototype.StandardIntents = {
  * @apiai
  */
 Assistant.prototype.SupportedPermissions = {
+  /** Name permission. */
   NAME: 'NAME',
+  /** Precise location permission. */
   PRECISE_LOCATION: 'DEVICE_PRECISE_LOCATION',
+  /** Coarse location permission. */
   COARSE_LOCATION: 'DEVICE_COARSE_LOCATION'
 };
 
@@ -201,6 +204,7 @@ Assistant.prototype.SupportedPermissions = {
  * @apiai
  */
 Assistant.prototype.BuiltInArgNames = {
+  /** Permission granted argument. */
   PERMISSION_GRANTED: 'permission_granted'
 };
 
@@ -1872,8 +1876,13 @@ ApiAiAssistant.prototype.getArgument = function (argName) {
     self.handleError_('Invalid argument name');
     return null;
   }
-  if (self.body_.result.parameters) {
+  if (self.body_.result.parameters && self.body_.result.parameters[argName]) {
     return self.body_.result.parameters[argName];
+  }
+  if (self.body_.originalRequest && self.body_.originalRequest.data &&
+      self.body_.originalRequest.data.inputs &&
+      self.body_.originalRequest.data.inputs[0].arguments) {
+    return self.body_.originalRequest.data.inputs[0].arguments[0][argName];
   }
   debug('Failed to get argument value: %s', argName);
   return null;
