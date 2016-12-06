@@ -232,7 +232,7 @@ Assistant.prototype.BuiltInArgNames = {
  * actionMap.set(RAW_INTENT, rawInputIntent);
  *
  * // API.ai
- * const assistant = new Assistant({request: req, response: res});
+ * const assistant = new ApiAiAssistant({request: req, response: res});
  * const NAME_ACTION = 'make_name';
  * const COLOR_ARGUMENT = 'color';
  * const NUMBER_ARGUMENT = 'number';
@@ -298,11 +298,11 @@ Assistant.prototype.handleRequest = function (handler) {
 /**
  * Asks the Assistant to guide the user to grant the permissions, e.g., when action wants
  * to access the user's personal info, the action invokes the askForPermissions method,
- * the Assistant will ask the user '<context>, I'll just need to get your '
- * 'name and <street address OR zip code>', is that OK?'. Once the user
+ * the Assistant will ask the user '[context], I'll just need to get your '
+ * 'name and [street address OR zip code]', is that OK?'. Once the user
  * says 'Yes' or 'No', the Assistant will fire another intent:
- * assistant.intent.action.PERMISSION with a bool arg: 'permission_granted'. If
- * permission_granted is true, the action can inspect request.user_info for details,
+ * assistant.intent.action.PERMISSION with a bool arg: assistant.BuiltInArgNames.PERMISSION_GRANTED.
+ * If permission_granted is true, the action can inspect request.user_info for details,
  * otherwise the action needs to change the way it asks the user to continue the dialog.
  *
  * @example
@@ -336,7 +336,7 @@ Assistant.prototype.handleRequest = function (handler) {
  *
  * @param {string} context Context why the permission is being asked; it's the TTS
  *                 prompt prefix (action phrase) we ask the user.
- * @param {Array} permissions List of permissions Assistant supports, each of
+ * @param {Array} permissions Array of permissions Assistant supports, each of
  *                which comes from Assistant.SupportedPermissions.
  * @param {Object=} dialogState JSON object the action uses to hold dialog state that
  *                 will be circulated back by Assistant.
@@ -384,11 +384,11 @@ Assistant.prototype.askForPermissions = function (
 /**
  * Asks the Assistant to guide the user to grant a permission, e.g., when the action
  * wants to access the user's personal info, the action invokes the askForPermissions
- * method, the Assistant will ask user '<context>, I'll just need to get your'
- * '<name, zip code OR street address>, is that OK?'. Once the user
+ * method, the Assistant will ask user '[context], I'll just need to get your'
+ * '[name, zip code OR street address], is that OK?'. Once the user
  * says 'Yes' or 'No', the Assistant will fire another intent:
- * assistant.intent.action.PERMISSION with a bool arg: 'permission_granted'. If
- * permission_granted is true, the action can inspect request.user_info for details,
+ * assistant.intent.action.PERMISSION with a bool arg: assistant.BuiltInArgNames.PERMISSION_GRANTED.
+ * If permission_granted is true, the action can inspect request.user_info for details,
  * otherwise the action needs to change the way it asks the user to continue the dialog.
  *
  * @example
@@ -437,9 +437,9 @@ Assistant.prototype.askForPermission = function (
 /**
  * User's permissioned name info.
  * @typedef {Object} UserName
- * @property {string} displayName
- * @property {boolean} givenName
- * @property {boolean} familyName
+ * @property {string} displayName - user display name
+ * @property {string} givenName - user given name
+ * @property {string} familyName - user family name
  */
 
 /**
@@ -624,7 +624,7 @@ Assistant.prototype.handleError_ = function (text) {
 /**
  * Utility method to send an HTTP response.
  *
- * @return {object} response.
+ * @return {object} HTTP response.
  * @private
  */
 Assistant.prototype.doResponse_ = function (response, responseCode) {
@@ -678,8 +678,8 @@ Assistant.prototype.fulfillPermissionsRequest_ = function () {
 /**
  * Helper to build prompts from SSML's.
  *
- * @param {array} ssmls List of ssml.
- * @return {array} list of SpeechResponse objects.
+ * @param {array} ssmls Array of ssml.
+ * @return {array} Array of SpeechResponse objects.
  * @private
  */
 Assistant.prototype.buildPromptsFromSsmlHelper_ = function (ssmls) {
@@ -697,8 +697,8 @@ Assistant.prototype.buildPromptsFromSsmlHelper_ = function (ssmls) {
 /**
  * Helper to build prompts from plain texts.
  *
- * @param {array} plainTexts List of plain text to speech.
- * @return {array} list of SpeechResponse objects.
+ * @param {array} plainTexts Array of plain text to speech.
+ * @return {array} Array of SpeechResponse objects.
  * @private
  */
 Assistant.prototype.buildPromptsFromPlainTextHelper_ = function (plainTexts) {
@@ -773,7 +773,7 @@ ActionsSdkAssistant.prototype = new Assistant();
  * const assistant = new ActionsSdkAssistant({request: request, response: response});
  * let apiVersion = assistant.getApiVersion();
  *
- * @return {string} version value or null if no value.
+ * @return {string} Version value or null if no value.
  * @actionssdk
  */
 ActionsSdkAssistant.prototype.getApiVersion = function () {
@@ -788,7 +788,7 @@ ActionsSdkAssistant.prototype.getApiVersion = function () {
  * const assistant = new ActionsSdkAssistant({request: request, response: response});
  * assistant.tell('You said ' + assistant.getRawInput());
  *
- * @return {string} user's raw query or null if no value.
+ * @return {string} User's raw query or null if no value.
  * @actionssdk
  */
 ActionsSdkAssistant.prototype.getRawInput = function () {
@@ -842,7 +842,7 @@ ActionsSdkAssistant.prototype.getDialogState = function () {
  * const assistant = new ActionsSdkAssistant({request: request, response: response});
  * let userId = assistant.getUser().user_id;
  *
- * @return {object} user info or null if no value.
+ * @return {object} User info or null if no value.
  * @actionssdk
  */
 ActionsSdkAssistant.prototype.getUser = function () {
@@ -922,7 +922,7 @@ ActionsSdkAssistant.prototype.isPermissionGranted = function () {
  * const assistant = new ActionsSdkAssistant({request: request, response: response});
  * let actionVersionLabel = assistant.getActionVersionLabel();
  *
- * @return {string} the specified version label or null if unspecified.
+ * @return {string} The specified version label or null if unspecified.
  * @actionssdk
  */
 ActionsSdkAssistant.prototype.getActionVersionLabel = function () {
@@ -944,7 +944,7 @@ ActionsSdkAssistant.prototype.getActionVersionLabel = function () {
  * const assistant = new ActionsSdkAssistant({request: request, response: response});
  * let conversationId = assistant.getConversationId();
  *
- * @return {string} conversation ID or null if no value.
+ * @return {string} Conversation ID or null if no value.
  * @actionssdk
  */
 ActionsSdkAssistant.prototype.getConversationId = function () {
@@ -982,7 +982,7 @@ ActionsSdkAssistant.prototype.getConversationId = function () {
  *
  * assistant.handleRequest(responseHandler);
  *
- * @return {string} intent id or null if no value.
+ * @return {string} Intent id or null if no value.
  * @actionssdk
  */
 ActionsSdkAssistant.prototype.getIntent = function () {
@@ -1021,7 +1021,7 @@ ActionsSdkAssistant.prototype.getIntent = function () {
  * assistant.handleRequest(actionMap);
  *
  * @param {string} argName Name of the argument.
- * @return {object} argument value matching argName
+ * @return {object} Argument value matching argName
                     or null if no matching argument.
  * @actionssdk
  */
@@ -1093,10 +1093,10 @@ ActionsSdkAssistant.prototype.getArgument = function (argName) {
  * assistant.handleRequest(actionMap);
  *
  * @param {Object} inputPrompt Holding initial, no-match and no-input prompts.
- * @param {array} possibleIntents List of ExpectedIntents.
+ * @param {array} possibleIntents Array of ExpectedIntents.
  * @param {Object} dialogState JSON object the action uses to hold dialog state that
  *                 will be circulated back by Assistant.
- * @return the response that is sent to Assistant to ask user to provide input.
+ * @return The response that is sent to Assistant to ask user to provide input.
  * @actionssdk
  */
 ActionsSdkAssistant.prototype.ask = function (inputPrompt, possibleIntents, dialogState) {
@@ -1154,7 +1154,7 @@ ActionsSdkAssistant.prototype.ask = function (inputPrompt, possibleIntents, dial
  * @param {Object} dialogState JSON object the action uses to hold dialog state that
  *                 will be circulated back by Assistant.
  *
- * @return the response that is sent to Assistant to ask user to provide an input.
+ * @return The response that is sent to Assistant to ask user to provide an input.
  * @actionssdk
  */
 ActionsSdkAssistant.prototype.askForText = function (textToSpeech, dialogState) {
@@ -1201,11 +1201,11 @@ ActionsSdkAssistant.prototype.askForText = function (textToSpeech, dialogState) 
  *
  * @param {Object} inputPrompt Object holding no-match, no-input prompts; use
  *                 {@link buildInputPrompt} to construct it.
- * @param {Array} expectedIntentIds List of intent IDs action expects,
+ * @param {Array} expectedIntentIds Array of intent IDs action expects,
  *                 e.g., ['PROVIDE_LOCATION', 'PROVIDE_DATE'].
  * @param {Object} dialogState JSON object the action uses to hold dialog state that
  *                 will be circulated back by Assistant.
- * @return the response that is sent back to the Assistant.
+ * @return The response that is sent back to the Assistant.
  * @actionssdk
  */
 ActionsSdkAssistant.prototype.askNoRuntimeEntities = function (
@@ -1258,7 +1258,7 @@ ActionsSdkAssistant.prototype.askNoRuntimeEntities = function (
  * assistant.handleRequest(actionMap);
  *
  * @param {string} textToSpeech Final spoken response. Spoken response can be SSML.
- * @return the response that is sent back to Assistant.
+ * @return The response that is sent back to Assistant.
  * @actionssdk
  */
 ActionsSdkAssistant.prototype.tell = function (textToSpeech) {
@@ -1308,7 +1308,7 @@ ActionsSdkAssistant.prototype.tell = function (textToSpeech) {
  * @param {array} noMatches Array of re-prompts when user's response mismatches
  *                 the action's expected input (max 3).
  * @param {array} noInputs Array of re-prompts when the user does not respond (max 3).
- * @return {Object} an InputPrompt object.
+ * @return {Object} An InputPrompt object.
  * @actionssdk
  */
 ActionsSdkAssistant.prototype.buildInputPrompt = function (isSsml, initialPrompt,
@@ -1383,12 +1383,12 @@ ActionsSdkAssistant.prototype.buildInputPrompt = function (isSsml, initialPrompt
  * @param {string} intent Developer specified in-dialog intent inside the Action
  *                 Package or an Assistant built-in intent like
  *                 'assistant.intent.action.TEXT'.
- * @param {Array} runtimeEntities List of runtime entities. Each runtime entity
+ * @param {Array} runtimeEntities Array of runtime entities. Each runtime entity
  *                represents a custom type defined dynamically, e.g., car
  *                action might return list of available drivers after user says
  *                [book a cab].
  *
- * @return {Object} an ExpectedIntent object encapsulating the intent and
+ * @return {Object} An ExpectedIntent object encapsulating the intent and
                     the runtime entities.
  * @actionssdk
  */
@@ -1415,6 +1415,7 @@ ActionsSdkAssistant.prototype.buildExpectedIntent = function (intent, runtimeEnt
 /**
  * Creates a runtime entity, including the list of items. Refer to {@link buildExpectedIntent}
  * on the use of runtime entities. Runtime entities need to be defined in the Action Package.
+ * This method is mostly used to create a runtime entity before action invokes {@link buildExpectedIntent}.
  *
  * @example
  * const assistant = new ActionsSdkAssistant({request: request, response: response});
@@ -1439,12 +1440,10 @@ ActionsSdkAssistant.prototype.buildExpectedIntent = function (intent, runtimeEnt
  *
  * assistant.handleRequest(actionMap);
  *
- * This method is mostly used to create a runtime entity before action invokes buildExpectedIntent.
- *
  * @param {string} name The name for this entity, which must be matched to a custom
  *                 type defined in Action Package.
- * @param {Array} items List of possible items for this entity.
- * @return {Object} a runtime entity.
+ * @param {Array} items Array of possible items for this entity.
+ * @return {Object} A runtime entity.
  * @actionssdk
  */
 ActionsSdkAssistant.prototype.newRuntimeEntity = function (name, items) {
@@ -1496,9 +1495,9 @@ ActionsSdkAssistant.prototype.newRuntimeEntity = function (name, items) {
  * assistant.handleRequest(actionMap);
  *
  * @param {string} key UUID for this item.
- * @param {Array} synonyms List of synonyms which can be used by the user
+ * @param {Array} synonyms Array of synonyms which can be used by the user
                   to refer to this item.
- * @return {Object} an Item object used to encapsulate this item.
+ * @return {Object} An Item object used to encapsulate this item.
  * @actionssdk
  */
 ActionsSdkAssistant.prototype.newItem = function (key, synonyms) {
@@ -1516,7 +1515,7 @@ ActionsSdkAssistant.prototype.newItem = function (key, synonyms) {
 /**
  * Get the top most Input object.
  *
- * @return {object} input object.
+ * @return {object} Input object.
  * @private
  * @actionssdk
  */
@@ -1537,7 +1536,7 @@ ActionsSdkAssistant.prototype.getTopInput_ = function () {
  * @param {boolean} expectUserResponse The expected user response.
  * @param {object} expectedInput The expected response.
  * @param {boolean} finalResponse The final response.
- * @return {object} final response returned to server.
+ * @return {object} Final response returned to server.
  * @private
  * @actionssdk
  */
@@ -1584,7 +1583,7 @@ ActionsSdkAssistant.prototype.maybeAddItemToArray_ = function (item, array) {
  * Get the argument by name from the current action.
  *
  * @param {string} argName Name of the argument.
- * @return {object} argument value matching argName
+ * @return {object} Argument value matching argName
                     or null if no matching argument.
  * @private
  * @actionssdk
@@ -1699,7 +1698,7 @@ ApiAiAssistant.prototype = new Assistant();
  * const assistant = new ApiAiAssistant({request: request, response: response});
  * let userId = assistant.getUser().user_id;
  *
- * @return {object} user info or null if no value.
+ * @return {object} User info or null if no value.
  * @apiai
  */
 ApiAiAssistant.prototype.getUser = function () {
@@ -1828,7 +1827,7 @@ ApiAiAssistant.prototype.isRequestFromApiAi = function (key, value) {
  *
  * assistant.handleRequest(responseHandler);
  *
- * @return {string} intent id or null if no value.
+ * @return {string} Intent id or null if no value.
  * @apiai
  */
 ApiAiAssistant.prototype.getIntent = function () {
@@ -1865,7 +1864,7 @@ ApiAiAssistant.prototype.getIntent = function () {
  * assistant.handleRequest(actionMap);
  *
  * @param {string} argName Name of the argument.
- * @return {object} argument value matching argName
+ * @return {object} Argument value matching argName
                     or null if no matching argument.
  * @apiai
  */
@@ -1954,7 +1953,7 @@ ApiAiAssistant.prototype.ask = function (inputPrompt, noInputs) {
  * assistant.handleRequest(actionMap);
  *
  * @param {string} textToSpeech Final spoken response. Spoken response can be SSML.
- * @return the response that is sent back to Assistant.
+ * @return The response that is sent back to Assistant.
  * @apiai
  */
 ApiAiAssistant.prototype.tell = function (speechResponse) {
@@ -2022,7 +2021,7 @@ ApiAiAssistant.prototype.setContext = function (context, lifespan, parameters) {
  * const assistant = new ApiAiAssistant({request: request, response: response});
  * assistant.tell('You said ' + assistant.getRawInput());
  *
- * @return {string} user's raw query or null if no value.
+ * @return {string} User's raw query or null if no value.
  * @apiai
  */
 ApiAiAssistant.prototype.getRawInput = function () {
@@ -2043,7 +2042,7 @@ ApiAiAssistant.prototype.getRawInput = function () {
 /**
  * Get the current intent.
  *
- * @return {string} the intent id.
+ * @return {string} The intent id.
  * @private
  * @apiai
  */
@@ -2066,7 +2065,7 @@ ApiAiAssistant.prototype.getIntent_ = function () {
  * @param {string} textToSpeech TTS spoken to end user.
  * @param {boolean} expectUserResponse true if the user response is expected.
  * @param {array} noInputs Array of re-prompts when the user does not respond (max 3).
- * @return {object} the final response returned to Assistant.
+ * @return {object} The final response returned to Assistant.
  * @private
  * @apiai
  */
@@ -2148,7 +2147,7 @@ ApiAiAssistant.prototype.extractData_ = function () {
  *
  * @param {object} permissionsSpec PermissionsValueSpec object containing
  *                 the permissions prefix and permissions requested.
- * @return {Object} the HTTP response.
+ * @return {Object} The HTTP response.
  * @private
  * @apiai
  */
