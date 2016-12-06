@@ -1940,7 +1940,7 @@ describe('ActionsSdkAssistant#askForPermissions', function () {
     function getRide (assistant) {
       assistant.askForPermissions('To get you a ride', [
         assistant.SupportedPermissions.NAME,
-        assistant.SupportedPermissions.PRECISE_LOCATION
+        assistant.SupportedPermissions.DEVICE_PRECISE_LOCATION
       ], {
         carType: 'big'
       });

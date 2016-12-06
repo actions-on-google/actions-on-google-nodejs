@@ -191,9 +191,9 @@ Assistant.prototype.SupportedPermissions = {
   /** Name permission. */
   NAME: 'NAME',
   /** Precise location permission. */
-  PRECISE_LOCATION: 'DEVICE_PRECISE_LOCATION',
+  DEVICE_PRECISE_LOCATION: 'DEVICE_PRECISE_LOCATION',
   /** Coarse location permission. */
-  COARSE_LOCATION: 'DEVICE_COARSE_LOCATION'
+  DEVICE_COARSE_LOCATION: 'DEVICE_COARSE_LOCATION'
 };
 
 /**
@@ -313,7 +313,7 @@ Assistant.prototype.handleRequest = function (handler) {
  * function requestPermission (assistant) {
  *   let permission = [
  *     assistant.SupportedPermissions.NAME,
- *     assistant.SupportedPermissions.PRECISE_LOCATION
+ *     assistant.SupportedPermissions.DEVICE_PRECISE_LOCATION
  *   ];
  *   assistant.askForPermissions('To pick you up', permissions);
  * }
@@ -362,10 +362,10 @@ Assistant.prototype.askForPermissions = function (
   for (let i = 0; i < permissions.length; i++) {
     let permission = permissions[i];
     if (permission !== self.SupportedPermissions.NAME &&
-      permission !== self.SupportedPermissions.PRECISE_LOCATION &&
-      permission !== self.SupportedPermissions.COARSE_LOCATION) {
+      permission !== self.SupportedPermissions.DEVICE_PRECISE_LOCATION &&
+      permission !== self.SupportedPermissions.DEVICE_COARSE_LOCATION) {
       self.handleError_('Assistant permission must be one of ' +
-        '[NAME, PRECISE_LOCATION, COARSE_LOCATION]');
+        '[NAME, DEVICE_PRECISE_LOCATION, DEVICE_COARSE_LOCATION]');
       return null;
     }
   }
@@ -446,13 +446,13 @@ Assistant.prototype.askForPermission = function (
  * User's permissioned device location.
  * @typedef {Object} DeviceLocation
  * @property {Object} coordinates - {latitude, longitude}. Requested with
- *                                  SupportedPermissions.PRECISE_LOCATION
+ *                                  SupportedPermissions.DEVICE_PRECISE_LOCATION
  * @property {string} address - Full, formatted street address. Requested with
- *                              SupportedPermissions.PRECISE_LOCATION.
+ *                              SupportedPermissions.DEVICE_PRECISE_LOCATION.
  * @property {string} zipCode - Zip code. Requested with
- *                              SupportedPermissions.COARSE_LOCATION.
+ *                              SupportedPermissions.DEVICE_COARSE_LOCATION.
  * @property {string} city - Device city. Requested with
- *                           SupportedPermissions.COARSE_LOCATION
+ *                           SupportedPermissions.DEVICE_COARSE_LOCATION
  */
 
 /**
@@ -862,7 +862,7 @@ ActionsSdkAssistant.prototype.getUser = function () {
  * @example
  * const assistant = new ActionsSdkAssistant({request: req, response: res});
  * assistant.askForPermission("To get you a ride",
- *   assistant.SupportedPermissions.PRECISE_LOCATION);
+ *   assistant.SupportedPermissions.DEVICE_PRECISE_LOCATION);
  * // ...
  * // In response handler for subsequent intent:
  * if (assistant.isPermissionGranted()) {
@@ -897,7 +897,7 @@ ActionsSdkAssistant.prototype.getDeviceLocation = function () {
  * const assistant = new ActionsSdkAssistant({request: request, response: response});
  * assistant.askForPermissions("To get you a ride", [
  *   assistant.SupportedPermissions.NAME,
- *   assistant.SupportedPermissions.PRECISE_LOCATION
+ *   assistant.SupportedPermissions.DEVICE_PRECISE_LOCATION
  * ]);
  * // ...
  * // In response handler for subsequent intent:
@@ -1720,7 +1720,7 @@ ApiAiAssistant.prototype.getUser = function () {
  * @example
  * const assistant = new ApiAiAssistant({request: req, response: res});
  * assistant.askForPermission("To get you a ride",
- *   assistant.SupportedPermissions.PRECISE_LOCATION);
+ *   assistant.SupportedPermissions.DEVICE_PRECISE_LOCATION);
  * // ...
  * // In response handler for permissions fallback intent:
  * if (assistant.isPermissionGranted()) {
@@ -1755,7 +1755,7 @@ ApiAiAssistant.prototype.getDeviceLocation = function () {
  * const assistant = new ApiAiAssistant({request: request, response: response});
  * assistant.askForPermissions("To get you a ride", [
  *   assistant.SupportedPermissions.NAME,
- *   assistant.SupportedPermissions.PRECISE_LOCATION
+ *   assistant.SupportedPermissions.DEVICE_PRECISE_LOCATION
  * ]);
  * // ...
  * // In response handler for permissions fallback intent:
