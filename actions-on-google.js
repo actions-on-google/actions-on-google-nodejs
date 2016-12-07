@@ -188,11 +188,20 @@ Assistant.prototype.StandardIntents = {
  * @apiai
  */
 Assistant.prototype.SupportedPermissions = {
-  /** Name permission. */
+  /**
+   * The user's name as defined in the
+   * {@link https://developers.google.com/actions/reference/conversation#UserProfile|UserProfile object}
+   */
   NAME: 'NAME',
-  /** Precise location permission. */
+  /**
+   * The location of the user's current device, as defined in the
+   * {@link https://developers.google.com/actions/reference/conversation#Location|Location object}.
+   */
   DEVICE_PRECISE_LOCATION: 'DEVICE_PRECISE_LOCATION',
-  /** Coarse location permission. */
+  /**
+   * City and zipcode corresponding to the location of the user's current device, as defined in the
+   * {@link https://developers.google.com/actions/reference/conversation#Location|Location object}.
+   */
   DEVICE_COARSE_LOCATION: 'DEVICE_COARSE_LOCATION'
 };
 
@@ -296,14 +305,18 @@ Assistant.prototype.handleRequest = function (handler) {
 };
 
 /**
- * Asks the Assistant to guide the user to grant the permissions, e.g., when action wants
- * to access the user's personal info, the action invokes the askForPermissions method,
- * the Assistant will ask the user '[context], I'll just need to get your '
- * 'name and [street address OR zip code]', is that OK?'. Once the user
- * says 'Yes' or 'No', the Assistant will fire another intent:
- * assistant.intent.action.PERMISSION with a bool arg: assistant.BuiltInArgNames.PERMISSION_GRANTED.
- * If permission_granted is true, the action can inspect request.user_info for details,
- * otherwise the action needs to change the way it asks the user to continue the dialog.
+ * Equivalent to {@link Assistant#askForPermission()}, but allows you to prompt the
+ * user for more than one permission at once.
+ *
+ * Notes:
+ *
+ * * The order in which you specify the permission prompts does not matter -
+ *   it is controlled by the assistant to provide a consistent user experience.
+ * * The user will be able to either accept all permissions at once, or none.
+ *   If you wish to allow them to selectively accept one or other, make several
+ *   dialog turns asking for each permission independently with askForPermission.
+ * * Asking for DEVICE_COARSE_LOCATION and DEVICE_PRECISE_LOCATION at once is
+ *   equivalent to just asking for DEVICE_PRECISE_LOCATION
  *
  * @example
  * const assistant = new ApiAiAssistant({request: req, response: res});
@@ -382,14 +395,23 @@ Assistant.prototype.askForPermissions = function (
 };
 
 /**
- * Asks the Assistant to guide the user to grant a permission, e.g., when the action
- * wants to access the user's personal info, the action invokes the askForPermissions
- * method, the Assistant will ask user '[context], I'll just need to get your'
- * '[name, zip code OR street address], is that OK?'. Once the user
- * says 'Yes' or 'No', the Assistant will fire another intent:
- * assistant.intent.action.PERMISSION with a bool arg: assistant.BuiltInArgNames.PERMISSION_GRANTED.
- * If permission_granted is true, the action can inspect request.user_info for details,
- * otherwise the action needs to change the way it asks the user to continue the dialog.
+ * Asks the Assistant to guide the user to grant a permission. For example,
+ * if you want your action to get access to the user's name, you would invoke
+ * the askForPermission method with a context containing the reason for the request,
+ * and the 'assistant.SupportedPermissions.NAME'. With this, the Assistant will ask
+ * user, in your agent's voice, the following: '[Context with reason for the request],
+ * I'll just need to get your name from Google, is that OK?'.
+ *
+ * Once the user accepts or denies the request, the Assistant will fire another intent:
+ * assistant.intent.action.PERMISSION with a bool arg: assistant.BuiltInArgNames.PERMISSION_GRANTED
+ * and, if granted, the information that you requested.
+ *
+ * Read more:
+ *
+ * * {@link https://developers.google.com/actions/reference/conversation#ExpectedIntent|Supported Permissions}
+ * * Check if the permission has been granted with {@link isPermissionGranted|Assistant#isPermissionGranted()}
+ * * {@link ActionsSdkAssistant#getDeviceLocation()}
+ * * {@link Assistant#getUserName()}
  *
  * @example
  * const assistant = new ApiAiAssistant({request: req, response: res});
@@ -483,8 +505,9 @@ Assistant.prototype.askForPermission = function (
  * actionMap.set(SAY_NAME_ACTION, sayName);
  * assistant.handleRequest(actionMap);
  *
- * @return {UserName} Container for user's display name, first name, given name.
- *                    Null if name permission is not granted.
+ * @return {Object} Container for user's display name, first name, given name:
+ *                  {displayName, givenName, familyName}. Null if name
+ *                  permission is not granted.
  * @actionssdk
  * @apiai
  */
@@ -842,7 +865,8 @@ ActionsSdkAssistant.prototype.getDialogState = function () {
  * const assistant = new ActionsSdkAssistant({request: request, response: response});
  * let userId = assistant.getUser().user_id;
  *
- * @return {object} User info or null if no value.
+ * @return {Object} {@link https://developers.google.com/actions/reference/conversation#User|User info}
+ *                  or null if no value.
  * @actionssdk
  */
 ActionsSdkAssistant.prototype.getUser = function () {
@@ -869,8 +893,9 @@ ActionsSdkAssistant.prototype.getUser = function () {
  *   sendCarTo(assistant.getDeviceLocation().coordinates);
  * }
  *
- * @return {DeviceLocation} Container for user's location data. Null if name
- *                          permission is not granted.
+ * @return {Object} Container for user's location data:
+ *                  {coordinates, address, zipCode, city}.
+ *                  Null if location permission is not granted.
  * @actionssdk
  */
 ActionsSdkAssistant.prototype.getDeviceLocation = function () {
@@ -1698,7 +1723,8 @@ ApiAiAssistant.prototype = new Assistant();
  * const assistant = new ApiAiAssistant({request: request, response: response});
  * let userId = assistant.getUser().user_id;
  *
- * @return {object} User info or null if no value.
+ * @return {Object} {@link https://developers.google.com/actions/reference/conversation#User|User info}
+ *                  or null if no value.
  * @apiai
  */
 ApiAiAssistant.prototype.getUser = function () {
@@ -1727,8 +1753,9 @@ ApiAiAssistant.prototype.getUser = function () {
  *   sendCarTo(assistant.getDeviceLocation().coordinates);
  * }
  *
- * @return {DeviceLocation} Container for user's location data. Null if name
- *                          permission is not granted.
+ * @return {Object} Container for user's location data:
+ *                  {coordinates, address, zipCode, city}.
+ *                  Null if location permission is not granted.
  * @apiai
  */
 ApiAiAssistant.prototype.getDeviceLocation = function () {
