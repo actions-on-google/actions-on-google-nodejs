@@ -52,7 +52,6 @@ error.log = console.error.bind(console);
  * @param {Object} options JSON configuration: {request [HTTP request object],
                    response [HTTP response object], sessionStarted [function]}
  * @constructor
- * @private
  */
 function Assistant (options) {
   let self = this;
@@ -142,7 +141,7 @@ function Assistant (options) {
   self.data = {};
 
   /**
-   * The API.ai context.
+   * The API.AI context.
    * @private {object}
    */
   self.contexts_ = {};
@@ -240,7 +239,7 @@ Assistant.prototype.BuiltInArgNames = {
  * actionMap.set(assistant.StandardIntents.MAIN, mainIntent);
  * actionMap.set(RAW_INTENT, rawInputIntent);
  *
- * // API.ai
+ * // API.AI
  * const assistant = new ApiAiAssistant({request: req, response: res});
  * const NAME_ACTION = 'make_name';
  * const COLOR_ARGUMENT = 'color';
@@ -305,7 +304,7 @@ Assistant.prototype.handleRequest = function (handler) {
 };
 
 /**
- * Equivalent to {@link Assistant#askForPermission()}, but allows you to prompt the
+ * Equivalent to {@link Assistant#askForPermission}, but allows you to prompt the
  * user for more than one permission at once.
  *
  * Notes:
@@ -398,20 +397,20 @@ Assistant.prototype.askForPermissions = function (
  * Asks the Assistant to guide the user to grant a permission. For example,
  * if you want your action to get access to the user's name, you would invoke
  * the askForPermission method with a context containing the reason for the request,
- * and the 'assistant.SupportedPermissions.NAME'. With this, the Assistant will ask
- * user, in your agent's voice, the following: '[Context with reason for the request],
+ * and the assistant.SupportedPermissions.NAME permission. With this, the Assistant will ask
+ * the user, in your agent's voice, the following: '[Context with reason for the request],
  * I'll just need to get your name from Google, is that OK?'.
  *
  * Once the user accepts or denies the request, the Assistant will fire another intent:
- * assistant.intent.action.PERMISSION with a bool arg: assistant.BuiltInArgNames.PERMISSION_GRANTED
+ * assistant.intent.action.PERMISSION with a boolean argument: assistant.BuiltInArgNames.PERMISSION_GRANTED
  * and, if granted, the information that you requested.
  *
  * Read more:
  *
  * * {@link https://developers.google.com/actions/reference/conversation#ExpectedIntent|Supported Permissions}
- * * Check if the permission has been granted with {@link isPermissionGranted|Assistant#isPermissionGranted()}
- * * {@link ActionsSdkAssistant#getDeviceLocation()}
- * * {@link Assistant#getUserName()}
+ * * Check if the permission has been granted with {@link ActionsSdkAssistant#isPermissionGranted}
+ * * {@link ActionsSdkAssistant#getDeviceLocation}
+ * * {@link Assistant#getUserName}
  *
  * @example
  * const assistant = new ApiAiAssistant({request: req, response: res});
@@ -677,7 +676,7 @@ Assistant.prototype.doResponse_ = function (response, responseCode) {
 /**
  * Extract session data from the incoming JSON request.
  *
- * Used in subclasses for Actions SDK and API.ai.
+ * Used in subclasses for Actions SDK and API.AI.
  * @private
  */
 Assistant.prototype.extractData_ = function () {
@@ -689,7 +688,7 @@ Assistant.prototype.extractData_ = function () {
  * Uses a PermissionsValueSpec object to construct and send a
  * permissions request to user.
  *
- * Used in subclasses for Actions SDK and API.ai.
+ * Used in subclasses for Actions SDK and API.AI.
  * @return {Object} HTTP response.
  * @private
  */
@@ -857,7 +856,8 @@ ActionsSdkAssistant.prototype.getDialogState = function () {
 };
 
 /**
- * Gets the user object. The user object contains information about the user, including
+ * Gets the {@link https://developers.google.com/actions/reference/conversation#User|User object}.
+ * The user object contains information about the user, including
  * a string identifier and personal information (requires requesting permissions,
  * see {@link Assistant#askForPermissions}).
  *
@@ -880,8 +880,9 @@ ActionsSdkAssistant.prototype.getUser = function () {
 };
 
 /**
- * If granted permission to user's location in previous intent, returns device's
- * location. If device info is unavailable, returns null.
+ * If granted permission to device's location in previous intent, returns device's
+ * location (see {@link Assistant#askForPermissions}). If device info is unavailable,
+ * returns null.
  *
  * @example
  * const assistant = new ActionsSdkAssistant({request: req, response: res});
@@ -1046,7 +1047,7 @@ ActionsSdkAssistant.prototype.getIntent = function () {
  * assistant.handleRequest(actionMap);
  *
  * @param {string} argName Name of the argument.
- * @return {object} Argument value matching argName
+ * @return {string} Argument value matching argName
                     or null if no matching argument.
  * @actionssdk
  */
@@ -1222,7 +1223,7 @@ ActionsSdkAssistant.prototype.askForText = function (textToSpeech, dialogState) 
  * assistant.handleRequest(actionMap);
  *
  * @param {string} textToSpeech Final spoken response. Spoken response can be SSML.
- * @return The response that is sent back to Assistant.
+ * @return The HTTP response that is sent back to Assistant.
  * @actionssdk
  */
 ActionsSdkAssistant.prototype.tell = function (textToSpeech) {
@@ -1248,8 +1249,8 @@ ActionsSdkAssistant.prototype.tell = function (textToSpeech) {
 };
 
 /**
- * Builds the InputPrompt object from initial prompt, no-match prompts, and no-input
- * prompts.
+ * Builds the {@link https://developers.google.com/actions/reference/conversation#InputPrompt|InputPrompt object}
+ * from initial prompt, no-match prompts, and no-input prompts.
  *
  * The Assistant needs one initial prompt to start the conversation, then if the user provides
  * an input which does not match to action's expected intents, the Assistant renders the
@@ -1272,7 +1273,7 @@ ActionsSdkAssistant.prototype.tell = function (textToSpeech) {
  * @param {array} noMatches Array of re-prompts when user's response mismatches
  *                 the action's expected input (max 3).
  * @param {array} noInputs Array of re-prompts when the user does not respond (max 3).
- * @return {Object} An InputPrompt object.
+ * @return {Object} An {@link https://developers.google.com/actions/reference/conversation#InputPrompt|InputPrompt object}.
  * @actionssdk
  */
 ActionsSdkAssistant.prototype.buildInputPrompt = function (isSsml, initialPrompt,
@@ -1352,8 +1353,8 @@ ActionsSdkAssistant.prototype.buildInputPrompt = function (isSsml, initialPrompt
  *                action might return list of available drivers after user says
  *                [book a cab].
  *
- * @return {Object} An ExpectedIntent object encapsulating the intent and
-                    the runtime entities.
+ * @return {Object} An {@link https://developers.google.com/actions/reference/conversation#ExpectedIntent|ExpectedIntent object}
+                    encapsulating the intent and the runtime entities.
  * @actionssdk
  */
 ActionsSdkAssistant.prototype.buildExpectedIntent = function (intent, runtimeEntities) {
@@ -1628,11 +1629,11 @@ ActionsSdkAssistant.prototype.fulfillPermissionsRequest_ = function (
 };
 
 // ---------------------------------------------------------------------------
-//                   API.ai support
+//                   API.AI support
 // ---------------------------------------------------------------------------
 
 /**
- * Constructor for ApiAiAssistant object. To be used in the API.ai
+ * Constructor for ApiAiAssistant object. To be used in the API.AI
  * fulfillment webhook logic.
  *
  * @example
@@ -1654,7 +1655,8 @@ function ApiAiAssistant (options) {
 ApiAiAssistant.prototype = new Assistant();
 
 /**
- * Gets the user object. The user object contains information about the user, including
+ * Gets the {@link https://developers.google.com/actions/reference/conversation#User|User object}.
+ * The user object contains information about the user, including
  * a string identifier and personal information (requires requesting permissions,
  * see {@link Assistant#askForPermissions}).
  *
@@ -1679,8 +1681,9 @@ ApiAiAssistant.prototype.getUser = function () {
 };
 
 /**
- * If granted permission to user's location in previous intent, returns device's
- * location. If device info is unavailable, returns null.
+ * If granted permission to device's location in previous intent, returns device's
+ * location (see {@link Assistant#askForPermissions}). If device info is unavailable,
+ * returns null.
  *
  * @example
  * const assistant = new ApiAiAssistant({request: req, response: res});
@@ -1856,6 +1859,10 @@ ApiAiAssistant.prototype.getArgument = function (argName) {
 /**
  * Asks Assistant to collect the user's input.
  *
+ * NOTE: Due to a bug, if you specify the no-input prompts,
+ * the mic is closed after the 3rd prompt, so you should use the 3rd prompt
+ * for a bye message until the bug is fixed.
+ *
  * @example
  * const assistant = new ApiAiAssistant({request: request, response: response});
  * const WELCOME_INTENT = 'input.welcome';
@@ -2024,7 +2031,7 @@ ApiAiAssistant.prototype.getIntent_ = function () {
 };
 
 /**
- * Builds a response for API.ai to send back to the Assistant.
+ * Builds a response for API.AI to send back to the Assistant.
  *
  * @param {object} dialogState JSON object the action uses to hold dialog state that
  *                 will be circulated back by Assistant.
