@@ -859,7 +859,7 @@ ActionsSdkAssistant.prototype.getDialogState = function () {
 /**
  * Gets the user object. The user object contains information about the user, including
  * a string identifier and personal information (requires requesting permissions,
- * see {@link askForPermissions}).
+ * see {@link Assistant#askForPermissions}).
  *
  * @example
  * const assistant = new ActionsSdkAssistant({request: request, response: response});
@@ -893,7 +893,7 @@ ActionsSdkAssistant.prototype.getUser = function () {
  *   sendCarTo(assistant.getDeviceLocation().coordinates);
  * }
  *
- * @return {Object} Container for user's location data:
+ * @return {Object} Container for device's location data:
  *                  {coordinates, address, zipCode, city}.
  *                  Null if location permission is not granted.
  * @actionssdk
@@ -916,7 +916,7 @@ ActionsSdkAssistant.prototype.getDeviceLocation = function () {
 /**
  * Returns true if the request follows a previous request asking for
  * permission from the user and the user granted the permission(s). Otherwise,
- * false. Use with {@link askForPermissions}.
+ * false. Use with {@link Assistant#askForPermissions}.
  *
  * @example
  * const assistant = new ActionsSdkAssistant({request: request, response: response});
@@ -983,7 +983,7 @@ ActionsSdkAssistant.prototype.getConversationId = function () {
 };
 
 /**
- * Get the current intent. Alternatively, using a handler Map with {@link handleRequest},
+ * Get the current intent. Alternatively, using a handler Map with {@link Assistant#handleRequest},
  * the client library will automatically handle the incoming intents.
  *
  * @example
@@ -1200,67 +1200,6 @@ ActionsSdkAssistant.prototype.askForText = function (textToSpeech, dialogState) 
 };
 
 /**
- * Similar to ask method but only uses a list of raw values for expected
- * intent IDs; no runtime entities are provided.
- *
- * @example
- * const assistant = new ActionsSdkAssistant({request: request, response: response});
- * const PROVIDE_NUMBER_INTENT = 'PROVIDE_NUMBER';
- *
- * function mainIntent (assistant) {
- *   let inputPrompt = assistant.buildInputPrompt(false, 'Welcome to action snippets! Say a number.',
- *     ['Sorry, say that again?', 'Sorry, that number again?', 'What was that number?'],
- *     ['Say any number', 'Pick a number', 'What is the number?']);
- *   assistant.askNoRuntimeEntities(inputPrompt, [PROVIDE_NUMBER_INTENT], {started: true});
- * }
- *
- * function provideNumberIntent (assistant) {
- *   assistant.tell('You said ' + assistant.getRawInput());
- * }
- *
- * let actionMap = new Map();
- * actionMap.set(assistant.StandardIntents.MAIN, mainIntent);
- * actionMap.set(PROVIDE_NUMBER_INTENT, provideNumberIntent);
- *
- * assistant.handleRequest(actionMap);
- *
- * @param {Object} inputPrompt Object holding no-match, no-input prompts; use
- *                 {@link buildInputPrompt} to construct it.
- * @param {Array} expectedIntentIds Array of intent IDs action expects,
- *                 e.g., ['PROVIDE_LOCATION', 'PROVIDE_DATE'].
- * @param {Object} dialogState JSON object the action uses to hold dialog state that
- *                 will be circulated back by Assistant.
- * @return The response that is sent back to the Assistant.
- * @actionssdk
- */
-ActionsSdkAssistant.prototype.askNoRuntimeEntities = function (
-    inputPrompt, expectedIntentIds, dialogState) {
-  debug('askNoRuntimeEntities: inputPrompt=%s, expectedIntentIds=%s, dialogState=%s',
-    inputPrompt, expectedIntentIds, JSON.stringify(dialogState));
-  let self = this;
-  if (!inputPrompt) {
-    self.handleError_('Invalid input prompt');
-    return null;
-  }
-  let expectedIntents = [];
-  if (expectedIntentIds) {
-    for (let i = 0; i < expectedIntentIds.length; i++) {
-      let intent = self.buildExpectedIntent(expectedIntentIds[i], null);
-      if (intent) {
-        expectedIntents.push(intent);
-      }
-    }
-  }
-  if (!dialogState) {
-    dialogState = {
-      'state': (self.state instanceof State ? self.state.getName() : self.state),
-      'data': self.data
-    };
-  }
-  return self.ask(inputPrompt, expectedIntents, dialogState);
-};
-
-/**
  * Tells Assistant to render the speech response and close the mic.
  *
  * @example
@@ -1378,7 +1317,7 @@ ActionsSdkAssistant.prototype.buildInputPrompt = function (isSsml, initialPrompt
 };
 
 /**
- * Builds an ExpectedIntent object. Refer to {@link newRuntimeEntity} to create the list
+ * Builds an ExpectedIntent object. Refer to {@link ActionsSdkAssistant#newRuntimeEntity} to create the list
  * of runtime entities required by this method. Runtime entities need to be defined in
  * the Action Package.
  *
@@ -1438,9 +1377,9 @@ ActionsSdkAssistant.prototype.buildExpectedIntent = function (intent, runtimeEnt
 };
 
 /**
- * Creates a runtime entity, including the list of items. Refer to {@link buildExpectedIntent}
+ * Creates a runtime entity, including the list of items. Refer to {@link ActionsSdkAssistant#buildExpectedIntent}
  * on the use of runtime entities. Runtime entities need to be defined in the Action Package.
- * This method is mostly used to create a runtime entity before action invokes {@link buildExpectedIntent}.
+ * This method is mostly used to create a runtime entity before action invokes {@link ActionsSdkAssistant#buildExpectedIntent}.
  *
  * @example
  * const assistant = new ActionsSdkAssistant({request: request, response: response});
@@ -1493,7 +1432,7 @@ ActionsSdkAssistant.prototype.newRuntimeEntity = function (name, items) {
 };
 
 /**
- * Creates a new item with a specific key and list of synonyms. Refer to {@link newRuntimeEntity}
+ * Creates a new item with a specific key and list of synonyms. Refer to {@link ActionsSdkAssistant#newRuntimeEntity}
  * to create a list of runtime entities. Runtime entities need to be defined in the Action Package.
  *
  * @example
@@ -1717,7 +1656,7 @@ ApiAiAssistant.prototype = new Assistant();
 /**
  * Gets the user object. The user object contains information about the user, including
  * a string identifier and personal information (requires requesting permissions,
- * see {@link askForPermissions}).
+ * see {@link Assistant#askForPermissions}).
  *
  * @example
  * const assistant = new ApiAiAssistant({request: request, response: response});
@@ -1753,7 +1692,7 @@ ApiAiAssistant.prototype.getUser = function () {
  *   sendCarTo(assistant.getDeviceLocation().coordinates);
  * }
  *
- * @return {Object} Container for user's location data:
+ * @return {Object} Container for device's location data:
  *                  {coordinates, address, zipCode, city}.
  *                  Null if location permission is not granted.
  * @apiai
@@ -1776,7 +1715,7 @@ ApiAiAssistant.prototype.getDeviceLocation = function () {
 /**
  * Returns true if the request follows a previous request asking for
  * permission from the user and the user granted the permission(s). Otherwise,
- * false. Use with {@link askForPermissions}.
+ * false. Use with {@link Assistant#askForPermissions}.
  *
  * @example
  * const assistant = new ApiAiAssistant({request: request, response: response});
@@ -1832,7 +1771,7 @@ ApiAiAssistant.prototype.isRequestFromApiAi = function (key, value) {
 };
 
 /**
- * Get the current intent. Alternatively, using a handler Map with {@link handleRequest},
+ * Get the current intent. Alternatively, using a handler Map with {@link Assistant#handleRequest},
  * the client library will automatically handle the incoming intents.
  *
  * @example
