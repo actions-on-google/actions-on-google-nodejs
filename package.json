@@ -14,12 +14,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/actions-on-google/client-library-nodejs.git"
+    "url": "git+https://github.com/actions-on-google/actions-on-google-nodejs.git"
   },
   "bugs": {
-    "url": "https://github.com/actions-on-google/client-library-nodejs/issues"
+    "url": "https://github.com/actions-on-google/actions-on-google-nodejs/issues"
   },
-  "homepage": "https://github.com/actions-on-google/client-library-nodejs#readme",
+  "homepage": "https://github.com/actions-on-google/actions-on-google-nodejs#readme",
   "keywords": [
     "google",
     "google actions",
