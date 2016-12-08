@@ -1,5 +1,4 @@
 # Actions On Google Client Library
-==================================
 
 This Actions On Google client library makes it easy to create your actions for the Google Assistant.
 

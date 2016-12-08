@@ -49,8 +49,8 @@ error.log = console.error.bind(console);
  * Should not be instantiated; rather instantiate one of the subclasses
  * {@link ActionsSdkAssistant} or {@link ApiAiAssistant}.
  *
- * @param {Object} options JSON configuration: {request [HTTP request object],
-                   response [HTTP response object], sessionStarted [function]}
+ * @param {Object} options JSON configuration: {request [Express HTTP request object],
+                   response [Express HTTP response object], sessionStarted [function]}
  * @constructor
  */
 function Assistant (options) {
@@ -74,13 +74,13 @@ function Assistant (options) {
   }
 
   /**
-   * The HTTP request that the endpoint receives from the Assistant.
+   * The Express HTTP request that the endpoint receives from the Assistant.
    * @private {object}
    */
   self.request_ = options.request;
 
   /**
-   * The HTTP response the endpoint will return to Assistant.
+   * The Express HTTP response the endpoint will return to Assistant.
    * @private {object}
    */
   self.response_ = options.response;
@@ -774,8 +774,8 @@ State.prototype.getName = function () {
  * const assistant = new ActionsSdkAssistant({request: request, response: response,
  *   sessionStarted:sessionStarted});
  *
- * @param {Object} options JSON configuration: {request [HTTP request object],
-                   response [HTTP response object], sessionStarted [function]}
+ * @param {Object} options JSON configuration: {request [Express HTTP request object],
+                   response [Express HTTP response object], sessionStarted [function]}
  * @constructor
  * @actionssdk
  */
@@ -1641,8 +1641,8 @@ ActionsSdkAssistant.prototype.fulfillPermissionsRequest_ = function (
  * const assistant = new ApiAiAssistant({request: request, response: response,
  *   sessionStarted:sessionStarted});
  *
- * @param {Object} options JSON configuration: {request [HTTP request object],
-                   response [HTTP response object], sessionStarted [function]}
+ * @param {Object} options JSON configuration: {request [Express HTTP request object],
+                   response [Express HTTP response object], sessionStarted [function]}
  * @constructor
  * @apiai
  */
