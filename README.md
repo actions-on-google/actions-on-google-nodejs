@@ -5,38 +5,29 @@ This Actions On Google client library makes it easy to create your actions for t
 
 The client library supports both the Actions SDK webhook and API.ai fulfillment.
 
-
-Here is the list of sample apps using the library:
-* [Hello World: HelloWorld](https://github.com/actions-on-google/helloworld)
-
-
 ## Setup Instructions
 
-# Actions SDK
+### Actions SDK
  1. Import the appropriate class: let ActionsSdkAssistant = require('actions-on-google').ActionsSdkAssistant;
- 2. Create an instance: const assistant = new ActionsSdkAssistant({request: request, response: response});
+ 1. Create an instance: const assistant = new ActionsSdkAssistant({request: request, response: response});
 
- # API.ai
+### API.ai
  1. Import the appropriate class: let ApiAiAssistant = require('actions-on-google').ApiAiAssistant;
- 2. Create an instance: const assistant = new ApiAiAssistant({request: request, response: response});
-
-See the developer guide and release notes at https://developers.google.com/actions/ for more details.
-
-## Documentation
-* Actions On Google: https://developers.google.com/actions/
+ 1. Create an instance: const assistant = new ApiAiAssistant({request: request, response: response});
 
 ## References and How to report bugs
-* Conversation APIs: http://developers.google.com/actions
-* If you find any issues, please open a bug here on GitHub
+* Actions on Google documentation: [https://developers.google.com/actions/](https://developers.google.com/actions/).
+* If you find any issues, please open a bug here on GitHub.
+* Questions are answered on [StackOverflow](https://stackoverflow.com/questions/tagged/actions-on-google).
 
-How to make contributions?
-Please read and follow the steps in the CONTRIBUTING.md
+## How to make contributions?
+Please read and follow the steps in the CONTRIBUTING.md.
 
-License
-See LICENSE.md
+## License
+See LICENSE.md.
 
 ## Terms
-Your use of this sample is subject to, and by using or downloading the sample files you agree to comply with, the [Google APIs Terms of Service](https://developers.google.com/terms/) and the [Actions On Google Developer Terms of Service](https://developers.google.com/actions/docs/terms/).
+Your use of this sample is subject to, and by using or downloading the sample files you agree to comply with, the [Google APIs Terms of Service](https://developers.google.com/terms/).
 
 ## Google+
-Actions on Google Developers Community on Google+ [http://g.co/actionsdev](http://g.co/actionsdev)
+Actions on Google Developers Community on Google+ [https://g.co/actionsdev](https://g.co/actionsdev).
