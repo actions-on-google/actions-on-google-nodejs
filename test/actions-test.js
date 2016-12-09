@@ -1248,16 +1248,12 @@ describe('ActionsSdkAssistant#ask', function () {
       response: mockResponse
     });
 
-    const RAW_INTENT = 'raw.input';
-
     function handler (assistant) {
-      return new Promise(function (resolve, reject) {
-        let inputPrompt = assistant.buildInputPrompt(true, '<speak>Hi! <break time="1"/> ' +
+      let inputPrompt = assistant.buildInputPrompt(true, '<speak>Hi! <break time="1"/> ' +
           'I can read out an ordinal like ' +
-          '<say-as interpret-as="ordinal">123</say-as></speak>');
-        let expectedIntent = assistant.buildExpectedIntent(RAW_INTENT);
-        resolve(assistant.ask(inputPrompt, [expectedIntent]));
-      });
+          '<say-as interpret-as="ordinal">123</say-as>. Say a number.</speak>',
+          ['I didn\'t hear a number', 'If you\'re still there, what\'s the number?', 'What is the number?']);
+      assistant.ask(inputPrompt);
     }
 
     let actionMap = new Map();
@@ -1274,19 +1270,24 @@ describe('ActionsSdkAssistant#ask', function () {
           'input_prompt': {
             'initial_prompts': [
               {
-                'ssml': '<speak>Hi! <break time="1"/> I can read out an ordinal like <say-as interpret-as="ordinal">123</say-as></speak>'
+                'ssml': '<speak>Hi! <break time="1"/> I can read out an ordinal like <say-as interpret-as="ordinal">123</say-as>. Say a number.</speak>'
               }
             ],
-            'no_match_prompts': [
-
-            ],
             'no_input_prompts': [
-
+              {
+                'ssml': 'I didn\'t hear a number'
+              },
+              {
+                'ssml': 'If you\'re still there, what\'s the number?'
+              },
+              {
+                'ssml': 'What is the number?'
+              }
             ]
           },
           'possible_intents': [
             {
-              'intent': 'raw.input'
+              'intent': 'assistant.intent.action.TEXT'
             }
           ]
         }
@@ -1339,14 +1340,12 @@ describe('ActionsSdkAssistant#ask', function () {
       response: mockResponse
     });
 
-    const RAW_INTENT = 'raw.input';
-
     function handler (assistant) {
       let inputPrompt = assistant.buildInputPrompt(true, '<speak>Hi! <break time="1"/> ' +
-        'I can read out an ordinal like ' +
-        '<say-as interpret-as="ordinal">123</say-as></speak>');
-      let expectedIntent = assistant.buildExpectedIntent(RAW_INTENT);
-      assistant.ask(inputPrompt, [expectedIntent]);
+          'I can read out an ordinal like ' +
+          '<say-as interpret-as="ordinal">123</say-as>. Say a number.</speak>',
+          ['I didn\'t hear a number', 'If you\'re still there, what\'s the number?', 'What is the number?']);
+      assistant.ask(inputPrompt);
     }
 
     let actionMap = new Map();
@@ -1363,19 +1362,24 @@ describe('ActionsSdkAssistant#ask', function () {
           'input_prompt': {
             'initial_prompts': [
               {
-                'ssml': '<speak>Hi! <break time="1"/> I can read out an ordinal like <say-as interpret-as="ordinal">123</say-as></speak>'
+                'ssml': '<speak>Hi! <break time="1"/> I can read out an ordinal like <say-as interpret-as="ordinal">123</say-as>. Say a number.</speak>'
               }
             ],
-            'no_match_prompts': [
-
-            ],
             'no_input_prompts': [
-
+              {
+                'ssml': 'I didn\'t hear a number'
+              },
+              {
+                'ssml': 'If you\'re still there, what\'s the number?'
+              },
+              {
+                'ssml': 'What is the number?'
+              }
             ]
           },
           'possible_intents': [
             {
-              'intent': 'raw.input'
+              'intent': 'assistant.intent.action.TEXT'
             }
           ]
         }
@@ -1406,7 +1410,7 @@ describe('ActionsSdkAssistant#tell', function () {
       },
       'inputs': [
         {
-          'intent': 'raw.input',
+          'intent': 'assistant.intent.action.MAIN',
           'raw_inputs': [
             {
               'input_type': 2,
@@ -1431,8 +1435,6 @@ describe('ActionsSdkAssistant#tell', function () {
       response: mockResponse
     });
 
-    const RAW_INTENT = 'raw.input';
-
     function handler (assistant) {
       return new Promise(function (resolve, reject) {
         resolve(assistant.tell('Goodbye!'));
@@ -1440,7 +1442,7 @@ describe('ActionsSdkAssistant#tell', function () {
     }
 
     let actionMap = new Map();
-    actionMap.set(RAW_INTENT, handler);
+    actionMap.set(assistant.StandardIntents.MAIN, handler);
 
     assistant.handleRequest(actionMap);
 
@@ -1478,7 +1480,7 @@ describe('ActionsSdkAssistant#getRawInput', function () {
       },
       'inputs': [
         {
-          'intent': 'raw.input',
+          'intent': 'assistant.intent.action.TEXT',
           'raw_inputs': [
             {
               'input_type': 2,
@@ -1552,7 +1554,7 @@ describe('ActionsSdkAssistant#askForText', function () {
 
     function handler (assistant) {
       return new Promise(function (resolve, reject) {
-        resolve(assistant.askForText('What can I help you with?'));
+        resolve(assistant.ask('What can I help you with?'));
       });
     }
 
@@ -1572,9 +1574,6 @@ describe('ActionsSdkAssistant#askForText', function () {
               {
                 'text_to_speech': 'What can I help you with?'
               }
-            ],
-            'no_match_prompts': [
-
             ],
             'no_input_prompts': [
 
@@ -1637,7 +1636,7 @@ describe('ActionsSdkAssistant#askForText', function () {
 
     function handler (assistant) {
       return new Promise(function (resolve, reject) {
-        resolve(assistant.askForText('<speak>What <break time="1"/> can I help you with?</speak>'));
+        resolve(assistant.ask('<speak>What <break time="1"/> can I help you with?</speak>'));
       });
     }
 
@@ -1657,9 +1656,6 @@ describe('ActionsSdkAssistant#askForText', function () {
               {
                 'ssml': '<speak>What <break time="1"/> can I help you with?</speak>'
               }
-            ],
-            'no_match_prompts': [
-
             ],
             'no_input_prompts': [
 
@@ -1718,31 +1714,22 @@ describe('ActionsSdkAssistant#ask', function () {
       response: mockResponse
     });
 
-    const PROVIDE_NUMBER_INTENT = 'PROVIDE_NUMBER';
-
     function handler (assistant) {
       return new Promise(function (resolve, reject) {
         let inputPrompt = assistant.buildInputPrompt(false, 'Welcome to action snippets! Say a number.',
-          ['Sorry, say that again?', 'Sorry, that number again?', 'What was that number?'],
           ['Say any number', 'Pick a number', 'What is the number?']);
-        let expectedIntent = assistant.buildExpectedIntent(PROVIDE_NUMBER_INTENT);
-        resolve(assistant.ask(inputPrompt, [expectedIntent], {started: true}));
+        resolve(assistant.ask(inputPrompt));
       });
-    }
-
-    function provideNumberIntent (assistant) {
-      assistant.tell('You said ' + assistant.getRawInput());
     }
 
     let actionMap = new Map();
     actionMap.set(assistant.StandardIntents.MAIN, handler);
-    actionMap.set(PROVIDE_NUMBER_INTENT, provideNumberIntent);
 
     assistant.handleRequest(actionMap);
 
     // Validating the response object
     let expectedResponse = {
-      'conversation_token': '{"started":true}',
+      'conversation_token': '{"state":null,"data":{}}',
       'expect_user_response': true,
       'expected_inputs': [
         {
@@ -1750,17 +1737,6 @@ describe('ActionsSdkAssistant#ask', function () {
             'initial_prompts': [
               {
                 'text_to_speech': 'Welcome to action snippets! Say a number.'
-              }
-            ],
-            'no_match_prompts': [
-              {
-                'text_to_speech': 'Sorry, say that again?'
-              },
-              {
-                'text_to_speech': 'Sorry, that number again?'
-              },
-              {
-                'text_to_speech': 'What was that number?'
               }
             ],
             'no_input_prompts': [
@@ -1777,7 +1753,7 @@ describe('ActionsSdkAssistant#ask', function () {
           },
           'possible_intents': [
             {
-              'intent': 'PROVIDE_NUMBER'
+              'intent': 'assistant.intent.action.TEXT'
             }
           ]
         }
@@ -1855,8 +1831,6 @@ describe('ActionsSdkAssistant#askForPermissions', function () {
               {
                 'text_to_speech': 'PLACEHOLDER_FOR_PERMISSION'
               }
-            ],
-            'no_match_prompts': [
             ],
             'no_input_prompts': [
             ]
@@ -2431,7 +2405,7 @@ describe('ActionsSdkAssistant#tell', function () {
       },
       'inputs': [
         {
-          'intent': 'raw.input',
+          'intent': 'assistant.intent.action.TEXT',
           'raw_inputs': [
             {
               'input_type': 2,
@@ -2456,12 +2430,9 @@ describe('ActionsSdkAssistant#tell', function () {
       response: mockResponse
     });
 
-    const RAW_INTENT = 'raw.input';
-
     function mainIntent (assistant) {
       let inputPrompt = assistant.buildInputPrompt(false, 'Welcome to action snippets! Say anything.');
-      let expectedIntent = assistant.buildExpectedIntent(RAW_INTENT);
-      assistant.ask(inputPrompt, [expectedIntent]);
+      assistant.ask(inputPrompt);
     }
 
     function rawInputIntent (assistant) {
@@ -2470,7 +2441,7 @@ describe('ActionsSdkAssistant#tell', function () {
 
     let actionMap = new Map();
     actionMap.set(assistant.StandardIntents.MAIN, mainIntent);
-    actionMap.set(RAW_INTENT, rawInputIntent);
+    actionMap.set(assistant.StandardIntents.TEXT, rawInputIntent);
 
     assistant.handleRequest(actionMap);
 
@@ -2554,125 +2525,5 @@ describe('ActionsSdkAssistant#getArgument', function () {
     actionMap.set(PROVIDE_NUMBER_INTENT, provideNumberIntent);
 
     assistant.handleRequest(actionMap);
-  });
-});
-
-/**
- * Describes the behavior for ActionsSdkAssistant buildExpectedIntent method.
- */
-describe('ActionsSdkAssistant#buildExpectedIntent', function () {
-  // Success case test, when the API returns a valid 200 response with the response object
-  it('Should validate assistant runtime entity request.', function () {
-    let headers = {
-      'Content-Type': 'application/json',
-      'Google-Assistant-API-Version': 'v1',
-      'Agent-Version-Label': '1.0.0'
-    };
-    let body = {
-      'user': {
-        'user_id': '11112226094657824893'
-      },
-      'conversation': {
-        'conversation_id': '1480714814340',
-        'type': 1
-      },
-      'inputs': [
-        {
-          'intent': 'assistant.intent.action.MAIN',
-          'raw_inputs': [
-            {
-              'input_type': 2,
-              'query': 'talk to action snippets'
-            }
-          ],
-          'arguments': [
-
-          ]
-        }
-      ]
-    };
-    const mockRequest = new MockRequest(headers, body);
-    const mockResponse = new MockResponse();
-
-    const assistant = new ActionsSdkAssistant({
-      request: mockRequest,
-      response: mockResponse
-    });
-
-    const PROVIDE_TIME_INTENT = 'PROVIDE_TIME';
-
-    function mainIntent (assistant) {
-      let runtimeEntity = assistant.newRuntimeEntity('$CustomTypeTime',
-        [assistant.newItem('18:00:00', ['six', '6 pm']),
-         assistant.newItem('19:00:00', ['seven', '7 pm'])]);
-
-      let inputPrompt = assistant.buildInputPrompt(false, 'Welcome to action snippets! Say a time.');
-      let expectedIntent = assistant.buildExpectedIntent(PROVIDE_TIME_INTENT, [runtimeEntity]);
-      assistant.ask(inputPrompt, [expectedIntent]);
-    }
-
-    function provideTimeIntent (assistant) {
-      assistant.tell('You said ' + assistant.getArgument('time'));
-    }
-
-    let actionMap = new Map();
-    actionMap.set(assistant.StandardIntents.MAIN, mainIntent);
-    actionMap.set(PROVIDE_TIME_INTENT, provideTimeIntent);
-
-    assistant.handleRequest(actionMap);
-
-    // Validating the response object
-    let expectedResponse = {
-      'conversation_token': '{"state":null,"data":{}}',
-      'expect_user_response': true,
-      'expected_inputs': [
-        {
-          'input_prompt': {
-            'initial_prompts': [
-              {
-                'text_to_speech': 'Welcome to action snippets! Say a time.'
-              }
-            ],
-            'no_match_prompts': [
-
-            ],
-            'no_input_prompts': [
-
-            ]
-          },
-          'possible_intents': [
-            {
-              'intent': 'PROVIDE_TIME',
-              'input_value_spec': {
-                'option_value_spec': {
-                  'options': [
-                    {
-                      'name': '$CustomTypeTime',
-                      'items': [
-                        {
-                          'key': '18:00:00',
-                          'synonyms': [
-                            'six',
-                            '6 pm'
-                          ]
-                        },
-                        {
-                          'key': '19:00:00',
-                          'synonyms': [
-                            'seven',
-                            '7 pm'
-                          ]
-                        }
-                      ]
-                    }
-                  ]
-                }
-              }
-            }
-          ]
-        }
-      ]
-    };
-    expect(JSON.stringify(mockResponse.body)).to.equal(JSON.stringify(expectedResponse));
   });
 });

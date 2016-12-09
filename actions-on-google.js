@@ -223,21 +223,31 @@ Assistant.prototype.BuiltInArgNames = {
  * @example
  * // Actions SDK
  * const assistant = new ActionsSdkAssistant({request: request, response: response});
- * const RAW_INTENT = 'raw.input';
  *
  * function mainIntent (assistant) {
- *   let inputPrompt = assistant.buildInputPrompt(false, 'Welcome to action snippets! Say anything.');
- *   let expectedIntent = assistant.buildExpectedIntent(RAW_INTENT);
- *   assistant.ask(inputPrompt, [expectedIntent]);
+ *   let inputPrompt = assistant.buildInputPrompt(true, '<speak>Hi! <break time="1"/> ' +
+ *         'I can read out an ordinal like ' +
+ *         '<say-as interpret-as="ordinal">123</say-as>. Say a number.</speak>',
+ *         ['I didn\'t hear a number', 'If you\'re still there, what\'s the number?', 'What is the number?']);
+ *   assistant.ask(inputPrompt);
  * }
  *
- * function rawInputIntent (assistant) {
- *   assistant.tell('You said ' + assistant.getRawInput());
+ * function rawInput (assistant) {
+ *   if (assistant.getRawInput() === 'bye') {
+ *     assistant.tell('Goodbye!');
+ *   } else {
+ *     let inputPrompt = assistant.buildInputPrompt(true, '<speak>You said, <say-as interpret-as="ordinal">' +
+ *       assistant.getRawInput() + '</say-as></speak>',
+ *         ['I didn\'t hear a number', 'If you\'re still there, what\'s the number?', 'What is the number?']);
+ *     assistant.ask(inputPrompt);
+ *   }
  * }
  *
  * let actionMap = new Map();
  * actionMap.set(assistant.StandardIntents.MAIN, mainIntent);
- * actionMap.set(RAW_INTENT, rawInputIntent);
+ * actionMap.set(assistant.StandardIntents.TEXT, rawInput);
+ *
+ * assistant.handleRequest(actionMap);
  *
  * // API.AI
  * const assistant = new ApiAiAssistant({request: req, response: res});
@@ -989,18 +999,16 @@ ActionsSdkAssistant.prototype.getConversationId = function () {
  *
  * @example
  * const assistant = new ActionsSdkAssistant({request: request, response: response});
- * const RAW_INTENT = 'raw.input';
  *
  * function responseHandler (assistant) {
  *   let intent = assistant.getIntent();
  *   switch (intent) {
  *     case assistant.StandardIntents.MAIN:
  *       let inputPrompt = assistant.buildInputPrompt(false, 'Welcome to action snippets! Say anything.');
- *       let expectedIntent = assistant.buildExpectedIntent(RAW_INTENT);
- *       assistant.ask(inputPrompt, [expectedIntent]);
+ *       assistant.ask(inputPrompt);
  *       break;
  *
- *     case RAW_INTENT:
+ *     case assistant.StandardIntents.TEXT:
  *       assistant.tell('You said ' + assistant.getRawInput());
  *       break;
  *   }
@@ -1029,26 +1037,17 @@ ActionsSdkAssistant.prototype.getIntent = function () {
  * const assistant = new ActionsSdkAssistant({request: request, response: response});
  *
  * function mainIntent (assistant) {
- *   let inputPrompt = assistant.buildInputPrompt(false, 'Welcome to action snippets! Say a number.',
- *     ['Sorry, say that again?', 'Sorry, that number again?', 'What was that number?'],
- *     ['Say any number', 'Pick a number', 'What is the number?']);
- *   let expectedIntent = assistant.buildExpectedIntent(PROVIDE_NUMBER_INTENT);
- *   assistant.ask(inputPrompt, [expectedIntent], {started: true});
- * }
- *
- * function provideNumberIntent (assistant) {
- *   assistant.tell('You said ' + assistant.getArgument('number'));
+ *    assistant.tell('You said ' + assistant.getRawInput());
  * }
  *
  * let actionMap = new Map();
  * actionMap.set(assistant.StandardIntents.MAIN, mainIntent);
- * actionMap.set(PROVIDE_NUMBER_INTENT, provideNumberIntent);
  *
  * assistant.handleRequest(actionMap);
  *
  * @param {string} argName Name of the argument.
  * @return {string} Argument value matching argName
-                    or null if no matching argument.
+ *                  or null if no matching argument.
  * @actionssdk
  */
 ActionsSdkAssistant.prototype.getArgument = function (argName) {
@@ -1073,61 +1072,46 @@ ActionsSdkAssistant.prototype.getArgument = function (argName) {
 };
 
 /**
- * Asks Assistant to collect the user's input.
+ * Asks Assistant to collect user's input; all user's queries need to be sent to
+ * the action.
  *
  * @example
- * // Basic 'ask' usage
  * const assistant = new ActionsSdkAssistant({request: request, response: response});
- * const RAW_INTENT = 'raw.input';
  *
  * function mainIntent (assistant) {
- *   let inputPrompt = assistant.buildInputPrompt(false, 'Welcome to action snippets! Say anything.');
- *   let expectedIntent = assistant.buildExpectedIntent(RAW_INTENT);
- *   assistant.ask(inputPrompt, [expectedIntent]);
+ *   let inputPrompt = assistant.buildInputPrompt(true, '<speak>Hi! <break time="1"/> ' +
+ *         'I can read out an ordinal like ' +
+ *         '<say-as interpret-as="ordinal">123</say-as>. Say a number.</speak>',
+ *         ['I didn\'t hear a number', 'If you\'re still there, what\'s the number?', 'What is the number?']);
+ *   assistant.ask(inputPrompt);
  * }
  *
- * function rawInputIntent (assistant) {
- *   assistant.tell('You said ' + assistant.getRawInput());
+ * function rawInput (assistant) {
+ *   if (assistant.getRawInput() === 'bye') {
+ *     assistant.tell('Goodbye!');
+ *   } else {
+ *     let inputPrompt = assistant.buildInputPrompt(true, '<speak>You said, <say-as interpret-as="ordinal">' +
+ *       assistant.getRawInput() + '</say-as></speak>',
+ *         ['I didn\'t hear a number', 'If you\'re still there, what\'s the number?', 'What is the number?']);
+ *     assistant.ask(inputPrompt);
+ *   }
  * }
  *
  * let actionMap = new Map();
  * actionMap.set(assistant.StandardIntents.MAIN, mainIntent);
- * actionMap.set(RAW_INTENT, rawInputIntent);
+ * actionMap.set(assistant.StandardIntents.TEXT, rawInput);
  *
  * assistant.handleRequest(actionMap);
  *
- * // Advanced 'ask' usage
- * const assistant = new ActionsSdkAssistant({request: request, response: response});
- * const PROVIDE_NUMBER_INTENT = 'PROVIDE_NUMBER';
- *
- * function mainIntent (assistant) {
- *   let inputPrompt = assistant.buildInputPrompt(false, 'Welcome to action snippets! Say a number.',
- *     ['Sorry, say that again?', 'Sorry, that number again?', 'What was that number?'],
- *     ['Say any number', 'Pick a number', 'What is the number?']);
- *   let expectedIntent = assistant.buildExpectedIntent(PROVIDE_NUMBER_INTENT);
- *   assistant.ask(inputPrompt, [expectedIntent], {started: true});
- * }
- *
- * function provideNumberIntent (assistant) {
- *   assistant.tell('You said ' + assistant.getRawInput());
- * }
- *
- * let actionMap = new Map();
- * actionMap.set(assistant.StandardIntents.MAIN, mainIntent);
- * actionMap.set(PROVIDE_NUMBER_INTENT, provideNumberIntent);
- *
- * assistant.handleRequest(actionMap);
- *
- * @param {Object} inputPrompt Holding initial, no-match and no-input prompts.
- * @param {array} possibleIntents Array of ExpectedIntents.
+ * @param {Object} inputPrompt Holding initial and no-input prompts.
  * @param {Object} dialogState JSON object the action uses to hold dialog state that
  *                 will be circulated back by Assistant.
  * @return The response that is sent to Assistant to ask user to provide input.
  * @actionssdk
  */
-ActionsSdkAssistant.prototype.ask = function (inputPrompt, possibleIntents, dialogState) {
-  debug('ask: inputPrompt=%s, possibleIntents=%s,  dialogState=%s',
-    inputPrompt, possibleIntents, dialogState);
+ActionsSdkAssistant.prototype.ask = function (inputPrompt, dialogState) {
+  debug('ask: inputPrompt=%s, dialogState=%s',
+    inputPrompt, dialogState);
   let self = this;
   if (!inputPrompt) {
     self.handleError_('Invalid input prompt');
@@ -1141,63 +1125,18 @@ ActionsSdkAssistant.prototype.ask = function (inputPrompt, possibleIntents, dial
       'state': (self.state instanceof State ? self.state.getName() : self.state),
       'data': self.data
     };
+  } else if (Array.isArray(dialogState)) {
+    self.handleError_('Invalid dialog state');
+    return null;
   }
-  let expectedInputs = [{
-    input_prompt: inputPrompt,
-    possible_intents: possibleIntents
-  }];
-  let response = self.buildResponseHelper_(
-    JSON.stringify(dialogState),
-    true, // expected_user_response
-    expectedInputs,
-    null // final_response is null b/c dialog is active
-  );
-  return self.doResponse_(response, RESPONSE_CODE_OK);
-};
-
-/**
- * Asks Assistant to collect user's input; all user's queries need to be sent to
- * the action.
- *
- * @example
- * const assistant = new ActionsSdkAssistant({request: request, response: response});
- *
- * function askForTextIntent (assistant) {
- *   assistant.askForText('What can I help you with?');
- * }
- *
- * function rawInputIntent (assistant) {
- *   assistant.tell('You said ' + assistant.getRawInput());
- * }
- *
- * let actionMap = new Map();
- * actionMap.set(assistant.StandardIntents.MAIN, askForTextIntent);
- * actionMap.set(assistant.StandardIntents.TEXT, rawInputIntent);
- *
- * assistant.handleRequest(actionMap);
- *
- * @param {string} textToSpeech text to speech value.
- * @param {Object} dialogState JSON object the action uses to hold dialog state that
- *                 will be circulated back by Assistant.
- *
- * @return The response that is sent to Assistant to ask user to provide an input.
- * @actionssdk
- */
-ActionsSdkAssistant.prototype.askForText = function (textToSpeech, dialogState) {
-  debug('askForText: textToSpeech=%s, dialogState=%s',
-    textToSpeech, JSON.stringify(dialogState));
-  let self = this;
-  let expectedIntent = this.buildExpectedIntent(self.StandardIntents.TEXT, []);
-  // We don't provide no-match and no-input prompt b/c user's query will always
-  // be matched.
-  let inputPrompt = self.buildInputPrompt(self.isSsml_(textToSpeech), textToSpeech);
+  let expectedIntent = self.buildExpectedIntent_(self.StandardIntents.TEXT, []);
   if (!dialogState) {
     dialogState = {
       'state': (self.state instanceof State ? self.state.getName() : self.state),
       'data': self.data
     };
   }
-  return self.ask(inputPrompt, [expectedIntent], dialogState);
+  return self.buildAskHelper_(inputPrompt, [expectedIntent], dialogState);
 };
 
 /**
@@ -1207,18 +1146,27 @@ ActionsSdkAssistant.prototype.askForText = function (textToSpeech, dialogState) 
  * const assistant = new ActionsSdkAssistant({request: request, response: response});
  *
  * function mainIntent (assistant) {
- *   let inputPrompt = assistant.buildInputPrompt(false, 'Welcome to action snippets! Say anything.');
- *   let expectedIntent = assistant.buildExpectedIntent(RAW_INTENT);
- *   assistant.ask(inputPrompt, [expectedIntent]);
+ *   let inputPrompt = assistant.buildInputPrompt(true, '<speak>Hi! <break time="1"/> ' +
+ *         'I can read out an ordinal like ' +
+ *         '<say-as interpret-as="ordinal">123</say-as>. Say a number.</speak>',
+ *         ['I didn\'t hear a number', 'If you\'re still there, what\'s the number?', 'What is the number?']);
+ *   assistant.ask(inputPrompt);
  * }
  *
- * function rawInputIntent (assistant) {
- *   assistant.tell('You said ' + assistant.getRawInput());
+ * function rawInput (assistant) {
+ *   if (assistant.getRawInput() === 'bye') {
+ *     assistant.tell('Goodbye!');
+ *   } else {
+ *     let inputPrompt = assistant.buildInputPrompt(true, '<speak>You said, <say-as interpret-as="ordinal">' +
+ *       assistant.getRawInput() + '</say-as></speak>',
+ *         ['I didn\'t hear a number', 'If you\'re still there, what\'s the number?', 'What is the number?']);
+ *     assistant.ask(inputPrompt);
+ *   }
  * }
  *
  * let actionMap = new Map();
  * actionMap.set(assistant.StandardIntents.MAIN, mainIntent);
- * actionMap.set(RAW_INTENT, rawInputIntent);
+ * actionMap.set(assistant.StandardIntents.TEXT, rawInput);
  *
  * assistant.handleRequest(actionMap);
  *
@@ -1250,47 +1198,32 @@ ActionsSdkAssistant.prototype.tell = function (textToSpeech) {
 
 /**
  * Builds the {@link https://developers.google.com/actions/reference/conversation#InputPrompt|InputPrompt object}
- * from initial prompt, no-match prompts, and no-input prompts.
+ * from initial prompt and no-input prompts.
  *
- * The Assistant needs one initial prompt to start the conversation, then if the user provides
- * an input which does not match to action's expected intents, the Assistant renders the
- * no-match prompts three times (one for each no-match prompt that was configured) to help the user
- * provide the right response. If there is no user response, the Assistant re-opens the mic
- * and issues no-input prompts in a similar fashion.
+ * The Assistant needs one initial prompt to start the conversation. If there is no user response,
+ * the Assistant re-opens the mic and renders the no-input prompts three times
+ * (one for each no-input prompt that was configured) to help the user
+ * provide the right response.
  *
  * Note: we highly recommend action to provide all the prompts required here in order to ensure a
  * good user experience.
  *
  * @example
  * let inputPrompt = assistant.buildInputPrompt(false, 'Welcome to action snippets! Say a number.',
- *     ['Sorry, say that again?', 'Sorry, that number again?', 'What was that number?'],
  *     ['Say any number', 'Pick a number', 'What is the number?']);
- *   let expectedIntent = assistant.buildExpectedIntent(PROVIDE_NUMBER_INTENT);
- *   assistant.ask(inputPrompt, [expectedIntent], {started: true});
+ * assistant.ask(inputPrompt);
  *
  * @param {boolean} isSsml Indicates whether the text to speech is SSML or not.
  * @param {string} initialPrompt The initial prompt the Assistant asks the user.
- * @param {array} noMatches Array of re-prompts when user's response mismatches
- *                 the action's expected input (max 3).
  * @param {array} noInputs Array of re-prompts when the user does not respond (max 3).
  * @return {Object} An {@link https://developers.google.com/actions/reference/conversation#InputPrompt|InputPrompt object}.
  * @actionssdk
  */
-ActionsSdkAssistant.prototype.buildInputPrompt = function (isSsml, initialPrompt,
-    noMatches, noInputs) {
-  debug('buildInputPrompt: isSsml=%s, initialPrompt=%s, noMatches=%s, noInputs=%s',
-    isSsml, initialPrompt, noMatches, noInputs);
+ActionsSdkAssistant.prototype.buildInputPrompt = function (isSsml, initialPrompt, noInputs) {
+  debug('buildInputPrompt: isSsml=%s, initialPrompt=%s, noInputs=%s',
+    isSsml, initialPrompt, noInputs);
   let self = this;
   let initials = [];
-
-  if (noMatches) {
-    if (noMatches.length > INPUTS_MAX) {
-      self.handleError_('Invalid number of no matches');
-      return null;
-    }
-  } else {
-    noMatches = [];
-  }
 
   if (noInputs) {
     if (noInputs.length > INPUTS_MAX) {
@@ -1305,172 +1238,14 @@ ActionsSdkAssistant.prototype.buildInputPrompt = function (isSsml, initialPrompt
   if (isSsml) {
     return {
       initial_prompts: self.buildPromptsFromSsmlHelper_(initials),
-      no_match_prompts: self.buildPromptsFromSsmlHelper_(noMatches),
       no_input_prompts: self.buildPromptsFromSsmlHelper_(noInputs)
     };
   } else {
     return {
       initial_prompts: self.buildPromptsFromPlainTextHelper_(initials),
-      no_match_prompts: self.buildPromptsFromPlainTextHelper_(noMatches),
       no_input_prompts: self.buildPromptsFromPlainTextHelper_(noInputs)
     };
   }
-};
-
-/**
- * Builds an ExpectedIntent object. Refer to {@link ActionsSdkAssistant#newRuntimeEntity} to create the list
- * of runtime entities required by this method. Runtime entities need to be defined in
- * the Action Package.
- *
- * @example
- * const assistant = new ActionsSdkAssistant({request: request, response: response});
- *
- * function mainIntent (assistant) {
- *   let runtimeEntity = assistant.newRuntimeEntity('$CustomTypeTime',
- *     [assistant.newItem('18:00:00', ['six', '6 pm']),
- *      assistant.newItem('19:00:00', ['seven', '7 pm'])])
- *
- *   let inputPrompt = assistant.buildInputPrompt(false, 'Welcome to action snippets! Say a time.');
- *   let expectedIntent = assistant.buildExpectedIntent(PROVIDE_TIME_INTENT, [runtimeEntity]);
- *   assistant.ask(inputPrompt, [expectedIntent]);
- * }
- *
- * function provideTimeIntent (assistant) {
- *   assistant.tell('You said ' + assistant.getArgument('time'));
- * }
- *
- * let actionMap = new Map();
- * actionMap.set(assistant.StandardIntents.MAIN, mainIntent);
- * actionMap.set(PROVIDE_TIME_INTENT, provideTimeIntent);
- *
- * assistant.handleRequest(actionMap);
- *
- * @param {string} intent Developer specified in-dialog intent inside the Action
- *                 Package or an Assistant built-in intent like
- *                 'assistant.intent.action.TEXT'.
- * @param {Array} runtimeEntities Array of runtime entities. Each runtime entity
- *                represents a custom type defined dynamically, e.g., car
- *                action might return list of available drivers after user says
- *                [book a cab].
- *
- * @return {Object} An {@link https://developers.google.com/actions/reference/conversation#ExpectedIntent|ExpectedIntent object}
-                    encapsulating the intent and the runtime entities.
- * @actionssdk
- */
-ActionsSdkAssistant.prototype.buildExpectedIntent = function (intent, runtimeEntities) {
-  debug('buildExpectedIntent: intent=%s, runtimeEntities=%s', intent, runtimeEntities);
-  let self = this;
-  if (!intent || intent === '') {
-    self.handleError_('Invalid intent');
-    return null;
-  }
-  let expectedIntent = {
-    intent: intent
-  };
-  if (runtimeEntities && runtimeEntities.length) {
-    expectedIntent.input_value_spec = {
-      option_value_spec: {
-        options: runtimeEntities
-      }
-    };
-  }
-  return expectedIntent;
-};
-
-/**
- * Creates a runtime entity, including the list of items. Refer to {@link ActionsSdkAssistant#buildExpectedIntent}
- * on the use of runtime entities. Runtime entities need to be defined in the Action Package.
- * This method is mostly used to create a runtime entity before action invokes {@link ActionsSdkAssistant#buildExpectedIntent}.
- *
- * @example
- * const assistant = new ActionsSdkAssistant({request: request, response: response});
- *
- * function mainIntent (assistant) {
- *   let runtimeEntity = assistant.newRuntimeEntity('$CustomTypeTime',
- *     [assistant.newItem('18:00:00', ['six', '6 pm']),
- *      assistant.newItem('19:00:00', ['seven', '7 pm'])])
- *
- *   let inputPrompt = assistant.buildInputPrompt(false, 'Welcome to action snippets! Say a time.');
- *   let expectedIntent = assistant.buildExpectedIntent(PROVIDE_TIME_INTENT, [runtimeEntity]);
- *   assistant.ask(inputPrompt, [expectedIntent]);
- * }
- *
- * function provideTimeIntent (assistant) {
- *   assistant.tell('You said ' + assistant.getArgument('time'));
- * }
- *
- * let actionMap = new Map();
- * actionMap.set(assistant.StandardIntents.MAIN, mainIntent);
- * actionMap.set(PROVIDE_TIME_INTENT, provideTimeIntent);
- *
- * assistant.handleRequest(actionMap);
- *
- * @param {string} name The name for this entity, which must be matched to a custom
- *                 type defined in Action Package.
- * @param {Array} items Array of possible items for this entity.
- * @return {Object} A runtime entity.
- * @actionssdk
- */
-ActionsSdkAssistant.prototype.newRuntimeEntity = function (name, items) {
-  debug('newRuntimeEntity: name=%s, items=%s', name, items);
-  let self = this;
-  if (!name) {
-    self.handleError_('Invalid name');
-    return null;
-  }
-  if (!name.startsWith('$')) {
-    self.handleError_('Name must start with $, name: ' + name);
-    return null;
-  }
-  if (!items || items.length === 0) {
-    self.handleError_('Missing items.');
-    return null;
-  }
-  return {
-    name: name,
-    items: items
-  };
-};
-
-/**
- * Creates a new item with a specific key and list of synonyms. Refer to {@link ActionsSdkAssistant#newRuntimeEntity}
- * to create a list of runtime entities. Runtime entities need to be defined in the Action Package.
- *
- * @example
- * const assistant = new ActionsSdkAssistant({request: request, response: response});
- *
- * function mainIntent (assistant) {
- *   let runtimeEntity = assistant.newRuntimeEntity('$CustomTypeTime',
- *     [assistant.newItem('18:00:00', ['six', '6 pm']),
- *      assistant.newItem('19:00:00', ['seven', '7 pm'])])
- *
- *   let inputPrompt = assistant.buildInputPrompt(false, 'Welcome to action snippets! Say a time.');
- *   let expectedIntent = assistant.buildExpectedIntent(PROVIDE_TIME_INTENT, [runtimeEntity]);
- *   assistant.ask(inputPrompt, [expectedIntent]);
- * }
- *
- * function provideTimeIntent (assistant) {
- *   assistant.tell('You said ' + assistant.getArgument('time'));
- * }
- *
- * let actionMap = new Map();
- * actionMap.set(assistant.StandardIntents.MAIN, mainIntent);
- * actionMap.set(PROVIDE_TIME_INTENT, provideTimeIntent);
- *
- * assistant.handleRequest(actionMap);
- *
- * @param {string} key UUID for this item.
- * @param {Array} synonyms Array of synonyms which can be used by the user
-                  to refer to this item.
- * @return {Object} An Item object used to encapsulate this item.
- * @actionssdk
- */
-ActionsSdkAssistant.prototype.newItem = function (key, synonyms) {
-  debug('newItem: key=%s, synonyms=%s', key, synonyms);
-  return {
-    key: key,
-    synonyms: synonyms
-  };
 };
 
 // ---------------------------------------------------------------------------
@@ -1585,7 +1360,7 @@ ActionsSdkAssistant.prototype.extractData_ = function () {
   let self = this;
   if (self.body_.conversation &&
     self.body_.conversation.conversation_token) {
-    let json = JSON.parse(this.body_.conversation.conversation_token);
+    let json = JSON.parse(self.body_.conversation.conversation_token);
     self.data = json.data;
     self.state = json.state;
   } else {
@@ -1625,7 +1400,74 @@ ActionsSdkAssistant.prototype.fulfillPermissionsRequest_ = function (
       'data': self.data
     };
   }
-  return self.ask(inputPrompt, [expectedIntent], dialogState);
+  return self.buildAskHelper_(inputPrompt, [expectedIntent], dialogState);
+};
+
+/**
+ * Builds the ask response to send back to Assistant.
+ *
+ * @param {Object} inputPrompt Holding initial and no-input prompts.
+ * @param {array} possibleIntents Array of ExpectedIntents.
+ * @param {Object} dialogState JSON object the action uses to hold dialog state that
+ *                 will be circulated back by Assistant.
+ * @return The response that is sent to Assistant to ask user to provide input.
+ * @private
+ * @actionssdk
+ */
+ActionsSdkAssistant.prototype.buildAskHelper_ = function (inputPrompt, possibleIntents, dialogState) {
+  debug('buildAskHelper_: inputPrompt=%s, possibleIntents=%s,  dialogState=%s',
+    inputPrompt, possibleIntents, dialogState);
+  let self = this;
+  if (!inputPrompt) {
+    self.handleError_('Invalid input prompt');
+    return null;
+  }
+  if (typeof inputPrompt === 'string') {
+    inputPrompt = self.buildInputPrompt(self.isSsml_(inputPrompt), inputPrompt);
+  }
+  if (!dialogState) {
+    dialogState = {
+      'state': (self.state instanceof State ? self.state.getName() : self.state),
+      'data': self.data
+    };
+  }
+  let expectedInputs = [{
+    input_prompt: inputPrompt,
+    possible_intents: possibleIntents
+  }];
+  let response = self.buildResponseHelper_(
+    JSON.stringify(dialogState),
+    true, // expected_user_response
+    expectedInputs,
+    null // final_response is null b/c dialog is active
+  );
+  return self.doResponse_(response, RESPONSE_CODE_OK);
+};
+
+/**
+ * Builds an ExpectedIntent object. Refer to {@link ActionsSdkAssistant#newRuntimeEntity} to create the list
+ * of runtime entities required by this method. Runtime entities need to be defined in
+ * the Action Package.
+ *
+ * @param {string} intent Developer specified in-dialog intent inside the Action
+ *                 Package or an Assistant built-in intent like
+ *                 'assistant.intent.action.TEXT'.
+ *
+ * @return {Object} An {@link https://developers.google.com/actions/reference/conversation#ExpectedIntent|ExpectedIntent object}
+                    encapsulating the intent and the runtime entities.
+ * @actionssdk
+ */
+ActionsSdkAssistant.prototype.buildExpectedIntent_ = function (intent) {
+  debug('buildExpectedIntent_: intent=%s', intent);
+  let self = this;
+  if (!intent || intent === '') {
+    self.handleError_('Invalid intent');
+    return null;
+  }
+  let expectedIntent = {
+    intent: intent
+  };
+  return expectedIntent;
 };
 
 // ---------------------------------------------------------------------------
