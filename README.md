@@ -8,12 +8,30 @@ The client library supports both the Actions SDK webhook and API.ai fulfillment.
 ## Setup Instructions
 
 ### Actions SDK
- 1. Import the appropriate class: let ActionsSdkAssistant = require('actions-on-google').ActionsSdkAssistant;
- 1. Create an instance: const assistant = new ActionsSdkAssistant({request: request, response: response});
+ 1. Import the appropriate class: 
+
+ ```javascript
+ let ActionsSdkAssistant = require('actions-on-google').ActionsSdkAssistant;
+ ```
+
+ 1. Create an instance: 
+
+ ```javascript
+ const assistant = new ActionsSdkAssistant({request: request, response: response});
+ ```
 
 ### API.ai
- 1. Import the appropriate class: let ApiAiAssistant = require('actions-on-google').ApiAiAssistant;
- 1. Create an instance: const assistant = new ApiAiAssistant({request: request, response: response});
+ 1. Import the appropriate class:
+
+ ```javascript
+ let ApiAiAssistant = require('actions-on-google').ApiAiAssistant;
+ ```
+
+ 1. Create an instance:
+
+ ```javascript
+ const assistant = new ApiAiAssistant({request: request, response: response});
+ ```
 
 ## References and How to report bugs
 * Actions on Google documentation: [https://developers.google.com/actions/](https://developers.google.com/actions/).
