@@ -1033,18 +1033,6 @@ ActionsSdkAssistant.prototype.getIntent = function () {
 /**
  * Get the argument value by name from the current intent.
  *
- * @example
- * const assistant = new ActionsSdkAssistant({request: request, response: response});
- *
- * function mainIntent (assistant) {
- *    assistant.tell('You said ' + assistant.getRawInput());
- * }
- *
- * let actionMap = new Map();
- * actionMap.set(assistant.StandardIntents.MAIN, mainIntent);
- *
- * assistant.handleRequest(actionMap);
- *
  * @param {string} argName Name of the argument.
  * @return {string} Argument value matching argName
  *                  or null if no matching argument.
@@ -1130,12 +1118,6 @@ ActionsSdkAssistant.prototype.ask = function (inputPrompt, dialogState) {
     return null;
   }
   let expectedIntent = self.buildExpectedIntent_(self.StandardIntents.TEXT, []);
-  if (!dialogState) {
-    dialogState = {
-      'state': (self.state instanceof State ? self.state.getName() : self.state),
-      'data': self.data
-    };
-  }
   return self.buildAskHelper_(inputPrompt, [expectedIntent], dialogState);
 };
 
@@ -1455,6 +1437,7 @@ ActionsSdkAssistant.prototype.buildAskHelper_ = function (inputPrompt, possibleI
  *
  * @return {Object} An {@link https://developers.google.com/actions/reference/conversation#ExpectedIntent|ExpectedIntent object}
                     encapsulating the intent and the runtime entities.
+ * @private
  * @actionssdk
  */
 ActionsSdkAssistant.prototype.buildExpectedIntent_ = function (intent) {
