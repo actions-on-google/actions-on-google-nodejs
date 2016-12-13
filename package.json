@@ -2,7 +2,7 @@
   "name": "actions-on-google",
   "description": "Actions on Google Client Library for Node.js",
   "main": "actions-on-google.js",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "license": "Apache-2.0",
   "author": "Google Inc.",
   "directories": {

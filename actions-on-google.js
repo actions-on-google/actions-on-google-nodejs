@@ -33,8 +33,6 @@ const CONVERSATION_API_AGENT_VERSION_HEADER = 'Agent-Version-Label';
 const RESPONSE_CODE_OK = 200;
 const RESPONSE_CODE_BAD_REQUEST = 400;
 const ACTIONS_API_AI_CONTEXT = '_actions_on_google_';
-const SSML_SPEAK_START = '<speak>';
-const SSML_SPEAK_END = '</speak>';
 const MAX_LIFESPAN = 100;
 const HTTP_CONTENT_TYPE_HEADER = 'Content-Type';
 const HTTP_CONTENT_TYPE_JSON = 'application/json';
@@ -619,12 +617,7 @@ Assistant.prototype.isSsml_ = function (text) {
     self.handleError_('Missing text');
     return false;
   }
-  text = text.trim().toLowerCase();
-  if (text.startsWith(SSML_SPEAK_START) &&
-      text.endsWith(SSML_SPEAK_END)) {
-    return true;
-  }
-  return false;
+  return /^<speak\b[^>]*>(.*?)<\/speak>$/gi.test(text);
 };
 
 /**
@@ -656,11 +649,13 @@ Assistant.prototype.handleError_ = function (text) {
 /**
  * Utility method to send an HTTP response.
  *
+ * @param {string} response The JSON response.
+ * @param {string} respnseCode The HTTP response code.
  * @return {object} HTTP response.
  * @private
  */
 Assistant.prototype.doResponse_ = function (response, responseCode) {
-  debug('doResponse_');
+  debug('doResponse_: response=%s, responseCode=%d', JSON.stringify(response), responseCode);
   let self = this;
   if (self.responded_) {
     return;
@@ -1099,7 +1094,7 @@ ActionsSdkAssistant.prototype.getArgument = function (argName) {
  */
 ActionsSdkAssistant.prototype.ask = function (inputPrompt, dialogState) {
   debug('ask: inputPrompt=%s, dialogState=%s',
-    inputPrompt, dialogState);
+    JSON.stringify(inputPrompt), JSON.stringify(dialogState));
   let self = this;
   if (!inputPrompt) {
     self.handleError_('Invalid input prompt');
@@ -1266,7 +1261,8 @@ ActionsSdkAssistant.prototype.buildResponseHelper_ = function (conversationToken
     expectUserResponse, expectedInput, finalResponse) {
   debug('buildResponseHelper_: conversationToken=%s, expectUserResponse=%s, ' +
     'expectedInput=%s, finalResponse=%s',
-    conversationToken, expectUserResponse, expectedInput, finalResponse);
+    conversationToken, expectUserResponse, JSON.stringify(expectedInput),
+    JSON.stringify(finalResponse));
   let response = {};
   if (conversationToken) {
     response.conversation_token = conversationToken;
@@ -1398,7 +1394,7 @@ ActionsSdkAssistant.prototype.fulfillPermissionsRequest_ = function (
  */
 ActionsSdkAssistant.prototype.buildAskHelper_ = function (inputPrompt, possibleIntents, dialogState) {
   debug('buildAskHelper_: inputPrompt=%s, possibleIntents=%s,  dialogState=%s',
-    inputPrompt, possibleIntents, dialogState);
+    inputPrompt, possibleIntents, JSON.stringify(dialogState));
   let self = this;
   if (!inputPrompt) {
     self.handleError_('Invalid input prompt');
@@ -1793,7 +1789,8 @@ ApiAiAssistant.prototype.tell = function (speechResponse) {
  * @apiai
  */
 ApiAiAssistant.prototype.setContext = function (context, lifespan, parameters) {
-  debug('setContext: context=%s, lifespan=%s, parameters=%s', context, lifespan, parameters);
+  debug('setContext: context=%s, lifespan=%d, parameters=%s', context, lifespan,
+    JSON.stringify(parameters));
   let self = this;
   if (!context) {
     self.handleError_('Invalid context name');

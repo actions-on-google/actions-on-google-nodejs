@@ -73,6 +73,89 @@ MockResponse.prototype.append = function (header, value) {
 };
 
 // ---------------------------------------------------------------------------
+//                   Assistant helpers
+// ---------------------------------------------------------------------------
+
+/**
+ * Describes the behavior for Assistant isSsml_ method.
+ */
+describe('ApiAiAssistant#isSsml_', function () {
+  // Success case test, when the API returns a valid 200 response with the response object
+  it('Should validate SSML syntax.', function () {
+    let headers = {
+      'Content-Type': 'application/json',
+      'google-assistant-api-version': 'v1'
+    };
+    let body = {
+      'id': 'ce7295cc-b042-42d8-8d72-14b83597ac1e',
+      'timestamp': '2016-10-28T03:05:34.288Z',
+      'result': {
+        'source': 'agent',
+        'resolvedQuery': 'start guess a number game',
+        'speech': '',
+        'action': 'generate_answer',
+        'actionIncomplete': false,
+        'parameters': {
+
+        },
+        'contexts': [
+          {
+            'name': 'game',
+            'lifespan': 5
+          }
+        ],
+        'metadata': {
+          'intentId': '56da4637-0419-46b2-b851-d7bf726b1b1b',
+          'webhookUsed': 'true',
+          'intentName': 'start_game'
+        },
+        'fulfillment': {
+          'speech': ''
+        },
+        'score': 1
+      },
+      'status': {
+        'code': 200,
+        'errorType': 'success'
+      },
+      'sessionId': 'e420f007-501d-4bc8-b551-5d97772bc50c',
+      'originalRequest': null
+    };
+    const mockRequest = new MockRequest(headers, body);
+    const mockResponse = new MockResponse();
+
+    const assistant = new ApiAiAssistant({request: mockRequest, response: mockResponse});
+
+    expect(assistant.isSsml_('<speak></speak>')).to.equal(true);
+    expect(assistant.isSsml_('<SPEAK></SPEAK>')).to.equal(true);
+    expect(assistant.isSsml_('  <speak></speak>  ')).to.equal(false);
+    expect(assistant.isSsml_('<speak>  </speak>')).to.equal(true);
+    expect(assistant.isSsml_('<speak version="1.0"></speak>')).to.equal(true);
+    expect(assistant.isSsml_('<speak version="1.0">Hello world!</speak>')).to.equal(true);
+    expect(assistant.isSsml_('<speak>')).to.equal(false);
+    expect(assistant.isSsml_('</speak>')).to.equal(false);
+    expect(assistant.isSsml_('')).to.equal(false);
+    expect(assistant.isSsml_('bla bla bla')).to.equal(false);
+    expect(assistant.isSsml_('<html></html>')).to.equal(false);
+    expect(assistant.isSsml_('bla bla bla<speak></speak>')).to.equal(false);
+    expect(assistant.isSsml_('<speak></speak> bla bla bla')).to.equal(false);
+    expect(assistant.isSsml_('<speak>my SSML content</speak>')).to.equal(true);
+    expect(assistant.isSsml_('<speak>Step 1, take a deep breath. <break time="2s" />Step 2, exhale.</speak>')).to.equal(true);
+    expect(assistant.isSsml_('<speak><say-as interpret-as="cardinal">12345</say-as></speak>')).to.equal(true);
+    expect(assistant.isSsml_('<speak><say-as interpret-as="ordinal">1</say-as></speak>')).to.equal(true);
+    expect(assistant.isSsml_('<speak><say-as interpret-as="characters">can</say-as></speak>')).to.equal(true);
+    expect(assistant.isSsml_('<speak><say-as interpret-as="date" format="ymd">1960-09-10</say-as></speak>')).to.equal(true);
+    expect(assistant.isSsml_('<speak><say-as interpret-as="date" format="yyyymmdd" detail="1">1960-09-10</say-as></speak>')).to.equal(true);
+    expect(assistant.isSsml_('<speak><say-as interpret-as="date" format="dm">10-9</say-as></speak>')).to.equal(true);
+    expect(assistant.isSsml_('<speak><say-as interpret-as="date" format="dmy" detail="2">10-9-1960</say-as></speak>')).to.equal(true);
+    expect(assistant.isSsml_('<speak><say-as interpret-as="time" format="hms12">2:30pm</say-as></speak>')).to.equal(true);
+    expect(assistant.isSsml_('<speak><audio src="https://somesite.bla/meow.mp3">a cat meowing</audio></speak>')).to.equal(true);
+    expect(assistant.isSsml_('<speak><p><s>This is sentence one.</s><s>This is sentence two.</s></p></speak>')).to.equal(true);
+    expect(assistant.isSsml_('<speak><sub alias="World Wide Web Consortium">W3C</sub></speak>')).to.equal(true);
+  });
+});
+
+// ---------------------------------------------------------------------------
 //                   API.ai support
 // ---------------------------------------------------------------------------
 
