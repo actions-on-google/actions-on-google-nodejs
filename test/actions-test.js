@@ -24,9 +24,9 @@ process.env.DEBUG = 'actions-on-google:*';
  */
 let winston = require('winston');
 let expect = require('chai').expect;
-let Assistant = require('.././actions-on-google');
-let ApiAiAssistant = Assistant.ApiAiAssistant;
-let ActionsSdkAssistant = Assistant.ActionsSdkAssistant;
+let assistant = require('.././actions-on-google');
+let ApiAiAssistant = assistant.ApiAiAssistant;
+let ActionsSdkAssistant = assistant.ActionsSdkAssistant;
 
 // Default logger
 winston.loggers.add('DEFAULT_LOGGER', {
