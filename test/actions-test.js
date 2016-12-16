@@ -22,11 +22,11 @@ process.env.DEBUG = 'actions-on-google:*';
 /**
  * Test suite for the actions client library.
  */
-let winston = require('winston');
-let expect = require('chai').expect;
-let assistant = require('.././actions-on-google');
-let ApiAiAssistant = assistant.ApiAiAssistant;
-let ActionsSdkAssistant = assistant.ActionsSdkAssistant;
+const winston = require('winston');
+const expect = require('chai').expect;
+const assistant = require('.././actions-on-google');
+const ApiAiAssistant = assistant.ApiAiAssistant;
+const ActionsSdkAssistant = assistant.ActionsSdkAssistant;
 
 // Default logger
 winston.loggers.add('DEFAULT_LOGGER', {
@@ -39,37 +39,45 @@ winston.loggers.add('DEFAULT_LOGGER', {
   }
 });
 
-function MockRequest (headers, body) {
-  if (headers) {
-    this.headers = headers;
-  } else {
-    this.headers = {};
+const MockRequest = class {
+  constructor (headers, body) {
+    if (headers) {
+      this.headers = headers;
+    } else {
+      this.headers = {};
+    }
+    if (body) {
+      this.body = body;
+    } else {
+      this.body = {};
+    }
   }
-  if (body) {
-    this.body = body;
-  } else {
-    this.body = {};
+
+  get (header) {
+    return this.headers[header];
   }
-}
-MockRequest.prototype.get = function (header) {
-  return this.headers[header];
 };
 
-function MockResponse () {
-  this.statusCode = 200;
-  this.headers = {};
-}
-MockResponse.prototype.status = function (statusCode) {
-  this.statusCode = statusCode;
-  return this;
-};
-MockResponse.prototype.send = function (body) {
-  this.body = body;
-  return this;
-};
-MockResponse.prototype.append = function (header, value) {
-  this.headers[header] = value;
-  return this;
+const MockResponse = class {
+  constructor () {
+    this.statusCode = 200;
+    this.headers = {};
+  }
+
+  status (statusCode) {
+    this.statusCode = statusCode;
+    return this;
+  }
+
+  send (body) {
+    this.body = body;
+    return this;
+  }
+
+  append (header, value) {
+    this.headers[header] = value;
+    return this;
+  }
 };
 
 // ---------------------------------------------------------------------------
