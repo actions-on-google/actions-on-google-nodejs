@@ -300,7 +300,6 @@ const ActionsSdkAssistant = class extends Assistant {
     }
     const argument = this.getArgument_(argName);
     if (!argument) {
-      this.handleError_('Missing argument');
       return null;
     }
     if (argument.text_value) {
