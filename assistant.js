@@ -160,11 +160,11 @@ const Assistant = class {
       return;
     }
     if (!options.request) {
-      this.handleError_('Invalid request');
+      this.handleError_('Request can NOT be empty.');
       return;
     }
     if (!options.response) {
-      this.handleError_('Invalid response');
+      this.handleError_('Response can NOT be empty.');
       return;
     }
 
@@ -268,7 +268,7 @@ const Assistant = class {
   handleRequest (handler) {
     debug('handleRequest: handler=%s', handler);
     if (!handler) {
-      this.handleError_('invalid request handler');
+      this.handleError_('request handler can NOT be empty.');
       return;
     }
     this.extractData_();
@@ -302,7 +302,7 @@ const Assistant = class {
       return;
     }
     // Could not handle intent
-    this.handleError_('no matching handler');
+    this.handleError_('invalid intent handler type: ' + (typeof handler));
     this.tell(ERROR_MESSAGE);
   }
 
@@ -589,7 +589,7 @@ const Assistant = class {
         return true;
       }
     }
-    this.handleError_('no matching intent handler');
+    this.handleError_('no matching intent handler for: ' + intent);
     return false;
   }
 
@@ -603,7 +603,7 @@ const Assistant = class {
   isSsml_ (text) {
     debug('isSsml_: text=%s', text);
     if (!text) {
-      this.handleError_('Missing text');
+      this.handleError_('text can NOT be empty.');
       return false;
     }
     return /^<speak\b[^>]*>(.*?)<\/speak>$/gi.test(text);
@@ -648,7 +648,7 @@ const Assistant = class {
       return;
     }
     if (!response) {
-      this.handleError_('Invalid response');
+      this.handleError_('Response can NOT be empty.');
       return null;
     }
     let code = RESPONSE_CODE_OK;
