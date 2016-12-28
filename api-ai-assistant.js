@@ -77,9 +77,9 @@ const ApiAiAssistant = class extends Assistant {
    */
   getUser () {
     debug('getUser');
-    if (!this.body_.originalRequest &&
+    if (!(this.body_.originalRequest &&
         this.body_.originalRequest.data &&
-        this.body_.originalRequest.data.user) {
+        this.body_.originalRequest.data.user)) {
       this.handleError_('No user object');
       return null;
     }
