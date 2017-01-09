@@ -163,9 +163,7 @@ const ActionsSdkAssistant = class extends Assistant {
    *   sendCarTo(assistant.getDeviceLocation().coordinates);
    * }
    *
-   * @return {Object} Container for device's location data:
-   *                  {coordinates, address, zipCode, city}.
-   *                  Null if location permission is not granted.
+   * @return {DeviceLocation} Null if location permission is not granted.
    * @actionssdk
    */
   getDeviceLocation () {

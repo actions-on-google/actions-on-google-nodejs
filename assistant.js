@@ -504,9 +504,7 @@ const Assistant = class {
    * actionMap.set(SAY_NAME_ACTION, sayName);
    * assistant.handleRequest(actionMap);
    *
-   * @return {Object} Container for user's display name, first name, given name:
-   *                  {displayName, givenName, familyName}. Null if name
-   *                  permission is not granted.
+   * @return {UserName} Null if name permission is not granted.
    * @actionssdk
    * @apiai
    */
