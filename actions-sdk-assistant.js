@@ -50,9 +50,10 @@ error.log = console.error.bind(console);
  * const assistant = new ActionsSdkAssistant({request: request, response: response,
  *   sessionStarted:sessionStarted});
  *
- * @param {Object} options JSON configuration: {request [Express HTTP request object],
-                   response [Express HTTP response object], sessionStarted [function]}
- * @constructor
+ * @param {Object} options JSON configuration.
+ * @param {Object} options.request Express HTTP request object.
+ * @param {Object} options.response Express HTTP response object.
+ * @param {Function=} options.sessionStarted Function callback when session starts.
  * @actionssdk
  */
 const ActionsSdkAssistant = class extends Assistant {
@@ -126,17 +127,16 @@ const ActionsSdkAssistant = class extends Assistant {
   }
 
   /**
-   * Gets the {@link https://developers.google.com/actions/reference/conversation#User|User object}.
+   * Gets the {@link User} object.
    * The user object contains information about the user, including
    * a string identifier and personal information (requires requesting permissions,
-   * see {@link Assistant#askForPermissions}).
+   * see {@link Assistant#askForPermissions|askForPermissions}).
    *
    * @example
    * const assistant = new ActionsSdkAssistant({request: request, response: response});
-   * const userId = assistant.getUser().user_id;
+   * const userId = assistant.getUser().userId;
    *
-   * @return {Object} {@link https://developers.google.com/actions/reference/conversation#User|User info}
-   *                  or null if no value.
+   * @return {User} Null if no value.
    * @actionssdk
    */
   getUser () {
@@ -145,13 +145,26 @@ const ActionsSdkAssistant = class extends Assistant {
       this.handleError_('No user object');
       return null;
     }
-    return this.body_.user;
+    // User object includes original API properties
+    const user = {
+      userId: this.body_.user.user_id,
+      user_id: this.body_.user.user_id,
+      userName: this.body_.user.profile ? {
+        displayName: this.body_.user.profile.display_name,
+        givenName: this.body_.user.profile.given_name,
+        familyName: this.body_.user.profile.family_name
+      } : null,
+      profile: this.body_.user.profile,
+      accessToken: this.body_.user.access_token,
+      access_token: this.body_.user.access_token
+    };
+    return user;
   }
 
   /**
    * If granted permission to device's location in previous intent, returns device's
-   * location (see {@link Assistant#askForPermissions}). If device info is unavailable,
-   * returns null.
+   * location (see {@link Assistant#askForPermissions|askForPermissoins}).
+   * If device info is unavailable, returns null.
    *
    * @example
    * const assistant = new ActionsSdkAssistant({request: req, response: res});
@@ -183,7 +196,7 @@ const ActionsSdkAssistant = class extends Assistant {
   /**
    * Returns true if the request follows a previous request asking for
    * permission from the user and the user granted the permission(s). Otherwise,
-   * false. Use with {@link Assistant#askForPermissions}.
+   * false. Use with {@link Assistant#askForPermissions|askForPermissions}.
    *
    * @example
    * const assistant = new ActionsSdkAssistant({request: request, response: response});
@@ -247,8 +260,9 @@ const ActionsSdkAssistant = class extends Assistant {
   }
 
   /**
-   * Get the current intent. Alternatively, using a handler Map with {@link Assistant#handleRequest},
-   * the client library will automatically handle the incoming intents.
+   * Get the current intent. Alternatively, using a handler Map with
+   * {@link Assistant#handleRequest|handleRequest}, the client library will
+   * automatically handle the incoming intents.
    *
    * @example
    * const assistant = new ActionsSdkAssistant({request: request, response: response});
@@ -342,7 +356,7 @@ const ActionsSdkAssistant = class extends Assistant {
    * assistant.handleRequest(actionMap);
    *
    * @param {Object} inputPrompt Holding initial and no-input prompts.
-   * @param {Object} dialogState JSON object the action uses to hold dialog state that
+   * @param {Object=} dialogState JSON object the action uses to hold dialog state that
    *                 will be circulated back by Assistant.
    * @return The response that is sent to Assistant to ask user to provide input.
    * @actionssdk
@@ -444,7 +458,7 @@ const ActionsSdkAssistant = class extends Assistant {
    *
    * @param {boolean} isSsml Indicates whether the text to speech is SSML or not.
    * @param {string} initialPrompt The initial prompt the Assistant asks the user.
-   * @param {array} noInputs Array of re-prompts when the user does not respond (max 3).
+   * @param {Array<string>=} noInputs Array of re-prompts when the user does not respond (max 3).
    * @return {Object} An {@link https://developers.google.com/actions/reference/conversation#InputPrompt|InputPrompt object}.
    * @actionssdk
    */
@@ -501,9 +515,9 @@ const ActionsSdkAssistant = class extends Assistant {
    *
    * @param {string} conversationToken The dialog state.
    * @param {boolean} expectUserResponse The expected user response.
-   * @param {object} expectedInput The expected response.
+   * @param {Object} expectedInput The expected response.
    * @param {boolean} finalResponse The final response.
-   * @return {object} Final response returned to server.
+   * @return {Object} Final response returned to server.
    * @private
    * @actionssdk
    */
@@ -549,7 +563,7 @@ const ActionsSdkAssistant = class extends Assistant {
    * Get the argument by name from the current action.
    *
    * @param {string} argName Name of the argument.
-   * @return {object} Argument value matching argName
+   * @return {Object} Argument value matching argName
                       or null if no matching argument.
    * @private
    * @actionssdk
@@ -596,7 +610,7 @@ const ActionsSdkAssistant = class extends Assistant {
    * Uses a PermissionsValueSpec object to construct and send a
    * permissions request to user.
    *
-   * @param {object} permissionsSpec PermissionsValueSpec object containing
+   * @param {Object} permissionsSpec PermissionsValueSpec object containing
    *                 the permissions prefix and the permissions requested.
    * @param {Object} dialogState JSON object the action uses to hold dialog state that
    *                 will be circulated back by Assistant.
@@ -629,7 +643,7 @@ const ActionsSdkAssistant = class extends Assistant {
    * Builds the ask response to send back to Assistant.
    *
    * @param {Object} inputPrompt Holding initial and no-input prompts.
-   * @param {array} possibleIntents Array of ExpectedIntents.
+   * @param {Array} possibleIntents Array of ExpectedIntents.
    * @param {Object} dialogState JSON object the action uses to hold dialog state that
    *                 will be circulated back by Assistant.
    * @return The response that is sent to Assistant to ask user to provide input.

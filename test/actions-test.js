@@ -481,7 +481,9 @@ describe('ApiAiAssistant#getUser', function () {
       response: mockResponse
     });
 
+    // Test new and old API
     expect(assistant.getUser().user_id).to.equal('11112226094657824893');
+    expect(assistant.getUser().userId).to.equal('11112226094657824893');
   });
 });
 
@@ -2111,7 +2113,9 @@ describe('ActionsSdkAssistant#getUser', function () {
       response: mockResponse
     });
 
+    // Test new and old API
     expect(assistant.getUser().user_id).to.equal('11112226094657824893');
+    expect(assistant.getUser().userId).to.equal('11112226094657824893');
   });
 });
 

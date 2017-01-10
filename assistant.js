@@ -46,9 +46,10 @@ error.log = console.error.bind(console);
  * Should not be instantiated; rather instantiate one of the subclasses
  * {@link ActionsSdkAssistant} or {@link ApiAiAssistant}.
  *
- * @param {Object} options JSON configuration: {request [Express HTTP request object],
-                   response [Express HTTP response object], sessionStarted [function]}
- * @constructor
+ * @param {Object} options JSON configuration.
+ * @param {Object} options.request Express HTTP request object.
+ * @param {Object} options.response Express HTTP response object.
+ * @param {Function=} options.sessionStarted Function callback when session starts.
  */
 const Assistant = class {
   constructor (options) {
@@ -56,49 +57,57 @@ const Assistant = class {
 
     /**
      * Intent handling data structure.
-     * @private {object}
+     * @private
+     * @type {Object}
      */
     this.handler_ = null;
 
     /**
      * Intent mapping data structure.
-     * @private {object}
+     * @private
+     * @type {Object}
      */
     this.intentMap_ = null;
 
     /**
      * Intent state data structure.
-     * @private {object}
+     * @private
+     * @type {Object}
      */
     this.stateMap_ = null;
 
     /**
      * The session state.
-     * @public {string}
+     * @public
+     * @type {string}
      */
     this.state = null;
 
     /**
      * The session data in JSON format.
-     * @public {object}
+     * @public
+     * @type {Object}
      */
     this.data = {};
 
     /**
      * The API.AI context.
-     * @private {object}
+     * @private
+     * @type {Object}
      */
     this.contexts_ = {};
 
     /**
      * The last error message.
-     * @private {string}
+     * @private
+     * @type {string}
      */
     this.lastErrorMessage_ = null;
 
     /**
      * Track if an HTTP response has been sent already.
-     * @private {boolean}
+     * @private
+     * @type {boolean}
      */
     this.responded_ = false;
 
@@ -170,19 +179,22 @@ const Assistant = class {
 
     /**
      * The Express HTTP request that the endpoint receives from the Assistant.
-     * @private {object}
+     * @private
+     * @type {Object}
      */
     this.request_ = options.request;
 
     /**
      * The Express HTTP response the endpoint will return to Assistant.
-     * @private {object}
+     * @private
+     * @type {Object}
      */
     this.response_ = options.response;
 
     /**
      * 'sessionStarted' callback (optional).
-     * @private {object}
+     * @private
+     * @type {Function}
      */
     this.sessionStarted_ = options.sessionStarted;
 
@@ -190,13 +202,15 @@ const Assistant = class {
 
     /**
      * The request body contains query JSON and previous session variables.
-     * @private {object}
+     * @private
+     * @type {Object}
      */
     this.body_ = this.request_.body;
 
     /**
      * API version describes version of the Assistant request.
-     * @private {string} valid API version.
+     * @private
+     * @type {string}
      */
     this.apiVersion_ = null;
     // Populates API version.
@@ -261,7 +275,7 @@ const Assistant = class {
    * actionMap.set(NAME_ACTION, makeName);
    * assistant.handleRequest(actionMap);
    *
-   * @param {Object} handler The handler for the request.
+   * @param {(Function|Map)} handler The handler (or Map of handlers) for the request.
    * @actionssdk
    * @apiai
    */
@@ -307,8 +321,8 @@ const Assistant = class {
   }
 
   /**
-   * Equivalent to {@link Assistant#askForPermission}, but allows you to prompt the
-   * user for more than one permission at once.
+   * Equivalent to {@link Assistant#askForPermission|askForPermission},
+   * but allows you to prompt the user for more than one permission at once.
    *
    * Notes:
    *
@@ -351,7 +365,7 @@ const Assistant = class {
    *
    * @param {string} context Context why the permission is being asked; it's the TTS
    *                 prompt prefix (action phrase) we ask the user.
-   * @param {Array} permissions Array of permissions Assistant supports, each of
+   * @param {Array<string>} permissions Array of permissions Assistant supports, each of
    *                which comes from Assistant.SupportedPermissions.
    * @param {Object=} dialogState JSON object the action uses to hold dialog state that
    *                 will be circulated back by Assistant.
@@ -409,9 +423,9 @@ const Assistant = class {
    * Read more:
    *
    * * {@link https://developers.google.com/actions/reference/conversation#ExpectedIntent|Supported Permissions}
-   * * Check if the permission has been granted with {@link ActionsSdkAssistant#isPermissionGranted}
-   * * {@link ActionsSdkAssistant#getDeviceLocation}
-   * * {@link Assistant#getUserName}
+   * * Check if the permission has been granted with {@link ActionsSdkAssistant#isPermissionGranted|isPermissionsGranted}
+   * * {@link ActionsSdkAssistant#getDeviceLocation|getDeviceLocation}
+   * * {@link Assistant#getUserName|getUserName}
    *
    * @example
    * const assistant = new ApiAiAssistant({request: req, response: res});
@@ -458,22 +472,33 @@ const Assistant = class {
   /**
    * User's permissioned name info.
    * @typedef {Object} UserName
-   * @property {string} displayName - user display name
-   * @property {string} givenName - user given name
-   * @property {string} familyName - user family name
+   * @property {string} displayName - User's display name.
+   * @property {string} givenName - User's given name.
+   * @property {string} familyName - User's family name.
    */
 
   /**
    * User's permissioned device location.
    * @typedef {Object} DeviceLocation
    * @property {Object} coordinates - {latitude, longitude}. Requested with
-   *                                  SupportedPermissions.DEVICE_PRECISE_LOCATION
+   *                                  SupportedPermissions.DEVICE_PRECISE_LOCATION.
    * @property {string} address - Full, formatted street address. Requested with
    *                              SupportedPermissions.DEVICE_PRECISE_LOCATION.
    * @property {string} zipCode - Zip code. Requested with
    *                              SupportedPermissions.DEVICE_COARSE_LOCATION.
    * @property {string} city - Device city. Requested with
-   *                           SupportedPermissions.DEVICE_COARSE_LOCATION
+   *                           SupportedPermissions.DEVICE_COARSE_LOCATION.
+   */
+
+   /**
+   * User object.
+   * @typedef {Object} User
+   * @property {string} userId - Random string ID for Google user.
+   * @property {UserName} userName - User name information. Null if not
+                                     requested with
+   *                                 {@link Assistant#askForPermission|askForPermission(SupportedPermissions.NAME)}.
+   * @property {string} accessToken - Unique Oauth2 token. Only available with
+   *                                  account linking.
    */
 
   /**
@@ -510,15 +535,7 @@ const Assistant = class {
    */
   getUserName () {
     debug('getUserName');
-    if (!this.getUser().profile) {
-      return null;
-    }
-    const userName = {
-      displayName: this.getUser().profile.display_name,
-      givenName: this.getUser().profile.given_name,
-      familyName: this.getUser().profile.family_name
-    };
-    return userName;
+    return this.getUser().userName;
   }
 
   // ---------------------------------------------------------------------------
@@ -637,7 +654,7 @@ const Assistant = class {
    *
    * @param {string} response The JSON response.
    * @param {string} respnseCode The HTTP response code.
-   * @return {object} HTTP response.
+   * @return {Object} HTTP response.
    * @private
    */
   doResponse_ (response, responseCode) {
@@ -690,8 +707,8 @@ const Assistant = class {
   /**
    * Helper to build prompts from SSML's.
    *
-   * @param {array} ssmls Array of ssml.
-   * @return {array} Array of SpeechResponse objects.
+   * @param {Array<string>} ssmls Array of ssml.
+   * @return {Array<Object>} Array of SpeechResponse objects.
    * @private
    */
   buildPromptsFromSsmlHelper_ (ssmls) {
@@ -709,8 +726,8 @@ const Assistant = class {
   /**
    * Helper to build prompts from plain texts.
    *
-   * @param {array} plainTexts Array of plain text to speech.
-   * @return {array} Array of SpeechResponse objects.
+   * @param {Array<string>} plainTexts Array of plain text to speech.
+   * @return {Array<Object>} Array of SpeechResponse objects.
    * @private
    */
   buildPromptsFromPlainTextHelper_ (plainTexts) {

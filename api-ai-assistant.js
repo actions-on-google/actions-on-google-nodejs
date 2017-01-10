@@ -50,9 +50,10 @@ error.log = console.error.bind(console);
  * const assistant = new ApiAiAssistant({request: request, response: response,
  *   sessionStarted:sessionStarted});
  *
- * @param {Object} options JSON configuration: {request [Express HTTP request object],
-                   response [Express HTTP response object], sessionStarted [function]}
- * @constructor
+ * @param {Object} options JSON configuration.
+ * @param {Object} options.request Express HTTP request object.
+ * @param {Object} options.response Express HTTP response object.
+ * @param {Function=} options.sessionStarted Function callback when session starts.
  * @apiai
  */
 const ApiAiAssistant = class extends Assistant {
@@ -62,17 +63,16 @@ const ApiAiAssistant = class extends Assistant {
   }
 
   /**
-   * Gets the {@link https://developers.google.com/actions/reference/conversation#User|User object}.
+   * Gets the {@link User} object.
    * The user object contains information about the user, including
    * a string identifier and personal information (requires requesting permissions,
-   * see {@link Assistant#askForPermissions}).
+   * see {@link Assistant#askForPermissions|askForPermissions}).
    *
    * @example
    * const assistant = new ApiAiAssistant({request: request, response: response});
-   * const userId = assistant.getUser().user_id;
+   * const userId = assistant.getUser().userId;
    *
-   * @return {Object} {@link https://developers.google.com/actions/reference/conversation#User|User info}
-   *                  or null if no value.
+   * @return {User} Null if no value.
    * @apiai
    */
   getUser () {
@@ -83,13 +83,26 @@ const ApiAiAssistant = class extends Assistant {
       this.handleError_('No user object');
       return null;
     }
-    return this.body_.originalRequest.data.user;
+    // User object includes original API properties
+    const user = {
+      userId: this.body_.originalRequest.data.user.user_id,
+      user_id: this.body_.originalRequest.data.user.user_id,
+      userName: this.body_.originalRequest.data.user.profile ? {
+        displayName: this.body_.originalRequest.data.user.profile.display_name,
+        givenName: this.body_.originalRequest.data.user.profile.given_name,
+        familyName: this.body_.originalRequest.data.user.profile.family_name
+      } : null,
+      profile: this.body_.originalRequest.data.user.profile,
+      accessToken: this.body_.originalRequest.data.user.access_token,
+      access_token: this.body_.originalRequest.data.user.access_token
+    };
+    return user;
   }
 
   /**
    * If granted permission to device's location in previous intent, returns device's
-   * location (see {@link Assistant#askForPermissions}). If device info is unavailable,
-   * returns null.
+   * location (see {@link Assistant#askForPermissions|askForPermissions}).
+   * If device info is unavailable, returns null.
    *
    * @example
    * const assistant = new ApiAiAssistant({request: req, response: res});
@@ -121,7 +134,7 @@ const ApiAiAssistant = class extends Assistant {
   /**
    * Returns true if the request follows a previous request asking for
    * permission from the user and the user granted the permission(s). Otherwise,
-   * false. Use with {@link Assistant#askForPermissions}.
+   * false. Use with {@link Assistant#askForPermissions|askForPermissions}.
    *
    * @example
    * const assistant = new ApiAiAssistant({request: request, response: response});
@@ -135,7 +148,7 @@ const ApiAiAssistant = class extends Assistant {
    *  // Use the requested permission(s) to get the user a ride
    * }
    *
-   * @return {boolean} true if permissions granted.
+   * @return {boolean} True if permissions granted.
    * @apiai
    */
   isPermissionGranted () {
@@ -158,7 +171,7 @@ const ApiAiAssistant = class extends Assistant {
    *                 API.AI Fulfillment settings of the action.
    * @param {string} value The private value specified by the developer inside the
    *                 fulfillment header.
-   * @return {boolean} true if the request comes from API.AI.
+   * @return {boolean} True if the request comes from API.AI.
    * @apiai
    */
   isRequestFromApiAi (key, value) {
@@ -175,7 +188,8 @@ const ApiAiAssistant = class extends Assistant {
   }
 
   /**
-   * Get the current intent. Alternatively, using a handler Map with {@link Assistant#handleRequest},
+   * Get the current intent. Alternatively, using a handler Map with
+   * {@link Assistant#handleRequest|handleRequest},
    * the client library will automatically handle the incoming intents.
    *
    * @example
@@ -233,7 +247,7 @@ const ApiAiAssistant = class extends Assistant {
    * assistant.handleRequest(actionMap);
    *
    * @param {string} argName Name of the argument.
-   * @return {object} Argument value matching argName
+   * @return {Object} Argument value matching argName
                       or null if no matching argument.
    * @apiai
    */
@@ -282,8 +296,8 @@ const ApiAiAssistant = class extends Assistant {
    * actionMap.set(NUMBER_INTENT, numberIntent);
    * assistant.handleRequest(actionMap);
    *
-   * @param {String} inputPrompt The input prompt text.
-   * @param {array} noInputs Array of re-prompts when the user does not respond (max 3).
+   * @param {string} inputPrompt The input prompt text.
+   * @param {Array<string>=} noInputs Array of re-prompts when the user does not respond (max 3).
    * @return {Object} HTTP response.
    * @apiai
    */
@@ -361,8 +375,8 @@ const ApiAiAssistant = class extends Assistant {
    * assistant.handleRequest(actionMap);
    *
    * @param {string} name Name of the context. API.AI converts to lowercase.
-   * @param {int} lifespan Context lifespan.
-   * @param {object} parameters Context JSON parameters.
+   * @param {int} [lifespan=1] Context lifespan.
+   * @param {Object=} parameters Context JSON parameters.
    * @apiai
    */
   setContext (name, lifespan, parameters) {
@@ -485,12 +499,12 @@ const ApiAiAssistant = class extends Assistant {
   /**
    * Builds a response for API.AI to send back to the Assistant.
    *
-   * @param {object} dialogState JSON object the action uses to hold dialog state that
+   * @param {Object} dialogState JSON object the action uses to hold dialog state that
    *                 will be circulated back by Assistant.
    * @param {string} textToSpeech TTS spoken to end user.
    * @param {boolean} expectUserResponse true if the user response is expected.
-   * @param {array} noInputs Array of re-prompts when the user does not respond (max 3).
-   * @return {object} The final response returned to Assistant.
+   * @param {Array<string>=} noInputs Array of re-prompts when the user does not respond (max 3).
+   * @return {Object} The final response returned to Assistant.
    * @private
    * @apiai
    */
@@ -567,7 +581,7 @@ const ApiAiAssistant = class extends Assistant {
    * Uses a PermissionsValueSpec object to construct and send a
    * permissions request to the user.
    *
-   * @param {object} permissionsSpec PermissionsValueSpec object containing
+   * @param {Object} permissionsSpec PermissionsValueSpec object containing
    *                 the permissions prefix and permissions requested.
    * @return {Object} The HTTP response.
    * @private
