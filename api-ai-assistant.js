@@ -343,6 +343,7 @@ const ApiAiAssistant = class extends Assistant {
    * @example
    * const assistant = new ApiAiAssistant({request: request, response: response});
    * const CONTEXT_NUMBER = 'number';
+   * const NUMBER_ARGUMENT = 'myNumber';
    *
    * function welcomeIntent (assistant) {
    *   assistant.setContext(CONTEXT_NUMBER);
@@ -359,20 +360,20 @@ const ApiAiAssistant = class extends Assistant {
    * actionMap.set(NUMBER_INTENT, numberIntent);
    * assistant.handleRequest(actionMap);
    *
-   * @param {string} context Name of the context.
+   * @param {string} name Name of the context. API.AI converts to lowercase.
    * @param {int} lifespan Context lifespan.
    * @param {object} parameters Context JSON parameters.
    * @apiai
    */
-  setContext (context, lifespan, parameters) {
-    debug('setContext: context=%s, lifespan=%d, parameters=%s', context, lifespan,
+  setContext (name, lifespan, parameters) {
+    debug('setContext: context=%s, lifespan=%d, parameters=%s', name, lifespan,
       JSON.stringify(parameters));
-    if (!context) {
+    if (!name) {
       this.handleError_('Invalid context name');
       return null;
     }
     const newContext = {
-      name: context,
+      name: name,
       lifespan: 1
     };
     if (lifespan !== null && lifespan !== undefined) {
@@ -381,7 +382,63 @@ const ApiAiAssistant = class extends Assistant {
     if (parameters) {
       newContext.parameters = parameters;
     }
-    this.contexts_[context] = newContext;
+    this.contexts_[name] = newContext;
+  }
+
+  /**
+   * API.AI {@link https://docs.api.ai/docs/concept-contexts|Context}.
+   * @typedef {Object} Context
+   * @property {string} name - Full name of the context.
+   * @property {Object} parameters - Parameters carried within this context.
+                                     See {@link https://docs.api.ai/docs/concept-actions#section-extracting-values-from-contexts|here}.
+   * @property {number} lifespan - Remaining number of intents
+   */
+
+  /**
+   * Returns the incoming contexts for this intent.
+   *
+   * @example
+   * const assistant = new ApiAiAssistant({request: request, response: response});
+   * const CONTEXT_NUMBER = 'number';
+   * const NUMBER_ARGUMENT = 'myNumber';
+   *
+   * function welcomeIntent (assistant) {
+   *   assistant.setContext(CONTEXT_NUMBER);
+   *   assistant.ask('Welcome to action snippets! Say a number.');
+   * }
+   *
+   * function numberIntent (assistant) {
+   *   let contexts = assistant.getContexts();
+   *   // contexts === [{
+   *   //   name: 'number',
+   *   //   lifespan: 0,
+   *   //   parameters: {
+   *   //     myNumber: '23',
+   *   //     myNumber.original: '23'
+   *   //   }
+   *   // }]
+   *   const number = assistant.getArgument(NUMBER_ARGUMENT);
+   *   assistant.tell('You said ' + number);
+   * }
+   *
+   * const actionMap = new Map();
+   * actionMap.set(WELCOME_INTENT, welcomeIntent);
+   * actionMap.set(NUMBER_INTENT, numberIntent);
+   * assistant.handleRequest(actionMap);
+   *
+   * @return {Context[]} Empty if no active contexts.
+   * @apiai
+   */
+  getContexts () {
+    debug('getContexts');
+    if (!this.body_.result ||
+        !this.body_.result.contexts) {
+      this.handleError_('No contexts included in request');
+      return null;
+    }
+    return this.body_.result.contexts.filter((context) => {
+      return context.name !== ACTIONS_API_AI_CONTEXT;
+    });
   }
 
   /**
