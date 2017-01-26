@@ -148,6 +148,7 @@ describe('ApiAiAssistant#isSsml_', function () {
     expect(assistant.isSsml_('bla bla bla<speak></speak>')).to.equal(false);
     expect(assistant.isSsml_('<speak></speak> bla bla bla')).to.equal(false);
     expect(assistant.isSsml_('<speak>my SSML content</speak>')).to.equal(true);
+    expect(assistant.isSsml_('<speak>Line 1\nLine2</speak>')).to.equal(true);
     expect(assistant.isSsml_('<speak>Step 1, take a deep breath. <break time="2s" />Step 2, exhale.</speak>')).to.equal(true);
     expect(assistant.isSsml_('<speak><say-as interpret-as="cardinal">12345</say-as></speak>')).to.equal(true);
     expect(assistant.isSsml_('<speak><say-as interpret-as="ordinal">1</say-as></speak>')).to.equal(true);

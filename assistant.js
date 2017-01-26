@@ -604,7 +604,8 @@ const Assistant = class {
       this.handleError_('text can NOT be empty.');
       return false;
     }
-    return /^<speak\b[^>]*>(.*?)<\/speak>$/gi.test(text);
+    // Using [^]* instead of .* to match newlines, since JS does not have the DOTALL modifier
+    return /^<speak\b[^>]*>([^]*?)<\/speak>$/gi.test(text);
   }
 
   /**
