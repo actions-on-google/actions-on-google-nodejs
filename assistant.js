@@ -621,7 +621,7 @@ const Assistant = class {
       this.handleError_('text can NOT be empty.');
       return false;
     }
-    return /^<speak\b[^>]*>(.*?)<\/speak>$/gi.test(text);
+    return /^<speak\b[^>]*>([^]*?)<\/speak>$/gi.test(text);
   }
 
   /**
