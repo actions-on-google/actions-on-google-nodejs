@@ -41,6 +41,7 @@
   },
   "devDependencies": {
     "chai": "^3.5.0",
+    "chai-spies": "^0.7.1",
     "mocha": "^3.0.2",
     "winston": "2.2.0",
     "semistandard": "^9.1.0"

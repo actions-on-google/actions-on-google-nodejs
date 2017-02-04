@@ -164,6 +164,29 @@ const Assistant = class {
       PERMISSION_GRANTED: 'permission_granted'
     };
 
+    /**
+     * List of possible conversation stages, as defined in the
+     * (@link https://developers.google.com/actions/reference/conversation#Conversation|Conversation object).
+     * @readonly
+     * @enum {number}
+     * @actionssdk
+     * @apiai
+     */
+    this.ConversationStages = {
+      /**
+       * Unspecified conversation state.
+       */
+      UNSPECIFIED: 0,
+      /**
+       * A new conversation.
+       */
+      NEW: 1,
+      /**
+       * An active (ongoing) conversation.
+       */
+      ACTIVE: 2
+    };
+
     if (!options) {
       // ignore for JavaScript inheritance to work
       return;

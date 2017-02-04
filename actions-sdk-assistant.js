@@ -60,6 +60,13 @@ const ActionsSdkAssistant = class extends Assistant {
   constructor (options) {
     debug('ActionsSdkAssistant constructor');
     super(options);
+
+    if (this.body_.conversation.type === this.ConversationStages.NEW &&
+        this.sessionStarted_ && typeof this.sessionStarted_ === 'function') {
+      this.sessionStarted_();
+    } else if (this.sessionStarted_ && typeof this.sessionStarted_ !== 'function') {
+      this.handleError_('options.sessionStarted must be a Function');
+    }
   }
 
   /*

@@ -23,10 +23,14 @@ process.env.DEBUG = 'actions-on-google:*';
  * Test suite for the actions client library.
  */
 const winston = require('winston');
-const expect = require('chai').expect;
+const chai = require('chai');
+const expect = chai.expect;
+const spies = require('chai-spies');
 const assistant = require('.././actions-on-google');
 const ApiAiAssistant = assistant.ApiAiAssistant;
 const ActionsSdkAssistant = assistant.ActionsSdkAssistant;
+
+chai.use(spies);
 
 // Default logger
 winston.loggers.add('DEFAULT_LOGGER', {
@@ -127,7 +131,13 @@ describe('ApiAiAssistant#isSsml_', function () {
         'errorType': 'success'
       },
       'sessionId': 'e420f007-501d-4bc8-b551-5d97772bc50c',
-      'originalRequest': null
+      'originalRequest': {
+        'data': {
+          'conversation': {
+            'type': 2
+          }
+        }
+      }
     };
     const mockRequest = new MockRequest(headers, body);
     const mockResponse = new MockResponse();
@@ -167,6 +177,137 @@ describe('ApiAiAssistant#isSsml_', function () {
 // ---------------------------------------------------------------------------
 //                   API.ai support
 // ---------------------------------------------------------------------------
+
+/**
+ * Describes the behavior for ApiAiAssistant constructor method.
+ */
+describe('ApiAiAssistant#constructor', function () {
+  // Calls sessionStarted when provided
+  it('Calls sessionStarted when new session', function () {
+    let headers = {
+      'Content-Type': 'application/json',
+      'google-assistant-api-version': 'v1'
+    };
+    let body = {
+      'id': 'ce7295cc-b042-42d8-8d72-14b83597ac1e',
+      'timestamp': '2016-10-28T03:05:34.288Z',
+      'result': {
+        'source': 'agent',
+        'resolvedQuery': 'start guess a number game',
+        'speech': '',
+        'action': 'generate_answer',
+        'actionIncomplete': false,
+        'parameters': {
+
+        },
+        'contexts': [
+          {
+            'name': 'game',
+            'lifespan': 5
+          }
+        ],
+        'metadata': {
+          'intentId': '56da4637-0419-46b2-b851-d7bf726b1b1b',
+          'webhookUsed': 'true',
+          'intentName': 'start_game'
+        },
+        'fulfillment': {
+          'speech': ''
+        },
+        'score': 1
+      },
+      'status': {
+        'code': 200,
+        'errorType': 'success'
+      },
+      'sessionId': 'e420f007-501d-4bc8-b551-5d97772bc50c',
+      'originalRequest': {
+        'data': {
+          'conversation': {
+            'type': 1
+          }
+        }
+      }
+    };
+    const mockRequest = new MockRequest(headers, body);
+    const mockResponse = new MockResponse();
+
+    const sessionStartedSpy = chai.spy();
+
+    const assistant = new ApiAiAssistant({
+      request: mockRequest,
+      response: mockResponse,
+      sessionStarted: sessionStartedSpy
+    });
+
+    assistant.handleRequest();
+
+    expect(sessionStartedSpy).to.have.been.called();
+  });
+
+  // Does not call sessionStarted when not new sessoin
+  it('Does not call sessionStarted when not new session ', function () {
+    let headers = {
+      'Content-Type': 'application/json',
+      'google-assistant-api-version': 'v1'
+    };
+    let body = {
+      'id': 'ce7295cc-b042-42d8-8d72-14b83597ac1e',
+      'timestamp': '2016-10-28T03:05:34.288Z',
+      'result': {
+        'source': 'agent',
+        'resolvedQuery': 'start guess a number game',
+        'speech': '',
+        'action': 'generate_answer',
+        'actionIncomplete': false,
+        'parameters': {
+
+        },
+        'contexts': [
+          {
+            'name': 'game',
+            'lifespan': 5
+          }
+        ],
+        'metadata': {
+          'intentId': '56da4637-0419-46b2-b851-d7bf726b1b1b',
+          'webhookUsed': 'true',
+          'intentName': 'start_game'
+        },
+        'fulfillment': {
+          'speech': ''
+        },
+        'score': 1
+      },
+      'status': {
+        'code': 200,
+        'errorType': 'success'
+      },
+      'sessionId': 'e420f007-501d-4bc8-b551-5d97772bc50c',
+      'originalRequest': {
+        'data': {
+          'conversation': {
+            'type': 2
+          }
+        }
+      }
+    };
+    const mockRequest = new MockRequest(headers, body);
+    const mockResponse = new MockResponse();
+
+    const sessionStartedSpy = chai.spy();
+
+    const assistant = new ApiAiAssistant({
+      request: mockRequest,
+      response: mockResponse,
+      sessionStarted: sessionStartedSpy
+    });
+
+    assistant.handleRequest();
+
+    expect(sessionStartedSpy).to.not.have.been.called();
+  });
+});
 
 /**
  * Describes the behavior for ApiAiAssistant tell method.
@@ -211,7 +352,13 @@ describe('ApiAiAssistant#tell', function () {
         'errorType': 'success'
       },
       'sessionId': 'e420f007-501d-4bc8-b551-5d97772bc50c',
-      'originalRequest': null
+      'originalRequest': {
+        'data': {
+          'conversation': {
+            'type': 2
+          }
+        }
+      }
     };
     const mockRequest = new MockRequest(headers, body);
     const mockResponse = new MockResponse();
@@ -305,7 +452,13 @@ describe('ApiAiAssistant#ask', function () {
         'errorType': 'success'
       },
       'sessionId': 'e420f007-501d-4bc8-b551-5d97772bc50c',
-      'originalRequest': null
+      'originalRequest': {
+        'data': {
+          'conversation': {
+            'type': 2
+          }
+        }
+      }
     };
     const mockRequest = new MockRequest(headers, body);
     const mockResponse = new MockResponse();
@@ -381,7 +534,13 @@ describe('ApiAiAssistant#askForPermissions', function () {
         'errorType': 'success'
       },
       'sessionId': 'e420f007-501d-4bc8-b551-5d97772bc50c',
-      'originalRequest': null
+      'originalRequest': {
+        'data': {
+          'conversation': {
+            'type': 2
+          }
+        }
+      }
     };
     const mockRequest = new MockRequest(headers, body);
     const mockResponse = new MockResponse();
@@ -467,6 +626,9 @@ describe('ApiAiAssistant#getUser', function () {
       'sessionId': 'e420f007-501d-4bc8-b551-5d97772bc50c',
       'originalRequest': {
         'data': {
+          'conversation': {
+            'type': 2
+          },
           'user': {
             'user_id': '11112226094657824893'
           }
@@ -530,6 +692,9 @@ describe('ApiAiAssistant#getUserName', function () {
       'sessionId': 'e420f007-501d-4bc8-b551-5d97772bc50c',
       'originalRequest': {
         'data': {
+          'conversation': {
+            'type': 2
+          },
           'user': {
             'user_id': '11112226094657824893',
             'profile': {
@@ -611,6 +776,9 @@ describe('ApiAiAssistant#getDeviceLocation', function () {
       'sessionId': 'e420f007-501d-4bc8-b551-5d97772bc50c',
       'originalRequest': {
         'data': {
+          'conversation': {
+            'type': 2
+          },
           'user': {
             'user_id': '11112226094657824893'
           },
@@ -704,6 +872,9 @@ describe('ApiAiAssistant#isPermissionGranted', function () {
       'sessionId': 'e420f007-501d-4bc8-b551-5d97772bc50c',
       'originalRequest': {
         'data': {
+          'conversation': {
+            'type': 2
+          },
           'inputs': [{
             'arguments': [{
               'name': 'permission_granted',
@@ -796,7 +967,13 @@ describe('ApiAiAssistant#getIntent', function () {
         'errorType': 'success'
       },
       'sessionId': 'e420f007-501d-4bc8-b551-5d97772bc50c',
-      'originalRequest': null
+      'originalRequest': {
+        'data': {
+          'conversation': {
+            'type': 2
+          }
+        }
+      }
     };
     const mockRequest = new MockRequest(headers, body);
     const mockResponse = new MockResponse();
@@ -866,7 +1043,13 @@ describe('ApiAiAssistant#getArgument', function () {
         'errorType': 'success'
       },
       'sessionId': 'e420f007-501d-4bc8-b551-5d97772bc50c',
-      'originalRequest': null
+      'originalRequest': {
+        'data': {
+          'conversation': {
+            'type': 2
+          }
+        }
+      }
     };
     const mockRequest = new MockRequest(headers, body);
     const mockResponse = new MockResponse();
@@ -935,7 +1118,13 @@ describe('ApiAiAssistant#isRequestFromApiAi', function () {
         'errorType': 'success'
       },
       'sessionId': 'f23e77a5-8b09-495d-b9b3-6835d737abf3',
-      'originalRequest': null
+      'originalRequest': {
+        'data': {
+          'conversation': {
+            'type': 2
+          }
+        }
+      }
     };
     const mockRequest = new MockRequest(headers, body);
     const mockResponse = new MockResponse();
@@ -985,7 +1174,14 @@ describe('ApiAiAssistant#isRequestFromApiAi', function () {
             }
           ]
         }
-      ]
+      ],
+      'originalRequest': {
+        'data': {
+          'conversation': {
+            'type': 2
+          }
+        }
+      }
     };
     const mockRequest = new MockRequest(headers, body);
     const mockResponse = new MockResponse();
@@ -1065,7 +1261,13 @@ describe('ApiAiAssistant#getRawInput', function () {
         'errorType': 'success'
       },
       'sessionId': 'f23e77a5-8b09-495d-b9b3-6835d737abf3',
-      'originalRequest': null
+      'originalRequest': {
+        'data': {
+          'conversation': {
+            'type': 2
+          }
+        }
+      }
     };
     const mockRequest = new MockRequest(headers, body);
     const mockResponse = new MockResponse();
@@ -1129,7 +1331,13 @@ describe('ApiAiAssistant#setContext', function () {
         'errorType': 'success'
       },
       'sessionId': 'f23e77a5-8b09-495d-b9b3-6835d737abf3',
-      'originalRequest': null
+      'originalRequest': {
+        'data': {
+          'conversation': {
+            'type': 2
+          }
+        }
+      }
     };
     const mockRequest = new MockRequest(headers, body);
     const mockResponse = new MockResponse();
@@ -1246,7 +1454,13 @@ describe('ApiAiAssistant#getContexts', function () {
         'errorType': 'success'
       },
       'sessionId': 'f23e77a5-8b09-495d-b9b3-6835d737abf3',
-      'originalRequest': null
+      'originalRequest': {
+        'data': {
+          'conversation': {
+            'type': 2
+          }
+        }
+      }
     };
     let mockRequest = new MockRequest(headers, body);
     const mockResponse = new MockResponse();
@@ -1364,7 +1578,13 @@ describe('ApiAiAssistant#ask', function () {
         'errorType': 'success'
       },
       'sessionId': 'f23e77a5-8b09-495d-b9b3-6835d737abf3',
-      'originalRequest': null
+      'originalRequest': {
+        'data': {
+          'conversation': {
+            'type': 2
+          }
+        }
+      }
     };
     const mockRequest = new MockRequest(headers, body);
     const mockResponse = new MockResponse();
@@ -1421,6 +1641,105 @@ describe('ApiAiAssistant#ask', function () {
 // ---------------------------------------------------------------------------
 //                   Actions SDK support
 // ---------------------------------------------------------------------------
+
+/**
+ * Describes the behavior for ApiAiAssistant constructor method.
+ */
+describe('ActionsSdkAssistant#constructor', function () {
+  // Calls sessionStarted when provided
+  it('Calls sessionStarted when new session', function () {
+    let headers = {
+      'Content-Type': 'application/json',
+      'Google-Assistant-API-Version': 'v1'
+    };
+    let body = {
+      'user': {
+        'user_id': '11112226094657824893'
+      },
+      'conversation': {
+        'conversation_id': '1480373842830',
+        'type': 1
+      },
+      'inputs': [
+        {
+          'intent': 'assistant.intent.action.MAIN',
+          'raw_inputs': [
+            {
+              'input_type': 2,
+              'query': 'talk to hello action'
+            }
+          ],
+          'arguments': [
+            {
+              'name': 'agent_info'
+            }
+          ]
+        }
+      ]
+    };
+    const mockRequest = new MockRequest(headers, body);
+    const mockResponse = new MockResponse();
+
+    const sessionStartedSpy = chai.spy();
+
+    const assistant = new ActionsSdkAssistant({
+      request: mockRequest,
+      response: mockResponse,
+      sessionStarted: sessionStartedSpy
+    });
+
+    assistant.handleRequest();
+
+    expect(sessionStartedSpy).to.have.been.called();
+  });
+
+  // Does not call sessionStarted when not new sessoin
+  it('Does not call sessionStarted when not new session ', function () {
+    let headers = {
+      'Content-Type': 'application/json',
+      'Google-Assistant-API-Version': 'v1'
+    };
+    let body = {
+      'user': {
+        'user_id': '11112226094657824893'
+      },
+      'conversation': {
+        'conversation_id': '1480373842830',
+        'type': 2
+      },
+      'inputs': [
+        {
+          'intent': 'assistant.intent.action.MAIN',
+          'raw_inputs': [
+            {
+              'input_type': 2,
+              'query': 'talk to hello action'
+            }
+          ],
+          'arguments': [
+            {
+              'name': 'agent_info'
+            }
+          ]
+        }
+      ]
+    };
+    const mockRequest = new MockRequest(headers, body);
+    const mockResponse = new MockResponse();
+
+    const sessionStartedSpy = chai.spy();
+
+    const assistant = new ActionsSdkAssistant({
+      request: mockRequest,
+      response: mockResponse,
+      sessionStarted: sessionStartedSpy
+    });
+
+    assistant.handleRequest();
+
+    expect(sessionStartedSpy).to.not.have.been.called();
+  });
+});
 
 /**
  * Describes the behavior for ActionsSdkAssistant ask method.
