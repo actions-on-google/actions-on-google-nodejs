@@ -168,9 +168,9 @@ const ApiAiAssistant = class extends Assistant {
    * Verifies whether the request comes from API.AI.
    *
    * @param {string} key The header key specified by the developer in the
-   *                 API.AI Fulfillment settings of the action.
+   *     API.AI Fulfillment settings of the action.
    * @param {string} value The private value specified by the developer inside the
-   *                 fulfillment header.
+   *     fulfillment header.
    * @return {boolean} True if the request comes from API.AI.
    * @apiai
    */
@@ -248,7 +248,7 @@ const ApiAiAssistant = class extends Assistant {
    *
    * @param {string} argName Name of the argument.
    * @return {Object} Argument value matching argName
-                      or null if no matching argument.
+   *     or null if no matching argument.
    * @apiai
    */
   getArgument (argName) {
@@ -500,7 +500,7 @@ const ApiAiAssistant = class extends Assistant {
    * Builds a response for API.AI to send back to the Assistant.
    *
    * @param {Object} dialogState JSON object the action uses to hold dialog state that
-   *                 will be circulated back by Assistant.
+   *     will be circulated back by Assistant.
    * @param {string} textToSpeech TTS spoken to end user.
    * @param {boolean} expectUserResponse true if the user response is expected.
    * @param {Array<string>=} noInputs Array of re-prompts when the user does not respond (max 3).
@@ -582,7 +582,7 @@ const ApiAiAssistant = class extends Assistant {
    * permissions request to the user.
    *
    * @param {Object} permissionsSpec PermissionsValueSpec object containing
-   *                 the permissions prefix and permissions requested.
+   *     the permissions prefix and permissions requested.
    * @return {Object} The HTTP response.
    * @private
    * @apiai

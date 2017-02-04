@@ -364,14 +364,13 @@ const Assistant = class {
    * assistant.handleRequest(actionMap);
    *
    * @param {string} context Context why the permission is being asked; it's the TTS
-   *                 prompt prefix (action phrase) we ask the user.
+   *     prompt prefix (action phrase) we ask the user.
    * @param {Array<string>} permissions Array of permissions Assistant supports, each of
-   *                which comes from Assistant.SupportedPermissions.
+   *     which comes from Assistant.SupportedPermissions.
    * @param {Object=} dialogState JSON object the action uses to hold dialog state that
-   *                 will be circulated back by Assistant.
-   *
+   *     will be circulated back by Assistant.
    * @return A response is sent to Assistant to ask for the user's permission; for any
-   *         invalid input, we return null.
+   *     invalid input, we return null.
    * @actionssdk
    * @apiai
    */
@@ -452,14 +451,13 @@ const Assistant = class {
    * assistant.handleRequest(actionMap);
    *
    * @param {string} context Context why permission is asked; it's the TTS
-   *                 prompt prefix (action phrase) we ask the user.
+   *     prompt prefix (action phrase) we ask the user.
    * @param {string} permission One of the permissions Assistant supports, each of
-   *                 which comes from Assistant.SupportedPermissions.
+   *     which comes from Assistant.SupportedPermissions.
    * @param {Object=} dialogState JSON object the action uses to hold dialog state that
-   *                 will be circulated back by Assistant.
-   *
+   *     will be circulated back by Assistant.
    * @return A response is sent to the Assistant to ask for the user's permission;
-   *         for any invalid input, we return null.
+   *     for any invalid input, we return null.
    * @actionssdk
    * @apiai
    */
@@ -481,13 +479,13 @@ const Assistant = class {
    * User's permissioned device location.
    * @typedef {Object} DeviceLocation
    * @property {Object} coordinates - {latitude, longitude}. Requested with
-   *                                  SupportedPermissions.DEVICE_PRECISE_LOCATION.
+   *     SupportedPermissions.DEVICE_PRECISE_LOCATION.
    * @property {string} address - Full, formatted street address. Requested with
-   *                              SupportedPermissions.DEVICE_PRECISE_LOCATION.
+   *     SupportedPermissions.DEVICE_PRECISE_LOCATION.
    * @property {string} zipCode - Zip code. Requested with
-   *                              SupportedPermissions.DEVICE_COARSE_LOCATION.
+   *      SupportedPermissions.DEVICE_COARSE_LOCATION.
    * @property {string} city - Device city. Requested with
-   *                           SupportedPermissions.DEVICE_COARSE_LOCATION.
+   *     SupportedPermissions.DEVICE_COARSE_LOCATION.
    */
 
    /**
@@ -495,10 +493,9 @@ const Assistant = class {
    * @typedef {Object} User
    * @property {string} userId - Random string ID for Google user.
    * @property {UserName} userName - User name information. Null if not
-                                     requested with
-   *                                 {@link Assistant#askForPermission|askForPermission(SupportedPermissions.NAME)}.
+   *     requested with {@link Assistant#askForPermission|askForPermission(SupportedPermissions.NAME)}.
    * @property {string} accessToken - Unique Oauth2 token. Only available with
-   *                                  account linking.
+   *     account linking.
    */
 
   /**
@@ -528,7 +525,6 @@ const Assistant = class {
    * actionMap.set(REQUEST_PERMISSION_ACTION, requestPermission);
    * actionMap.set(SAY_NAME_ACTION, sayName);
    * assistant.handleRequest(actionMap);
-   *
    * @return {UserName} Null if name permission is not granted.
    * @actionssdk
    * @apiai

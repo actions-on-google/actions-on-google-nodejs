@@ -115,7 +115,7 @@ const ActionsSdkAssistant = class extends Assistant {
    * const dialogState = assistant.getDialogState();
    *
    * @return {Object} JSON object provided to the Assistant in the previous
-   *                  user turn or {} if no value.
+   *     user turn or {} if no value.
    * @actionssdk
    */
   getDialogState () {
@@ -301,7 +301,7 @@ const ActionsSdkAssistant = class extends Assistant {
    *
    * @param {string} argName Name of the argument.
    * @return {string} Argument value matching argName
-   *                  or null if no matching argument.
+   *     or null if no matching argument.
    * @actionssdk
    */
   getArgument (argName) {
@@ -357,7 +357,7 @@ const ActionsSdkAssistant = class extends Assistant {
    *
    * @param {Object} inputPrompt Holding initial and no-input prompts.
    * @param {Object=} dialogState JSON object the action uses to hold dialog state that
-   *                 will be circulated back by Assistant.
+   *     will be circulated back by Assistant.
    * @return The response that is sent to Assistant to ask user to provide input.
    * @actionssdk
    */
@@ -564,7 +564,7 @@ const ActionsSdkAssistant = class extends Assistant {
    *
    * @param {string} argName Name of the argument.
    * @return {Object} Argument value matching argName
-                      or null if no matching argument.
+         or null if no matching argument.
    * @private
    * @actionssdk
    */
@@ -611,9 +611,9 @@ const ActionsSdkAssistant = class extends Assistant {
    * permissions request to user.
    *
    * @param {Object} permissionsSpec PermissionsValueSpec object containing
-   *                 the permissions prefix and the permissions requested.
+   *     the permissions prefix and the permissions requested.
    * @param {Object} dialogState JSON object the action uses to hold dialog state that
-   *                 will be circulated back by Assistant.
+   *     will be circulated back by Assistant.
    * @return {Object} HTTP response object.
    * @private
    * @actionssdk
@@ -645,7 +645,7 @@ const ActionsSdkAssistant = class extends Assistant {
    * @param {Object} inputPrompt Holding initial and no-input prompts.
    * @param {Array} possibleIntents Array of ExpectedIntents.
    * @param {Object} dialogState JSON object the action uses to hold dialog state that
-   *                 will be circulated back by Assistant.
+   *     will be circulated back by Assistant.
    * @return The response that is sent to Assistant to ask user to provide input.
    * @private
    * @actionssdk
@@ -685,11 +685,10 @@ const ActionsSdkAssistant = class extends Assistant {
    * the Action Package.
    *
    * @param {string} intent Developer specified in-dialog intent inside the Action
-   *                 Package or an Assistant built-in intent like
-   *                 'assistant.intent.action.TEXT'.
-   *
+   *     Package or an Assistant built-in intent like
+   *     'assistant.intent.action.TEXT'.
    * @return {Object} An {@link https://developers.google.com/actions/reference/conversation#ExpectedIntent|ExpectedIntent object}
-                      encapsulating the intent and the runtime entities.
+         encapsulating the intent and the runtime entities.
    * @private
    * @actionssdk
    */
