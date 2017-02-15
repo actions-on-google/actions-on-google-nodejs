@@ -502,7 +502,33 @@ describe('ApiAiAssistant#ask', function () {
 });
 
 /**
- * Describes the behavior for ApiAiAssistant askForPermissions method.
+ * Describes the behavior for ApiAiAssistant ask method.
+ */
+describe('ApiAiAssistant with an invalid payload', function () {
+  // Success case test, when the API returns a valid 200 response with the response object
+  it('Should produce a useful error.', function () {
+    let headers = {
+      'Content-Type': 'application/json',
+      'Google-Assistant-API-Version': 'v1'
+    };
+    const mockRequest = new MockRequest(headers, {});
+    const mockResponse = new MockResponse();
+
+    const assistant = new ApiAiAssistant({
+      request: mockRequest,
+      response: mockResponse
+    });
+
+    let actionMap = new Map();
+    assistant.handleRequest(actionMap);
+
+    // Validating the response object
+    expect(mockResponse.body).to.equal('Action Error: Missing result from request body');
+  });
+});
+
+/**
+ * Describes the behavior for ApiAiAssistant with invalid payload.
  */
 describe('ApiAiAssistant#askForPermissions', function () {
   // Success case test, when the API returns a valid 200 response with the response object

@@ -62,7 +62,10 @@ const ApiAiAssistant = class extends Assistant {
     debug('ApiAiAssistant constructor');
     super(options);
 
-    if (this.body_.originalRequest.data.conversation.type ===
+    if (this.body_.originalRequest &&
+        this.body_.originalRequest.data &&
+        this.body_.originalRequest.data.conversation &&
+        this.body_.originalRequest.data.conversation.type ===
         this.ConversationStages.NEW && this.sessionStarted_ &&
         typeof this.sessionStarted_ === 'function') {
       this.sessionStarted_();
