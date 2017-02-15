@@ -166,7 +166,7 @@ const Assistant = class {
 
     /**
      * List of possible conversation stages, as defined in the
-     * (@link https://developers.google.com/actions/reference/conversation#Conversation|Conversation object).
+     * {@link https://developers.google.com/actions/reference/conversation#Conversation|Conversation object}.
      * @readonly
      * @enum {number}
      * @actionssdk
