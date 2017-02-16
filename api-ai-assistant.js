@@ -54,7 +54,8 @@ error.log = console.error.bind(console);
  * @param {Object} options.request Express HTTP request object.
  * @param {Object} options.response Express HTTP response object.
  * @param {Function=} options.sessionStarted Function callback when session starts.
- *     Only called if webhook is enabled for welcome/triggering intents.
+ *     Only called if webhook is enabled for welcome/triggering intents, and
+ *     called from Web Simulator or Google Home device (i.e., not API.AI simulator).
  * @apiai
  */
 const ApiAiAssistant = class extends Assistant {
@@ -62,12 +63,16 @@ const ApiAiAssistant = class extends Assistant {
     debug('ApiAiAssistant constructor');
     super(options);
 
-    if (this.body_.originalRequest.data.conversation.type ===
+    if (this.body_.originalRequest &&
+        this.body_.originalRequest.data &&
+        this.body_.originalRequest.data.conversation) {
+      if (this.body_.originalRequest.data.conversation.type ===
         this.ConversationStages.NEW && this.sessionStarted_ &&
         typeof this.sessionStarted_ === 'function') {
-      this.sessionStarted_();
-    } else if (this.sessionStarted_ && typeof this.sessionStarted_ !== 'function') {
-      this.handleError_('options.sessionStarted must be a Function');
+        this.sessionStarted_();
+      } else if (this.sessionStarted_ && typeof this.sessionStarted_ !== 'function') {
+        this.handleError_('options.sessionStarted must be a Function');
+      }
     }
   }
 
