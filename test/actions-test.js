@@ -1669,9 +1669,30 @@ describe('ApiAiAssistant#ask', function () {
 // ---------------------------------------------------------------------------
 
 /**
- * Describes the behavior for ApiAiAssistant constructor method.
+ * Describes the behavior for ActionsSdkAssistant constructor method.
  */
 describe('ActionsSdkAssistant#constructor', function () {
+  // Success case test, when the API returns a valid 200 response with the response object
+  it('Should produce a useful error with invalid payload.', function () {
+    let headers = {
+      'Content-Type': 'application/json',
+      'Google-Assistant-API-Version': 'v1'
+    };
+    const mockRequest = new MockRequest(headers, {});
+    const mockResponse = new MockResponse();
+
+    const assistant = new ActionsSdkAssistant({
+      request: mockRequest,
+      response: mockResponse
+    });
+
+    let actionMap = new Map();
+    assistant.handleRequest(actionMap);
+
+    // Validating the response object
+    expect(mockResponse.body).to.equal('Action Error: Missing inputs from request body');
+  });
+
   // Calls sessionStarted when provided
   it('Calls sessionStarted when new session', function () {
     let headers = {
