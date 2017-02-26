@@ -276,7 +276,8 @@ const ApiAiAssistant = class extends Assistant {
     }
     if (this.body_.originalRequest && this.body_.originalRequest.data &&
         this.body_.originalRequest.data.inputs &&
-        this.body_.originalRequest.data.inputs[0].arguments) {
+        this.body_.originalRequest.data.inputs[0].arguments &&
+        this.body_.originalRequest.data.inputs[0].arguments[0]) {
       return this.body_.originalRequest.data.inputs[0].arguments[0][argName];
     }
     debug('Failed to get argument value: %s', argName);
