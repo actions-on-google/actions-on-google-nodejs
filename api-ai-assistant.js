@@ -549,6 +549,59 @@ const ApiAiAssistant = class extends Assistant {
     });
   }
 
+ /**
+   * Returns the incoming context by name for this intent.
+   *
+   * @example
+   * const action = new ApiAiAction({request: request, response: response});
+   * const CONTEXT_NUMBER = 'number';
+   * const NUMBER_ARGUMENT = 'myNumber';
+   *
+   * function welcomeIntent (action) {
+   *   action.setContext(CONTEXT_NUMBER);
+   *   action.ask('Welcome to action snippets! Say a number.');
+   * }
+   *
+   * function numberIntent (action) {
+   *   let context = action.getContext(CONTEXT_NUMBER);
+   *   // context === {
+   *   //   name: 'number',
+   *   //   lifespan: 0,
+   *   //   parameters: {
+   *   //     myNumber: '23',
+   *   //     myNumber.original: '23'
+   *   //   }
+   *   // }
+   *   const number = action.getArgument(NUMBER_ARGUMENT);
+   *   action.tell('You said ' + number);
+   * }
+   *
+   * const actionMap = new Map();
+   * actionMap.set(WELCOME_INTENT, welcomeIntent);
+   * actionMap.set(NUMBER_INTENT, numberIntent);
+   * action.handleRequest(actionMap);
+   *
+   * @return {Object} Context value matching name
+   *     or null if no matching context.
+   * @apiai
+   */
+
+  getContext (name) {
+    debug('getContext: name=%s', name);
+    if (!this.body_.result ||
+        !this.body_.result.contexts) {
+      this.handleError_('No contexts included in request');
+      return null;
+    }
+    for (let context of this.body_.result.contexts) {
+      if (context.name === name) {
+        return context;
+      }
+    }
+    debug('Failed to get context: %s', name);
+    return null;
+  }
+
   /**
    * Gets the user's raw input query.
    *

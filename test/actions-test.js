@@ -1624,7 +1624,114 @@ describe('ApiAiAssistant#getContexts', function () {
 });
 
 /**
- * Describes the behavior for ApiAiAssistant ask with no inputs method.
+ * Describes the behavior for ApiAiAction getContext method.
+ */
+describe('ApiAiAction#getContext', function () {
+  // Success case test, when the API returns a valid 200 response with the response object
+  it('Should return the context by name from incoming JSON for the success case.', function () {
+    let headers = {
+      'Content-Type': 'application/json',
+      'Google-Assistant-API-Version': 'v1'
+    };
+    let body = {
+      'id': '4bef6e67-c09d-4a43-ae7b-97c4457582c7',
+      'timestamp': '2016-12-01T19:27:58.837Z',
+      'result': {
+        'source': 'agent',
+        'resolvedQuery': 'talk to action snippets',
+        'speech': '',
+        'action': 'input.welcome',
+        'actionIncomplete': false,
+        'parameters': {
+
+        },
+        'contexts': [
+          {
+            'name': '_actions_on_google_'
+          },
+          {
+            'name': 'number',
+            'lifespan': 5,
+            'parameters': {
+              'parameterOne': '23',
+              'parameterTwo': '24'
+            }
+          },
+          {
+            'name': 'word',
+            'lifespan': 1,
+            'parameters': {
+              'parameterOne': 'wordOne',
+              'parameterTwo': 'wordTwo'
+            }
+          }
+        ],
+        'metadata': {
+          'intentId': '1b1f35cb-ef66-41c4-9703-89446c00cfe8',
+          'webhookUsed': 'true',
+          'webhookForSlotFillingUsed': 'false',
+          'intentName': 'Default Welcome Intent'
+        },
+        'fulfillment': {
+          'speech': 'Good day!',
+          'messages': [
+            {
+              'type': 0,
+              'speech': 'Hi!'
+            }
+          ]
+        },
+        'score': 1
+      },
+      'status': {
+        'code': 200,
+        'errorType': 'success'
+      },
+      'sessionId': 'f23e77a5-8b09-495d-b9b3-6835d737abf3',
+      'originalRequest': {
+        'data': {
+          'conversation': {
+            'type': 2
+          }
+        }
+      }
+    };
+    let mockRequest = new MockRequest(headers, body);
+    const mockResponse = new MockResponse();
+
+    let action = new ApiAiAction({
+      request: mockRequest,
+      response: mockResponse
+    });
+
+    let mockContext = action.getContext('number');
+
+    let expectedContext = {
+      'name': 'number',
+      'lifespan': 5,
+      'parameters': {
+        'parameterOne': '23',
+        'parameterTwo': '24'
+      }
+    };
+    expect(mockContext).to.deep.equal(expectedContext);
+
+    //  Check the empty case
+    body.result.contexts = [];
+    mockRequest = new MockRequest(headers, body);
+
+    action = new ApiAiAction({
+      request: mockRequest,
+      response: mockResponse
+    });
+    mockContext = action.getContext('name');
+    expectedContext = null;
+    expect(mockContext).to.equal(expectedContext);
+  });
+});
+
+/**
+ * Describes the behavior for ApiAiAction ask with no inputs method.
  */
 describe('ApiAiAssistant#ask', function () {
   // Success case test, when the API returns a valid 200 response with the response object
