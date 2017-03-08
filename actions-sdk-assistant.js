@@ -61,7 +61,10 @@ const ActionsSdkAssistant = class extends Assistant {
     debug('ActionsSdkAssistant constructor');
     super(options);
 
-    if (this.body_.conversation.type === this.ConversationStages.NEW &&
+    if (this.body_ &&
+        this.body_.conversation &&
+        this.body_.conversation.type &&
+        this.body_.conversation.type === this.ConversationStages.NEW &&
         this.sessionStarted_ && typeof this.sessionStarted_ === 'function') {
       this.sessionStarted_();
     } else if (this.sessionStarted_ && typeof this.sessionStarted_ !== 'function') {
