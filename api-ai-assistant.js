@@ -299,9 +299,13 @@ const ApiAiAssistant = class extends Assistant {
    * const NUMBER_ARG = 'myNumberArg';
    *
    * function welcomeIntent (assistant) {
+<<<<<<< HEAD
    *   const parameters = {};
    *   parameters[NUMBER_ARG] = '42';
    *   assistant.setContext(OUT_CONTEXT, 1, parameters);
+=======
+   *   assistant.setContext(OUT_CONTEXT, 1, { NUMBER_ARG: '42' });
+>>>>>>> Add getContextArgument(contextName, argName) method
    *   assistant.ask('Welcome to action snippets! Ask me for your number.');
    * }
    *
