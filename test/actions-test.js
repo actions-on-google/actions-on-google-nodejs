@@ -1064,6 +1064,85 @@ describe('ApiAiAssistant#getArgument', function () {
 });
 
 /**
+ * Describes the behavior for ApiAiAssistant getContextArgument method.
+ */
+describe('ApiAiAssistant#getContextArgument', function () {
+  // Success case test, when the API returns a valid 200 response with the response object
+  it('Should get the context argument value for the success case.', function () {
+    let headers = {
+      'Content-Type': 'application/json',
+      'Google-Assistant-API-Version': 'v1'
+    };
+    let body = {
+      'id': '9c4394e3-4f5a-4e68-b1af-088b75ad3071',
+      'timestamp': '2016-10-28T03:41:39.957Z',
+      'result': {
+        'source': 'agent',
+        'resolvedQuery': '50',
+        'speech': '',
+        'action': 'check_guess',
+        'actionIncomplete': false,
+        'parameters': {
+          'guess': '50'
+        },
+        'contexts': [
+          {
+            'name': 'game',
+            'parameters': {
+              'guess.original': '50',
+              'guess': '50'
+            },
+            'lifespan': 5
+          },
+          {
+            'name': 'previous_answer',
+            'parameters': {
+              'answer': '68',
+              'guess.original': '50',
+              'guess': '50'
+            },
+            'lifespan': 99
+          }
+        ],
+        'metadata': {
+          'intentId': '1e46ffc2-651f-4ac0-a54e-9698feb88880',
+          'webhookUsed': 'true',
+          'intentName': 'provide_guess'
+        },
+        'fulfillment': {
+          'speech': ''
+        },
+        'score': 1
+      },
+      'status': {
+        'code': 200,
+        'errorType': 'success'
+      },
+      'sessionId': 'e420f007-501d-4bc8-b551-5d97772bc50c',
+      'originalRequest': {
+        'data': {
+          'conversation': {
+            'type': 2
+          }
+        }
+      }
+    };
+    const mockRequest = new MockRequest(headers, body);
+    const mockResponse = new MockResponse();
+
+    const assistant = new ApiAiAssistant({
+      request: mockRequest,
+      response: mockResponse
+    });
+
+    expect(assistant.getContextArgument('game', 'guess')).to
+      .deep.equal({ value: '50', original: '50' });
+    expect(assistant.getContextArgument('previous_answer', 'answer')).to
+      .deep.equal({ value: '68' });
+  });
+});
+
+/**
  * Describes the behavior for ApiAiAssistant isRequestFromApiAi method.
  */
 describe('ApiAiAssistant#isRequestFromApiAi', function () {

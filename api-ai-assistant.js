@@ -32,6 +32,7 @@ const RESPONSE_CODE_OK = 200;
 const ACTIONS_API_AI_CONTEXT = '_actions_on_google_';
 const MAX_LIFESPAN = 100;
 const INPUTS_MAX = 3;
+const ORIGINAL_SUFFIX = '.original';
 
 // Configure logging for hosting platforms that only support console.log and console.error
 debug.log = console.log.bind(console);
@@ -275,11 +276,77 @@ const ApiAiAssistant = class extends Assistant {
       return this.body_.result.parameters[argName];
     }
     if (this.body_.originalRequest && this.body_.originalRequest.data &&
-        this.body_.originalRequest.data.inputs &&
-        this.body_.originalRequest.data.inputs[0].arguments) {
+      this.body_.originalRequest.data.inputs &&
+      this.body_.originalRequest.data.inputs[0].arguments) {
       return this.body_.originalRequest.data.inputs[0].arguments[0][argName];
     }
     debug('Failed to get argument value: %s', argName);
+    return null;
+  }
+
+  /**
+   * Get the context argument value by name from the current intent. Context
+   * arguments include parameters collected in previous intents during the
+   * lifespan of the given context. If the context argument has an original
+   * value, usually representing the underlying entity value, that will be given
+   * as part of the return object.
+   *
+   * @example
+   * const assistant = new ApiAiAssistant({request: request, response: response});
+   * const WELCOME_INTENT = 'input.welcome';
+   * const NUMBER_INTENT = 'input.number';
+   * const OUT_CONTEXT = 'output_context';
+   * const NUMBER_ARG = 'myNumberArg';
+   *
+   * function welcomeIntent (assistant) {
+   *   const parameters = {};
+   *   parameters[NUMBER_ARG] = '42';
+   *   assistant.setContext(OUT_CONTEXT, 1, parameters);
+   *   assistant.ask('Welcome to action snippets! Ask me for your number.');
+   * }
+   *
+   * function numberIntent (assistant) {
+   *   const number = assistant.getContextArgument(OUT_CONTEXT, NUMBER_ARG);
+   *   // number === { value: 42 }
+   *   assistant.tell('Your number is  ' + number.value);
+   * }
+   *
+   * const actionMap = new Map();
+   * actionMap.set(WELCOME_INTENT, welcomeIntent);
+   * actionMap.set(NUMBER_INTENT, numberIntent);
+   * assistant.handleRequest(actionMap);
+   *
+   * @param {string} contextName Name of the context.
+   * @param {string} argName Name of the argument.
+   * @return {Object} Object containing value property and optional original
+   *     property matching context argument. Null if no matching argument.
+   * @apiai
+   */
+  getContextArgument (contextName, argName) {
+    debug('getContextArgument: contextName=%s, argName=%s', contextName, argName);
+    if (!contextName) {
+      this.handleError_('Invalid context name');
+      return null;
+    }
+    if (!argName) {
+      this.handleError_('Invalid argument name');
+      return null;
+    }
+    if (!this.body_.result ||
+      !this.body_.result.contexts) {
+      this.handleError_('No contexts included in request');
+      return null;
+    }
+    for (let context of this.body_.result.contexts) {
+      if (context.name === contextName && context.parameters[argName]) {
+        let argument = { value: context.parameters[argName] };
+        if (context.parameters[argName + ORIGINAL_SUFFIX]) {
+          argument.original = context.parameters[argName + ORIGINAL_SUFFIX];
+        }
+        return argument;
+      }
+    }
+    debug('Failed to get context argument value: %s', argName);
     return null;
   }
 
