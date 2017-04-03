@@ -307,7 +307,8 @@ const ActionsSdkAssistant = class extends Assistant {
   }
 
   /**
-   * Get the argument value by name from the current intent.
+   * Get the argument value by name from the current intent. If the argument
+   * is not a text argument, the entire argument object is returned.
    *
    * @param {string} argName Name of the argument.
    * @return {string} Argument value matching argName
@@ -322,15 +323,13 @@ const ActionsSdkAssistant = class extends Assistant {
     }
     const argument = this.getArgument_(argName);
     if (!argument) {
+      debug('Failed to get argument value: %s', argName);
       return null;
-    }
-    if (argument.text_value) {
+    } else if (argument.text_value) {
       return argument.text_value;
-    } else if (argument.raw_text) {
-      return argument.raw_text;
+    } else {
+      return argument;
     }
-    debug('Failed to get argument value: %s', argName);
-    return null;
   }
 
   /**
