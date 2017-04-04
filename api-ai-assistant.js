@@ -240,9 +240,7 @@ const ApiAiAssistant = class extends Assistant {
   }
 
   /**
-   * Get the argument value by name from the current intent. If the argument
-   * is included in originalRequest, and is not a text argument, the entire
-   * argument object is returned.
+   * Get the argument value by name from the current intent.
    *
    * @example
    * const assistant = new ApiAiAssistant({request: request, response: response});
@@ -278,20 +276,9 @@ const ApiAiAssistant = class extends Assistant {
       return this.body_.result.parameters[argName];
     }
     if (this.body_.originalRequest && this.body_.originalRequest.data &&
-      this.body_.originalRequest.data.inputs) {
-      for (let input of this.body_.originalRequest.data.inputs) {
-        if (input.arguments) {
-          for (let argument of input.arguments) {
-            if (argument.name === argName) {
-              if (argument.text_value) {
-                return argument.text_value;
-              } else {
-                return argument;
-              }
-            }
-          }
-        }
-      }
+      this.body_.originalRequest.data.inputs &&
+      this.body_.originalRequest.data.inputs[0].arguments) {
+      return this.body_.originalRequest.data.inputs[0].arguments[0][argName];
     }
     debug('Failed to get argument value: %s', argName);
     return null;
@@ -312,13 +299,9 @@ const ApiAiAssistant = class extends Assistant {
    * const NUMBER_ARG = 'myNumberArg';
    *
    * function welcomeIntent (assistant) {
-<<<<<<< HEAD
    *   const parameters = {};
    *   parameters[NUMBER_ARG] = '42';
    *   assistant.setContext(OUT_CONTEXT, 1, parameters);
-=======
-   *   assistant.setContext(OUT_CONTEXT, 1, { NUMBER_ARG: '42' });
->>>>>>> Add getContextArgument(contextName, argName) method
    *   assistant.ask('Welcome to action snippets! Ask me for your number.');
    * }
    *
