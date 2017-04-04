@@ -1045,24 +1045,6 @@ describe('ApiAiAssistant#getArgument', function () {
       'sessionId': 'e420f007-501d-4bc8-b551-5d97772bc50c',
       'originalRequest': {
         'data': {
-          'inputs': [
-            {
-              'arguments': [
-                {
-                  'raw_text': 'raw text one',
-                  'text_value': 'text value one',
-                  'name': 'arg_value_one'
-                },
-                {
-                  'name': 'other_value',
-                  'raw_text': '45',
-                  'other_value': {
-                    'key': 'value'
-                  }
-                }
-              ]
-            }
-          ],
           'conversation': {
             'type': 2
           }
@@ -1078,14 +1060,6 @@ describe('ApiAiAssistant#getArgument', function () {
     });
 
     expect(assistant.getArgument('guess')).to.equal('50');
-    expect(assistant.getArgument('arg_value_one')).to.equal('text value one');
-    expect(assistant.getArgument('other_value', true)).to.deep.equal({
-      'name': 'other_value',
-      'raw_text': '45',
-      'other_value': {
-        'key': 'value'
-      }
-    });
   });
 });
 
@@ -2990,13 +2964,6 @@ describe('ActionsSdkAssistant#getArgument', function () {
               'name': 'number',
               'raw_text': '45',
               'text_value': '45'
-            },
-            {
-              'name': 'other_value',
-              'raw_text': '45',
-              'other_value': {
-                'key': 'value'
-              }
             }
           ]
         }
@@ -3012,35 +2979,24 @@ describe('ActionsSdkAssistant#getArgument', function () {
 
     const PROVIDE_NUMBER_INTENT = 'PROVIDE_NUMBER';
 
+    function mainIntent (assistant) {
+      let inputPrompt = assistant.buildInputPrompt(false, 'Welcome to action snippets! Say a number.',
+        ['Sorry, say that again?', 'Sorry, that number again?', 'What was that number?'],
+        ['Say any number', 'Pick a number', 'What is the number?']);
+      let expectedIntent = assistant.buildExpectedIntent(PROVIDE_NUMBER_INTENT);
+      assistant.ask(inputPrompt, [expectedIntent], {started: true});
+    }
+
     function provideNumberIntent (assistant) {
       expect(assistant.getArgument('number')).to.equal('45');
       assistant.tell('You said ' + assistant.getArgument('number'));
     }
 
     let actionMap = new Map();
+    actionMap.set(assistant.StandardIntents.MAIN, mainIntent);
     actionMap.set(PROVIDE_NUMBER_INTENT, provideNumberIntent);
 
     assistant.handleRequest(actionMap);
-
-    expect(assistant.getArgument('other_value')).to.deep.equal({
-      'name': 'other_value',
-      'raw_text': '45',
-      'other_value': {
-        'key': 'value'
-      }
-    });
-
-    // Validating the response object
-    let expectedResponse = {
-      'expect_user_response': false,
-      'final_response': {
-        'speech_response': {
-          'text_to_speech': 'You said 45'
-        }
-      }
-    };
-
-    expect(JSON.stringify(mockResponse.body)).to.equal(JSON.stringify(expectedResponse));
   });
 });
 
@@ -3116,5 +3072,75 @@ describe('ActionsSdkAssistant#tell', function () {
       }
     };
     expect(JSON.stringify(mockResponse.body)).to.equal(JSON.stringify(expectedResponse));
+  });
+});
+
+/**
+ * Describes the behavior for ActionsSdkAssistant getArgument method.
+ */
+describe('ActionsSdkAssistant#getArgument', function () {
+  // Success case test, when the API returns a valid 200 response with the response object
+  it('Should validate assistant intent.', function () {
+    let headers = {
+      'Content-Type': 'application/json',
+      'Google-Assistant-API-Version': 'v1',
+      'Agent-Version-Label': '1.0.0'
+    };
+    let body = {
+      'user': {
+        'user_id': '11112226094657824893'
+      },
+      'conversation': {
+        'conversation_id': '1480543005681',
+        'type': 2,
+        'conversation_token': '{"started":true}'
+      },
+      'inputs': [
+        {
+          'intent': 'PROVIDE_NUMBER',
+          'raw_inputs': [
+            {
+              'input_type': 2,
+              'query': '45'
+            }
+          ],
+          'arguments': [
+            {
+              'name': 'number',
+              'raw_text': '45',
+              'text_value': '45'
+            }
+          ]
+        }
+      ]
+    };
+    const mockRequest = new MockRequest(headers, body);
+    const mockResponse = new MockResponse();
+
+    const assistant = new ActionsSdkAssistant({
+      request: mockRequest,
+      response: mockResponse
+    });
+
+    const PROVIDE_NUMBER_INTENT = 'PROVIDE_NUMBER';
+
+    function mainIntent (assistant) {
+      let inputPrompt = assistant.buildInputPrompt(false, 'Welcome to action snippets! Say a number.',
+        ['Sorry, say that again?', 'Sorry, that number again?', 'What was that number?'],
+        ['Say any number', 'Pick a number', 'What is the number?']);
+      let expectedIntent = assistant.buildExpectedIntent(PROVIDE_NUMBER_INTENT);
+      assistant.ask(inputPrompt, [expectedIntent], ['$SchemaOrg_Number'], {started: true});
+    }
+
+    function provideNumberIntent (assistant) {
+      expect(assistant.getArgument('number')).to.equal('45');
+      assistant.tell('You said ' + assistant.getArgument('number'));
+    }
+
+    let actionMap = new Map();
+    actionMap.set(assistant.StandardIntents.MAIN, mainIntent);
+    actionMap.set(PROVIDE_NUMBER_INTENT, provideNumberIntent);
+
+    assistant.handleRequest(actionMap);
   });
 });
