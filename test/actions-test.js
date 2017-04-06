@@ -1624,9 +1624,9 @@ describe('ApiAiAssistant#getContexts', function () {
 });
 
 /**
- * Describes the behavior for ApiAiAction getContext method.
+ * Describes the behavior for ApiAiAssistant getContext method.
  */
-describe('ApiAiAction#getContext', function () {
+describe('ApiAiAssistant#getContext', function () {
   // Success case test, when the API returns a valid 200 response with the response object
   it('Should return the context by name from incoming JSON for the success case.', function () {
     let headers = {
@@ -1699,12 +1699,12 @@ describe('ApiAiAction#getContext', function () {
     let mockRequest = new MockRequest(headers, body);
     const mockResponse = new MockResponse();
 
-    let action = new ApiAiAction({
+    let assistant = new ApiAiAssistant({
       request: mockRequest,
       response: mockResponse
     });
 
-    let mockContext = action.getContext('number');
+    let mockContext = assistant.getContext('number');
 
     let expectedContext = {
       'name': 'number',
@@ -1720,18 +1720,18 @@ describe('ApiAiAction#getContext', function () {
     body.result.contexts = [];
     mockRequest = new MockRequest(headers, body);
 
-    action = new ApiAiAction({
+    assistant = new ApiAiAssistant({
       request: mockRequest,
       response: mockResponse
     });
-    mockContext = action.getContext('name');
+    mockContext = assistant.getContext('name');
     expectedContext = null;
     expect(mockContext).to.equal(expectedContext);
   });
 });
 
 /**
- * Describes the behavior for ApiAiAction ask with no inputs method.
+ * Describes the behavior for ApiAiAssistant ask with no inputs method.
  */
 describe('ApiAiAssistant#ask', function () {
   // Success case test, when the API returns a valid 200 response with the response object
