@@ -28,10 +28,15 @@ const Debug = require('debug');
 const debug = Debug('actions-on-google:debug');
 const error = Debug('actions-on-google:error');
 
+const transformToSnakeCase = require('./utils/transform').transformToSnakeCase;
+const transformToCamelCase = require('./utils/transform').transformToCamelCase;
+
 // Constants
 const ERROR_MESSAGE = 'Sorry, I am unable to process your request.';
 const API_ERROR_MESSAGE_PREFIX = 'Action Error: ';
 const CONVERSATION_API_VERSION_HEADER = 'Google-Assistant-API-Version';
+const ACTIONS_CONVERSATION_API_VERSION_HEADER = 'Google-Actions-API-Version';
+const ACTIONS_CONVERSATION_API_VERSION_TWO = 2;
 const RESPONSE_CODE_OK = 200;
 const RESPONSE_CODE_BAD_REQUEST = 400;
 const HTTP_CONTENT_TYPE_HEADER = 'Content-Type';
@@ -54,6 +59,85 @@ error.log = console.error.bind(console);
 const Assistant = class {
   constructor (options) {
     debug('Assistant constructor');
+
+    if (!options) {
+      // ignore for JavaScript inheritance to work
+
+      // As a workaround for pre-existing sample code which incorrectly
+      // initializes this class without an options object.
+      this.StandardIntents = {
+        MAIN: 'assistant.intent.action.MAIN',
+        TEXT: 'assistant.intent.action.TEXT',
+        PERMISSION: 'assistant.intent.action.PERMISSION'
+      };
+      return;
+    }
+    if (!options.request) {
+      this.handleError_('Request can NOT be empty.');
+      return;
+    }
+    if (!options.response) {
+      this.handleError_('Response can NOT be empty.');
+      return;
+    }
+
+    /**
+     * The Express HTTP request that the endpoint receives from the Assistant.
+     * @private
+     * @type {Object}
+     */
+    this.request_ = options.request;
+
+    /**
+     * The Express HTTP response the endpoint will return to Assistant.
+     * @private
+     * @type {Object}
+     */
+    this.response_ = options.response;
+
+    /**
+     * 'sessionStarted' callback (optional).
+     * @private
+     * @type {Function}
+     */
+    this.sessionStarted_ = options.sessionStarted;
+
+    debug('Request from Assistant: %s', JSON.stringify(this.request_.body));
+
+    /**
+     * The request body contains query JSON and previous session variables.
+     * Assignment using JSON parse/stringify ensures manipulation of this.body_
+     * does not affect passed in request body structure.
+     * @private
+     * @type {Object}
+     */
+    this.body_ = JSON.parse(JSON.stringify(this.request_.body));
+
+    /**
+     * API version describes version of the Actions API request.
+     * @private
+     * @type {string}
+     */
+    this.actionsApiVersion_ = null;
+    // Populates API version from either request header or APIAI orig request.
+    if (this.request_.get(ACTIONS_CONVERSATION_API_VERSION_HEADER)) {
+      this.actionsApiVersion_ = this.request_.get(ACTIONS_CONVERSATION_API_VERSION_HEADER);
+      debug('Actions API version from header: ' + this.actionsApiVersion_);
+    }
+    if (this.body_.originalRequest &&
+      this.body_.originalRequest.version) {
+      this.actionsApiVersion_ = this.body_.originalRequest.version;
+      debug('Actions API version from APIAI: ' + this.actionsApiVersion_);
+    }
+
+    // If request is in Proto2 format, convert to Proto3
+    if (!this.isNotApiVersionOne_()) {
+      if (this.body_.originalRequest) {
+        this.body_.originalRequest = transformToCamelCase(this.body_.originalRequest);
+      } else {
+        this.body_ = transformToCamelCase(this.body_);
+      }
+    }
 
     /**
      * Intent handling data structure.
@@ -120,11 +204,11 @@ const Assistant = class {
      */
     this.StandardIntents = {
       /** Assistant fires MAIN intent for queries like [talk to $action]. */
-      MAIN: 'assistant.intent.action.MAIN',
+      MAIN: this.isNotApiVersionOne_() ? 'actions.intent.MAIN' : 'assistant.intent.action.MAIN',
       /** Assistant fires TEXT intent when action issues ask intent. */
-      TEXT: 'assistant.intent.action.TEXT',
+      TEXT: this.isNotApiVersionOne_() ? 'actions.intent.TEXT' : 'assistant.intent.action.TEXT',
       /** Assistant fires PERMISSION intent when action invokes askForPermission. */
-      PERMISSION: 'assistant.intent.action.PERMISSION'
+      PERMISSION: this.isNotApiVersionOne_() ? 'actions.intent.PERMISSION' : 'assistant.intent.action.PERMISSION'
     };
 
     /**
@@ -161,7 +245,28 @@ const Assistant = class {
      */
     this.BuiltInArgNames = {
       /** Permission granted argument. */
-      PERMISSION_GRANTED: 'permission_granted'
+      PERMISSION_GRANTED: this.isNotApiVersionOne_() ? 'PERMISSION' : 'permission_granted'
+    };
+
+    /**
+     * The property name used when specifying an input value data spec.
+     * @readonly
+     * @type {string}
+     * @actionssdk
+     * @apiai
+     */
+    this.ANY_TYPE_PROPERTY_ = '@type';
+
+    /**
+     * List of built-in value type names.
+     * @readonly
+     * @enum {string}
+     * @actionssdk
+     * @apiai
+     */
+    this.InputValueDataTypes_ = {
+      /** Permission Value Spec. */
+      PERMISSION: 'type.googleapis.com/google.actions.v2.PermissionValueSpec'
     };
 
     /**
@@ -176,62 +281,20 @@ const Assistant = class {
       /**
        * Unspecified conversation state.
        */
-      UNSPECIFIED: 0,
+      UNSPECIFIED: this.isNotApiVersionOne_() ? 'UNSPECIFIED' : 0,
       /**
        * A new conversation.
        */
-      NEW: 1,
+      NEW: this.isNotApiVersionOne_() ? 'NEW' : 1,
       /**
        * An active (ongoing) conversation.
        */
-      ACTIVE: 2
+      ACTIVE: this.isNotApiVersionOne_() ? 'ACTIVE' : 2
     };
-
-    if (!options) {
-      // ignore for JavaScript inheritance to work
-      return;
-    }
-    if (!options.request) {
-      this.handleError_('Request can NOT be empty.');
-      return;
-    }
-    if (!options.response) {
-      this.handleError_('Response can NOT be empty.');
-      return;
-    }
-
-    /**
-     * The Express HTTP request that the endpoint receives from the Assistant.
-     * @private
-     * @type {Object}
-     */
-    this.request_ = options.request;
-
-    /**
-     * The Express HTTP response the endpoint will return to Assistant.
-     * @private
-     * @type {Object}
-     */
-    this.response_ = options.response;
-
-    /**
-     * 'sessionStarted' callback (optional).
-     * @private
-     * @type {Function}
-     */
-    this.sessionStarted_ = options.sessionStarted;
-
-    debug('Request from Assistant: %s', JSON.stringify(this.request_.body));
-
-    /**
-     * The request body contains query JSON and previous session variables.
-     * @private
-     * @type {Object}
-     */
-    this.body_ = this.request_.body;
 
     /**
      * API version describes version of the Assistant request.
+     * @deprecated
      * @private
      * @type {string}
      */
@@ -425,7 +488,7 @@ const Assistant = class {
       };
     }
     return this.fulfillPermissionsRequest_({
-      opt_context: context,
+      optContext: context,
       permissions: permissions
     }, dialogState);
   }
@@ -644,6 +707,18 @@ const Assistant = class {
   }
 
   /**
+   * Utility function to detect incoming request format.
+   *
+   * @return {boolean} true if request is not Action API Version 1.
+   * @private
+   */
+  isNotApiVersionOne_ () {
+    debug('isNotApiVersionOne_');
+    return this.actionsApiVersion_ !== null &&
+      parseInt(this.actionsApiVersion_, 10) >= ACTIONS_CONVERSATION_API_VERSION_TWO;
+  }
+
+  /**
    * Utility function to handle error messages.
    *
    * @param {string} text The error message.
@@ -693,6 +768,14 @@ const Assistant = class {
       this.response_.append(CONVERSATION_API_VERSION_HEADER, this.apiVersion_);
     }
     this.response_.append(HTTP_CONTENT_TYPE_HEADER, HTTP_CONTENT_TYPE_JSON);
+    // If request was in Proto2 format, convert response to Proto2
+    if (!this.isNotApiVersionOne_()) {
+      if (response.data) {
+        response.data = transformToSnakeCase(response.data);
+      } else {
+        response = transformToSnakeCase(response);
+      }
+    }
     debug('Response %s', JSON.stringify(response));
     const httpResponse = this.response_.status(code).send(response);
     this.responded_ = true;
@@ -754,7 +837,7 @@ const Assistant = class {
     const prompts = [];
     for (let i = 0; i < plainTexts.length; i++) {
       const prompt = {
-        text_to_speech: plainTexts[i]
+        textToSpeech: plainTexts[i]
       };
       prompts.push(prompt);
     }

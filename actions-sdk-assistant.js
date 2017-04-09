@@ -24,6 +24,7 @@
 const Debug = require('debug');
 const debug = Debug('actions-on-google:debug');
 const error = Debug('actions-on-google:error');
+const transformToSnakeCase = require('./utils/transform').transformToSnakeCase;
 const assistant = require('./assistant');
 const Assistant = assistant.Assistant;
 const State = assistant.State;
@@ -84,7 +85,7 @@ const ActionsSdkAssistant = class extends Assistant {
    */
   getApiVersion () {
     debug('getApiVersion');
-    return this.apiVersion_;
+    return this.apiVersion_ || this.actionsApiVersion_;
   }
 
   /**
@@ -104,11 +105,11 @@ const ActionsSdkAssistant = class extends Assistant {
       this.handleError_('Failed to get top Input.');
       return null;
     }
-    if (!input.raw_inputs || input.raw_inputs.length === 0) {
+    if (!input.rawInputs || input.rawInputs.length === 0) {
       this.handleError_('Missing user raw input');
       return null;
     }
-    const rawInput = input.raw_inputs[0];
+    const rawInput = input.rawInputs[0];
     if (!rawInput.query) {
       this.handleError_('Missing query for user raw input');
       return null;
@@ -130,8 +131,8 @@ const ActionsSdkAssistant = class extends Assistant {
    */
   getDialogState () {
     debug('getDialogState');
-    if (this.body_.conversation && this.body_.conversation.conversation_token) {
-      return JSON.parse(this.body_.conversation.conversation_token);
+    if (this.body_.conversation && this.body_.conversation.conversationToken) {
+      return JSON.parse(this.body_.conversation.conversationToken);
     }
     return {};
   }
@@ -157,16 +158,16 @@ const ActionsSdkAssistant = class extends Assistant {
     }
     // User object includes original API properties
     const user = {
-      userId: this.body_.user.user_id,
-      user_id: this.body_.user.user_id,
+      userId: this.body_.user.userId,
+      user_id: this.body_.user.userId,
       userName: this.body_.user.profile ? {
-        displayName: this.body_.user.profile.display_name,
-        givenName: this.body_.user.profile.given_name,
-        familyName: this.body_.user.profile.family_name
+        displayName: this.body_.user.profile.displayName,
+        givenName: this.body_.user.profile.givenName,
+        familyName: this.body_.user.profile.familyName
       } : null,
       profile: this.body_.user.profile,
-      accessToken: this.body_.user.access_token,
-      access_token: this.body_.user.access_token
+      accessToken: this.body_.user.accessToken,
+      access_token: this.body_.user.accessToken
     };
     return user;
   }
@@ -196,8 +197,8 @@ const ActionsSdkAssistant = class extends Assistant {
     }
     const deviceLocation = {
       coordinates: this.body_.device.location.coordinates,
-      address: this.body_.device.location.formatted_address,
-      zipCode: this.body_.device.location.zip_code,
+      address: this.body_.device.location.formattedAddress,
+      zipCode: this.body_.device.location.zipCode,
       city: this.body_.device.location.city
     };
     return deviceLocation;
@@ -262,11 +263,11 @@ const ActionsSdkAssistant = class extends Assistant {
    */
   getConversationId () {
     debug('getConversationId');
-    if (!this.body_.conversation || !this.body_.conversation.conversation_id) {
+    if (!this.body_.conversation || !this.body_.conversation.conversationId) {
       this.handleError_('No conversation ID');
       return null;
     }
-    return this.body_.conversation.conversation_id;
+    return this.body_.conversation.conversationId;
   }
 
   /**
@@ -310,6 +311,9 @@ const ActionsSdkAssistant = class extends Assistant {
    * Get the argument value by name from the current intent. If the argument
    * is not a text argument, the entire argument object is returned.
    *
+   * Note: If incoming request is using an API version under 2 (e.g. 'v1'),
+   * the argument object will be in Proto2 format (snake_case, etc).
+   *
    * @param {string} argName Name of the argument.
    * @return {string} Argument value matching argName
    *     or null if no matching argument.
@@ -325,10 +329,14 @@ const ActionsSdkAssistant = class extends Assistant {
     if (!argument) {
       debug('Failed to get argument value: %s', argName);
       return null;
-    } else if (argument.text_value) {
-      return argument.text_value;
+    } else if (argument.textValue) {
+      return argument.textValue;
     } else {
-      return argument;
+      if (!this.isNotApiVersionOne_()) {
+        return transformToSnakeCase(argument);
+      } else {
+        return argument;
+      }
     }
   }
 
@@ -436,12 +444,12 @@ const ActionsSdkAssistant = class extends Assistant {
     }
     const finalResponse = {};
     if (this.isSsml_(textToSpeech)) {
-      finalResponse.speech_response = {
+      finalResponse.speechResponse = {
         ssml: textToSpeech
       };
     } else {
-      finalResponse.speech_response = {
-        text_to_speech: textToSpeech
+      finalResponse.speechResponse = {
+        textToSpeech: textToSpeech
       };
     }
     const response = this.buildResponseHelper_(null, false, null, finalResponse);
@@ -488,13 +496,13 @@ const ActionsSdkAssistant = class extends Assistant {
     this.maybeAddItemToArray_(initialPrompt, initials);
     if (isSsml) {
       return {
-        initial_prompts: this.buildPromptsFromSsmlHelper_(initials),
-        no_input_prompts: this.buildPromptsFromSsmlHelper_(noInputs)
+        initialPrompts: this.buildPromptsFromSsmlHelper_(initials),
+        noInputPrompts: this.buildPromptsFromSsmlHelper_(noInputs)
       };
     } else {
       return {
-        initial_prompts: this.buildPromptsFromPlainTextHelper_(initials),
-        no_input_prompts: this.buildPromptsFromPlainTextHelper_(noInputs)
+        initialPrompts: this.buildPromptsFromPlainTextHelper_(initials),
+        noInputPrompts: this.buildPromptsFromPlainTextHelper_(noInputs)
       };
     }
   }
@@ -537,14 +545,14 @@ const ActionsSdkAssistant = class extends Assistant {
       JSON.stringify(finalResponse));
     const response = {};
     if (conversationToken) {
-      response.conversation_token = conversationToken;
+      response.conversationToken = conversationToken;
     }
-    response.expect_user_response = expectUserResponse;
+    response.expectUserResponse = expectUserResponse;
     if (expectedInput) {
-      response.expected_inputs = expectedInput;
+      response.expectedInputs = expectedInput;
     }
     if (!expectUserResponse && finalResponse) {
-      response.final_response = finalResponse;
+      response.finalResponse = finalResponse;
     }
     return response;
   }
@@ -588,6 +596,10 @@ const ActionsSdkAssistant = class extends Assistant {
       this.handleError_('Missing action');
       return null;
     }
+    if (!arguments) {
+      debug('No arguments included in request');
+      return null;
+    }
     for (let i = 0; i < input.arguments.length; i++) {
       if (input.arguments[i].name === argName) {
         return input.arguments[i];
@@ -606,8 +618,8 @@ const ActionsSdkAssistant = class extends Assistant {
   extractData_ () {
     debug('extractData_');
     if (this.body_.conversation &&
-      this.body_.conversation.conversation_token) {
-      const json = JSON.parse(this.body_.conversation.conversation_token);
+      this.body_.conversation.conversationToken) {
+      const json = JSON.parse(this.body_.conversation.conversationToken);
       this.data = json.data;
       this.state = json.state;
     } else {
@@ -632,11 +644,17 @@ const ActionsSdkAssistant = class extends Assistant {
       JSON.stringify(permissionsSpec), JSON.stringify(dialogState));
     // Build an Expected Intent object.
     const expectedIntent = {
-      intent: this.StandardIntents.PERMISSION,
-      input_value_spec: {
-        permission_value_spec: permissionsSpec
-      }
+      intent: this.StandardIntents.PERMISSION
     };
+    if (this.isNotApiVersionOne_()) {
+      expectedIntent.inputValueData = Object.assign({
+        [this.ANY_TYPE_PROPERTY_]: this.InputValueDataTypes_.PERMISSION
+      }, permissionsSpec);
+    } else {
+      expectedIntent.inputValueSpec = {
+        permissionValueSpec: permissionsSpec
+      };
+    }
     // Send an Ask request to Assistant.
     const inputPrompt = this.buildInputPrompt(false, 'PLACEHOLDER_FOR_PERMISSION');
     if (!dialogState) {
@@ -676,14 +694,14 @@ const ActionsSdkAssistant = class extends Assistant {
       };
     }
     const expectedInputs = [{
-      input_prompt: inputPrompt,
-      possible_intents: possibleIntents
+      inputPrompt: inputPrompt,
+      possibleIntents: possibleIntents
     }];
     const response = this.buildResponseHelper_(
       JSON.stringify(dialogState),
-      true, // expected_user_response
+      true, // expectedUserResponse
       expectedInputs,
-      null // final_response is null b/c dialog is active
+      null // finalResponse is null b/c dialog is active
     );
     return this.doResponse_(response, RESPONSE_CODE_OK);
   }
