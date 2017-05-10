@@ -89,6 +89,84 @@ const MockResponse = class {
 // ---------------------------------------------------------------------------
 
 /**
+ * Describes the behavior for Assistant isNotApiVersionOne_ method.
+ */
+describe('ApiAiAssistant#isNotApiVersionOne_', function () {
+  it('Should detect Proto2 when header isn\'t present', function () {
+    let headers = {
+      'Content-Type': 'application/json',
+      'google-assistant-api-version': 'v1'
+    };
+    const mockRequest = new MockRequest(headers, {});
+    const mockResponse = new MockResponse();
+
+    const assistant = new ApiAiAssistant({request: mockRequest, response: mockResponse});
+
+    expect(assistant.isNotApiVersionOne_()).to.equal(false);
+  });
+  it('Should detect v1 when header is present', function () {
+    let headers = {
+      'Content-Type': 'application/json',
+      'google-assistant-api-version': 'v1',
+      'Google-Actions-API-Version': '1'
+    };
+    const mockRequest = new MockRequest(headers, {});
+    const mockResponse = new MockResponse();
+
+    const assistant = new ApiAiAssistant({request: mockRequest, response: mockResponse});
+
+    expect(assistant.isNotApiVersionOne_()).to.equal(false);
+  });
+  it('Should detect v1 when version is present in APIAI req', function () {
+    let headers = {
+      'Content-Type': 'application/json',
+      'google-assistant-api-version': 'v1',
+      'Google-Actions-API-Version': '2'
+    };
+    const mockRequest = new MockRequest(headers, {
+      'originalRequest': {
+        'version': 1
+      }
+    });
+    const mockResponse = new MockResponse();
+
+    const assistant = new ApiAiAssistant({request: mockRequest, response: mockResponse});
+
+    expect(assistant.isNotApiVersionOne_()).to.equal(false);
+  });
+  it('Should detect v2 when header is present', function () {
+    let headers = {
+      'Content-Type': 'application/json',
+      'google-assistant-api-version': 'v1',
+      'Google-Actions-API-Version': '2'
+    };
+    const mockRequest = new MockRequest(headers, {});
+    const mockResponse = new MockResponse();
+
+    const assistant = new ApiAiAssistant({request: mockRequest, response: mockResponse});
+
+    expect(assistant.isNotApiVersionOne_()).to.equal(true);
+  });
+  it('Should detect v2 when version is present in APIAI req', function () {
+    let headers = {
+      'Content-Type': 'application/json',
+      'google-assistant-api-version': 'v1',
+      'Google-Actions-API-Version': '2'
+    };
+    const mockRequest = new MockRequest(headers, {
+      'originalRequest': {
+        'version': 2
+      }
+    });
+    const mockResponse = new MockResponse();
+
+    const assistant = new ApiAiAssistant({request: mockRequest, response: mockResponse});
+
+    expect(assistant.isNotApiVersionOne_()).to.equal(true);
+  });
+});
+
+/**
  * Describes the behavior for Assistant isSsml_ method.
  */
 describe('ApiAiAssistant#isSsml_', function () {
@@ -307,6 +385,16 @@ describe('ApiAiAssistant#constructor', function () {
 
     expect(sessionStartedSpy).to.not.have.been.called();
   });
+
+  // Test a change made for backwards compatibility with legacy sample code
+  it('Does initialize StandardIntents without an options object', function () {
+    const assistant = new ApiAiAssistant();
+
+    expect(assistant.StandardIntents.MAIN).to.equal('assistant.intent.action.MAIN');
+    expect(assistant.StandardIntents.TEXT).to.equal('assistant.intent.action.TEXT');
+    expect(assistant.StandardIntents.PERMISSION).to
+      .equal('assistant.intent.action.PERMISSION');
+  });
 });
 
 /**
@@ -502,7 +590,7 @@ describe('ApiAiAssistant#ask', function () {
 });
 
 /**
- * Describes the behavior for ApiAiAssistant askForPermissions method.
+ * Describes the behavior for ApiAiAssistant askForPermissions method in v1.
  */
 describe('ApiAiAssistant#askForPermissions', function () {
   // Success case test, when the API returns a valid 200 response with the response object
@@ -566,9 +654,102 @@ describe('ApiAiAssistant#askForPermissions', function () {
           'expect_user_response': true,
           'is_ssml': false,
           'no_input_prompts': [],
-          'permissions_request': {
-            'opt_context': 'To test',
-            'permissions': ['NAME', 'DEVICE_PRECISE_LOCATION']
+          'system_intent': {
+            'intent': 'assistant.intent.action.PERMISSION',
+            'spec': {
+              'permission_value_spec': {
+                'opt_context': 'To test',
+                'permissions': ['NAME', 'DEVICE_PRECISE_LOCATION']
+              }
+            }
+          }
+        }
+      },
+      'contextOut': [
+        {
+          'name': '_actions_on_google_',
+          'lifespan': 100,
+          'parameters': {}
+        }
+      ]
+    };
+    expect(mockResponse.body).to.deep.equal(expectedResponse);
+  });
+});
+
+/**
+ * Describes the behavior for ApiAiAssistant askForPermissions method in v2.
+ */
+describe('ApiAiAssistant#askForPermissions', function () {
+  // Success case test, when the API returns a valid 200 response with the response object
+  it('Should return the valid JSON in the response object for the success case.', function () {
+    let headers = {'Content-Type': 'application/json'};
+    let body = {
+      'id': '9c4394e3-4f5a-4e68-b1af-088b75ad3071',
+      'timestamp': '2016-10-28T03:41:39.957Z',
+      'result': {
+        'source': 'agent',
+        'resolvedQuery': 'Where am I?',
+        'speech': '',
+        'action': 'get_permission',
+        'actionIncomplete': false,
+        'parameters': {},
+        'contexts': [],
+        'metadata': {
+          'intentId': '1e46ffc2-651f-4ac0-a54e-9698feb88880',
+          'webhookUsed': 'true',
+          'intentName': 'give_permission'
+        },
+        'fulfillment': {
+          'speech': ''
+        },
+        'score': 1
+      },
+      'status': {
+        'code': 200,
+        'errorType': 'success'
+      },
+      'sessionId': 'e420f007-501d-4bc8-b551-5d97772bc50c',
+      'originalRequest': {
+        'version': 2,
+        'data': {
+          'conversation': {
+            'type': 2
+          }
+        }
+      }
+    };
+    const mockRequest = new MockRequest(headers, body);
+    const mockResponse = new MockResponse();
+
+    const assistant = new ApiAiAssistant({request: mockRequest, response: mockResponse});
+
+    function handler (assistant) {
+      return new Promise(function (resolve, reject) {
+        resolve(assistant.askForPermissions('To test', ['NAME', 'DEVICE_PRECISE_LOCATION']));
+      });
+    }
+
+    let actionMap = new Map();
+    actionMap.set('get_permission', handler);
+
+    assistant.handleRequest(actionMap);
+
+    // Validating the response object
+    let expectedResponse = {
+      'speech': 'PLACEHOLDER_FOR_PERMISSION',
+      'data': {
+        'google': {
+          'expectUserResponse': true,
+          'isSsml': false,
+          'noInputPrompts': [],
+          'systemIntent': {
+            'intent': 'actions.intent.PERMISSION',
+            'data': {
+              '@type': 'type.googleapis.com/google.actions.v2.PermissionValueSpec',
+              'optContext': 'To test',
+              'permissions': ['NAME', 'DEVICE_PRECISE_LOCATION']
+            }
           }
         }
       },
@@ -1951,6 +2132,16 @@ describe('ActionsSdkAssistant#constructor', function () {
 
     expect(sessionStartedSpy).to.not.have.been.called();
   });
+
+  // Test a change made for backwards compatibility with legacy sample code
+  it('Does initialize StandardIntents without an options object', function () {
+    const assistant = new ActionsSdkAssistant();
+
+    expect(assistant.StandardIntents.MAIN).to.equal('assistant.intent.action.MAIN');
+    expect(assistant.StandardIntents.TEXT).to.equal('assistant.intent.action.TEXT');
+    expect(assistant.StandardIntents.PERMISSION).to
+      .equal('assistant.intent.action.PERMISSION');
+  });
 });
 
 /**
@@ -2512,7 +2703,7 @@ describe('ActionsSdkAssistant#ask', function () {
 });
 
 /**
- * Describes the behavior for ActionsSdkAssistant askForPermissions method.
+ * Describes the behavior for ActionsSdkAssistant askForPermissions method in v1.
  */
 describe('ActionsSdkAssistant#askForPermissions', function () {
   // Success case test, when the API returns a valid 200 response with the response object
@@ -2598,7 +2789,97 @@ describe('ActionsSdkAssistant#askForPermissions', function () {
       ]
     };
 
-    expect(JSON.stringify(mockResponse.body)).to.equal(JSON.stringify(expectedResponse));
+    expect(mockResponse.body).to.deep.equal(expectedResponse);
+  });
+});
+
+/**
+ * Describes the behavior for ActionsSdkAssistant askForPermissions method in v2.
+ */
+describe('ActionsSdkAssistant#askForPermissions', function () {
+  // Success case test, when the API returns a valid 200 response with the response object
+  it('Should return the valid JSON in the response object for the success case.', function () {
+    let headers = {
+      'Content-Type': 'application/json',
+      'Google-Actions-API-Version': '2'
+    };
+    let body = {
+      'user': {
+
+      },
+      'conversation': {
+        'conversationId': '1480532856956',
+        'type': 1
+      },
+      'inputs': [
+        {
+          'intent': 'GET_RIDE',
+          'rawInputs': [
+            {
+              'inputType': 2,
+              'query': 'get me a ride in a big car'
+            }
+          ],
+          'arguments': [
+
+          ]
+        }
+      ]
+    };
+    const mockRequest = new MockRequest(headers, body);
+    const mockResponse = new MockResponse();
+
+    const assistant = new ActionsSdkAssistant({
+      request: mockRequest,
+      response: mockResponse
+    });
+
+    const GET_RIDE = 'GET_RIDE';
+
+    function getRide (assistant) {
+      assistant.askForPermissions('To get you a ride', [
+        assistant.SupportedPermissions.NAME,
+        assistant.SupportedPermissions.DEVICE_PRECISE_LOCATION
+      ], {
+        carType: 'big'
+      });
+    }
+
+    let actionMap = new Map();
+    actionMap.set(GET_RIDE, getRide);
+
+    assistant.handleRequest(actionMap);
+
+    // Validating the response object
+    let expectedResponse = {
+      'conversationToken': '{"carType":"big"}',
+      'expectUserResponse': true,
+      'expectedInputs': [
+        {
+          'inputPrompt': {
+            'initialPrompts': [
+              {
+                'textToSpeech': 'PLACEHOLDER_FOR_PERMISSION'
+              }
+            ],
+            'noInputPrompts': [
+            ]
+          },
+          'possibleIntents': [
+            {
+              'intent': 'actions.intent.PERMISSION',
+              'inputValueData': {
+                '@type': 'type.googleapis.com/google.actions.v2.PermissionValueSpec',
+                'optContext': 'To get you a ride',
+                'permissions': ['NAME', 'DEVICE_PRECISE_LOCATION']
+              }
+            }
+          ]
+        }
+      ]
+    };
+
+    expect(mockResponse.body).to.deep.equal(expectedResponse);
   });
 });
 

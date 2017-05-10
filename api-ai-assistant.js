@@ -23,6 +23,7 @@
 const Debug = require('debug');
 const debug = Debug('actions-on-google:debug');
 const error = Debug('actions-on-google:error');
+const transformToSnakeCase = require('./utils/transform').transformToSnakeCase;
 const assistant = require('./assistant');
 const Assistant = assistant.Assistant;
 const State = assistant.State;
@@ -64,9 +65,10 @@ const ApiAiAssistant = class extends Assistant {
     debug('ApiAiAssistant constructor');
     super(options);
 
-    if (this.body_.originalRequest &&
-        this.body_.originalRequest.data &&
-        this.body_.originalRequest.data.conversation) {
+    if (this.body_ &&
+      this.body_.originalRequest &&
+      this.body_.originalRequest.data &&
+      this.body_.originalRequest.data.conversation) {
       if (this.body_.originalRequest.data.conversation.type ===
         this.ConversationStages.NEW && this.sessionStarted_ &&
         typeof this.sessionStarted_ === 'function') {
@@ -100,16 +102,16 @@ const ApiAiAssistant = class extends Assistant {
     }
     // User object includes original API properties
     const user = {
-      userId: this.body_.originalRequest.data.user.user_id,
-      user_id: this.body_.originalRequest.data.user.user_id,
+      userId: this.body_.originalRequest.data.user.userId,
+      user_id: this.body_.originalRequest.data.user.userId,
       userName: this.body_.originalRequest.data.user.profile ? {
-        displayName: this.body_.originalRequest.data.user.profile.display_name,
-        givenName: this.body_.originalRequest.data.user.profile.given_name,
-        familyName: this.body_.originalRequest.data.user.profile.family_name
+        displayName: this.body_.originalRequest.data.user.profile.displayName,
+        givenName: this.body_.originalRequest.data.user.profile.givenName,
+        familyName: this.body_.originalRequest.data.user.profile.familyName
       } : null,
       profile: this.body_.originalRequest.data.user.profile,
-      accessToken: this.body_.originalRequest.data.user.access_token,
-      access_token: this.body_.originalRequest.data.user.access_token
+      accessToken: this.body_.originalRequest.data.user.accessToken,
+      access_token: this.body_.originalRequest.data.user.accessToken
     };
     return user;
   }
@@ -139,8 +141,8 @@ const ApiAiAssistant = class extends Assistant {
     }
     const deviceLocation = {
       coordinates: this.body_.originalRequest.data.device.location.coordinates,
-      address: this.body_.originalRequest.data.device.location.formatted_address,
-      zipCode: this.body_.originalRequest.data.device.location.zip_code,
+      address: this.body_.originalRequest.data.device.location.formattedAddress,
+      zipCode: this.body_.originalRequest.data.device.location.zipCode,
       city: this.body_.originalRequest.data.device.location.city
     };
     return deviceLocation;
@@ -172,7 +174,7 @@ const ApiAiAssistant = class extends Assistant {
       if (input.arguments) {
         for (let argument of input.arguments) {
           return argument.name === this.BuiltInArgNames.PERMISSION_GRANTED &&
-            argument.text_value === 'true';
+            argument.textValue === 'true';
         }
       }
     }
@@ -244,6 +246,9 @@ const ApiAiAssistant = class extends Assistant {
    * is included in originalRequest, and is not a text argument, the entire
    * argument object is returned.
    *
+   * Note: If incoming request is using an API version under 2 (e.g. 'v1'),
+   * the argument object will be in Proto2 format (snake_case, etc).
+   *
    * @example
    * const assistant = new ApiAiAssistant({request: request, response: response});
    * const WELCOME_INTENT = 'input.welcome';
@@ -283,10 +288,14 @@ const ApiAiAssistant = class extends Assistant {
         if (input.arguments) {
           for (let argument of input.arguments) {
             if (argument.name === argName) {
-              if (argument.text_value) {
-                return argument.text_value;
+              if (argument.textValue) {
+                return argument.textValue;
               } else {
-                return argument;
+                if (!this.isNotApiVersionOne_()) {
+                  return transformToSnakeCase(argument);
+                } else {
+                  return argument;
+                }
               }
             }
           }
@@ -679,9 +688,9 @@ const ApiAiAssistant = class extends Assistant {
       speech: textToSpeech,
       data: {
         google: {
-          expect_user_response: expectUserResponse,
-          is_ssml: this.isSsml_(textToSpeech),
-          no_input_prompts: noInputs
+          expectUserResponse: expectUserResponse,
+          isSsml: this.isSsml_(textToSpeech),
+          noInputPrompts: noInputs
         }
       },
       contextOut: []
@@ -743,7 +752,18 @@ const ApiAiAssistant = class extends Assistant {
     };
     const inputPrompt = 'PLACEHOLDER_FOR_PERMISSION';
     const response = this.buildResponse_(dialogState, inputPrompt, true);
-    response.data.google.permissions_request = permissionsSpec;
+    response.data.google.systemIntent = {
+      intent: this.StandardIntents.PERMISSION
+    };
+    if (this.isNotApiVersionOne_()) {
+      response.data.google.systemIntent.data = Object.assign({
+        [this.ANY_TYPE_PROPERTY_]: this.InputValueDataTypes_.PERMISSION
+      }, permissionsSpec);
+    } else {
+      response.data.google.systemIntent.spec = {
+        permissionValueSpec: permissionsSpec
+      };
+    }
     return this.doResponse_(response, RESPONSE_CODE_OK);
   }
 };
