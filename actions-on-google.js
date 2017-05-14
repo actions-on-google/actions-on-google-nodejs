@@ -21,11 +21,15 @@
 
 'use strict';
 
-const assistant = require('./assistant');
+const AssistantApp = require('./assistant-app');
 
 module.exports = {
-  Assistant: assistant.Assistant,
-  State: assistant.State,
-  ActionsSdkAssistant: require('./actions-sdk-assistant'),
-  ApiAiAssistant: require('./api-ai-assistant')
+  AssistantApp: AssistantApp.AssistantApp,
+  State: AssistantApp.State,
+  ActionsSdkApp: require('./actions-sdk-app'),
+  ApiAiApp: require('./api-ai-app'),
+  // Backwards compatibility
+  Assistant: AssistantApp.AssistantApp,
+  ActionsSdkAssistant: require('./actions-sdk-app'),
+  ApiAiAssistant: require('./api-ai-app')
 };

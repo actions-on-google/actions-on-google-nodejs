@@ -1,5 +1,5 @@
 /**
- * Copyright 2016 Google Inc. All Rights Reserved.
+ * Copyright 201 Google Inc. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,10 +15,10 @@
  */
 
 /**
- * The Actions on Google client library Assistant base class.
+ * The Actions on Google client library AssistantApp base class.
  *
- * This class contains the methods that are shared between platforms to suppor the converstaion API
- * protocol form Assistant. It also exports the 'State' class as a helper to represent states by
+ * This class contains the methods that are shared between platforms to support the conversation API
+ * protocol from Assistant. It also exports the 'State' class as a helper to represent states by
  * name.
  */
 
@@ -27,6 +27,14 @@
 const Debug = require('debug');
 const debug = Debug('actions-on-google:debug');
 const error = Debug('actions-on-google:error');
+
+// Response Builder classes
+const RichResponse = require('./response-builder').RichResponse;
+const BasicCard = require('./response-builder').BasicCard;
+const List = require('./response-builder').List;
+const Carousel = require('./response-builder').Carousel;
+const OptionItem = require('./response-builder').OptionItem;
+const isSsml = require('./response-builder').isSsml;
 
 const transformToSnakeCase = require('./utils/transform').transformToSnakeCase;
 const transformToCamelCase = require('./utils/transform').transformToCamelCase;
@@ -47,18 +55,18 @@ debug.log = console.log.bind(console);
 error.log = console.error.bind(console);
 
 /**
- * Constructor for Assistant object.
+ * Constructor for AssistantApp object.
  * Should not be instantiated; rather instantiate one of the subclasses
- * {@link ActionsSdkAssistant} or {@link ApiAiAssistant}.
+ * {@link ActionsSdkApp} or {@link ApiAiApp}.
  *
  * @param {Object} options JSON configuration.
  * @param {Object} options.request Express HTTP request object.
  * @param {Object} options.response Express HTTP response object.
  * @param {Function=} options.sessionStarted Function callback when session starts.
  */
-const Assistant = class {
+const AssistantApp = class {
   constructor (options) {
-    debug('Assistant constructor');
+    debug('AssistantApp constructor');
 
     if (!options) {
       // ignore for JavaScript inheritance to work
@@ -196,7 +204,7 @@ const Assistant = class {
     this.responded_ = false;
 
     /**
-     * List of standard intents that the Assistant provides.
+     * List of standard intents that the app provides.
      * @readonly
      * @enum {string}
      * @actionssdk
@@ -208,11 +216,13 @@ const Assistant = class {
       /** Assistant fires TEXT intent when action issues ask intent. */
       TEXT: this.isNotApiVersionOne_() ? 'actions.intent.TEXT' : 'assistant.intent.action.TEXT',
       /** Assistant fires PERMISSION intent when action invokes askForPermission. */
-      PERMISSION: this.isNotApiVersionOne_() ? 'actions.intent.PERMISSION' : 'assistant.intent.action.PERMISSION'
+      PERMISSION: this.isNotApiVersionOne_() ? 'actions.intent.PERMISSION' : 'assistant.intent.action.PERMISSION',
+      /** App fires OPTION intent when user chooses from options provided. */
+      OPTION: 'actions.intent.OPTION'
     };
 
     /**
-     * List of supported permissions the Assistant supports.
+     * List of supported permissions the app supports.
      * @readonly
      * @enum {string}
      * @actionssdk
@@ -266,7 +276,9 @@ const Assistant = class {
      */
     this.InputValueDataTypes_ = {
       /** Permission Value Spec. */
-      PERMISSION: 'type.googleapis.com/google.actions.v2.PermissionValueSpec'
+      PERMISSION: 'type.googleapis.com/google.actions.v2.PermissionValueSpec',
+      /** Option Value Spec. */
+      OPTION: 'type.googleapis.com/google.actions.v2.OptionValueSpec'
     };
 
     /**
@@ -293,6 +305,50 @@ const Assistant = class {
     };
 
     /**
+     * List of surface capabilities supported by the app.
+     * @readonly
+     * @enum {string}
+     * @actionssdk
+     * @apiai
+     */
+    this.SurfaceCapabilities = {
+      /**
+       * The ability to output audio.
+       */
+      AUDIO_OUTPUT: 'actions.capability.AUDIO_OUTPUT',
+      /**
+       * The ability to output on a screen
+       */
+      SCREEN_OUTPUT: 'actions.capability.SCREEN_OUTPUT'
+    };
+
+    /**
+     * List of possible user input types.
+     * @readonly
+     * @enum {number}
+     * @actionssdk
+     * @apiai
+     */
+    this.InputTypes = {
+      /**
+       * Unspecified.
+       */
+      UNSPECIFIED: this.isNotApiVersionOne_() ? 'UNSPECIFIED' : 0,
+      /**
+       * Input given by touch.
+       */
+      TOUCH: this.isNotApiVersionOne_() ? 'TOUCH' : 1,
+      /**
+       * Input given by voice (spoken).
+       */
+      VOICE: this.isNotApiVersionOne_() ? 'VOICE' : 2,
+      /**
+       * Input given by keyboard (typed).
+       */
+      KEYBOARD: this.isNotApiVersionOne_() ? 'KEYBOARD' : 3
+    };
+
+    /**
      * API version describes version of the Assistant request.
      * @deprecated
      * @private
@@ -316,50 +372,50 @@ const Assistant = class {
    *
    * @example
    * // Actions SDK
-   * const assistant = new ActionsSdkAssistant({request: request, response: response});
+   * const app = new ActionsSdkApp({request: request, response: response});
    *
-   * function mainIntent (assistant) {
-   *   const inputPrompt = assistant.buildInputPrompt(true, '<speak>Hi! <break time="1"/> ' +
+   * function mainIntent (app) {
+   *   const inputPrompt = app.buildInputPrompt(true, '<speak>Hi! <break time="1"/> ' +
    *         'I can read out an ordinal like ' +
    *         '<say-as interpret-as="ordinal">123</say-as>. Say a number.</speak>',
    *         ['I didn\'t hear a number', 'If you\'re still there, what\'s the number?', 'What is the number?']);
-   *   assistant.ask(inputPrompt);
+   *   app.ask(inputPrompt);
    * }
    *
-   * function rawInput (assistant) {
-   *   if (assistant.getRawInput() === 'bye') {
-   *     assistant.tell('Goodbye!');
+   * function rawInput (app) {
+   *   if (app.getRawInput() === 'bye') {
+   *     app.tell('Goodbye!');
    *   } else {
-   *     const inputPrompt = assistant.buildInputPrompt(true, '<speak>You said, <say-as interpret-as="ordinal">' +
-   *       assistant.getRawInput() + '</say-as></speak>',
+   *     const inputPrompt = app.buildInputPrompt(true, '<speak>You said, <say-as interpret-as="ordinal">' +
+   *       app.getRawInput() + '</say-as></speak>',
    *         ['I didn\'t hear a number', 'If you\'re still there, what\'s the number?', 'What is the number?']);
-   *     assistant.ask(inputPrompt);
+   *     app.ask(inputPrompt);
    *   }
    * }
    *
    * const actionMap = new Map();
-   * actionMap.set(assistant.StandardIntents.MAIN, mainIntent);
-   * actionMap.set(assistant.StandardIntents.TEXT, rawInput);
+   * actionMap.set(app.StandardIntents.MAIN, mainIntent);
+   * actionMap.set(app.StandardIntents.TEXT, rawInput);
    *
-   * assistant.handleRequest(actionMap);
+   * app.handleRequest(actionMap);
    *
    * // API.AI
-   * const assistant = new ApiAiAssistant({request: req, response: res});
+   * const app = new ApiAIApp({request: req, response: res});
    * const NAME_ACTION = 'make_name';
    * const COLOR_ARGUMENT = 'color';
    * const NUMBER_ARGUMENT = 'number';
    *
-   * function makeName (assistant) {
-   *   const number = assistant.getArgument(NUMBER_ARGUMENT);
-   *   const color = assistant.getArgument(COLOR_ARGUMENT);
-   *   assistant.tell('Alright, your silly name is ' +
+   * function makeName (app) {
+   *   const number = app.getArgument(NUMBER_ARGUMENT);
+   *   const color = app.getArgument(COLOR_ARGUMENT);
+   *   app.tell('Alright, your silly name is ' +
    *     color + ' ' + number +
    *     '! I hope you like it. See you next time.');
    * }
    *
    * const actionMap = new Map();
    * actionMap.set(NAME_ACTION, makeName);
-   * assistant.handleRequest(actionMap);
+   * app.handleRequest(actionMap);
    *
    * @param {(Function|Map)} handler The handler (or Map of handlers) for the request.
    * @actionssdk
@@ -407,13 +463,13 @@ const Assistant = class {
   }
 
   /**
-   * Equivalent to {@link Assistant#askForPermission|askForPermission},
+   * Equivalent to {@link AssistantApp#askForPermission|askForPermission},
    * but allows you to prompt the user for more than one permission at once.
    *
    * Notes:
    *
    * * The order in which you specify the permission prompts does not matter -
-   *   it is controlled by the assistant to provide a consistent user experience.
+   *   it is controlled by the Assistant to provide a consistent user experience.
    * * The user will be able to either accept all permissions at once, or none.
    *   If you wish to allow them to selectively accept one or other, make several
    *   dialog turns asking for each permission independently with askForPermission.
@@ -421,39 +477,39 @@ const Assistant = class {
    *   equivalent to just asking for DEVICE_PRECISE_LOCATION
    *
    * @example
-   * const assistant = new ApiAiAssistant({request: req, response: res});
+   * const app = new ApiAIApp({request: req, response: res});
    * const REQUEST_PERMISSION_ACTION = 'request_permission';
    * const GET_RIDE_ACTION = 'get_ride';
    *
-   * function requestPermission (assistant) {
+   * function requestPermission (app) {
    *   const permission = [
-   *     assistant.SupportedPermissions.NAME,
-   *     assistant.SupportedPermissions.DEVICE_PRECISE_LOCATION
+   *     app.SupportedPermissions.NAME,
+   *     app.SupportedPermissions.DEVICE_PRECISE_LOCATION
    *   ];
-   *   assistant.askForPermissions('To pick you up', permissions);
+   *   app.askForPermissions('To pick you up', permissions);
    * }
    *
-   * function sendRide (assistant) {
-   *   if (assistant.isPermissionGranted()) {
-   *     const displayName = assistant.getUserName().displayName;
-   *     const address = assistant.getDeviceLocation().address;
-   *     assistant.tell('I will tell your driver to pick up ' + displayName +
+   * function sendRide (app) {
+   *   if (app.isPermissionGranted()) {
+   *     const displayName = app.getUserName().displayName;
+   *     const address = app.getDeviceLocation().address;
+   *     app.tell('I will tell your driver to pick up ' + displayName +
    *         ' at ' + address);
    *   } else {
    *     // Response shows that user did not grant permission
-   *     assistant.tell('Sorry, I could not figure out where to pick you up.');
+   *     app.tell('Sorry, I could not figure out where to pick you up.');
    *   }
    * }
    * const actionMap = new Map();
    * actionMap.set(REQUEST_PERMISSION_ACTION, requestPermission);
    * actionMap.set(GET_RIDE_ACTION, sendRide);
-   * assistant.handleRequest(actionMap);
+   * app.handleRequest(actionMap);
    *
    * @param {string} context Context why the permission is being asked; it's the TTS
    *     prompt prefix (action phrase) we ask the user.
-   * @param {Array<string>} permissions Array of permissions Assistant supports, each of
-   *     which comes from Assistant.SupportedPermissions.
-   * @param {Object=} dialogState JSON object the action uses to hold dialog state that
+   * @param {Array<string>} permissions Array of permissions App supports, each of
+   *     which comes from AssistantApp.SupportedPermissions.
+   * @param {Object=} dialogState JSON object the app uses to hold dialog state that
    *     will be circulated back by Assistant.
    * @return A response is sent to Assistant to ask for the user's permission; for any
    *     invalid input, we return null.
@@ -495,52 +551,52 @@ const Assistant = class {
 
   /**
    * Asks the Assistant to guide the user to grant a permission. For example,
-   * if you want your action to get access to the user's name, you would invoke
+   * if you want your app to get access to the user's name, you would invoke
    * the askForPermission method with a context containing the reason for the request,
-   * and the assistant.SupportedPermissions.NAME permission. With this, the Assistant will ask
+   * and the AssistantApp.SupportedPermissions.NAME permission. With this, the Assistant will ask
    * the user, in your agent's voice, the following: '[Context with reason for the request],
    * I'll just need to get your name from Google, is that OK?'.
    *
    * Once the user accepts or denies the request, the Assistant will fire another intent:
-   * assistant.intent.action.PERMISSION with a boolean argument: assistant.BuiltInArgNames.PERMISSION_GRANTED
+   * assistant.intent.action.PERMISSION with a boolean argument: AssistantApp.BuiltInArgNames.PERMISSION_GRANTED
    * and, if granted, the information that you requested.
    *
    * Read more:
    *
    * * {@link https://developers.google.com/actions/reference/conversation#ExpectedIntent|Supported Permissions}
-   * * Check if the permission has been granted with {@link ActionsSdkAssistant#isPermissionGranted|isPermissionsGranted}
-   * * {@link ActionsSdkAssistant#getDeviceLocation|getDeviceLocation}
-   * * {@link Assistant#getUserName|getUserName}
+   * * Check if the permission has been granted with {@link ActionsSdkApp#isPermissionGranted|isPermissionsGranted}
+   * * {@link ActionsSdkApp#getDeviceLocation|getDeviceLocation}
+   * * {@link AssistantApp#getUserName|getUserName}
    *
    * @example
-   * const assistant = new ApiAiAssistant({request: req, response: res});
+   * const app = new ApiAiApp({request: req, response: res});
    * const REQUEST_PERMISSION_ACTION = 'request_permission';
    * const GET_RIDE_ACTION = 'get_ride';
    *
-   * function requestPermission (assistant) {
-   *   const permission = assistant.SupportedPermissions.NAME;
-   *   assistant.askForPermission('To pick you up', permission);
+   * function requestPermission (app) {
+   *   const permission = app.SupportedPermissions.NAME;
+   *   app.askForPermission('To pick you up', permission);
    * }
    *
-   * function sendRide (assistant) {
-   *   if (assistant.isPermissionGranted()) {
-   *     const displayName = assistant.getUserName().displayName;
-   *     assistant.tell('I will tell your driver to pick up ' + displayName);
+   * function sendRide (app) {
+   *   if (app.isPermissionGranted()) {
+   *     const displayName = app.getUserName().displayName;
+   *     app.tell('I will tell your driver to pick up ' + displayName);
    *   } else {
    *     // Response shows that user did not grant permission
-   *     assistant.tell('Sorry, I could not figure out who to pick up.');
+   *     app.tell('Sorry, I could not figure out who to pick up.');
    *   }
    * }
    * const actionMap = new Map();
    * actionMap.set(REQUEST_PERMISSION_ACTION, requestPermission);
    * actionMap.set(GET_RIDE_ACTION, sendRide);
-   * assistant.handleRequest(actionMap);
+   * app.handleRequest(actionMap);
    *
    * @param {string} context Context why permission is asked; it's the TTS
    *     prompt prefix (action phrase) we ask the user.
    * @param {string} permission One of the permissions Assistant supports, each of
-   *     which comes from Assistant.SupportedPermissions.
-   * @param {Object=} dialogState JSON object the action uses to hold dialog state that
+   *     which comes from AssistantApp.SupportedPermissions.
+   * @param {Object=} dialogState JSON object the app uses to hold dialog state that
    *     will be circulated back by Assistant.
    * @return A response is sent to the Assistant to ask for the user's permission;
    *     for any invalid input, we return null.
@@ -579,7 +635,7 @@ const Assistant = class {
    * @typedef {Object} User
    * @property {string} userId - Random string ID for Google user.
    * @property {UserName} userName - User name information. Null if not
-   *     requested with {@link Assistant#askForPermission|askForPermission(SupportedPermissions.NAME)}.
+   *     requested with {@link AssistantApp#askForPermission|askForPermission(SupportedPermissions.NAME)}.
    * @property {string} accessToken - Unique Oauth2 token. Only available with
    *     account linking.
    */
@@ -590,27 +646,27 @@ const Assistant = class {
    * returns null.
    *
    * @example
-   * const assistant = new ApiAiAssistant({request: req, response: res});
+   * const app = new ApiAIApp({request: req, response: res});
    * const REQUEST_PERMISSION_ACTION = 'request_permission';
    * const SAY_NAME_ACTION = 'get_name';
    *
-   * function requestPermission (assistant) {
-   *   const permission = assistant.SupportedPermissions.NAME;
-   *   assistant.askForPermission('To know who you are', permission);
+   * function requestPermission (app) {
+   *   const permission = app.SupportedPermissions.NAME;
+   *   app.askForPermission('To know who you are', permission);
    * }
    *
-   * function sayName (assistant) {
-   *   if (assistant.isPermissionGranted()) {
-   *     assistant.tell('Your name is ' + assistant.getUserName().displayName));
+   * function sayName (app) {
+   *   if (app.isPermissionGranted()) {
+   *     app.tell('Your name is ' + app.getUserName().displayName));
    *   } else {
    *     // Response shows that user did not grant permission
-   *     assistant.tell('Sorry, I could not get your name.');
+   *     app.tell('Sorry, I could not get your name.');
    *   }
    * }
    * const actionMap = new Map();
    * actionMap.set(REQUEST_PERMISSION_ACTION, requestPermission);
    * actionMap.set(SAY_NAME_ACTION, sayName);
-   * assistant.handleRequest(actionMap);
+   * app.handleRequest(actionMap);
    * @return {UserName} Null if name permission is not granted.
    * @actionssdk
    * @apiai
@@ -618,6 +674,123 @@ const Assistant = class {
   getUserName () {
     debug('getUserName');
     return this.getUser().userName;
+  }
+
+  /**
+   * Returns true if user device has a given surface capability.
+   *
+   * @param {string} capability Must be one of AssistantApp.SurfaceCapabilities.
+   * @return {boolean} True if user device has the given capability.
+   *
+   * @example
+   * const app = new ApiAIApp({request: req, response: res});
+   * const DESCRIBE_SOMETHING = 'DESCRIBE_SOMETHING';
+   *
+   * function describe (app) {
+   *   if (app.hasSurfaceCapability(app.SurfaceCapabilities.SCREEN_OUTPUT)) {
+   *     app.tell(richResponseWithBasicCard);
+   *   } else {
+   *     app.tell('Let me tell you about ...');
+   *   }
+   * }
+   * const actionMap = new Map();
+   * actionMap.set(DESCRIBE_SOMETHING, describe);
+   * app.handleRequest(actionMap);
+   *
+   * @apiai
+   * @actionssdk
+   */
+  hasSurfaceCapability (requestedCapability) {
+    debug('hasSurfaceCapability: requestedCapability=%s', requestedCapability);
+    const capabilities = this.getSurfaceCapabilities();
+    if (!capabilities) {
+      error('No incoming capabilities to search ' +
+        'for request capability: %s', requestedCapability);
+      return false;
+    }
+    return capabilities.includes(requestedCapability);
+  }
+
+  /**
+   * Gets surface capabilities of user device.
+   *
+   * Implemented in subclasses for Actions SDK and API.AI.
+   * @return {Object} HTTP response.
+   * @apiai
+   * @actionssdk
+   */
+  getSurfaceCapabilities () {
+    debug('getSurfaceCapabilities');
+    return [];
+  }
+
+  // ---------------------------------------------------------------------------
+  //                   Response Builders
+  // ---------------------------------------------------------------------------
+
+  /**
+   * Constructs RichResponse with chainable property setters.
+   *
+   * @param {RichResponse=} richResponse RichResponse to clone.
+   * @return {RichResponse} Constructed RichResponse.
+   */
+  buildRichResponse (richResponse) {
+    return new RichResponse(richResponse);
+  }
+
+  /**
+   * Constructs BasicCard with chainable property setters.
+   *
+   * @param {string=} bodyText Body text of the card. Can be set using setTitle
+   *     instead.
+   * @return {BasicCard} Constructed BasicCard.
+   */
+  buildBasicCard (bodyText) {
+    const card = new BasicCard();
+    if (bodyText) {
+      card.setBodyText(bodyText);
+    }
+    return card;
+  }
+
+  /**
+   * Constructs List with chainable property setters.
+   *
+   * @param {string=} title A title to set for a new List.
+   * @return {List} Constructed List.
+   */
+  buildList (title) {
+    return new List(title);
+  }
+
+  /**
+   * Constructs Carousel with chainable property setters.
+   *
+   * @return {Carousel} Constructed Carousel.
+   */
+  buildCarousel () {
+    return new Carousel();
+  }
+
+  /**
+   * Constructs OptionItem with chainable property setters.
+   *
+   * @param {string=} key A unique key to identify this option. This key will
+   *     be returned as an argument in the resulting actions.intent.OPTION
+   *     intent.
+   * @param {string|Array<string>=} synonyms A list of synonyms which the user may
+   *     use to identify this option instead of the option key.
+   * @return {OptionItem} Constructed OptionItem.
+   */
+  buildOptionItem (key, synonyms) {
+    let optionItem = new OptionItem();
+    if (key) {
+      optionItem.setKey(key);
+    }
+    if (synonyms) {
+      optionItem.addSynonyms(synonyms);
+    }
+    return optionItem;
   }
 
   // ---------------------------------------------------------------------------
@@ -703,7 +876,7 @@ const Assistant = class {
       this.handleError_('text can NOT be empty.');
       return false;
     }
-    return /^<speak\b[^>]*>([^]*?)<\/speak>$/gi.test(text);
+    return isSsml(text);
   }
 
   /**
@@ -732,7 +905,7 @@ const Assistant = class {
     }
     // Log error
     error.apply(text, Array.prototype.slice.call(arguments, 1));
-    // Tell assistant to say error
+    // Tell app to say error
     if (this.responded_) {
       return;
     }
@@ -876,6 +1049,6 @@ const State = class {
 };
 
 module.exports = {
-  Assistant: Assistant,
+  AssistantApp: AssistantApp,
   State: State
 };

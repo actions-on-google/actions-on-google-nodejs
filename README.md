@@ -1,6 +1,6 @@
 # Actions On Google Client Library
 
-This Actions On Google client library makes it easy to create your actions for the Google Assistant.
+This Actions On Google client library makes it easy to create your apps for the Google Assistant.
 
 The client library supports both the Actions SDK webhook and API.ai fulfillment.
 
@@ -10,26 +10,26 @@ The client library supports both the Actions SDK webhook and API.ai fulfillment.
  1. Import the appropriate class:
 
 ```javascript
-let ActionsSdkAssistant = require('actions-on-google').ActionsSdkAssistant;
+let ActionsSdkApp = require('actions-on-google').ActionsSdkApp;
 ```
 
  2. Create an instance:
 
 ```javascript
-const assistant = new ActionsSdkAssistant({request: request, response: response});
+const app = new ActionsSdkApp({request: request, response: response});
 ```
 
 ### API.ai
  1. Import the appropriate class:
 
 ```javascript
-let ApiAiAssistant = require('actions-on-google').ApiAiAssistant;
+let ApiAiApp = require('actions-on-google').ApiAiApp;
 ```
 
  2. Create an instance:
 
 ```javascript
-const assistant = new ApiAiAssistant({request: request, response: response});
+const app = new ApiAiApp({request: request, response: response});
 ```
 
 ## References and How to report bugs

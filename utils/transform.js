@@ -92,6 +92,7 @@ function transformToSnakeCase (object) {
 /**
  * Generic deep object transformation utility. Recursively converts all object
  * keys, including those of array elements, with some transformation function.
+ * Note that classes will get converted to objects.
  *
  * @param {Object} object Object to transform.
  * @param {Function} keyTransformation

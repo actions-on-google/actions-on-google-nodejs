@@ -26,9 +26,14 @@ const winston = require('winston');
 const chai = require('chai');
 const expect = chai.expect;
 const spies = require('chai-spies');
-const assistant = require('.././actions-on-google');
-const ApiAiAssistant = assistant.ApiAiAssistant;
-const ActionsSdkAssistant = assistant.ActionsSdkAssistant;
+const Actions = require('.././actions-on-google');
+const ApiAiApp = Actions.ApiAiApp;
+const ActionsSdkApp = Actions.ActionsSdkApp;
+const RichResponse = require('.././response-builder').RichResponse;
+const BasicCard = require('.././response-builder').BasicCard;
+const List = require('.././response-builder').List;
+const Carousel = require('.././response-builder').Carousel;
+const OptionItem = require('.././response-builder').OptionItem;
 
 chai.use(spies);
 
@@ -85,13 +90,13 @@ const MockResponse = class {
 };
 
 // ---------------------------------------------------------------------------
-//                   Assistant helpers
+//                   App helpers
 // ---------------------------------------------------------------------------
 
 /**
  * Describes the behavior for Assistant isNotApiVersionOne_ method.
  */
-describe('ApiAiAssistant#isNotApiVersionOne_', function () {
+describe('ApiAiApp#isNotApiVersionOne_', function () {
   it('Should detect Proto2 when header isn\'t present', function () {
     let headers = {
       'Content-Type': 'application/json',
@@ -100,9 +105,9 @@ describe('ApiAiAssistant#isNotApiVersionOne_', function () {
     const mockRequest = new MockRequest(headers, {});
     const mockResponse = new MockResponse();
 
-    const assistant = new ApiAiAssistant({request: mockRequest, response: mockResponse});
+    const app = new ApiAiApp({request: mockRequest, response: mockResponse});
 
-    expect(assistant.isNotApiVersionOne_()).to.equal(false);
+    expect(app.isNotApiVersionOne_()).to.equal(false);
   });
   it('Should detect v1 when header is present', function () {
     let headers = {
@@ -113,11 +118,11 @@ describe('ApiAiAssistant#isNotApiVersionOne_', function () {
     const mockRequest = new MockRequest(headers, {});
     const mockResponse = new MockResponse();
 
-    const assistant = new ApiAiAssistant({request: mockRequest, response: mockResponse});
+    const app = new ApiAiApp({request: mockRequest, response: mockResponse});
 
-    expect(assistant.isNotApiVersionOne_()).to.equal(false);
+    expect(app.isNotApiVersionOne_()).to.equal(false);
   });
-  it('Should detect v1 when version is present in APIAI req', function () {
+  it('Should detect v2 when version is present in APIAI req', function () {
     let headers = {
       'Content-Type': 'application/json',
       'google-assistant-api-version': 'v1',
@@ -130,9 +135,9 @@ describe('ApiAiAssistant#isNotApiVersionOne_', function () {
     });
     const mockResponse = new MockResponse();
 
-    const assistant = new ApiAiAssistant({request: mockRequest, response: mockResponse});
+    const app = new ApiAiApp({request: mockRequest, response: mockResponse});
 
-    expect(assistant.isNotApiVersionOne_()).to.equal(false);
+    expect(app.isNotApiVersionOne_()).to.equal(false);
   });
   it('Should detect v2 when header is present', function () {
     let headers = {
@@ -143,9 +148,9 @@ describe('ApiAiAssistant#isNotApiVersionOne_', function () {
     const mockRequest = new MockRequest(headers, {});
     const mockResponse = new MockResponse();
 
-    const assistant = new ApiAiAssistant({request: mockRequest, response: mockResponse});
+    const app = new ApiAiApp({request: mockRequest, response: mockResponse});
 
-    expect(assistant.isNotApiVersionOne_()).to.equal(true);
+    expect(app.isNotApiVersionOne_()).to.equal(true);
   });
   it('Should detect v2 when version is present in APIAI req', function () {
     let headers = {
@@ -160,16 +165,16 @@ describe('ApiAiAssistant#isNotApiVersionOne_', function () {
     });
     const mockResponse = new MockResponse();
 
-    const assistant = new ApiAiAssistant({request: mockRequest, response: mockResponse});
+    const app = new ApiAiApp({request: mockRequest, response: mockResponse});
 
-    expect(assistant.isNotApiVersionOne_()).to.equal(true);
+    expect(app.isNotApiVersionOne_()).to.equal(true);
   });
 });
 
 /**
- * Describes the behavior for Assistant isSsml_ method.
+ * Describes the behavior for AssistantApp isSsml_ method.
  */
-describe('ApiAiAssistant#isSsml_', function () {
+describe('ApiAiApp#isSsml_', function () {
   // Success case test, when the API returns a valid 200 response with the response object
   it('Should validate SSML syntax.', function () {
     let headers = {
@@ -220,35 +225,35 @@ describe('ApiAiAssistant#isSsml_', function () {
     const mockRequest = new MockRequest(headers, body);
     const mockResponse = new MockResponse();
 
-    const assistant = new ApiAiAssistant({request: mockRequest, response: mockResponse});
+    const app = new ApiAiApp({request: mockRequest, response: mockResponse});
 
-    expect(assistant.isSsml_('<speak></speak>')).to.equal(true);
-    expect(assistant.isSsml_('<SPEAK></SPEAK>')).to.equal(true);
-    expect(assistant.isSsml_('  <speak></speak>  ')).to.equal(false);
-    expect(assistant.isSsml_('<speak>  </speak>')).to.equal(true);
-    expect(assistant.isSsml_('<speak version="1.0"></speak>')).to.equal(true);
-    expect(assistant.isSsml_('<speak version="1.0">Hello world!</speak>')).to.equal(true);
-    expect(assistant.isSsml_('<speak>')).to.equal(false);
-    expect(assistant.isSsml_('</speak>')).to.equal(false);
-    expect(assistant.isSsml_('')).to.equal(false);
-    expect(assistant.isSsml_('bla bla bla')).to.equal(false);
-    expect(assistant.isSsml_('<html></html>')).to.equal(false);
-    expect(assistant.isSsml_('bla bla bla<speak></speak>')).to.equal(false);
-    expect(assistant.isSsml_('<speak></speak> bla bla bla')).to.equal(false);
-    expect(assistant.isSsml_('<speak>my SSML content</speak>')).to.equal(true);
-    expect(assistant.isSsml_('<speak>Line 1\nLine 2</speak>')).to.equal(true);
-    expect(assistant.isSsml_('<speak>Step 1, take a deep breath. <break time="2s" />Step 2, exhale.</speak>')).to.equal(true);
-    expect(assistant.isSsml_('<speak><say-as interpret-as="cardinal">12345</say-as></speak>')).to.equal(true);
-    expect(assistant.isSsml_('<speak><say-as interpret-as="ordinal">1</say-as></speak>')).to.equal(true);
-    expect(assistant.isSsml_('<speak><say-as interpret-as="characters">can</say-as></speak>')).to.equal(true);
-    expect(assistant.isSsml_('<speak><say-as interpret-as="date" format="ymd">1960-09-10</say-as></speak>')).to.equal(true);
-    expect(assistant.isSsml_('<speak><say-as interpret-as="date" format="yyyymmdd" detail="1">1960-09-10</say-as></speak>')).to.equal(true);
-    expect(assistant.isSsml_('<speak><say-as interpret-as="date" format="dm">10-9</say-as></speak>')).to.equal(true);
-    expect(assistant.isSsml_('<speak><say-as interpret-as="date" format="dmy" detail="2">10-9-1960</say-as></speak>')).to.equal(true);
-    expect(assistant.isSsml_('<speak><say-as interpret-as="time" format="hms12">2:30pm</say-as></speak>')).to.equal(true);
-    expect(assistant.isSsml_('<speak><audio src="https://somesite.bla/meow.mp3">a cat meowing</audio></speak>')).to.equal(true);
-    expect(assistant.isSsml_('<speak><p><s>This is sentence one.</s><s>This is sentence two.</s></p></speak>')).to.equal(true);
-    expect(assistant.isSsml_('<speak><sub alias="World Wide Web Consortium">W3C</sub></speak>')).to.equal(true);
+    expect(app.isSsml_('<speak></speak>')).to.equal(true);
+    expect(app.isSsml_('<SPEAK></SPEAK>')).to.equal(true);
+    expect(app.isSsml_('  <speak></speak>  ')).to.equal(false);
+    expect(app.isSsml_('<speak>  </speak>')).to.equal(true);
+    expect(app.isSsml_('<speak version="1.0"></speak>')).to.equal(true);
+    expect(app.isSsml_('<speak version="1.0">Hello world!</speak>')).to.equal(true);
+    expect(app.isSsml_('<speak>')).to.equal(false);
+    expect(app.isSsml_('</speak>')).to.equal(false);
+    expect(app.isSsml_('')).to.equal(false);
+    expect(app.isSsml_('bla bla bla')).to.equal(false);
+    expect(app.isSsml_('<html></html>')).to.equal(false);
+    expect(app.isSsml_('bla bla bla<speak></speak>')).to.equal(false);
+    expect(app.isSsml_('<speak></speak> bla bla bla')).to.equal(false);
+    expect(app.isSsml_('<speak>my SSML content</speak>')).to.equal(true);
+    expect(app.isSsml_('<speak>Line 1\nLine 2</speak>')).to.equal(true);
+    expect(app.isSsml_('<speak>Step 1, take a deep breath. <break time="2s" />Step 2, exhale.</speak>')).to.equal(true);
+    expect(app.isSsml_('<speak><say-as interpret-as="cardinal">12345</say-as></speak>')).to.equal(true);
+    expect(app.isSsml_('<speak><say-as interpret-as="ordinal">1</say-as></speak>')).to.equal(true);
+    expect(app.isSsml_('<speak><say-as interpret-as="characters">can</say-as></speak>')).to.equal(true);
+    expect(app.isSsml_('<speak><say-as interpret-as="date" format="ymd">1960-09-10</say-as></speak>')).to.equal(true);
+    expect(app.isSsml_('<speak><say-as interpret-as="date" format="yyyymmdd" detail="1">1960-09-10</say-as></speak>')).to.equal(true);
+    expect(app.isSsml_('<speak><say-as interpret-as="date" format="dm">10-9</say-as></speak>')).to.equal(true);
+    expect(app.isSsml_('<speak><say-as interpret-as="date" format="dmy" detail="2">10-9-1960</say-as></speak>')).to.equal(true);
+    expect(app.isSsml_('<speak><say-as interpret-as="time" format="hms12">2:30pm</say-as></speak>')).to.equal(true);
+    expect(app.isSsml_('<speak><audio src="https://somesite.bla/meow.mp3">a cat meowing</audio></speak>')).to.equal(true);
+    expect(app.isSsml_('<speak><p><s>This is sentence one.</s><s>This is sentence two.</s></p></speak>')).to.equal(true);
+    expect(app.isSsml_('<speak><sub alias="World Wide Web Consortium">W3C</sub></speak>')).to.equal(true);
   });
 });
 
@@ -257,9 +262,9 @@ describe('ApiAiAssistant#isSsml_', function () {
 // ---------------------------------------------------------------------------
 
 /**
- * Describes the behavior for ApiAiAssistant constructor method.
+ * Describes the behavior for ApiAiApp constructor method.
  */
-describe('ApiAiAssistant#constructor', function () {
+describe('ApiAiApp#constructor', function () {
   // Calls sessionStarted when provided
   it('Calls sessionStarted when new session', function () {
     let headers = {
@@ -312,13 +317,13 @@ describe('ApiAiAssistant#constructor', function () {
 
     const sessionStartedSpy = chai.spy();
 
-    const assistant = new ApiAiAssistant({
+    const app = new ApiAiApp({
       request: mockRequest,
       response: mockResponse,
       sessionStarted: sessionStartedSpy
     });
 
-    assistant.handleRequest();
+    app.handleRequest();
 
     expect(sessionStartedSpy).to.have.been.called();
   });
@@ -375,32 +380,32 @@ describe('ApiAiAssistant#constructor', function () {
 
     const sessionStartedSpy = chai.spy();
 
-    const assistant = new ApiAiAssistant({
+    const app = new ApiAiApp({
       request: mockRequest,
       response: mockResponse,
       sessionStarted: sessionStartedSpy
     });
 
-    assistant.handleRequest();
+    app.handleRequest();
 
     expect(sessionStartedSpy).to.not.have.been.called();
   });
 
   // Test a change made for backwards compatibility with legacy sample code
   it('Does initialize StandardIntents without an options object', function () {
-    const assistant = new ApiAiAssistant();
+    const app = new ApiAiApp();
 
-    expect(assistant.StandardIntents.MAIN).to.equal('assistant.intent.action.MAIN');
-    expect(assistant.StandardIntents.TEXT).to.equal('assistant.intent.action.TEXT');
-    expect(assistant.StandardIntents.PERMISSION).to
+    expect(app.StandardIntents.MAIN).to.equal('assistant.intent.action.MAIN');
+    expect(app.StandardIntents.TEXT).to.equal('assistant.intent.action.TEXT');
+    expect(app.StandardIntents.PERMISSION).to
       .equal('assistant.intent.action.PERMISSION');
   });
 });
 
 /**
- * Describes the behavior for ApiAiAssistant tell method.
+ * Describes the behavior for ApiAiApp tell method.
  */
-describe('ApiAiAssistant#tell', function () {
+describe('ApiAiApp#tell', function () {
   // Success case test, when the API returns a valid 200 response with the response object
   it('Should return the valid JSON in the response object for the success case.', function () {
     let headers = {
@@ -451,18 +456,18 @@ describe('ApiAiAssistant#tell', function () {
     const mockRequest = new MockRequest(headers, body);
     const mockResponse = new MockResponse();
 
-    const assistant = new ApiAiAssistant({request: mockRequest, response: mockResponse});
+    const app = new ApiAiApp({request: mockRequest, response: mockResponse});
 
-    function handler (assistant) {
+    function handler (app) {
       return new Promise(function (resolve, reject) {
-        resolve(assistant.tell('hello'));
+        resolve(app.tell('hello'));
       });
     }
 
     let actionMap = new Map();
     actionMap.set('generate_answer', handler);
 
-    assistant.handleRequest(actionMap);
+    app.handleRequest(actionMap);
 
     // Validating the response object
     let expectedResponse = {
@@ -482,14 +487,265 @@ describe('ApiAiAssistant#tell', function () {
     };
     expect(mockResponse.body).to.deep.equal(expectedResponse);
   });
+
+  // Success case test, when the API returns a valid 200 response with the response object
+  it('Should return the valid simple response JSON in the response object for the success case.', function () {
+    let headers = {
+      'Content-Type': 'application/json',
+      'Google-Assistant-API-Version': 'v1'
+    };
+    let body = {
+      'id': '9c4394e3-4f5a-4e68-b1af-088b75ad3071',
+      'timestamp': '2016-10-28T03:41:39.957Z',
+      'result': {
+        'source': 'agent',
+        'resolvedQuery': '50',
+        'speech': '',
+        'action': 'check_guess',
+        'actionIncomplete': false,
+        'parameters': {
+          'guess': '50'
+        },
+        'contexts': [
+        ],
+        'metadata': {
+          'intentId': '1e46ffc2-651f-4ac0-a54e-9698feb88880',
+          'webhookUsed': 'true',
+          'intentName': 'provide_guess'
+        },
+        'fulfillment': {
+          'speech': ''
+        },
+        'score': 1
+      },
+      'status': {
+        'code': 200,
+        'errorType': 'success'
+      },
+      'sessionId': 'e420f007-501d-4bc8-b551-5d97772bc50c',
+      'originalRequest': {
+        'data': {
+          'conversation': {
+            'type': 2
+          }
+        }
+      }
+    };
+    const mockRequest = new MockRequest(headers, body);
+    const mockResponse = new MockResponse();
+
+    const app = new ApiAiApp({
+      request: mockRequest,
+      response: mockResponse
+    });
+
+    function handler (app) {
+      return new Promise(function (resolve, reject) {
+        resolve(app.tell({
+          speech: 'hello',
+          displayText: 'hi'
+        }));
+      });
+    }
+
+    let actionMap = new Map();
+    actionMap.set('check_guess', handler);
+
+    app.handleRequest(actionMap);
+
+    // Validating the response object
+    let expectedResponse = {
+      'speech': 'hello',
+      'data': {
+        'google': {
+          'expect_user_response': false,
+          'rich_response': {
+            'items': [
+              {
+                'simple_response': {
+                  'text_to_speech': 'hello',
+                  'display_text': 'hi'
+                }
+              }
+            ],
+            'suggestions': []
+          }
+        }
+      },
+      'contextOut': []
+    };
+    expect(JSON.parse(JSON.stringify(mockResponse.body)))
+      .to.deep.equal(expectedResponse);
+  });
+
+  // Success case test, when the API returns a valid 200 response with the response object
+  it('Should return the valid rich response JSON in the response object for the success case.', function () {
+    let headers = {
+      'Content-Type': 'application/json',
+      'Google-Assistant-API-Version': 'v1'
+    };
+    let body = {
+      'id': '9c4394e3-4f5a-4e68-b1af-088b75ad3071',
+      'timestamp': '2016-10-28T03:41:39.957Z',
+      'result': {
+        'source': 'agent',
+        'resolvedQuery': '50',
+        'speech': '',
+        'action': 'check_guess',
+        'actionIncomplete': false,
+        'parameters': {
+          'guess': '50'
+        },
+        'contexts': [
+        ],
+        'metadata': {
+          'intentId': '1e46ffc2-651f-4ac0-a54e-9698feb88880',
+          'webhookUsed': 'true',
+          'intentName': 'provide_guess'
+        },
+        'fulfillment': {
+          'speech': ''
+        },
+        'score': 1
+      },
+      'status': {
+        'code': 200,
+        'errorType': 'success'
+      },
+      'sessionId': 'e420f007-501d-4bc8-b551-5d97772bc50c',
+      'originalRequest': {
+        'data': {
+          'conversation': {
+            'type': 2
+          }
+        }
+      }
+    };
+    const mockRequest = new MockRequest(headers, body);
+    const mockResponse = new MockResponse();
+
+    const app = new ApiAiApp({
+      request: mockRequest,
+      response: mockResponse
+    });
+
+    function handler (app) {
+      return new Promise(function (resolve, reject) {
+        resolve(app.tell(app.buildRichResponse()
+          .addSimpleResponse({ speech: 'hello', displayText: 'hi' })
+          .addSuggestions(['Say this', 'or this'])));
+      });
+    }
+
+    let actionMap = new Map();
+    actionMap.set('check_guess', handler);
+
+    app.handleRequest(actionMap);
+
+    // Validating the response object
+    let expectedResponse = {
+      'speech': 'hello',
+      'data': {
+        'google': {
+          'expect_user_response': false,
+          'rich_response': {
+            'items': [
+              {
+                'simple_response': {
+                  'text_to_speech': 'hello',
+                  'display_text': 'hi'
+                }
+              }
+            ],
+            'suggestions': [
+              {
+                'title': 'Say this'
+              },
+              {
+                'title': 'or this'
+              }
+            ]
+          }
+        }
+      },
+      'contextOut': []
+    };
+    expect(JSON.parse(JSON.stringify(mockResponse.body)))
+      .to.deep.equal(expectedResponse);
+  });
+
+  // Failure test, when the API returns a 400 response with the response object
+  it('Should send failure response for rich response without simple response', function () {
+    let headers = {
+      'Content-Type': 'application/json',
+      'Google-Assistant-API-Version': 'v1'
+    };
+    let body = {
+      'id': '9c4394e3-4f5a-4e68-b1af-088b75ad3071',
+      'timestamp': '2016-10-28T03:41:39.957Z',
+      'result': {
+        'source': 'agent',
+        'resolvedQuery': '50',
+        'speech': '',
+        'action': 'check_guess',
+        'actionIncomplete': false,
+        'parameters': {
+          'guess': '50'
+        },
+        'contexts': [
+        ],
+        'metadata': {
+          'intentId': '1e46ffc2-651f-4ac0-a54e-9698feb88880',
+          'webhookUsed': 'true',
+          'intentName': 'provide_guess'
+        },
+        'fulfillment': {
+          'speech': ''
+        },
+        'score': 1
+      },
+      'status': {
+        'code': 200,
+        'errorType': 'success'
+      },
+      'sessionId': 'e420f007-501d-4bc8-b551-5d97772bc50c',
+      'originalRequest': {
+        'data': {
+          'conversation': {
+            'type': 2
+          }
+        }
+      }
+    };
+    const mockRequest = new MockRequest(headers, body);
+    const mockResponse = new MockResponse();
+
+    const app = new ApiAiApp({
+      request: mockRequest,
+      response: mockResponse
+    });
+
+    function handler (app) {
+      return new Promise(function (resolve, reject) {
+        resolve(app.tell(app.buildRichResponse()));
+      });
+    }
+
+    let actionMap = new Map();
+    actionMap.set('check_guess', handler);
+
+    app.handleRequest(actionMap);
+
+    expect(mockResponse.statusCode).to.equal(400);
+  });
 });
 
 /**
- * Describes the behavior for ApiAiAssistant ask method.
+ * Describes the behavior for ApiAiApp ask method.
  */
-describe('ApiAiAssistant#ask', function () {
+describe('ApiAiApp#ask', function () {
   // Success case test, when the API returns a valid 200 response with the response object
-  it('Should return the valid JSON in the response object for the success case.', function () {
+  it('Should return the valid speech JSON in the response object for the success case.', function () {
     let headers = {
       'Content-Type': 'application/json',
       'Google-Assistant-API-Version': 'v1'
@@ -551,21 +807,21 @@ describe('ApiAiAssistant#ask', function () {
     const mockRequest = new MockRequest(headers, body);
     const mockResponse = new MockResponse();
 
-    const assistant = new ApiAiAssistant({
+    const app = new ApiAiApp({
       request: mockRequest,
       response: mockResponse
     });
 
-    function handler (assistant) {
+    function handler (app) {
       return new Promise(function (resolve, reject) {
-        resolve(assistant.ask('hello'));
+        resolve(app.ask('hello'));
       });
     }
 
     let actionMap = new Map();
     actionMap.set('check_guess', handler);
 
-    assistant.handleRequest(actionMap);
+    app.handleRequest(actionMap);
 
     // Validating the response object
     let expectedResponse = {
@@ -587,12 +843,618 @@ describe('ApiAiAssistant#ask', function () {
     };
     expect(mockResponse.body).to.deep.equal(expectedResponse);
   });
+
+  // Success case test, when the API returns a valid 200 response with the response object
+  it('Should return the valid simple response JSON in the response object for the success case.', function () {
+    let headers = {
+      'Content-Type': 'application/json',
+      'Google-Assistant-API-Version': 'v1'
+    };
+    let body = {
+      'id': '9c4394e3-4f5a-4e68-b1af-088b75ad3071',
+      'timestamp': '2016-10-28T03:41:39.957Z',
+      'result': {
+        'source': 'agent',
+        'resolvedQuery': '50',
+        'speech': '',
+        'action': 'check_guess',
+        'actionIncomplete': false,
+        'parameters': {
+          'guess': '50'
+        },
+        'contexts': [
+        ],
+        'metadata': {
+          'intentId': '1e46ffc2-651f-4ac0-a54e-9698feb88880',
+          'webhookUsed': 'true',
+          'intentName': 'provide_guess'
+        },
+        'fulfillment': {
+          'speech': ''
+        },
+        'score': 1
+      },
+      'status': {
+        'code': 200,
+        'errorType': 'success'
+      },
+      'sessionId': 'e420f007-501d-4bc8-b551-5d97772bc50c',
+      'originalRequest': {
+        'data': {
+          'conversation': {
+            'type': 2
+          }
+        }
+      }
+    };
+    const mockRequest = new MockRequest(headers, body);
+    const mockResponse = new MockResponse();
+
+    const app = new ApiAiApp({
+      request: mockRequest,
+      response: mockResponse
+    });
+
+    function handler (app) {
+      return new Promise(function (resolve, reject) {
+        resolve(app.ask({
+          speech: 'hello',
+          displayText: 'hi'
+        }));
+      });
+    }
+
+    let actionMap = new Map();
+    actionMap.set('check_guess', handler);
+
+    app.handleRequest(actionMap);
+
+    // Validating the response object
+    let expectedResponse = {
+      'speech': 'hello',
+      'data': {
+        'google': {
+          'expect_user_response': true,
+          'rich_response': {
+            'items': [
+              {
+                'simple_response': {
+                  'text_to_speech': 'hello',
+                  'display_text': 'hi'
+                }
+              }
+            ],
+            'suggestions': []
+          }
+        }
+      },
+      'contextOut': [
+        {
+          'name': '_actions_on_google_',
+          'lifespan': 100,
+          'parameters': {}
+        }
+      ]
+    };
+    expect(JSON.parse(JSON.stringify(mockResponse.body)))
+      .to.deep.equal(expectedResponse);
+  });
+
+  // Success case test, when the API returns a valid 200 response with the response object
+  it('Should return the valid rich response JSON in the response object for the success case.', function () {
+    let headers = {
+      'Content-Type': 'application/json',
+      'Google-Assistant-API-Version': 'v1'
+    };
+    let body = {
+      'id': '9c4394e3-4f5a-4e68-b1af-088b75ad3071',
+      'timestamp': '2016-10-28T03:41:39.957Z',
+      'result': {
+        'source': 'agent',
+        'resolvedQuery': '50',
+        'speech': '',
+        'action': 'check_guess',
+        'actionIncomplete': false,
+        'parameters': {
+          'guess': '50'
+        },
+        'contexts': [
+        ],
+        'metadata': {
+          'intentId': '1e46ffc2-651f-4ac0-a54e-9698feb88880',
+          'webhookUsed': 'true',
+          'intentName': 'provide_guess'
+        },
+        'fulfillment': {
+          'speech': ''
+        },
+        'score': 1
+      },
+      'status': {
+        'code': 200,
+        'errorType': 'success'
+      },
+      'sessionId': 'e420f007-501d-4bc8-b551-5d97772bc50c',
+      'originalRequest': {
+        'data': {
+          'conversation': {
+            'type': 2
+          }
+        }
+      }
+    };
+    const mockRequest = new MockRequest(headers, body);
+    const mockResponse = new MockResponse();
+
+    const app = new ApiAiApp({
+      request: mockRequest,
+      response: mockResponse
+    });
+
+    function handler (app) {
+      return new Promise(function (resolve, reject) {
+        resolve(app.ask(app.buildRichResponse()
+          .addSimpleResponse({ speech: 'hello', displayText: 'hi' })
+          .addSuggestions(['Say this', 'or this'])));
+      });
+    }
+
+    let actionMap = new Map();
+    actionMap.set('check_guess', handler);
+
+    app.handleRequest(actionMap);
+
+    // Validating the response object
+    let expectedResponse = {
+      'speech': 'hello',
+      'data': {
+        'google': {
+          'expect_user_response': true,
+          'rich_response': {
+            'items': [
+              {
+                'simple_response': {
+                  'text_to_speech': 'hello',
+                  'display_text': 'hi'
+                }
+              }
+            ],
+            'suggestions': [
+              {
+                'title': 'Say this'
+              },
+              {
+                'title': 'or this'
+              }
+            ]
+          }
+        }
+      },
+      'contextOut': [
+        {
+          'name': '_actions_on_google_',
+          'lifespan': 100,
+          'parameters': {}
+        }
+      ]
+    };
+    expect(JSON.parse(JSON.stringify(mockResponse.body)))
+      .to.deep.equal(expectedResponse);
+  });
+
+  // Failure test, when the API returns a 400 response with the response object
+  it('Should send failure response for rich response without simple response', function () {
+    let headers = {
+      'Content-Type': 'application/json',
+      'Google-Assistant-API-Version': 'v1'
+    };
+    let body = {
+      'id': '9c4394e3-4f5a-4e68-b1af-088b75ad3071',
+      'timestamp': '2016-10-28T03:41:39.957Z',
+      'result': {
+        'source': 'agent',
+        'resolvedQuery': '50',
+        'speech': '',
+        'action': 'check_guess',
+        'actionIncomplete': false,
+        'parameters': {
+          'guess': '50'
+        },
+        'contexts': [
+        ],
+        'metadata': {
+          'intentId': '1e46ffc2-651f-4ac0-a54e-9698feb88880',
+          'webhookUsed': 'true',
+          'intentName': 'provide_guess'
+        },
+        'fulfillment': {
+          'speech': ''
+        },
+        'score': 1
+      },
+      'status': {
+        'code': 200,
+        'errorType': 'success'
+      },
+      'sessionId': 'e420f007-501d-4bc8-b551-5d97772bc50c',
+      'originalRequest': {
+        'data': {
+          'conversation': {
+            'type': 2
+          }
+        }
+      }
+    };
+    const mockRequest = new MockRequest(headers, body);
+    const mockResponse = new MockResponse();
+
+    const app = new ApiAiApp({
+      request: mockRequest,
+      response: mockResponse
+    });
+
+    function handler (app) {
+      return new Promise(function (resolve, reject) {
+        resolve(app.ask(app.buildRichResponse()));
+      });
+    }
+
+    let actionMap = new Map();
+    actionMap.set('check_guess', handler);
+
+    app.handleRequest(actionMap);
+
+    expect(mockResponse.statusCode).to.equal(400);
+  });
 });
 
 /**
- * Describes the behavior for ApiAiAssistant askForPermissions method in v1.
+ * Describes the behavior for ApiAiApp askWithList method.
  */
-describe('ApiAiAssistant#askForPermissions', function () {
+describe('ApiAiApp#askWithList', function () {
+  // Success case test, when the API returns a valid 200 response with the response object
+  it('Should return the valid list JSON in the response object for the success case.', function () {
+    let headers = {'Content-Type': 'application/json'};
+    let body = {
+      'id': '9c4394e3-4f5a-4e68-b1af-088b75ad3071',
+      'timestamp': '2016-10-28T03:41:39.957Z',
+      'result': {
+        'source': 'agent',
+        'resolvedQuery': 'Show me a list',
+        'speech': '',
+        'action': 'show_list',
+        'actionIncomplete': false,
+        'parameters': {},
+        'contexts': [],
+        'metadata': {
+          'intentId': '1e46ffc2-651f-4ac0-a54e-9698feb88880',
+          'webhookUsed': 'true',
+          'intentName': 'show_list'
+        },
+        'fulfillment': {
+          'speech': ''
+        },
+        'score': 1
+      },
+      'status': {
+        'code': 200,
+        'errorType': 'success'
+      },
+      'sessionId': 'e420f007-501d-4bc8-b551-5d97772bc50c',
+      'originalRequest': {
+        'version': 2,
+        'data': {
+          'conversation': {
+            'type': 2
+          }
+        }
+      }
+    };
+    const mockRequest = new MockRequest(headers, body);
+    const mockResponse = new MockResponse();
+
+    const app = new ApiAiApp({request: mockRequest, response: mockResponse});
+
+    function handler (app) {
+      return new Promise(function (resolve, reject) {
+        resolve(app.askWithList('Here is a list', app.buildList()
+          .addItems([
+            app.buildOptionItem('key_1', 'key one'),
+            app.buildOptionItem('key_2', 'key two')
+          ])
+        ));
+      });
+    }
+
+    let actionMap = new Map();
+    actionMap.set('show_list', handler);
+
+    app.handleRequest(actionMap);
+
+    // Validating the response object
+    let expectedResponse = {
+      'speech': 'Here is a list',
+      'data': {
+        'google': {
+          'expectUserResponse': true,
+          'isSsml': false,
+          'noInputPrompts': [],
+          'systemIntent': {
+            'intent': 'actions.intent.OPTION',
+            'data': {
+              '@type': 'type.googleapis.com/google.actions.v2.OptionValueSpec',
+              'listSelect': {
+                'items': [
+                  {
+                    'optionInfo': {
+                      'key': 'key_1',
+                      'synonyms': [
+                        'key one'
+                      ]
+                    },
+                    'title': ''
+                  },
+                  {
+                    'optionInfo': {
+                      'key': 'key_2',
+                      'synonyms': [
+                        'key two'
+                      ]
+                    },
+                    'title': ''
+                  }
+                ]
+              }
+            }
+          }
+        }
+      },
+      'contextOut': [
+        {
+          'name': '_actions_on_google_',
+          'lifespan': 100,
+          'parameters': {}
+        }
+      ]
+    };
+    expect(JSON.parse(JSON.stringify(mockResponse.body))).to
+      .deep.equal(expectedResponse);
+  });
+
+  it('Should return the an error JSON in the response when list has <2 items.', function () {
+    let headers = {'Content-Type': 'application/json'};
+    let body = {
+      'id': '9c4394e3-4f5a-4e68-b1af-088b75ad3071',
+      'timestamp': '2016-10-28T03:41:39.957Z',
+      'result': {
+        'source': 'agent',
+        'resolvedQuery': 'Show me a list',
+        'speech': '',
+        'action': 'show_list',
+        'actionIncomplete': false,
+        'parameters': {},
+        'contexts': [],
+        'metadata': {
+          'intentId': '1e46ffc2-651f-4ac0-a54e-9698feb88880',
+          'webhookUsed': 'true',
+          'intentName': 'show_list'
+        },
+        'fulfillment': {
+          'speech': ''
+        },
+        'score': 1
+      },
+      'status': {
+        'code': 200,
+        'errorType': 'success'
+      },
+      'sessionId': 'e420f007-501d-4bc8-b551-5d97772bc50c',
+      'originalRequest': {
+        'version': 2,
+        'data': {
+          'conversation': {
+            'type': 2
+          }
+        }
+      }
+    };
+    const mockRequest = new MockRequest(headers, body);
+    const mockResponse = new MockResponse();
+
+    const app = new ApiAiApp({request: mockRequest, response: mockResponse});
+
+    function handler (app) {
+      return new Promise(function (resolve, reject) {
+        resolve(app.askWithList('Here is a list', app.buildList()));
+      });
+    }
+
+    let actionMap = new Map();
+    actionMap.set('show_list', handler);
+
+    app.handleRequest(actionMap);
+
+    expect(mockResponse.statusCode).to.equal(400);
+  });
+});
+
+/**
+ * Describes the behavior for ApiAiApp askWithCarousel method.
+ */
+describe('ApiAiApp#askWithCarousel', function () {
+  // Success case test, when the API returns a valid 200 response with the response object
+  it('Should return the valid carousel JSON in the response object for the success case.', function () {
+    let headers = {'Content-Type': 'application/json'};
+    let body = {
+      'id': '9c4394e3-4f5a-4e68-b1af-088b75ad3071',
+      'timestamp': '2016-10-28T03:41:39.957Z',
+      'result': {
+        'source': 'agent',
+        'resolvedQuery': 'Show me a carousel',
+        'speech': '',
+        'action': 'show_carousel',
+        'actionIncomplete': false,
+        'parameters': {},
+        'contexts': [],
+        'metadata': {
+          'intentId': '1e46ffc2-651f-4ac0-a54e-9698feb88880',
+          'webhookUsed': 'true',
+          'intentName': 'show_carousel'
+        },
+        'fulfillment': {
+          'speech': ''
+        },
+        'score': 1
+      },
+      'status': {
+        'code': 200,
+        'errorType': 'success'
+      },
+      'sessionId': 'e420f007-501d-4bc8-b551-5d97772bc50c',
+      'originalRequest': {
+        'version': 2,
+        'data': {
+          'conversation': {
+            'type': 2
+          }
+        }
+      }
+    };
+    const mockRequest = new MockRequest(headers, body);
+    const mockResponse = new MockResponse();
+
+    const app = new ApiAiApp({request: mockRequest, response: mockResponse});
+
+    function handler (app) {
+      return new Promise(function (resolve, reject) {
+        resolve(app.askWithCarousel('Here is a carousel',
+          app.buildCarousel()
+            .addItems([
+              app.buildOptionItem('key_1', 'key one'),
+              app.buildOptionItem('key_2', 'key two')
+            ])
+        ));
+      });
+    }
+
+    let actionMap = new Map();
+    actionMap.set('show_carousel', handler);
+
+    app.handleRequest(actionMap);
+
+    // Validating the response object
+    let expectedResponse = {
+      'speech': 'Here is a carousel',
+      'data': {
+        'google': {
+          'expectUserResponse': true,
+          'isSsml': false,
+          'noInputPrompts': [],
+          'systemIntent': {
+            'intent': 'actions.intent.OPTION',
+            'data': {
+              '@type': 'type.googleapis.com/google.actions.v2.OptionValueSpec',
+              'carouselSelect': {
+                'items': [
+                  {
+                    'optionInfo': {
+                      'key': 'key_1',
+                      'synonyms': [
+                        'key one'
+                      ]
+                    },
+                    'title': ''
+                  },
+                  {
+                    'optionInfo': {
+                      'key': 'key_2',
+                      'synonyms': [
+                        'key two'
+                      ]
+                    },
+                    'title': ''
+                  }
+                ]
+              }
+            }
+          }
+        }
+      },
+      'contextOut': [
+        {
+          'name': '_actions_on_google_',
+          'lifespan': 100,
+          'parameters': {}
+        }
+      ]
+    };
+    expect(JSON.parse(JSON.stringify(mockResponse.body))).to
+      .deep.equal(expectedResponse);
+  });
+
+  it('Should return the an error JSON in the response when carousel has <2 items.', function () {
+    let headers = {'Content-Type': 'application/json'};
+    let body = {
+      'id': '9c4394e3-4f5a-4e68-b1af-088b75ad3071',
+      'timestamp': '2016-10-28T03:41:39.957Z',
+      'result': {
+        'source': 'agent',
+        'resolvedQuery': 'Show me a carousel',
+        'speech': '',
+        'action': 'show_carousel',
+        'actionIncomplete': false,
+        'parameters': {},
+        'contexts': [],
+        'metadata': {
+          'intentId': '1e46ffc2-651f-4ac0-a54e-9698feb88880',
+          'webhookUsed': 'true',
+          'intentName': 'show_carousel'
+        },
+        'fulfillment': {
+          'speech': ''
+        },
+        'score': 1
+      },
+      'status': {
+        'code': 200,
+        'errorType': 'success'
+      },
+      'sessionId': 'e420f007-501d-4bc8-b551-5d97772bc50c',
+      'originalRequest': {
+        'version': 2,
+        'data': {
+          'conversation': {
+            'type': 2
+          }
+        }
+      }
+    };
+    const mockRequest = new MockRequest(headers, body);
+    const mockResponse = new MockResponse();
+
+    const app = new ApiAiApp({request: mockRequest, response: mockResponse});
+
+    function handler (app) {
+      return new Promise(function (resolve, reject) {
+        resolve(app.askWithCarousel('Here is a carousel',
+          app.buildCarousel()
+        ));
+      });
+    }
+
+    let actionMap = new Map();
+    actionMap.set('show_carousel', handler);
+
+    app.handleRequest(actionMap);
+
+    expect(mockResponse.statusCode).to.equal(400);
+  });
+});
+
+/**
+ * Describes the behavior for ApiAiApp askForPermissions method in v1.
+ */
+describe('ApiAiApp#askForPermissions', function () {
   // Success case test, when the API returns a valid 200 response with the response object
   it('Should return the valid JSON in the response object for the success case.', function () {
     let headers = {'Content-Type': 'application/json', 'google-assistant-api-version': 'v1'};
@@ -633,18 +1495,18 @@ describe('ApiAiAssistant#askForPermissions', function () {
     const mockRequest = new MockRequest(headers, body);
     const mockResponse = new MockResponse();
 
-    const assistant = new ApiAiAssistant({request: mockRequest, response: mockResponse});
+    const app = new ApiAiApp({request: mockRequest, response: mockResponse});
 
-    function handler (assistant) {
+    function handler (app) {
       return new Promise(function (resolve, reject) {
-        resolve(assistant.askForPermissions('To test', ['NAME', 'DEVICE_PRECISE_LOCATION']));
+        resolve(app.askForPermissions('To test', ['NAME', 'DEVICE_PRECISE_LOCATION']));
       });
     }
 
     let actionMap = new Map();
     actionMap.set('get_permission', handler);
 
-    assistant.handleRequest(actionMap);
+    app.handleRequest(actionMap);
 
     // Validating the response object
     let expectedResponse = {
@@ -678,9 +1540,9 @@ describe('ApiAiAssistant#askForPermissions', function () {
 });
 
 /**
- * Describes the behavior for ApiAiAssistant askForPermissions method in v2.
+ * Describes the behavior for ApiAiApp askForPermissions method in v2.
  */
-describe('ApiAiAssistant#askForPermissions', function () {
+describe('ApiAiApp#askForPermissions', function () {
   // Success case test, when the API returns a valid 200 response with the response object
   it('Should return the valid JSON in the response object for the success case.', function () {
     let headers = {'Content-Type': 'application/json'};
@@ -722,18 +1584,18 @@ describe('ApiAiAssistant#askForPermissions', function () {
     const mockRequest = new MockRequest(headers, body);
     const mockResponse = new MockResponse();
 
-    const assistant = new ApiAiAssistant({request: mockRequest, response: mockResponse});
+    const app = new ApiAiApp({request: mockRequest, response: mockResponse});
 
-    function handler (assistant) {
+    function handler (app) {
       return new Promise(function (resolve, reject) {
-        resolve(assistant.askForPermissions('To test', ['NAME', 'DEVICE_PRECISE_LOCATION']));
+        resolve(app.askForPermissions('To test', ['NAME', 'DEVICE_PRECISE_LOCATION']));
       });
     }
 
     let actionMap = new Map();
     actionMap.set('get_permission', handler);
 
-    assistant.handleRequest(actionMap);
+    app.handleRequest(actionMap);
 
     // Validating the response object
     let expectedResponse = {
@@ -766,9 +1628,9 @@ describe('ApiAiAssistant#askForPermissions', function () {
 });
 
 /**
- * Describes the behavior for ApiAiAssistant getUser method.
+ * Describes the behavior for ApiAiApp getUser method.
  */
-describe('ApiAiAssistant#getUser', function () {
+describe('ApiAiApp#getUser', function () {
   // Success case test, when the API returns a valid 200 response with the response object
   it('Should validate assistant request user.', function () {
     let headers = {
@@ -820,21 +1682,21 @@ describe('ApiAiAssistant#getUser', function () {
     let mockRequest = new MockRequest(headers, body);
     let mockResponse = new MockResponse();
 
-    let assistant = new ApiAiAssistant({
+    let app = new ApiAiApp({
       request: mockRequest,
       response: mockResponse
     });
 
     // Test new and old API
-    expect(assistant.getUser().user_id).to.equal('11112226094657824893');
-    expect(assistant.getUser().userId).to.equal('11112226094657824893');
+    expect(app.getUser().user_id).to.equal('11112226094657824893');
+    expect(app.getUser().userId).to.equal('11112226094657824893');
   });
 });
 
 /**
- * Describes the behavior for ApiAiAssistant getUserName method.
+ * Describes the behavior for ApiAiApp getUserName method.
  */
-describe('ApiAiAssistant#getUserName', function () {
+describe('ApiAiApp#getUserName', function () {
   // Success case test, when the API returns a valid 200 response with the response object
   it('Should validate assistant request user.', function () {
     let headers = {
@@ -890,14 +1752,14 @@ describe('ApiAiAssistant#getUserName', function () {
     let mockRequest = new MockRequest(headers, body);
     let mockResponse = new MockResponse();
 
-    let assistant = new ApiAiAssistant({
+    let app = new ApiAiApp({
       request: mockRequest,
       response: mockResponse
     });
 
-    expect(assistant.getUserName().displayName).to.equal('John Smith');
-    expect(assistant.getUserName().givenName).to.equal('John');
-    expect(assistant.getUserName().familyName).to.equal('Smith');
+    expect(app.getUserName().displayName).to.equal('John Smith');
+    expect(app.getUserName().givenName).to.equal('John');
+    expect(app.getUserName().familyName).to.equal('Smith');
 
     // Test the false case
 
@@ -906,19 +1768,19 @@ describe('ApiAiAssistant#getUserName', function () {
     mockRequest = new MockRequest(headers, body);
     mockResponse = new MockResponse();
 
-    assistant = new ApiAiAssistant({
+    app = new ApiAiApp({
       request: mockRequest,
       response: mockResponse
     });
 
-    expect(assistant.getUserName()).to.equal(null);
+    expect(app.getUserName()).to.equal(null);
   });
 });
 
 /**
- * Describes the behavior for ApiAiAssistant getDeviceLocation method.
+ * Describes the behavior for ApiAiApp getDeviceLocation method.
  */
-describe('ApiAiAssistant#getDeviceLocation', function () {
+describe('ApiAiApp#getDeviceLocation', function () {
   // Success case test, when the API returns a valid 200 response with the response object
   it('Should validate assistant request user.', function () {
     let headers = {
@@ -981,19 +1843,19 @@ describe('ApiAiAssistant#getDeviceLocation', function () {
     let mockRequest = new MockRequest(headers, body);
     let mockResponse = new MockResponse();
 
-    let assistant = new ApiAiAssistant({
+    let app = new ApiAiApp({
       request: mockRequest,
       response: mockResponse
     });
 
-    expect(assistant.getDeviceLocation().coordinates).to.deep.equal({
+    expect(app.getDeviceLocation().coordinates).to.deep.equal({
       latitude: 37.3861,
       longitude: 122.0839
     });
-    expect(assistant.getDeviceLocation().address)
+    expect(app.getDeviceLocation().address)
       .to.equal('123 Main St, Anytown, CA 12345, United States');
-    expect(assistant.getDeviceLocation().zipCode).to.equal('12345');
-    expect(assistant.getDeviceLocation().city).to.equal('Anytown');
+    expect(app.getDeviceLocation().zipCode).to.equal('12345');
+    expect(app.getDeviceLocation().city).to.equal('Anytown');
 
     // Test the false case
 
@@ -1002,19 +1864,19 @@ describe('ApiAiAssistant#getDeviceLocation', function () {
     mockRequest = new MockRequest(headers, body);
     mockResponse = new MockResponse();
 
-    assistant = new ApiAiAssistant({
+    app = new ApiAiApp({
       request: mockRequest,
       response: mockResponse
     });
 
-    expect(assistant.getDeviceLocation()).to.equal(null);
+    expect(app.getDeviceLocation()).to.equal(null);
   });
 });
 
 /**
- * Describes the behavior for ApiAiAssistant isPermissionGranted method.
+ * Describes the behavior for ApiAiApp isPermissionGranted method.
  */
-describe('ApiAiAssistant#isPermissionGranted', function () {
+describe('ApiAiApp#isPermissionGranted', function () {
   // Success case test, when the API returns a valid 200 response with the response object
   it('Should validate assistant request user.', function () {
     let headers = {
@@ -1069,12 +1931,12 @@ describe('ApiAiAssistant#isPermissionGranted', function () {
     let mockRequest = new MockRequest(headers, body);
     let mockResponse = new MockResponse();
 
-    let assistant = new ApiAiAssistant({
+    let app = new ApiAiApp({
       request: mockRequest,
       response: mockResponse
     });
 
-    expect(assistant.isPermissionGranted()).to.equal(true);
+    expect(app.isPermissionGranted()).to.equal(true);
 
     // Test the false case
 
@@ -1083,19 +1945,19 @@ describe('ApiAiAssistant#isPermissionGranted', function () {
     mockRequest = new MockRequest(headers, body);
     mockResponse = new MockResponse();
 
-    assistant = new ApiAiAssistant({
+    app = new ApiAiApp({
       request: mockRequest,
       response: mockResponse
     });
 
-    expect(assistant.isPermissionGranted()).to.equal(false);
+    expect(app.isPermissionGranted()).to.equal(false);
   });
 });
 
 /**
- * Describes the behavior for ApiAiAssistant getIntent method.
+ * Describes the behavior for ApiAiApp getIntent method.
  */
-describe('ApiAiAssistant#getIntent', function () {
+describe('ApiAiApp#getIntent', function () {
   // Success case test, when the API returns a valid 200 response with the response object
   it('Should get the intent value for the success case.', function () {
     let headers = {
@@ -1159,19 +2021,19 @@ describe('ApiAiAssistant#getIntent', function () {
     const mockRequest = new MockRequest(headers, body);
     const mockResponse = new MockResponse();
 
-    const assistant = new ApiAiAssistant({
+    const app = new ApiAiApp({
       request: mockRequest,
       response: mockResponse
     });
 
-    expect(assistant.getIntent()).to.equal('check_guess');
+    expect(app.getIntent()).to.equal('check_guess');
   });
 });
 
 /**
- * Describes the behavior for ApiAiAssistant getArgument method.
+ * Describes the behavior for ApiAiApp getArgument method.
  */
-describe('ApiAiAssistant#getArgument', function () {
+describe('ApiAiApp#getArgument', function () {
   // Success case test, when the API returns a valid 200 response with the response object
   it('Should get the argument value for the success case.', function () {
     let headers = {
@@ -1253,14 +2115,14 @@ describe('ApiAiAssistant#getArgument', function () {
     const mockRequest = new MockRequest(headers, body);
     const mockResponse = new MockResponse();
 
-    const assistant = new ApiAiAssistant({
+    const app = new ApiAiApp({
       request: mockRequest,
       response: mockResponse
     });
 
-    expect(assistant.getArgument('guess')).to.equal('50');
-    expect(assistant.getArgument('arg_value_one')).to.equal('text value one');
-    expect(assistant.getArgument('other_value', true)).to.deep.equal({
+    expect(app.getArgument('guess')).to.equal('50');
+    expect(app.getArgument('arg_value_one')).to.equal('text value one');
+    expect(app.getArgument('other_value', true)).to.deep.equal({
       'name': 'other_value',
       'raw_text': '45',
       'other_value': {
@@ -1271,9 +2133,9 @@ describe('ApiAiAssistant#getArgument', function () {
 });
 
 /**
- * Describes the behavior for ApiAiAssistant getContextArgument method.
+ * Describes the behavior for ApiAiApp getContextArgument method.
  */
-describe('ApiAiAssistant#getContextArgument', function () {
+describe('ApiAiApp#getContextArgument', function () {
   // Success case test, when the API returns a valid 200 response with the response object
   it('Should get the context argument value for the success case.', function () {
     let headers = {
@@ -1337,22 +2199,455 @@ describe('ApiAiAssistant#getContextArgument', function () {
     const mockRequest = new MockRequest(headers, body);
     const mockResponse = new MockResponse();
 
-    const assistant = new ApiAiAssistant({
+    const app = new ApiAiApp({
       request: mockRequest,
       response: mockResponse
     });
 
-    expect(assistant.getContextArgument('game', 'guess')).to
+    expect(app.getContextArgument('game', 'guess')).to
       .deep.equal({ value: '50', original: '50' });
-    expect(assistant.getContextArgument('previous_answer', 'answer')).to
+    expect(app.getContextArgument('previous_answer', 'answer')).to
       .deep.equal({ value: '68' });
   });
 });
 
 /**
- * Describes the behavior for ApiAiAssistant isRequestFromApiAi method.
+ * Describes the behavior for ApiAiApp getIncomingRichResponse method.
  */
-describe('ApiAiAssistant#isRequestFromApiAi', function () {
+describe('ApiAiApp#getIncomingRichResponse', function () {
+  // Success case test, when the API returns a valid 200 response with the response object
+  it('Should get the incoming rich response for the success case.', function () {
+    let headers = {
+      'Content-Type': 'application/json',
+      'Google-Assistant-API-Version': 'v1'
+    };
+    let body = {
+      'id': 'db2c39ce-1755-4163-a8df-ea033d713dbb',
+      'timestamp': '2017-04-21T22:15:25.611Z',
+      'lang': 'en',
+      'result': {
+        'source': 'agent',
+        'resolvedQuery': 'hi',
+        'action': 'input.welcome',
+        'actionIncomplete': false,
+        'parameters': {},
+        'contexts': [],
+        'metadata': {
+          'intentId': '784690f8-8d87-4f0d-a40f-3e6c99ecd1e0',
+          'webhookUsed': 'false',
+          'webhookForSlotFillingUsed': 'false',
+          'intentName': 'Default Welcome Intent'
+        },
+        'fulfillment': {
+          'speech': 'Hi!',
+          'messages': [
+            {
+              'type': 'simple_response',
+              'platform': 'google',
+              'text_to_speech': 'Simple response one'
+            },
+            {
+              'type': 'basic_card',
+              'platform': 'google',
+              'formatted_text': 'my text',
+              'buttons': []
+            },
+            {
+              'type': 'suggestion_chips',
+              'platform': 'google',
+              'suggestions': [
+                {
+                  'title': 'suggestion one'
+                }
+              ]
+            },
+            {
+              'type': 'link_out_chip',
+              'platform': 'google',
+              'destination_name': 'google',
+              'url': 'google.com'
+            },
+            {
+              'type': 0,
+              'speech': 'Good day!'
+            }
+          ]
+        },
+        'score': 1
+      },
+      'status': {
+        'code': 200,
+        'errorType': 'success'
+      },
+      'sessionId': 'cb92ecc5-0899-41f8-84a4-4ff329907512'
+    };
+    const mockRequest = new MockRequest(headers, body);
+    const mockResponse = new MockResponse();
+
+    const app = new ApiAiApp({
+      request: mockRequest,
+      response: mockResponse
+    });
+
+    const expectedResponse = new RichResponse()
+      .addSimpleResponse('Simple response one')
+      .addBasicCard(new BasicCard()
+        .setBodyText('my text'))
+      .addSuggestions('suggestion one')
+      .addSuggestionLink('google', 'google.com');
+
+    expect(app.getIncomingRichResponse()).to
+      .deep.equal(JSON.parse(JSON.stringify(expectedResponse)));
+  });
+});
+
+/**
+ * Describes the behavior for ApiAiApp getIncomingList method.
+ */
+describe('ApiAiApp#getIncomingList', function () {
+  // Success case test, when the API returns a valid 200 response with the response object
+  it('Should get the incoming list for the success case.', function () {
+    let headers = {
+      'Content-Type': 'application/json',
+      'Google-Assistant-API-Version': 'v1'
+    };
+    let body = {
+      'id': 'db2c39ce-1755-4163-a8df-ea033d713dbb',
+      'timestamp': '2017-04-21T22:15:25.611Z',
+      'lang': 'en',
+      'result': {
+        'source': 'agent',
+        'resolvedQuery': 'hi',
+        'action': 'input.welcome',
+        'actionIncomplete': false,
+        'parameters': {},
+        'contexts': [],
+        'metadata': {
+          'intentId': '784690f8-8d87-4f0d-a40f-3e6c99ecd1e0',
+          'webhookUsed': 'false',
+          'webhookForSlotFillingUsed': 'false',
+          'intentName': 'Default Welcome Intent'
+        },
+        'fulfillment': {
+          'speech': 'Hi!',
+          'messages': [
+            {
+              'type': 'simple_response',
+              'platform': 'google',
+              'text_to_speech': 'Check out these options'
+            },
+            {
+              'type': 'list_card',
+              'platform': 'google',
+              'title': 'list_title',
+              'items': [
+                {
+                  'option_info': {
+                    'key': 'first_item',
+                    'synonyms': []
+                  },
+                  'title': 'first item'
+                },
+                {
+                  'option_info': {
+                    'key': 'second_item',
+                    'synonyms': []
+                  },
+                  'title': 'second item'
+                }
+              ]
+            },
+            {
+              'type': 0,
+              'speech': 'unused'
+            }
+          ]
+        },
+        'score': 1
+      },
+      'status': {
+        'code': 200,
+        'errorType': 'success'
+      },
+      'sessionId': 'cb92ecc5-0899-41f8-84a4-4ff329907512'
+    };
+    const mockRequest = new MockRequest(headers, body);
+    const mockResponse = new MockResponse();
+
+    const app = new ApiAiApp({
+      request: mockRequest,
+      response: mockResponse
+    });
+
+    const expectedResponse = new List()
+      .setTitle('list_title')
+      .addItems([
+        new OptionItem().setTitle('first item').setKey('first_item'),
+        new OptionItem().setTitle('second item').setKey('second_item')
+      ]);
+
+    expect(app.getIncomingList()).to
+      .deep.equal(JSON.parse(JSON.stringify(expectedResponse)));
+  });
+});
+
+/**
+ * Describes the behavior for ApiAiApp getIncomingCarousel method.
+ */
+describe('ApiAiApp#getIncomingCarousel', function () {
+  // Success case test, when the API returns a valid 200 response with the response object
+  it('Should get the incoming list for the success case.', function () {
+    let headers = {
+      'Content-Type': 'application/json',
+      'Google-Assistant-API-Version': 'v1'
+    };
+    let body = {
+      'id': 'db2c39ce-1755-4163-a8df-ea033d713dbb',
+      'timestamp': '2017-04-21T22:15:25.611Z',
+      'lang': 'en',
+      'result': {
+        'source': 'agent',
+        'resolvedQuery': 'hi',
+        'action': 'input.welcome',
+        'actionIncomplete': false,
+        'parameters': {},
+        'contexts': [],
+        'metadata': {
+          'intentId': '784690f8-8d87-4f0d-a40f-3e6c99ecd1e0',
+          'webhookUsed': 'false',
+          'webhookForSlotFillingUsed': 'false',
+          'intentName': 'Default Welcome Intent'
+        },
+        'fulfillment': {
+          'speech': 'Hi!',
+          'messages': [
+            {
+              'type': 'simple_response',
+              'platform': 'google',
+              'text_to_speech': 'Check out these options'
+            },
+            {
+              'type': 'carousel_card',
+              'platform': 'google',
+              'items': [
+                {
+                  'option_info': {
+                    'key': 'first_item',
+                    'synonyms': []
+                  },
+                  'title': 'first item',
+                  'description': 'Your first choice'
+                },
+                {
+                  'option_info': {
+                    'key': 'second_item',
+                    'synonyms': []
+                  },
+                  'title': 'second item',
+                  'description': 'Your second choice'
+                }
+              ]
+            },
+            {
+              'type': 0,
+              'speech': 'unused'
+            }
+          ]
+        },
+        'score': 1
+      },
+      'status': {
+        'code': 200,
+        'errorType': 'success'
+      },
+      'sessionId': 'cb92ecc5-0899-41f8-84a4-4ff329907512'
+    };
+    const mockRequest = new MockRequest(headers, body);
+    const mockResponse = new MockResponse();
+
+    const app = new ApiAiApp({
+      request: mockRequest,
+      response: mockResponse
+    });
+
+    const expectedResponse = new Carousel()
+      .addItems([
+        new OptionItem().setTitle('first item').setKey('first_item')
+          .setDescription('Your first choice'),
+        new OptionItem().setTitle('second item').setKey('second_item')
+        .setDescription('Your second choice')
+      ]);
+
+    expect(app.getIncomingCarousel()).to
+      .deep.equal(JSON.parse(JSON.stringify(expectedResponse)));
+  });
+});
+
+/**
+ * Describes the behavior for ApiAiApp getSelectedOption method.
+ */
+describe('ApiAiApp#getSelectedOption', function () {
+  // Success case test, when the API returns a valid 200 response with the response object
+  it('Should get the selected option when given in APIAI context.', function () {
+    let headers = {
+      'Content-Type': 'application/json',
+      'Google-Assistant-API-Version': 'v1'
+    };
+    let body = {
+      'originalRequest': {
+        'source': 'google',
+        'data': {
+          'inputs': [
+            {
+              'arguments': [
+                {
+                  'text_value': 'first_item',
+                  'name': 'OPTION'
+                }
+              ],
+              'intent': 'actions.intent.OPTION',
+              'raw_inputs': [
+                {
+                  'query': 'firstitem',
+                  'input_type': 2,
+                  'annotation_sets': []
+                }
+              ]
+            }
+          ]
+        }
+      },
+      'id': 'db2c39ce-1755-4163-a8df-ea033d713dbb',
+      'timestamp': '2017-04-21T22:15:25.611Z',
+      'lang': 'en',
+      'result': {
+        'source': 'agent',
+        'resolvedQuery': 'hi',
+        'action': 'input.welcome',
+        'actionIncomplete': false,
+        'parameters': {},
+        'contexts': [
+          {
+            'name': 'actions_intent_option',
+            'parameters': {
+              'OPTION': 'first_item'
+            },
+            'lifespan': 0
+          }
+        ],
+        'metadata': {
+          'intentId': '784690f8-8d87-4f0d-a40f-3e6c99ecd1e0',
+          'webhookUsed': 'false',
+          'webhookForSlotFillingUsed': 'false',
+          'intentName': 'Default Welcome Intent'
+        },
+        'fulfillment': {
+          'speech': 'Hi!',
+          'messages': [
+            {
+              'type': 0,
+              'speech': 'unused'
+            }
+          ]
+        },
+        'score': 1
+      },
+      'status': {
+        'code': 200,
+        'errorType': 'success'
+      },
+      'sessionId': 'cb92ecc5-0899-41f8-84a4-4ff329907512'
+    };
+    const mockRequest = new MockRequest(headers, body);
+    const mockResponse = new MockResponse();
+
+    const app = new ApiAiApp({
+      request: mockRequest,
+      response: mockResponse
+    });
+
+    expect(app.getSelectedOption()).to.equal('first_item');
+  });
+
+  // Success case test, when the API returns a valid 200 response with the response object
+  it('Should get the selected option when not given in APIAI context.', function () {
+    let headers = {
+      'Content-Type': 'application/json',
+      'Google-Assistant-API-Version': 'v1'
+    };
+    let body = {
+      'originalRequest': {
+        'source': 'google',
+        'data': {
+          'inputs': [
+            {
+              'arguments': [
+                {
+                  'text_value': 'first_item',
+                  'name': 'OPTION'
+                }
+              ],
+              'intent': 'actions.intent.OPTION',
+              'raw_inputs': [
+                {
+                  'query': 'firstitem',
+                  'input_type': 2,
+                  'annotation_sets': []
+                }
+              ]
+            }
+          ]
+        }
+      },
+      'id': 'db2c39ce-1755-4163-a8df-ea033d713dbb',
+      'timestamp': '2017-04-21T22:15:25.611Z',
+      'lang': 'en',
+      'result': {
+        'source': 'agent',
+        'resolvedQuery': 'hi',
+        'action': 'input.welcome',
+        'actionIncomplete': false,
+        'parameters': {},
+        'contexts': [],
+        'metadata': {
+          'intentId': '784690f8-8d87-4f0d-a40f-3e6c99ecd1e0',
+          'webhookUsed': 'false',
+          'webhookForSlotFillingUsed': 'false',
+          'intentName': 'Default Welcome Intent'
+        },
+        'fulfillment': {
+          'speech': 'Hi!',
+          'messages': [
+            {
+              'type': 0,
+              'speech': 'unused'
+            }
+          ]
+        },
+        'score': 1
+      },
+      'status': {
+        'code': 200,
+        'errorType': 'success'
+      },
+      'sessionId': 'cb92ecc5-0899-41f8-84a4-4ff329907512'
+    };
+    const mockRequest = new MockRequest(headers, body);
+    const mockResponse = new MockResponse();
+
+    const app = new ApiAiApp({
+      request: mockRequest,
+      response: mockResponse
+    });
+
+    expect(app.getSelectedOption()).to.equal('first_item');
+  });
+});
+
+/**
+ * Describes the behavior for ApiAiApp isRequestFromApiAi method.
+ */
+describe('ApiAiApp#isRequestFromApiAi', function () {
   // Success case test, when the API returns a valid 200 response with the response object
   it('Should confirm request is from API.ai.', function () {
     let headers = {
@@ -1415,7 +2710,7 @@ describe('ApiAiAssistant#isRequestFromApiAi', function () {
     const mockRequest = new MockRequest(headers, body);
     const mockResponse = new MockResponse();
 
-    const assistant = new ApiAiAssistant({
+    const app = new ApiAiApp({
       request: mockRequest,
       response: mockResponse
     });
@@ -1423,14 +2718,14 @@ describe('ApiAiAssistant#isRequestFromApiAi', function () {
     const HEADER_KEY = 'Google-Assistant-Signature';
     const HEADER_VALUE = 'YOUR_PRIVATE_KEY';
 
-    expect(assistant.isRequestFromApiAi(HEADER_KEY, HEADER_VALUE)).to.equal(true);
+    expect(app.isRequestFromApiAi(HEADER_KEY, HEADER_VALUE)).to.equal(true);
   });
 });
 
 /**
- * Describes the behavior for ApiAiAssistant isRequestFromApiAi method.
+ * Describes the behavior for ApiAiApp isRequestFromApiAi method.
  */
-describe('ApiAiAssistant#isRequestFromApiAi', function () {
+describe('ApiAiApp#isRequestFromApiAi', function () {
   // Success case test, when the API returns a valid 200 response with the response object
   it('Should confirm request is NOT from API.ai.', function () {
     let headers = {
@@ -1472,7 +2767,7 @@ describe('ApiAiAssistant#isRequestFromApiAi', function () {
     const mockRequest = new MockRequest(headers, body);
     const mockResponse = new MockResponse();
 
-    const assistant = new ApiAiAssistant({
+    const app = new ApiAiApp({
       request: mockRequest,
       response: mockResponse
     });
@@ -1480,14 +2775,279 @@ describe('ApiAiAssistant#isRequestFromApiAi', function () {
     const HEADER_KEY = 'Google-Assistant-Signature';
     const HEADER_VALUE = 'YOUR_PRIVATE_KEY';
 
-    expect(assistant.isRequestFromApiAi(HEADER_KEY, HEADER_VALUE)).to.equal(false);
+    expect(app.isRequestFromApiAi(HEADER_KEY, HEADER_VALUE)).to.equal(false);
   });
 });
 
 /**
- * Describes the behavior for ApiAiAssistant getRawInput method.
+ * Describes the behavior for ApiAiApp hasSurfaceCapability method.
  */
-describe('ApiAiAssistant#getRawInput', function () {
+describe('ApiAiApp#hasSurfaceCapability', function () {
+  // Success case test, when the API returns a valid 200 response with the response object
+  it('Should return true for a valid capability from incoming JSON for the success case.', function () {
+    let headers = {
+      'Content-Type': 'application/json',
+      'Google-Assistant-API-Version': 'v1'
+    };
+    let body = {
+      'id': '4bef6e67-c09d-4a43-ae7b-97c4457582c7',
+      'timestamp': '2016-12-01T19:27:58.837Z',
+      'result': {
+        'source': 'agent',
+        'resolvedQuery': 'talk to action snippets',
+        'speech': '',
+        'action': 'input.welcome',
+        'actionIncomplete': false,
+        'parameters': {
+
+        },
+        'contexts': [
+
+        ],
+        'metadata': {
+          'intentId': '1b1f35cb-ef66-41c4-9703-89446c00cfe8',
+          'webhookUsed': 'true',
+          'webhookForSlotFillingUsed': 'false',
+          'intentName': 'Default Welcome Intent'
+        },
+        'fulfillment': {
+          'speech': 'Good day!',
+          'messages': [
+            {
+              'type': 0,
+              'speech': 'Hi!'
+            }
+          ]
+        },
+        'score': 1
+      },
+      'status': {
+        'code': 200,
+        'errorType': 'success'
+      },
+      'sessionId': 'f23e77a5-8b09-495d-b9b3-6835d737abf3',
+      'originalRequest': {
+        'data': {
+          'surface': {
+            'capabilities': [
+              {
+                'name': 'actions.capability.AUDIO_OUTPUT'
+              },
+              {
+                'name': 'actions.capability.SCREEN_OUTPUT'
+              }
+            ]
+          },
+          'inputs': [
+            {
+              'raw_inputs': [
+                {
+                  'query': 'basic card',
+                  'input_type': 3,
+                  'annotation_sets': []
+                }
+              ]
+            }
+          ],
+          'conversation': {
+            'type': 2
+          }
+        }
+      }
+    };
+
+    let mockRequest = new MockRequest(headers, body);
+    const mockResponse = new MockResponse();
+
+    let app = new ApiAiApp({
+      request: mockRequest,
+      response: mockResponse
+    });
+
+    let hasScreenOutput =
+      app.hasSurfaceCapability(app.SurfaceCapabilities.SCREEN_OUTPUT);
+    let hasMagicPowers =
+      app.hasSurfaceCapability('MAGIC_POWERS');
+    expect(hasScreenOutput).to.be.true;
+    expect(hasMagicPowers).to.be.false;
+  });
+});
+
+/**
+ * Describes the behavior for ApiAiApp getSurfaceCapabilities method.
+ */
+describe('ApiAiApp#getSurfaceCapabilities', function () {
+  // Success case test, when the API returns a valid 200 response with the response object
+  it('Should return valid list of capabilities from incoming JSON for the success case.', function () {
+    let headers = {
+      'Content-Type': 'application/json',
+      'Google-Assistant-API-Version': 'v1'
+    };
+    let body = {
+      'id': '4bef6e67-c09d-4a43-ae7b-97c4457582c7',
+      'timestamp': '2016-12-01T19:27:58.837Z',
+      'result': {
+        'source': 'agent',
+        'resolvedQuery': 'talk to action snippets',
+        'speech': '',
+        'action': 'input.welcome',
+        'actionIncomplete': false,
+        'parameters': {
+
+        },
+        'contexts': [
+
+        ],
+        'metadata': {
+          'intentId': '1b1f35cb-ef66-41c4-9703-89446c00cfe8',
+          'webhookUsed': 'true',
+          'webhookForSlotFillingUsed': 'false',
+          'intentName': 'Default Welcome Intent'
+        },
+        'fulfillment': {
+          'speech': 'Good day!',
+          'messages': [
+            {
+              'type': 0,
+              'speech': 'Hi!'
+            }
+          ]
+        },
+        'score': 1
+      },
+      'status': {
+        'code': 200,
+        'errorType': 'success'
+      },
+      'sessionId': 'f23e77a5-8b09-495d-b9b3-6835d737abf3',
+      'originalRequest': {
+        'data': {
+          'surface': {
+            'capabilities': [
+              {
+                'name': 'actions.capability.AUDIO_OUTPUT'
+              },
+              {
+                'name': 'actions.capability.SCREEN_OUTPUT'
+              }
+            ]
+          },
+          'inputs': [
+            {
+              'raw_inputs': [
+                {
+                  'query': 'basic card',
+                  'input_type': 3,
+                  'annotation_sets': []
+                }
+              ]
+            }
+          ],
+          'conversation': {
+            'type': 2
+          }
+        }
+      }
+    };
+
+    let mockRequest = new MockRequest(headers, body);
+    const mockResponse = new MockResponse();
+
+    let app = new ApiAiApp({
+      request: mockRequest,
+      response: mockResponse
+    });
+
+    let capabilities = app.getSurfaceCapabilities();
+    expect(capabilities).to.deep.equal([
+      app.SurfaceCapabilities.AUDIO_OUTPUT,
+      app.SurfaceCapabilities.SCREEN_OUTPUT
+    ]);
+  });
+});
+
+/**
+ * Describes the behavior for ApiAiApp getInputType method.
+ */
+describe('ApiAiApp#getInputType', function () {
+  // Success case test, when the API returns a valid 200 response with the response object
+  it('Should return valid input type from incoming JSON for the success case.', function () {
+    let headers = {
+      'Content-Type': 'application/json',
+      'Google-Assistant-API-Version': 'v1'
+    };
+    let body = {
+      'id': '4bef6e67-c09d-4a43-ae7b-97c4457582c7',
+      'timestamp': '2016-12-01T19:27:58.837Z',
+      'result': {
+        'source': 'agent',
+        'resolvedQuery': 'talk to action snippets',
+        'speech': '',
+        'action': 'input.welcome',
+        'actionIncomplete': false,
+        'parameters': {
+
+        },
+        'contexts': [
+
+        ],
+        'metadata': {
+          'intentId': '1b1f35cb-ef66-41c4-9703-89446c00cfe8',
+          'webhookUsed': 'true',
+          'webhookForSlotFillingUsed': 'false',
+          'intentName': 'Default Welcome Intent'
+        },
+        'fulfillment': {
+          'speech': 'Good day!',
+          'messages': [
+            {
+              'type': 0,
+              'speech': 'Hi!'
+            }
+          ]
+        },
+        'score': 1
+      },
+      'status': {
+        'code': 200,
+        'errorType': 'success'
+      },
+      'sessionId': 'f23e77a5-8b09-495d-b9b3-6835d737abf3',
+      'originalRequest': {
+        'data': {
+          'inputs': [
+            {
+              'raw_inputs': [
+                {
+                  'input_type': 3
+                }
+              ]
+            }
+          ],
+          'conversation': {
+            'type': 2
+          }
+        }
+      }
+    };
+
+    let mockRequest = new MockRequest(headers, body);
+    const mockResponse = new MockResponse();
+
+    let app = new ApiAiApp({
+      request: mockRequest,
+      response: mockResponse
+    });
+
+    let inputType = app.getInputType();
+    expect(inputType).to.equal(app.InputTypes.KEYBOARD);
+  });
+});
+
+/**
+ * Describes the behavior for ApiAiApp getRawInput method.
+ */
+describe('ApiAiApp#getRawInput', function () {
   // Success case test, when the API returns a valid 200 response with the response object
   it('Should raw input from API.ai.', function () {
     let headers = {
@@ -1558,19 +3118,19 @@ describe('ApiAiAssistant#getRawInput', function () {
     const mockRequest = new MockRequest(headers, body);
     const mockResponse = new MockResponse();
 
-    const assistant = new ApiAiAssistant({
+    const app = new ApiAiApp({
       request: mockRequest,
       response: mockResponse
     });
 
-    expect(assistant.getRawInput()).to.equal('is it 667');
+    expect(app.getRawInput()).to.equal('is it 667');
   });
 });
 
 /**
- * Describes the behavior for ApiAiAssistant setContext method.
+ * Describes the behavior for ApiAiApp setContext method.
  */
-describe('ApiAiAssistant#setContext', function () {
+describe('ApiAiApp#setContext', function () {
   // Success case test, when the API returns a valid 200 response with the response object
   it('Should return the valid JSON in the response object for the success case.', function () {
     let headers = {
@@ -1628,22 +3188,22 @@ describe('ApiAiAssistant#setContext', function () {
     const mockRequest = new MockRequest(headers, body);
     const mockResponse = new MockResponse();
 
-    const assistant = new ApiAiAssistant({
+    const app = new ApiAiApp({
       request: mockRequest,
       response: mockResponse
     });
 
     const CONTEXT_NUMBER = 'number';
 
-    function handler (assistant) {
-      assistant.setContext(CONTEXT_NUMBER);
-      assistant.ask('Welcome to action snippets! Say a number.');
+    function handler (app) {
+      app.setContext(CONTEXT_NUMBER);
+      app.ask('Welcome to action snippets! Say a number.');
     }
 
     let actionMap = new Map();
     actionMap.set('input.welcome', handler);
 
-    assistant.handleRequest(actionMap);
+    app.handleRequest(actionMap);
 
     // Validating the response object
     let expectedResponse = {
@@ -1676,9 +3236,9 @@ describe('ApiAiAssistant#setContext', function () {
 });
 
 /**
- * Describes the behavior for ApiAiAssistant getContexts method.
+ * Describes the behavior for ApiAiApp getContexts method.
  */
-describe('ApiAiAssistant#getContexts', function () {
+describe('ApiAiApp#getContexts', function () {
   // Success case test, when the API returns a valid 200 response with the response object
   it('Should return the active contexts from incoming JSON for the success case.', function () {
     let headers = {
@@ -1751,12 +3311,12 @@ describe('ApiAiAssistant#getContexts', function () {
     let mockRequest = new MockRequest(headers, body);
     const mockResponse = new MockResponse();
 
-    let assistant = new ApiAiAssistant({
+    let app = new ApiAiApp({
       request: mockRequest,
       response: mockResponse
     });
 
-    let mockContexts = assistant.getContexts();
+    let mockContexts = app.getContexts();
 
     let expectedContexts = [
       {
@@ -1778,15 +3338,15 @@ describe('ApiAiAssistant#getContexts', function () {
     ];
     expect(mockContexts).to.deep.equal(expectedContexts);
 
-    // Check the case with only assistant.data incoming
+    // Check the case with only app.data incoming
     body.result.contexts = [ { 'name': '_actions_on_google_' } ];
     mockRequest = new MockRequest(headers, body);
 
-    assistant = new ApiAiAssistant({
+    app = new ApiAiApp({
       request: mockRequest,
       response: mockResponse
     });
-    mockContexts = assistant.getContexts();
+    mockContexts = app.getContexts();
     expectedContexts = [];
     expect(mockContexts).to.deep.equal(expectedContexts);
 
@@ -1794,20 +3354,20 @@ describe('ApiAiAssistant#getContexts', function () {
     body.result.contexts = [];
     mockRequest = new MockRequest(headers, body);
 
-    assistant = new ApiAiAssistant({
+    app = new ApiAiApp({
       request: mockRequest,
       response: mockResponse
     });
-    mockContexts = assistant.getContexts();
+    mockContexts = app.getContexts();
     expectedContexts = [];
     expect(mockContexts).to.deep.equal(expectedContexts);
   });
 });
 
 /**
- * Describes the behavior for ApiAiAssistant getContext method.
+ * Describes the behavior for ApiAiApp getContext method.
  */
-describe('ApiAiAssistant#getContext', function () {
+describe('ApiAiApp#getContext', function () {
   // Success case test, when the API returns a valid 200 response with the response object
   it('Should return the context by name from incoming JSON for the success case.', function () {
     let headers = {
@@ -1880,12 +3440,12 @@ describe('ApiAiAssistant#getContext', function () {
     let mockRequest = new MockRequest(headers, body);
     const mockResponse = new MockResponse();
 
-    let assistant = new ApiAiAssistant({
+    let app = new ApiAiApp({
       request: mockRequest,
       response: mockResponse
     });
 
-    let mockContext = assistant.getContext('number');
+    let mockContext = app.getContext('number');
 
     let expectedContext = {
       'name': 'number',
@@ -1901,20 +3461,20 @@ describe('ApiAiAssistant#getContext', function () {
     body.result.contexts = [];
     mockRequest = new MockRequest(headers, body);
 
-    assistant = new ApiAiAssistant({
+    app = new ApiAiApp({
       request: mockRequest,
       response: mockResponse
     });
-    mockContext = assistant.getContext('name');
+    mockContext = app.getContext('name');
     expectedContext = null;
     expect(mockContext).to.equal(expectedContext);
   });
 });
 
 /**
- * Describes the behavior for ApiAiAssistant ask with no inputs method.
+ * Describes the behavior for ApiAiApp ask with no inputs method.
  */
-describe('ApiAiAssistant#ask', function () {
+describe('ApiAiApp#ask', function () {
   // Success case test, when the API returns a valid 200 response with the response object
   it('Should return the valid JSON in the response object for the success case.', function () {
     let headers = {
@@ -1982,20 +3542,20 @@ describe('ApiAiAssistant#ask', function () {
     const mockRequest = new MockRequest(headers, body);
     const mockResponse = new MockResponse();
 
-    const assistant = new ApiAiAssistant({
+    const app = new ApiAiApp({
       request: mockRequest,
       response: mockResponse
     });
 
-    function handler (assistant) {
-      assistant.ask('Welcome to action snippets! Say a number.',
+    function handler (app) {
+      app.ask('Welcome to action snippets! Say a number.',
         ['Say any number', 'Pick a number', 'What is the number?']);
     }
 
     let actionMap = new Map();
     actionMap.set('input.welcome', handler);
 
-    assistant.handleRequest(actionMap);
+    app.handleRequest(actionMap);
 
     // Validating the response object
     let expectedResponse = {
@@ -2036,9 +3596,9 @@ describe('ApiAiAssistant#ask', function () {
 // ---------------------------------------------------------------------------
 
 /**
- * Describes the behavior for ApiAiAssistant constructor method.
+ * Describes the behavior for ApiAiApp constructor method.
  */
-describe('ActionsSdkAssistant#constructor', function () {
+describe('ActionsSdkApp#constructor', function () {
   // Calls sessionStarted when provided
   it('Calls sessionStarted when new session', function () {
     let headers = {
@@ -2075,13 +3635,13 @@ describe('ActionsSdkAssistant#constructor', function () {
 
     const sessionStartedSpy = chai.spy();
 
-    const assistant = new ActionsSdkAssistant({
+    const app = new ActionsSdkApp({
       request: mockRequest,
       response: mockResponse,
       sessionStarted: sessionStartedSpy
     });
 
-    assistant.handleRequest();
+    app.handleRequest();
 
     expect(sessionStartedSpy).to.have.been.called();
   });
@@ -2122,32 +3682,22 @@ describe('ActionsSdkAssistant#constructor', function () {
 
     const sessionStartedSpy = chai.spy();
 
-    const assistant = new ActionsSdkAssistant({
+    const app = new ActionsSdkApp({
       request: mockRequest,
       response: mockResponse,
       sessionStarted: sessionStartedSpy
     });
 
-    assistant.handleRequest();
+    app.handleRequest();
 
     expect(sessionStartedSpy).to.not.have.been.called();
   });
-
-  // Test a change made for backwards compatibility with legacy sample code
-  it('Does initialize StandardIntents without an options object', function () {
-    const assistant = new ActionsSdkAssistant();
-
-    expect(assistant.StandardIntents.MAIN).to.equal('assistant.intent.action.MAIN');
-    expect(assistant.StandardIntents.TEXT).to.equal('assistant.intent.action.TEXT');
-    expect(assistant.StandardIntents.PERMISSION).to
-      .equal('assistant.intent.action.PERMISSION');
-  });
 });
 
 /**
- * Describes the behavior for ActionsSdkAssistant ask method.
+ * Describes the behavior for ActionsSdkApp ask method.
  */
-describe('ActionsSdkAssistant#ask', function () {
+describe('ActionsSdkApp#ask', function () {
   // Success case test, when the API returns a valid 200 response with the response object
   it('Should return the valid JSON in the response object for the success case.', function () {
     let headers = {
@@ -2182,23 +3732,23 @@ describe('ActionsSdkAssistant#ask', function () {
     const mockRequest = new MockRequest(headers, body);
     const mockResponse = new MockResponse();
 
-    const assistant = new ActionsSdkAssistant({
+    const app = new ActionsSdkApp({
       request: mockRequest,
       response: mockResponse
     });
 
-    function handler (assistant) {
-      let inputPrompt = assistant.buildInputPrompt(true, '<speak>Hi! <break time="1"/> ' +
+    function handler (app) {
+      let inputPrompt = app.buildInputPrompt(true, '<speak>Hi! <break time="1"/> ' +
           'I can read out an ordinal like ' +
           '<say-as interpret-as="ordinal">123</say-as>. Say a number.</speak>',
           ['I didn\'t hear a number', 'If you\'re still there, what\'s the number?', 'What is the number?']);
-      assistant.ask(inputPrompt);
+      app.ask(inputPrompt);
     }
 
     let actionMap = new Map();
-    actionMap.set(assistant.StandardIntents.MAIN, handler);
+    actionMap.set(app.StandardIntents.MAIN, handler);
 
-    assistant.handleRequest(actionMap);
+    app.handleRequest(actionMap);
 
     // Validating the response object
     let expectedResponse = {
@@ -2237,9 +3787,9 @@ describe('ActionsSdkAssistant#ask', function () {
 });
 
 /**
- * Describes the behavior for ActionsSdkAssistant ask method with function handler.
+ * Describes the behavior for ActionsSdkApp ask method with function handler.
  */
-describe('ActionsSdkAssistant#ask', function () {
+describe('ActionsSdkApp#ask', function () {
   // Success case test, when the API returns a valid 200 response with the response object
   it('Should return the valid JSON in the response object for the success case.', function () {
     let headers = {
@@ -2274,23 +3824,23 @@ describe('ActionsSdkAssistant#ask', function () {
     const mockRequest = new MockRequest(headers, body);
     const mockResponse = new MockResponse();
 
-    const assistant = new ActionsSdkAssistant({
+    const app = new ActionsSdkApp({
       request: mockRequest,
       response: mockResponse
     });
 
-    function handler (assistant) {
-      let inputPrompt = assistant.buildInputPrompt(true, '<speak>Hi! <break time="1"/> ' +
+    function handler (app) {
+      let inputPrompt = app.buildInputPrompt(true, '<speak>Hi! <break time="1"/> ' +
           'I can read out an ordinal like ' +
           '<say-as interpret-as="ordinal">123</say-as>. Say a number.</speak>',
           ['I didn\'t hear a number', 'If you\'re still there, what\'s the number?', 'What is the number?']);
-      assistant.ask(inputPrompt);
+      app.ask(inputPrompt);
     }
 
     let actionMap = new Map();
-    actionMap.set(assistant.StandardIntents.MAIN, handler);
+    actionMap.set(app.StandardIntents.MAIN, handler);
 
-    assistant.handleRequest(actionMap);
+    app.handleRequest(actionMap);
 
     // Validating the response object
     let expectedResponse = {
@@ -2329,9 +3879,9 @@ describe('ActionsSdkAssistant#ask', function () {
 });
 
 /**
- * Describes the behavior for ActionsSdkAssistant tell method.
+ * Describes the behavior for ActionsSdkApp tell method.
  */
-describe('ActionsSdkAssistant#tell', function () {
+describe('ActionsSdkApp#tell', function () {
   // Success case test, when the API returns a valid 200 response with the response object
   it('Should return the valid JSON in the response object for the success case.', function () {
     let headers = {
@@ -2369,21 +3919,21 @@ describe('ActionsSdkAssistant#tell', function () {
     const mockRequest = new MockRequest(headers, body);
     const mockResponse = new MockResponse();
 
-    const assistant = new ActionsSdkAssistant({
+    const app = new ActionsSdkApp({
       request: mockRequest,
       response: mockResponse
     });
 
-    function handler (assistant) {
+    function handler (app) {
       return new Promise(function (resolve, reject) {
-        resolve(assistant.tell('Goodbye!'));
+        resolve(app.tell('Goodbye!'));
       });
     }
 
     let actionMap = new Map();
-    actionMap.set(assistant.StandardIntents.MAIN, handler);
+    actionMap.set(app.StandardIntents.MAIN, handler);
 
-    assistant.handleRequest(actionMap);
+    app.handleRequest(actionMap);
 
     // Validating the response object
     let expectedResponse = {
@@ -2396,12 +3946,225 @@ describe('ActionsSdkAssistant#tell', function () {
     };
     expect(mockResponse.body).to.deep.equal(expectedResponse);
   });
+
+  // Success case test, when the API returns a valid 200 response with the response object
+  it('Should return the valid simple response JSON in the response object for the success case.', function () {
+    let headers = {
+      'Content-Type': 'application/json',
+      'Google-Assistant-API-Version': 'v1'
+    };
+    let body = {
+      'user': {
+        'user_id': '11112226094657824893'
+      },
+      'conversation': {
+        'conversation_id': '1480389944033',
+        'type': 2,
+        'conversation_token': '{"state":null,"data":{"state":null,"data":{}}}'
+      },
+      'inputs': [
+        {
+          'intent': 'assistant.intent.action.MAIN',
+          'raw_inputs': [
+            {
+              'input_type': 2,
+              'query': 'bye'
+            }
+          ],
+          'arguments': [
+            {
+              'name': 'raw_text',
+              'raw_text': 'bye',
+              'text_value': 'bye'
+            }
+          ]
+        }
+      ]
+    };
+    const mockRequest = new MockRequest(headers, body);
+    const mockResponse = new MockResponse();
+
+    const app = new ActionsSdkApp({
+      request: mockRequest,
+      response: mockResponse
+    });
+
+    function handler (app) {
+      return new Promise(function (resolve, reject) {
+        resolve(app.tell({ speech: 'hello', displayText: 'hi' }));
+      });
+    }
+
+    let actionMap = new Map();
+    actionMap.set('assistant.intent.action.MAIN', handler);
+
+    app.handleRequest(actionMap);
+
+    // Validating the response object
+    let expectedResponse = {
+      'expect_user_response': false,
+      'final_response': {
+        'rich_response': {
+          'items': [
+            {
+              'simple_response': {
+                'text_to_speech': 'hello',
+                'display_text': 'hi'
+              }
+            }
+          ],
+          'suggestions': []
+        }
+      }
+    };
+    expect(JSON.parse(JSON.stringify(mockResponse.body)))
+      .to.deep.equal(expectedResponse);
+  });
+
+  // Success case test, when the API returns a valid 200 response with the response object
+  it('Should return the valid rich response JSON in the response object for the success case.', function () {
+    let headers = {
+      'Content-Type': 'application/json',
+      'Google-Assistant-API-Version': 'v1'
+    };
+    let body = {
+      'user': {
+        'user_id': '11112226094657824893'
+      },
+      'conversation': {
+        'conversation_id': '1480389944033',
+        'type': 2,
+        'conversation_token': '{"state":null,"data":{"state":null,"data":{}}}'
+      },
+      'inputs': [
+        {
+          'intent': 'assistant.intent.action.MAIN',
+          'raw_inputs': [
+            {
+              'input_type': 2,
+              'query': 'bye'
+            }
+          ],
+          'arguments': [
+            {
+              'name': 'raw_text',
+              'raw_text': 'bye',
+              'text_value': 'bye'
+            }
+          ]
+        }
+      ]
+    };
+    const mockRequest = new MockRequest(headers, body);
+    const mockResponse = new MockResponse();
+
+    const app = new ActionsSdkApp({
+      request: mockRequest,
+      response: mockResponse
+    });
+
+    function handler (app) {
+      return new Promise(function (resolve, reject) {
+        resolve(app.tell(app.buildRichResponse()
+          .addSimpleResponse({ speech: 'hello', displayText: 'hi' })
+          .addSuggestions(['Say this', 'or this'])));
+      });
+    }
+
+    let actionMap = new Map();
+    actionMap.set('assistant.intent.action.MAIN', handler);
+
+    app.handleRequest(actionMap);
+
+    // Validating the response object
+    let expectedResponse = {
+      'expect_user_response': false,
+      'final_response': {
+        'rich_response': {
+          'items': [
+            {
+              'simple_response': {
+                'text_to_speech': 'hello',
+                'display_text': 'hi'
+              }
+            }
+          ],
+          'suggestions': [
+            {
+              'title': 'Say this'
+            },
+            {
+              'title': 'or this'
+            }
+          ]
+        }
+      }
+    };
+    expect(JSON.parse(JSON.stringify(mockResponse.body)))
+      .to.deep.equal(expectedResponse);
+  });
+
+  // Failure test, when the API returns a 400 response with the response object
+  it('Should send failure response for rich response without simple response', function () {
+    let headers = {
+      'Content-Type': 'application/json',
+      'Google-Assistant-API-Version': 'v1'
+    };
+    let body = {
+      'user': {
+        'user_id': '11112226094657824893'
+      },
+      'conversation': {
+        'conversation_id': '1480389944033',
+        'type': 2,
+        'conversation_token': '{"state":null,"data":{"state":null,"data":{}}}'
+      },
+      'inputs': [
+        {
+          'intent': 'assistant.intent.action.MAIN',
+          'raw_inputs': [
+            {
+              'input_type': 2,
+              'query': 'bye'
+            }
+          ],
+          'arguments': [
+            {
+              'name': 'raw_text',
+              'raw_text': 'bye',
+              'text_value': 'bye'
+            }
+          ]
+        }
+      ]
+    };
+    const mockRequest = new MockRequest(headers, body);
+    const mockResponse = new MockResponse();
+
+    const app = new ActionsSdkApp({
+      request: mockRequest,
+      response: mockResponse
+    });
+
+    function handler (app) {
+      return new Promise(function (resolve, reject) {
+        resolve(app.tell(app.buildRichResponse()));
+      });
+    }
+
+    let actionMap = new Map();
+    actionMap.set('check_guess', handler);
+
+    app.handleRequest(actionMap);
+
+    expect(mockResponse.statusCode).to.equal(400);
+  });
 });
 
 /**
- * Describes the behavior for ActionsSdkAssistant getRawInput method.
+ * Describes the behavior for ActionsSdkApp getRawInput method.
  */
-describe('ActionsSdkAssistant#getRawInput', function () {
+describe('ActionsSdkApp#getRawInput', function () {
   // Success case test, when the API returns a valid 200 response with the response object
   it('Should get the raw user input for the success case.', function () {
     let headers = {
@@ -2439,19 +4202,29 @@ describe('ActionsSdkAssistant#getRawInput', function () {
     const mockRequest = new MockRequest(headers, body);
     const mockResponse = new MockResponse();
 
-    const assistant = new ActionsSdkAssistant({
+    const app = new ActionsSdkApp({
       request: mockRequest,
       response: mockResponse
     });
 
-    expect(assistant.getRawInput()).to.equal('bye');
+    expect(app.getRawInput()).to.equal('bye');
+  });
+
+  // Test a change made for backwards compatibility with legacy sample code
+  it('Does initialize StandardIntents without an options object', function () {
+    const app = new ActionsSdkApp();
+
+    expect(app.StandardIntents.MAIN).to.equal('assistant.intent.action.MAIN');
+    expect(app.StandardIntents.TEXT).to.equal('assistant.intent.action.TEXT');
+    expect(app.StandardIntents.PERMISSION).to
+      .equal('assistant.intent.action.PERMISSION');
   });
 });
 
 /**
- * Describes the behavior for ActionsSdkAssistant askForText method.
+ * Describes the behavior for ActionsSdkApp askForText method.
  */
-describe('ActionsSdkAssistant#askForText', function () {
+describe('ActionsSdkApp#askForText', function () {
   // Success case test, when the API returns a valid 200 response with the response object
   it('Should return the valid JSON in the response object for the success case.', function () {
     let headers = {
@@ -2486,21 +4259,21 @@ describe('ActionsSdkAssistant#askForText', function () {
     const mockRequest = new MockRequest(headers, body);
     const mockResponse = new MockResponse();
 
-    const assistant = new ActionsSdkAssistant({
+    const app = new ActionsSdkApp({
       request: mockRequest,
       response: mockResponse
     });
 
-    function handler (assistant) {
+    function handler (app) {
       return new Promise(function (resolve, reject) {
-        resolve(assistant.ask('What can I help you with?'));
+        resolve(app.ask('What can I help you with?'));
       });
     }
 
     let actionMap = new Map();
-    actionMap.set(assistant.StandardIntents.MAIN, handler);
+    actionMap.set(app.StandardIntents.MAIN, handler);
 
-    assistant.handleRequest(actionMap);
+    app.handleRequest(actionMap);
 
     // Validating the response object
     let expectedResponse = {
@@ -2531,9 +4304,9 @@ describe('ActionsSdkAssistant#askForText', function () {
 });
 
 /**
- * Describes the behavior for ActionsSdkAssistant askForText method with SSML.
+ * Describes the behavior for ActionsSdkApp askForText method with SSML.
  */
-describe('ActionsSdkAssistant#askForText', function () {
+describe('ActionsSdkApp#askForText', function () {
   // Success case test, when the API returns a valid 200 response with the response object
   it('Should return the valid JSON in the response object for the success case.', function () {
     let headers = {
@@ -2568,21 +4341,21 @@ describe('ActionsSdkAssistant#askForText', function () {
     const mockRequest = new MockRequest(headers, body);
     const mockResponse = new MockResponse();
 
-    const assistant = new ActionsSdkAssistant({
+    const app = new ActionsSdkApp({
       request: mockRequest,
       response: mockResponse
     });
 
-    function handler (assistant) {
+    function handler (app) {
       return new Promise(function (resolve, reject) {
-        resolve(assistant.ask('<speak>What <break time="1"/> can I help you with?</speak>'));
+        resolve(app.ask('<speak>What <break time="1"/> can I help you with?</speak>'));
       });
     }
 
     let actionMap = new Map();
-    actionMap.set(assistant.StandardIntents.MAIN, handler);
+    actionMap.set(app.StandardIntents.MAIN, handler);
 
-    assistant.handleRequest(actionMap);
+    app.handleRequest(actionMap);
 
     // Validating the response object
     let expectedResponse = {
@@ -2613,9 +4386,9 @@ describe('ActionsSdkAssistant#askForText', function () {
 });
 
 /**
- * Describes the behavior for ActionsSdkAssistant ask (advanced usage) method.
+ * Describes the behavior for ActionsSdkApp ask (advanced usage) method.
  */
-describe('ActionsSdkAssistant#ask', function () {
+describe('ActionsSdkApp#ask', function () {
   // Success case test, when the API returns a valid 200 response with the response object
   it('Should return the valid JSON in the response object for the success case.', function () {
     let headers = {
@@ -2648,23 +4421,23 @@ describe('ActionsSdkAssistant#ask', function () {
     const mockRequest = new MockRequest(headers, body);
     const mockResponse = new MockResponse();
 
-    const assistant = new ActionsSdkAssistant({
+    const app = new ActionsSdkApp({
       request: mockRequest,
       response: mockResponse
     });
 
-    function handler (assistant) {
+    function handler (app) {
       return new Promise(function (resolve, reject) {
-        let inputPrompt = assistant.buildInputPrompt(false, 'Welcome to action snippets! Say a number.',
+        let inputPrompt = app.buildInputPrompt(false, 'Welcome to action snippets! Say a number.',
           ['Say any number', 'Pick a number', 'What is the number?']);
-        resolve(assistant.ask(inputPrompt));
+        resolve(app.ask(inputPrompt));
       });
     }
 
     let actionMap = new Map();
-    actionMap.set(assistant.StandardIntents.MAIN, handler);
+    actionMap.set(app.StandardIntents.MAIN, handler);
 
-    assistant.handleRequest(actionMap);
+    app.handleRequest(actionMap);
 
     // Validating the response object
     let expectedResponse = {
@@ -2700,12 +4473,515 @@ describe('ActionsSdkAssistant#ask', function () {
     };
     expect(JSON.stringify(mockResponse.body)).to.equal(JSON.stringify(expectedResponse));
   });
+
+  // Success case test, when the API returns a valid 200 response with the response object
+  it('Should return the valid simple response JSON in the response object for the success case.', function () {
+    let headers = {
+      'Content-Type': 'application/json',
+      'Google-Assistant-API-Version': 'v1'
+    };
+    let body = {
+      'user': {
+        'user_id': '11112226094657824893'
+      },
+      'conversation': {
+        'conversation_id': '1480389944033',
+        'type': 2,
+        'conversation_token': '{"state":null,"data":{}}'
+      },
+      'inputs': [
+        {
+          'intent': 'assistant.intent.action.MAIN',
+          'raw_inputs': [
+            {
+              'input_type': 2,
+              'query': 'bye'
+            }
+          ],
+          'arguments': [
+            {
+              'name': 'raw_text',
+              'raw_text': 'bye',
+              'text_value': 'bye'
+            }
+          ]
+        }
+      ]
+    };
+    const mockRequest = new MockRequest(headers, body);
+    const mockResponse = new MockResponse();
+
+    const app = new ActionsSdkApp({
+      request: mockRequest,
+      response: mockResponse
+    });
+
+    function handler (app) {
+      return new Promise(function (resolve, reject) {
+        resolve(app.ask({ speech: 'hello', displayText: 'hi' }));
+      });
+    }
+
+    let actionMap = new Map();
+    actionMap.set('assistant.intent.action.MAIN', handler);
+
+    app.handleRequest(actionMap);
+
+    // Validating the response object
+    let expectedResponse = {
+      'conversation_token': '{"state":null,"data":{}}',
+      'expect_user_response': true,
+      'expected_inputs': [
+        {
+          'input_prompt': {
+            'rich_initial_prompt': {
+              'items': [
+                {
+                  'simple_response': {
+                    'text_to_speech': 'hello',
+                    'display_text': 'hi'
+                  }
+                }
+              ],
+              'suggestions': []
+            }
+          },
+          'possible_intents': [
+            {
+              'intent': 'assistant.intent.action.TEXT'
+            }
+          ]
+        }
+      ]
+    };
+    expect(JSON.parse(JSON.stringify(mockResponse.body)))
+      .to.deep.equal(expectedResponse);
+  });
+
+  // Success case test, when the API returns a valid 200 response with the response object
+  it('Should return the valid rich response JSON in the response object for the success case.', function () {
+    let headers = {
+      'Content-Type': 'application/json',
+      'Google-Assistant-API-Version': 'v1'
+    };
+    let body = {
+      'user': {
+        'user_id': '11112226094657824893'
+      },
+      'conversation': {
+        'conversation_id': '1480389944033',
+        'type': 2,
+        'conversation_token': '{"state":null,"data":{}}'
+      },
+      'inputs': [
+        {
+          'intent': 'assistant.intent.action.MAIN',
+          'raw_inputs': [
+            {
+              'input_type': 2,
+              'query': 'bye'
+            }
+          ],
+          'arguments': [
+            {
+              'name': 'raw_text',
+              'raw_text': 'bye',
+              'text_value': 'bye'
+            }
+          ]
+        }
+      ]
+    };
+    const mockRequest = new MockRequest(headers, body);
+    const mockResponse = new MockResponse();
+
+    const app = new ActionsSdkApp({
+      request: mockRequest,
+      response: mockResponse
+    });
+
+    function handler (app) {
+      return new Promise(function (resolve, reject) {
+        resolve(app.ask(app.buildRichResponse()
+          .addSimpleResponse({ speech: 'hello', displayText: 'hi' })
+          .addSuggestions(['Say this', 'or this'])));
+      });
+    }
+
+    let actionMap = new Map();
+    actionMap.set('assistant.intent.action.MAIN', handler);
+
+    app.handleRequest(actionMap);
+
+    // Validating the response object
+    let expectedResponse = {
+      'conversation_token': '{"state":null,"data":{}}',
+      'expect_user_response': true,
+      'expected_inputs': [
+        {
+          'input_prompt': {
+            'rich_initial_prompt': {
+              'items': [
+                {
+                  'simple_response': {
+                    'text_to_speech': 'hello',
+                    'display_text': 'hi'
+                  }
+                }
+              ],
+              'suggestions': [
+                {
+                  'title': 'Say this'
+                },
+                {
+                  'title': 'or this'
+                }
+              ]
+            }
+          },
+          'possible_intents': [
+            {
+              'intent': 'assistant.intent.action.TEXT'
+            }
+          ]
+        }
+      ]
+    };
+    expect(JSON.parse(JSON.stringify(mockResponse.body)))
+      .to.deep.equal(expectedResponse);
+  });
 });
 
 /**
- * Describes the behavior for ActionsSdkAssistant askForPermissions method in v1.
+ * Describes the behavior for ActionsSdkApp askWithList method.
  */
-describe('ActionsSdkAssistant#askForPermissions', function () {
+describe('ActionsSdkApp#askWithList', function () {
+  // Success case test, when the API returns a valid 200 response with the response object
+  it('Should return the valid list JSON in the response object for the success case.', function () {
+    let headers = {
+      'Content-Type': 'application/json',
+      'Google-Actions-API-Version': '2'
+    };
+    let body = {
+      'user': {
+
+      },
+      'conversation': {
+        'conversationId': '1480532856956',
+        'type': 1
+      },
+      'inputs': [
+        {
+          'intent': 'show_list',
+          'rawInputs': [
+            {
+              'inputType': 2,
+              'query': 'show me a list'
+            }
+          ],
+          'arguments': [
+
+          ]
+        }
+      ]
+    };
+    const mockRequest = new MockRequest(headers, body);
+    const mockResponse = new MockResponse();
+
+    const app = new ActionsSdkApp({
+      request: mockRequest,
+      response: mockResponse
+    });
+
+    const SHOW_LIST = 'show_list';
+
+    function showList (app) {
+      app.askWithList('Here is a list', app.buildList()
+        .addItems([
+          app.buildOptionItem('key_1', 'key one'),
+          app.buildOptionItem('key_2', 'key two')
+        ]), {
+          optionType: 'list'
+        });
+    }
+
+    let actionMap = new Map();
+    actionMap.set(SHOW_LIST, showList);
+
+    app.handleRequest(actionMap);
+
+    // Validating the response object
+    let expectedResponse = {
+      'conversationToken': '{"optionType":"list"}',
+      'expectUserResponse': true,
+      'expectedInputs': [
+        {
+          'inputPrompt': {
+            'initialPrompts': [
+              {
+                'textToSpeech': 'Here is a list'
+              }
+            ],
+            'noInputPrompts': [
+            ]
+          },
+          'possibleIntents': [
+            {
+              'intent': 'actions.intent.OPTION',
+              'inputValueData': {
+                '@type': 'type.googleapis.com/google.actions.v2.OptionValueSpec',
+                'listSelect': {
+                  'items': [
+                    {
+                      'optionInfo': {
+                        'key': 'key_1',
+                        'synonyms': [
+                          'key one'
+                        ]
+                      },
+                      'title': ''
+                    },
+                    {
+                      'optionInfo': {
+                        'key': 'key_2',
+                        'synonyms': [
+                          'key two'
+                        ]
+                      },
+                      'title': ''
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      ]
+    };
+
+    expect(JSON.stringify(mockResponse.body)).to.equal(JSON.stringify(expectedResponse));
+  });
+
+  it('Should return the an error JSON in the response when list has <2 items.', function () {
+    let headers = {
+      'Content-Type': 'application/json',
+      'Google-Actions-API-Version': '2'
+    };
+    let body = {
+      'user': {
+
+      },
+      'conversation': {
+        'conversationId': '1480532856956',
+        'type': 1
+      },
+      'inputs': [
+        {
+          'intent': 'show_list',
+          'rawInputs': [
+            {
+              'inputType': 2,
+              'query': 'show me a list'
+            }
+          ],
+          'arguments': [
+
+          ]
+        }
+      ]
+    };
+    const mockRequest = new MockRequest(headers, body);
+    const mockResponse = new MockResponse();
+
+    const app = new ActionsSdkApp({
+      request: mockRequest,
+      response: mockResponse
+    });
+
+    const SHOW_LIST = 'show_list';
+
+    function showList (app) {
+      app.askWithList('Here is a list', app.buildList(), {
+        optionType: 'list'
+      });
+    }
+
+    let actionMap = new Map();
+    actionMap.set(SHOW_LIST, showList);
+
+    app.handleRequest(actionMap);
+
+    expect(mockResponse.statusCode).to.equal(400);
+  });
+});
+
+/**
+ * Describes the behavior for ActionsSdkApp askWithCarousel method.
+ */
+describe('ActionsSdkApp#askWithCarousel', function () {
+  // Success case test, when the API returns a valid 200 response with the response object
+  it('Should return the valid carousel JSON in the response object for the success case.', function () {
+    let headers = {
+      'Content-Type': 'application/json',
+      'Google-Actions-API-Version': '2'
+    };
+    let body = {
+      'user': {
+
+      },
+      'conversation': {
+        'conversationId': '1480532856956',
+        'type': 1
+      },
+      'inputs': [
+        {
+          'intent': 'show_carousel',
+          'rawInputs': [
+            {
+              'inputType': 2,
+              'query': 'show me a carousel'
+            }
+          ],
+          'arguments': [
+
+          ]
+        }
+      ]
+    };
+    const mockRequest = new MockRequest(headers, body);
+    const mockResponse = new MockResponse();
+
+    const app = new ActionsSdkApp({
+      request: mockRequest,
+      response: mockResponse
+    });
+
+    const SHOW_CAROUSEL = 'show_carousel';
+
+    function showCarousel (app) {
+      app.askWithCarousel('Here is a carousel', app.buildCarousel()
+        .addItems([
+          app.buildOptionItem('key_1', 'key one'),
+          app.buildOptionItem('key_2', 'key two')
+        ]), {
+          optionType: 'carousel'
+        });
+    }
+
+    let actionMap = new Map();
+    actionMap.set(SHOW_CAROUSEL, showCarousel);
+
+    app.handleRequest(actionMap);
+
+    // Validating the response object
+    let expectedResponse = {
+      'conversationToken': '{"optionType":"carousel"}',
+      'expectUserResponse': true,
+      'expectedInputs': [
+        {
+          'inputPrompt': {
+            'initialPrompts': [
+              {
+                'textToSpeech': 'Here is a carousel'
+              }
+            ],
+            'noInputPrompts': [
+            ]
+          },
+          'possibleIntents': [
+            {
+              'intent': 'actions.intent.OPTION',
+              'inputValueData': {
+                '@type': 'type.googleapis.com/google.actions.v2.OptionValueSpec',
+                'carouselSelect': {
+                  'items': [
+                    {
+                      'optionInfo': {
+                        'key': 'key_1',
+                        'synonyms': [
+                          'key one'
+                        ]
+                      },
+                      'title': ''
+                    },
+                    {
+                      'optionInfo': {
+                        'key': 'key_2',
+                        'synonyms': [
+                          'key two'
+                        ]
+                      },
+                      'title': ''
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      ]
+    };
+
+    expect(JSON.stringify(mockResponse.body)).to.equal(JSON.stringify(expectedResponse));
+  });
+
+  it('Should return the an error JSON in the response when carousel has <2 items.', function () {
+    let headers = {
+      'Content-Type': 'application/json',
+      'Google-Actions-API-Version': '2'
+    };
+    let body = {
+      'user': {
+
+      },
+      'conversation': {
+        'conversationId': '1480532856956',
+        'type': 1
+      },
+      'inputs': [
+        {
+          'intent': 'show_list',
+          'rawInputs': [
+            {
+              'inputType': 2,
+              'query': 'show me a list'
+            }
+          ],
+          'arguments': [
+
+          ]
+        }
+      ]
+    };
+    const mockRequest = new MockRequest(headers, body);
+    const mockResponse = new MockResponse();
+
+    const app = new ActionsSdkApp({
+      request: mockRequest,
+      response: mockResponse
+    });
+
+    const SHOW_LIST = 'show_list';
+
+    function showList (app) {
+      app.askWithList('Here is a list', app.buildList(), {
+        optionType: 'list'
+      });
+    }
+
+    let actionMap = new Map();
+    actionMap.set(SHOW_LIST, showList);
+
+    app.handleRequest(actionMap);
+
+    expect(mockResponse.statusCode).to.equal(400);
+  });
+});
+
+/**
+ * Describes the behavior for ActionsSdkApp askForPermissions method in v1.
+ */
+describe('ActionsSdkApp#askForPermissions', function () {
   // Success case test, when the API returns a valid 200 response with the response object
   it('Should return the valid JSON in the response object for the success case.', function () {
     let headers = {
@@ -2738,17 +5014,17 @@ describe('ActionsSdkAssistant#askForPermissions', function () {
     const mockRequest = new MockRequest(headers, body);
     const mockResponse = new MockResponse();
 
-    const assistant = new ActionsSdkAssistant({
+    const app = new ActionsSdkApp({
       request: mockRequest,
       response: mockResponse
     });
 
     const GET_RIDE = 'GET_RIDE';
 
-    function getRide (assistant) {
-      assistant.askForPermissions('To get you a ride', [
-        assistant.SupportedPermissions.NAME,
-        assistant.SupportedPermissions.DEVICE_PRECISE_LOCATION
+    function getRide (app) {
+      app.askForPermissions('To get you a ride', [
+        app.SupportedPermissions.NAME,
+        app.SupportedPermissions.DEVICE_PRECISE_LOCATION
       ], {
         carType: 'big'
       });
@@ -2757,7 +5033,7 @@ describe('ActionsSdkAssistant#askForPermissions', function () {
     let actionMap = new Map();
     actionMap.set(GET_RIDE, getRide);
 
-    assistant.handleRequest(actionMap);
+    app.handleRequest(actionMap);
 
     // Validating the response object
     let expectedResponse = {
@@ -2794,9 +5070,9 @@ describe('ActionsSdkAssistant#askForPermissions', function () {
 });
 
 /**
- * Describes the behavior for ActionsSdkAssistant askForPermissions method in v2.
+ * Describes the behavior for ActionsSdkApp askForPermissions method in v2.
  */
-describe('ActionsSdkAssistant#askForPermissions', function () {
+describe('ActionsSdkApp#askForPermissions', function () {
   // Success case test, when the API returns a valid 200 response with the response object
   it('Should return the valid JSON in the response object for the success case.', function () {
     let headers = {
@@ -2829,17 +5105,17 @@ describe('ActionsSdkAssistant#askForPermissions', function () {
     const mockRequest = new MockRequest(headers, body);
     const mockResponse = new MockResponse();
 
-    const assistant = new ActionsSdkAssistant({
+    const app = new ActionsSdkApp({
       request: mockRequest,
       response: mockResponse
     });
 
     const GET_RIDE = 'GET_RIDE';
 
-    function getRide (assistant) {
-      assistant.askForPermissions('To get you a ride', [
-        assistant.SupportedPermissions.NAME,
-        assistant.SupportedPermissions.DEVICE_PRECISE_LOCATION
+    function getRide (app) {
+      app.askForPermissions('To get you a ride', [
+        app.SupportedPermissions.NAME,
+        app.SupportedPermissions.DEVICE_PRECISE_LOCATION
       ], {
         carType: 'big'
       });
@@ -2848,7 +5124,7 @@ describe('ActionsSdkAssistant#askForPermissions', function () {
     let actionMap = new Map();
     actionMap.set(GET_RIDE, getRide);
 
-    assistant.handleRequest(actionMap);
+    app.handleRequest(actionMap);
 
     // Validating the response object
     let expectedResponse = {
@@ -2884,9 +5160,9 @@ describe('ActionsSdkAssistant#askForPermissions', function () {
 });
 
 /**
- * Describes the behavior for ActionsSdkAssistant getUser method.
+ * Describes the behavior for ActionsSdkApp getUser method.
  */
-describe('ActionsSdkAssistant#getUser', function () {
+describe('ActionsSdkApp#getUser', function () {
   // Success case test, when the API returns a valid 200 response with the response object
   it('Should validate assistant request info.', function () {
     let headers = {
@@ -2921,21 +5197,21 @@ describe('ActionsSdkAssistant#getUser', function () {
     const mockRequest = new MockRequest(headers, body);
     const mockResponse = new MockResponse();
 
-    const assistant = new ActionsSdkAssistant({
+    const app = new ActionsSdkApp({
       request: mockRequest,
       response: mockResponse
     });
 
     // Test new and old API
-    expect(assistant.getUser().user_id).to.equal('11112226094657824893');
-    expect(assistant.getUser().userId).to.equal('11112226094657824893');
+    expect(app.getUser().user_id).to.equal('11112226094657824893');
+    expect(app.getUser().userId).to.equal('11112226094657824893');
   });
 });
 
 /**
- * Describes the behavior for ActionsSdkAssistant getUserName method.
+ * Describes the behavior for ActionsSdkApp getUserName method.
  */
-describe('ActionsSdkAssistant#getUserName', function () {
+describe('ActionsSdkApp#getUserName', function () {
   // Success case test, when the API returns a valid 200 response with the response object
   it('Should validate assistant request user.', function () {
     let headers = {
@@ -2976,14 +5252,14 @@ describe('ActionsSdkAssistant#getUserName', function () {
     let mockRequest = new MockRequest(headers, body);
     let mockResponse = new MockResponse();
 
-    let assistant = new ActionsSdkAssistant({
+    let app = new ActionsSdkApp({
       request: mockRequest,
       response: mockResponse
     });
 
-    expect(assistant.getUserName().displayName).to.equal('John Smith');
-    expect(assistant.getUserName().givenName).to.equal('John');
-    expect(assistant.getUserName().familyName).to.equal('Smith');
+    expect(app.getUserName().displayName).to.equal('John Smith');
+    expect(app.getUserName().givenName).to.equal('John');
+    expect(app.getUserName().familyName).to.equal('Smith');
 
     // Test the false case
 
@@ -2992,19 +5268,19 @@ describe('ActionsSdkAssistant#getUserName', function () {
     mockRequest = new MockRequest(headers, body);
     mockResponse = new MockResponse();
 
-    assistant = new ActionsSdkAssistant({
+    app = new ActionsSdkApp({
       request: mockRequest,
       response: mockResponse
     });
 
-    expect(assistant.getUserName()).to.equal(null);
+    expect(app.getUserName()).to.equal(null);
   });
 });
 
 /**
- * Describes the behavior for ActionsSdkAssistant getDeviceLocation method.
+ * Describes the behavior for ActionsSdkApp getDeviceLocation method.
  */
-describe('ActionsSdkAssistant#getDeviceLocation', function () {
+describe('ActionsSdkApp#getDeviceLocation', function () {
   // Success case test, when the API returns a valid 200 response with the response object
   it('Should validate assistant request user.', function () {
     let headers = {
@@ -3051,19 +5327,19 @@ describe('ActionsSdkAssistant#getDeviceLocation', function () {
     let mockRequest = new MockRequest(headers, body);
     let mockResponse = new MockResponse();
 
-    let assistant = new ActionsSdkAssistant({
+    let app = new ActionsSdkApp({
       request: mockRequest,
       response: mockResponse
     });
 
-    expect(assistant.getDeviceLocation().coordinates).to.deep.equal({
+    expect(app.getDeviceLocation().coordinates).to.deep.equal({
       latitude: 37.3861,
       longitude: 122.0839
     });
-    expect(assistant.getDeviceLocation().address)
+    expect(app.getDeviceLocation().address)
       .to.equal('123 Main St, Anytown, CA 12345, United States');
-    expect(assistant.getDeviceLocation().zipCode).to.equal('12345');
-    expect(assistant.getDeviceLocation().city).to.equal('Anytown');
+    expect(app.getDeviceLocation().zipCode).to.equal('12345');
+    expect(app.getDeviceLocation().city).to.equal('Anytown');
 
     // Test the false case
 
@@ -3072,19 +5348,19 @@ describe('ActionsSdkAssistant#getDeviceLocation', function () {
     mockRequest = new MockRequest(headers, body);
     mockResponse = new MockResponse();
 
-    assistant = new ActionsSdkAssistant({
+    app = new ActionsSdkApp({
       request: mockRequest,
       response: mockResponse
     });
 
-    expect(assistant.getDeviceLocation()).to.equal(null);
+    expect(app.getDeviceLocation()).to.equal(null);
   });
 });
 
 /**
- * Describes the behavior for ActionsSdkAssistant isPermissionGranted method.
+ * Describes the behavior for ActionsSdkApp isPermissionGranted method.
  */
-describe('ActionsSdkAssistant#isPermissionGranted', function () {
+describe('ActionsSdkApp#isPermissionGranted', function () {
   // Success case test, when the API returns a valid 200 response with the response object
   it('Should validate assistant request user.', function () {
     let headers = {
@@ -3120,12 +5396,12 @@ describe('ActionsSdkAssistant#isPermissionGranted', function () {
     let mockRequest = new MockRequest(headers, body);
     let mockResponse = new MockResponse();
 
-    let assistant = new ActionsSdkAssistant({
+    let app = new ActionsSdkApp({
       request: mockRequest,
       response: mockResponse
     });
 
-    expect(assistant.isPermissionGranted()).to.equal(true);
+    expect(app.isPermissionGranted()).to.equal(true);
 
     // Test the false case
 
@@ -3134,19 +5410,188 @@ describe('ActionsSdkAssistant#isPermissionGranted', function () {
     mockRequest = new MockRequest(headers, body);
     mockResponse = new MockResponse();
 
-    assistant = new ActionsSdkAssistant({
+    app = new ActionsSdkApp({
       request: mockRequest,
       response: mockResponse
     });
 
-    expect(assistant.isPermissionGranted()).to.equal(false);
+    expect(app.isPermissionGranted()).to.equal(false);
   });
 });
 
 /**
- * Describes the behavior for ActionsSdkAssistant getApiVersion method.
+ * Describes the behavior for ActionsSdkApp hasSurfaceCapability method.
  */
-describe('ActionsSdkAssistant#getApiVersion', function () {
+describe('ActionsSdkApp#hasSurfaceCapability', function () {
+  // Success case test, when the API returns a valid 200 response with the response object
+  it('Should return true for a valid capability from incoming JSON for the success case.', function () {
+    let headers = {
+      'Content-Type': 'application/json',
+      'Google-Assistant-API-Version': 'v1'
+    };
+    let body = {
+      'user': {
+        'user_id': '11112226094657824893'
+      },
+      'conversation': {
+        'conversation_id': '1480476553943',
+        'type': 1
+      },
+      'inputs': [
+        {
+          'intent': 'assistant.intent.action.MAIN',
+          'raw_inputs': [
+            {
+              'input_type': 3,
+              'query': 'talk to action snippets'
+            }
+          ]
+        }
+      ],
+      'surface': {
+        'capabilities': [
+          {
+            'name': 'actions.capability.AUDIO_OUTPUT'
+          },
+          {
+            'name': 'actions.capability.SCREEN_OUTPUT'
+          }
+        ]
+      }
+    };
+
+    let mockRequest = new MockRequest(headers, body);
+    const mockResponse = new MockResponse();
+
+    let app = new ActionsSdkApp({
+      request: mockRequest,
+      response: mockResponse
+    });
+
+    let hasScreenOutput =
+      app.hasSurfaceCapability(app.SurfaceCapabilities.SCREEN_OUTPUT);
+    let hasMagicPowers =
+      app.hasSurfaceCapability('MAGIC_POWERS');
+    expect(hasScreenOutput).to.be.true;
+    expect(hasMagicPowers).to.be.false;
+  });
+});
+
+/**
+ * Describes the behavior for ActionsSdkApp getSurfaceCapabilities method.
+ */
+describe('ActionsSdkApp#getSurfaceCapabilities', function () {
+  // Success case test, when the API returns a valid 200 response with the response object
+  it('Should return valid list of capabilities from incoming JSON for the success case.', function () {
+    let headers = {
+      'Content-Type': 'application/json',
+      'Google-Assistant-API-Version': 'v1'
+    };
+    let body = {
+      'user': {
+        'user_id': '11112226094657824893'
+      },
+      'conversation': {
+        'conversation_id': '1480476553943',
+        'type': 1
+      },
+      'inputs': [
+        {
+          'intent': 'assistant.intent.action.MAIN',
+          'raw_inputs': [
+            {
+              'input_type': 3,
+              'query': 'talk to action snippets'
+            }
+          ]
+        }
+      ],
+      'surface': {
+        'capabilities': [
+          {
+            'name': 'actions.capability.AUDIO_OUTPUT'
+          },
+          {
+            'name': 'actions.capability.SCREEN_OUTPUT'
+          }
+        ]
+      }
+    };
+
+    let mockRequest = new MockRequest(headers, body);
+    const mockResponse = new MockResponse();
+
+    let app = new ActionsSdkApp({
+      request: mockRequest,
+      response: mockResponse
+    });
+
+    let capabilities = app.getSurfaceCapabilities();
+    expect(capabilities).to.deep.equal([
+      app.SurfaceCapabilities.AUDIO_OUTPUT,
+      app.SurfaceCapabilities.SCREEN_OUTPUT
+    ]);
+  });
+});
+
+/**
+ * Describes the behavior for ActionsSdkApp getInputType method.
+ */
+describe('ActionsSdkApp#getInputType', function () {
+  // Success case test, when the API returns a valid 200 response with the response object
+  it('Should return valid input type from incoming JSON for the success case.', function () {
+    let headers = {
+      'Content-Type': 'application/json',
+      'Google-Assistant-API-Version': 'v1'
+    };
+    let body = {
+      'user': {
+        'user_id': '11112226094657824893'
+      },
+      'conversation': {
+        'conversation_id': '1480476553943',
+        'type': 1
+      },
+      'inputs': [
+        {
+          'intent': 'assistant.intent.action.MAIN',
+          'raw_inputs': [
+            {
+              'input_type': 3,
+              'query': 'talk to action snippets'
+            }
+          ]
+        }
+      ],
+      'surface': {
+        'capabilities': [
+          {
+            'name': 'actions.capability.AUDIO_OUTPUT'
+          },
+          {
+            'name': 'actions.capability.SCREEN_OUTPUT'
+          }
+        ]
+      }
+    };
+
+    let mockRequest = new MockRequest(headers, body);
+    const mockResponse = new MockResponse();
+
+    let app = new ActionsSdkApp({
+      request: mockRequest,
+      response: mockResponse
+    });
+
+    let inputType = app.getInputType();
+    expect(inputType).to.equal(app.InputTypes.KEYBOARD);
+  });
+});
+
+/**
+ * Describes the behavior for ActionsSdkApp getApiVersion method.
+ */
+describe('ActionsSdkApp#getApiVersion', function () {
   // Success case test, when the API returns a valid 200 response with the response object
   it('Should validate assistant request info.', function () {
     let headers = {
@@ -3181,19 +5626,19 @@ describe('ActionsSdkAssistant#getApiVersion', function () {
     const mockRequest = new MockRequest(headers, body);
     const mockResponse = new MockResponse();
 
-    const assistant = new ActionsSdkAssistant({
+    const app = new ActionsSdkApp({
       request: mockRequest,
       response: mockResponse
     });
 
-    expect(assistant.getApiVersion()).to.equal('v1');
+    expect(app.getApiVersion()).to.equal('v1');
   });
 });
 
 /**
- * Describes the behavior for ActionsSdkAssistant getDialogState method.
+ * Describes the behavior for ActionsSdkApp getDialogState method.
  */
-describe('ActionsSdkAssistant#getDialogState', function () {
+describe('ActionsSdkApp#getDialogState', function () {
   // Success case test, when the API returns a valid 200 response with the response object
   it('Should validate assistant dialog state info.', function () {
     let headers = {
@@ -3231,21 +5676,21 @@ describe('ActionsSdkAssistant#getDialogState', function () {
     const mockRequest = new MockRequest(headers, body);
     const mockResponse = new MockResponse();
 
-    const assistant = new ActionsSdkAssistant({
+    const app = new ActionsSdkApp({
       request: mockRequest,
       response: mockResponse
     });
 
     let dialogState = {'started': true};
 
-    expect(dialogState).to.deep.equal(assistant.getDialogState());
+    expect(dialogState).to.deep.equal(app.getDialogState());
   });
 });
 
 /**
- * Describes the behavior for ActionsSdkAssistant getActionVersionLabel method.
+ * Describes the behavior for ActionsSdkApp getActionVersionLabel method.
  */
-describe('ActionsSdkAssistant#getActionVersionLabel', function () {
+describe('ActionsSdkApp#getActionVersionLabel', function () {
   // Success case test, when the API returns a valid 200 response with the response object
   it('Should validate assistant action version label info.', function () {
     let headers = {
@@ -3284,19 +5729,19 @@ describe('ActionsSdkAssistant#getActionVersionLabel', function () {
     const mockRequest = new MockRequest(headers, body);
     const mockResponse = new MockResponse();
 
-    const assistant = new ActionsSdkAssistant({
+    const app = new ActionsSdkApp({
       request: mockRequest,
       response: mockResponse
     });
 
-    expect(assistant.getActionVersionLabel()).to.equal('1.0.0');
+    expect(app.getActionVersionLabel()).to.equal('1.0.0');
   });
 });
 
 /**
- * Describes the behavior for ActionsSdkAssistant getConversationId method.
+ * Describes the behavior for ActionsSdkApp getConversationId method.
  */
-describe('ActionsSdkAssistant#getConversationId', function () {
+describe('ActionsSdkApp#getConversationId', function () {
   // Success case test, when the API returns a valid 200 response with the response object
   it('Should validate assistant conversation ID.', function () {
     let headers = {
@@ -3335,19 +5780,19 @@ describe('ActionsSdkAssistant#getConversationId', function () {
     const mockRequest = new MockRequest(headers, body);
     const mockResponse = new MockResponse();
 
-    const assistant = new ActionsSdkAssistant({
+    const app = new ActionsSdkApp({
       request: mockRequest,
       response: mockResponse
     });
 
-    expect(assistant.getConversationId()).to.equal('1480540140642');
+    expect(app.getConversationId()).to.equal('1480540140642');
   });
 });
 
 /**
- * Describes the behavior for ActionsSdkAssistant getArgument method.
+ * Describes the behavior for ActionsSdkApp getArgument method.
  */
-describe('ActionsSdkAssistant#getArgument', function () {
+describe('ActionsSdkApp#getArgument', function () {
   // Success case test, when the API returns a valid 200 response with the response object
   it('Should validate assistant intent.', function () {
     let headers = {
@@ -3393,24 +5838,24 @@ describe('ActionsSdkAssistant#getArgument', function () {
     const mockRequest = new MockRequest(headers, body);
     const mockResponse = new MockResponse();
 
-    const assistant = new ActionsSdkAssistant({
+    const app = new ActionsSdkApp({
       request: mockRequest,
       response: mockResponse
     });
 
     const PROVIDE_NUMBER_INTENT = 'PROVIDE_NUMBER';
 
-    function provideNumberIntent (assistant) {
-      expect(assistant.getArgument('number')).to.equal('45');
-      assistant.tell('You said ' + assistant.getArgument('number'));
+    function provideNumberIntent (app) {
+      expect(app.getArgument('number')).to.equal('45');
+      app.tell('You said ' + app.getArgument('number'));
     }
 
     let actionMap = new Map();
     actionMap.set(PROVIDE_NUMBER_INTENT, provideNumberIntent);
 
-    assistant.handleRequest(actionMap);
+    app.handleRequest(actionMap);
 
-    expect(assistant.getArgument('other_value')).to.deep.equal({
+    expect(app.getArgument('other_value')).to.deep.equal({
       'name': 'other_value',
       'raw_text': '45',
       'other_value': {
@@ -3433,9 +5878,54 @@ describe('ActionsSdkAssistant#getArgument', function () {
 });
 
 /**
- * Describes the behavior for ActionsSdkAssistant tell with SSML method.
+ * Describes the behavior for ActionsSdkApp getSelectedOption method.
  */
-describe('ActionsSdkAssistant#tell', function () {
+describe('ActionsSdkApp#getSelectedOption', function () {
+  // Success case test, when the API returns a valid 200 response with the response object
+  it('Should get the selected option when given in APIAI context.', function () {
+    let headers = {
+      'Content-Type': 'application/json',
+      'Google-Assistant-API-Version': 'v1'
+    };
+    let body = {
+      'user': {
+        'user_id': '123'
+      },
+      'inputs': [
+        {
+          'intent': 'actions.intent.OPTION',
+          'raw_inputs': [
+            {
+              'input_type': 2,
+              'query': 'first item',
+              'annotation_sets': []
+            }
+          ],
+          'arguments': [
+            {
+              'name': 'OPTION',
+              'text_value': 'first_item'
+            }
+          ]
+        }
+      ]
+    };
+    const mockRequest = new MockRequest(headers, body);
+    const mockResponse = new MockResponse();
+
+    const app = new ActionsSdkApp({
+      request: mockRequest,
+      response: mockResponse
+    });
+
+    expect(app.getSelectedOption()).to.equal('first_item');
+  });
+});
+
+  /**
+ * Describes the behavior for ActionsSdkApp tell with SSML method.
+ */
+describe('ActionsSdkApp#tell', function () {
   // Success case test, when the API returns a valid 200 response with the response object
   it('Should validate assistant tell SSML.', function () {
     let headers = {
@@ -3474,25 +5964,25 @@ describe('ActionsSdkAssistant#tell', function () {
     const mockRequest = new MockRequest(headers, body);
     const mockResponse = new MockResponse();
 
-    const assistant = new ActionsSdkAssistant({
+    const app = new ActionsSdkApp({
       request: mockRequest,
       response: mockResponse
     });
 
-    function mainIntent (assistant) {
-      let inputPrompt = assistant.buildInputPrompt(false, 'Welcome to action snippets! Say anything.');
-      assistant.ask(inputPrompt);
+    function mainIntent (app) {
+      let inputPrompt = app.buildInputPrompt(false, 'Welcome to action snippets! Say anything.');
+      app.ask(inputPrompt);
     }
 
-    function rawInputIntent (assistant) {
-      assistant.tell('<speak>You said <break time="2"/>' + assistant.getRawInput() + '</speak>');
+    function rawInputIntent (app) {
+      app.tell('<speak>You said <break time="2"/>' + app.getRawInput() + '</speak>');
     }
 
     let actionMap = new Map();
-    actionMap.set(assistant.StandardIntents.MAIN, mainIntent);
-    actionMap.set(assistant.StandardIntents.TEXT, rawInputIntent);
+    actionMap.set(app.StandardIntents.MAIN, mainIntent);
+    actionMap.set(app.StandardIntents.TEXT, rawInputIntent);
 
-    assistant.handleRequest(actionMap);
+    app.handleRequest(actionMap);
 
     // Validating the response object
     let expectedResponse = {

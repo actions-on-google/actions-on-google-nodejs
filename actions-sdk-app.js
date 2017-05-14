@@ -1,5 +1,5 @@
 /**
- * Copyright 2016 Google Inc. All Rights Reserved.
+ * Copyright 2017 Google Inc. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,15 +24,16 @@
 const Debug = require('debug');
 const debug = Debug('actions-on-google:debug');
 const error = Debug('actions-on-google:error');
+const app = require('./assistant-app');
+const AssistantApp = app.AssistantApp;
+const State = app.State;
 const transformToSnakeCase = require('./utils/transform').transformToSnakeCase;
-const assistant = require('./assistant');
-const Assistant = assistant.Assistant;
-const State = assistant.State;
 
 // Constants
 const CONVERSATION_API_AGENT_VERSION_HEADER = 'Agent-Version-Label';
 const RESPONSE_CODE_OK = 200;
 const INPUTS_MAX = 3;
+const SELECTED_KEY = 'OPTION';
 
 // Configure logging for hosting platforms that only support console.log and console.error
 debug.log = console.log.bind(console);
@@ -43,12 +44,12 @@ error.log = console.error.bind(console);
 // ---------------------------------------------------------------------------
 
 /**
- * Constructor for ActionsSdkAssistant object. To be used in the Actions SDK
+ * Constructor for ActionsSdkApp object. To be used in the Actions SDK
  * HTTP endpoint logic.
  *
  * @example
- * const ActionsSdkAssistant = require('actions-on-google').ActionsSdkAssistant;
- * const assistant = new ActionsSdkAssistant({request: request, response: response,
+ * const ActionsSdkApp = require('actions-on-google').ActionsSdkApp;
+ * const app = new ActionsSdkApp({request: request, response: response,
  *   sessionStarted:sessionStarted});
  *
  * @param {Object} options JSON configuration.
@@ -57,9 +58,9 @@ error.log = console.error.bind(console);
  * @param {Function=} options.sessionStarted Function callback when session starts.
  * @actionssdk
  */
-const ActionsSdkAssistant = class extends Assistant {
+const ActionsSdkApp = class extends AssistantApp {
   constructor (options) {
-    debug('ActionsSdkAssistant constructor');
+    debug('ActionsSdkApp constructor');
     super(options);
 
     if (this.body_ &&
@@ -77,8 +78,8 @@ const ActionsSdkAssistant = class extends Assistant {
    * Gets the request Conversation API version.
    *
    * @example
-   * const assistant = new ActionsSdkAssistant({request: request, response: response});
-   * const apiVersion = assistant.getApiVersion();
+   * const app = new ActionsSdkApp({request: request, response: response});
+   * const apiVersion = app.getApiVersion();
    *
    * @return {string} Version value or null if no value.
    * @actionssdk
@@ -92,8 +93,8 @@ const ActionsSdkAssistant = class extends Assistant {
    * Gets the user's raw input query.
    *
    * @example
-   * const assistant = new ActionsSdkAssistant({request: request, response: response});
-   * assistant.tell('You said ' + assistant.getRawInput());
+   * const app = new ActionsSdkApp({request: request, response: response});
+   * app.tell('You said ' + app.getRawInput());
    *
    * @return {string} User's raw query or null if no value.
    * @actionssdk
@@ -118,12 +119,12 @@ const ActionsSdkAssistant = class extends Assistant {
   }
 
   /**
-   * Gets previous JSON dialog state that the action sent to Assistant.
-   * Alternatively, use the assistant.data field to store JSON values between requests.
+   * Gets previous JSON dialog state that the app sent to Assistant.
+   * Alternatively, use the app.data field to store JSON values between requests.
    *
    * @example
-   * const assistant = new ActionsSdkAssistant({request: request, response: response});
-   * const dialogState = assistant.getDialogState();
+   * const app = new ActionsSdkApp({request: request, response: response});
+   * const dialogState = app.getDialogState();
    *
    * @return {Object} JSON object provided to the Assistant in the previous
    *     user turn or {} if no value.
@@ -141,11 +142,11 @@ const ActionsSdkAssistant = class extends Assistant {
    * Gets the {@link User} object.
    * The user object contains information about the user, including
    * a string identifier and personal information (requires requesting permissions,
-   * see {@link Assistant#askForPermissions|askForPermissions}).
+   * see {@link AssistantApp#askForPermissions|askForPermissions}).
    *
    * @example
-   * const assistant = new ActionsSdkAssistant({request: request, response: response});
-   * const userId = assistant.getUser().userId;
+   * const app = new ActionsSdkApp({request: request, response: response});
+   * const userId = app.getUser().userId;
    *
    * @return {User} Null if no value.
    * @actionssdk
@@ -174,17 +175,17 @@ const ActionsSdkAssistant = class extends Assistant {
 
   /**
    * If granted permission to device's location in previous intent, returns device's
-   * location (see {@link Assistant#askForPermissions|askForPermissoins}).
+   * location (see {@link AssistantApp#askForPermissions|askForPermissoins}).
    * If device info is unavailable, returns null.
    *
    * @example
-   * const assistant = new ActionsSdkAssistant({request: req, response: res});
-   * assistant.askForPermission("To get you a ride",
-   *   assistant.SupportedPermissions.DEVICE_PRECISE_LOCATION);
+   * const app = new ActionsSdkApp({request: req, response: res});
+   * app.askForPermission("To get you a ride",
+   *   app.SupportedPermissions.DEVICE_PRECISE_LOCATION);
    * // ...
    * // In response handler for subsequent intent:
-   * if (assistant.isPermissionGranted()) {
-   *   sendCarTo(assistant.getDeviceLocation().coordinates);
+   * if (app.isPermissionGranted()) {
+   *   sendCarTo(app.getDeviceLocation().coordinates);
    * }
    *
    * @return {DeviceLocation} Null if location permission is not granted.
@@ -207,17 +208,17 @@ const ActionsSdkAssistant = class extends Assistant {
   /**
    * Returns true if the request follows a previous request asking for
    * permission from the user and the user granted the permission(s). Otherwise,
-   * false. Use with {@link Assistant#askForPermissions|askForPermissions}.
+   * false. Use with {@link AssistantApp#askForPermissions|askForPermissions}.
    *
    * @example
-   * const assistant = new ActionsSdkAssistant({request: request, response: response});
-   * assistant.askForPermissions("To get you a ride", [
-   *   assistant.SupportedPermissions.NAME,
-   *   assistant.SupportedPermissions.DEVICE_PRECISE_LOCATION
+   * const app = new ActionsSdkApp({request: request, response: response});
+   * app.askForPermissions("To get you a ride", [
+   *   app.SupportedPermissions.NAME,
+   *   app.SupportedPermissions.DEVICE_PRECISE_LOCATION
    * ]);
    * // ...
    * // In response handler for subsequent intent:
-   * if (assistant.isPermissionGranted()) {
+   * if (app.isPermissionGranted()) {
    *  // Use the requested permission(s) to get the user a ride
    * }
    *
@@ -231,11 +232,11 @@ const ActionsSdkAssistant = class extends Assistant {
 
   /**
    * Gets the "versionLabel" specified inside the Action Package.
-   * Used by actions to do version control.
+   * Used by app to do version control.
    *
    * @example
-   * const assistant = new ActionsSdkAssistant({request: request, response: response});
-   * const actionVersionLabel = assistant.getActionVersionLabel();
+   * const app = new ActionsSdkApp({request: request, response: response});
+   * const actionVersionLabel = app.getActionVersionLabel();
    *
    * @return {string} The specified version label or null if unspecified.
    * @actionssdk
@@ -255,8 +256,8 @@ const ActionsSdkAssistant = class extends Assistant {
    * and stays the same until the end of the conversation.
    *
    * @example
-   * const assistant = new ActionsSdkAssistant({request: request, response: response});
-   * const conversationId = assistant.getConversationId();
+   * const app = new ActionsSdkApp({request: request, response: response});
+   * const conversationId = app.getConversationId();
    *
    * @return {string} Conversation ID or null if no value.
    * @actionssdk
@@ -272,27 +273,27 @@ const ActionsSdkAssistant = class extends Assistant {
 
   /**
    * Get the current intent. Alternatively, using a handler Map with
-   * {@link Assistant#handleRequest|handleRequest}, the client library will
+   * {@link AssistantApp#handleRequest|handleRequest}, the client library will
    * automatically handle the incoming intents.
    *
    * @example
-   * const assistant = new ActionsSdkAssistant({request: request, response: response});
+   * const app = new ActionsSdkApp({request: request, response: response});
    *
-   * function responseHandler (assistant) {
-   *   const intent = assistant.getIntent();
+   * function responseHandler (app) {
+   *   const intent = app.getIntent();
    *   switch (intent) {
-   *     case assistant.StandardIntents.MAIN:
-   *       const inputPrompt = assistant.buildInputPrompt(false, 'Welcome to action snippets! Say anything.');
-   *       assistant.ask(inputPrompt);
+   *     case app.StandardIntents.MAIN:
+   *       const inputPrompt = app.buildInputPrompt(false, 'Welcome to action snippets! Say anything.');
+   *       app.ask(inputPrompt);
    *       break;
    *
-   *     case assistant.StandardIntents.TEXT:
-   *       assistant.tell('You said ' + assistant.getRawInput());
+   *     case app.StandardIntents.TEXT:
+   *       app.tell('You said ' + app.getRawInput());
    *       break;
    *   }
    * }
    *
-   * assistant.handleRequest(responseHandler);
+   * app.handleRequest(responseHandler);
    *
    * @return {string} Intent id or null if no value.
    * @actionssdk
@@ -305,6 +306,53 @@ const ActionsSdkAssistant = class extends Assistant {
       return null;
     }
     return input.intent;
+  }
+
+  /**
+   * Gets surface capabilities of user device.
+   *
+   * @return {Array<string>} Supported surface capabilities, as defined in
+   *     ActionsSdkApp.SurfaceCapabilities.
+   * @actionssdk
+   */
+  getSurfaceCapabilities () {
+    debug('getSurfaceCapabilities');
+    if (this.body_.surface &&
+      this.body_.surface.capabilities) {
+      const capabilities = [];
+      for (let capability of this.body_.surface.capabilities) {
+        capabilities.push(capability.name);
+      }
+      return capabilities;
+    } else {
+      error('No surface capabilities in incoming request');
+      return null;
+    }
+  }
+
+  /**
+   * Gets type of input used for this request.
+   *
+   * @return {number} One of ActionsSdkApp.InputTypes.
+   *     Null if no input type given.
+   * @actionssdk
+   */
+  getInputType () {
+    debug('getInputType');
+    if (this.body_.inputs) {
+      for (let input of this.body_.inputs) {
+        if (input.rawInputs) {
+          for (let rawInput of input.rawInputs) {
+            if (rawInput.inputType) {
+              return rawInput.inputType;
+            }
+          }
+        }
+      }
+    } else {
+      error('No input type in incoming request');
+      return null;
+    }
   }
 
   /**
@@ -341,63 +389,237 @@ const ActionsSdkAssistant = class extends Assistant {
   }
 
   /**
-   * Asks Assistant to collect user's input; all user's queries need to be sent to
-   * the action.
+   * Returns the option key user chose from options response.
    *
    * @example
-   * const assistant = new ActionsSdkAssistant({request: request, response: response});
+   * const app = new App({request: req, response: res});
    *
-   * function mainIntent (assistant) {
-   *   const inputPrompt = assistant.buildInputPrompt(true, '<speak>Hi! <break time="1"/> ' +
+   * function pickOption (app) {
+   *   if (app.hasSurfaceCapability(app.SurfaceCapabilities.SCREEN_OUTPUT)) {
+   *     app.askWithCarousel('Which of these looks good?',
+   *       app.buildCarousel().addItems(
+   *         app.buildOptionItem('another_choice', ['Another choice']).
+   *         setTitle('Another choice').setDescription('Choose me!')));
+   *   } else {
+   *     app.ask('What would you like?');
+   *   }
+   * }
+   *
+   * function optionPicked (app) {
+   *   app.ask('You picked ' + app.getSelectedOption());
+   * }
+   *
+   * const actionMap = new Map();
+   * actionMap.set(app.StandardIntents.TEXT, pickOption);
+   * actionMap.set(app.StandardIntents.OPTION, optionPicked);
+   *
+   * app.handleRequest(actionMap);
+   *
+   * @return {string} Option key of selected item. Null if no option selected or
+   *     if current intent is not OPTION intent.
+   * @actionssdk
+   */
+  getSelectedOption () {
+    debug('getSelectedOption');
+    if (this.getArgument(SELECTED_KEY)) {
+      return this.getArgument(SELECTED_KEY);
+    }
+    debug('Failed to get selected option');
+    return null;
+  }
+
+  /**
+   * Asks to collect user's input; all user's queries need to be sent to
+   * the app.
+   *
+   * @example
+   * const app = new ActionsSdkApp({request: request, response: response});
+   *
+   * function mainIntent (app) {
+   *   const inputPrompt = app.buildInputPrompt(true, '<speak>Hi! <break time="1"/> ' +
    *         'I can read out an ordinal like ' +
    *         '<say-as interpret-as="ordinal">123</say-as>. Say a number.</speak>',
    *         ['I didn\'t hear a number', 'If you\'re still there, what\'s the number?', 'What is the number?']);
-   *   assistant.ask(inputPrompt);
+   *   app.ask(inputPrompt);
    * }
    *
-   * function rawInput (assistant) {
-   *   if (assistant.getRawInput() === 'bye') {
-   *     assistant.tell('Goodbye!');
+   * function rawInput (app) {
+   *   if (app.getRawInput() === 'bye') {
+   *     app.tell('Goodbye!');
    *   } else {
-   *     const inputPrompt = assistant.buildInputPrompt(true, '<speak>You said, <say-as interpret-as="ordinal">' +
-   *       assistant.getRawInput() + '</say-as></speak>',
+   *     const inputPrompt = app.buildInputPrompt(true, '<speak>You said, <say-as interpret-as="ordinal">' +
+   *       app.getRawInput() + '</say-as></speak>',
    *         ['I didn\'t hear a number', 'If you\'re still there, what\'s the number?', 'What is the number?']);
-   *     assistant.ask(inputPrompt);
+   *     app.ask(inputPrompt);
    *   }
    * }
    *
    * const actionMap = new Map();
-   * actionMap.set(assistant.StandardIntents.MAIN, mainIntent);
-   * actionMap.set(assistant.StandardIntents.TEXT, rawInput);
+   * actionMap.set(app.StandardIntents.MAIN, mainIntent);
+   * actionMap.set(app.StandardIntents.TEXT, rawInput);
    *
-   * assistant.handleRequest(actionMap);
+   * app.handleRequest(actionMap);
    *
-   * @param {Object} inputPrompt Holding initial and no-input prompts.
-   * @param {Object=} dialogState JSON object the action uses to hold dialog state that
-   *     will be circulated back by Assistant.
+   * @param {Object|SimpleResponse|RichResponse} inputPrompt Holding initial and
+   *     no-input prompts.
+   * @param {Object=} dialogState JSON object the app uses to hold dialog state that
+   *     will be circulated back by App.
    * @return The response that is sent to Assistant to ask user to provide input.
    * @actionssdk
    */
   ask (inputPrompt, dialogState) {
     debug('ask: inputPrompt=%s, dialogState=%s',
        JSON.stringify(inputPrompt), JSON.stringify(dialogState));
-    if (!inputPrompt) {
-      this.handleError_('Invalid input prompt');
-      return null;
-    }
-    if (typeof inputPrompt === 'string') {
-      inputPrompt = this.buildInputPrompt(this.isSsml_(inputPrompt), inputPrompt);
-    }
-    if (!dialogState) {
-      dialogState = {
-        'state': (this.state instanceof State ? this.state.getName() : this.state),
-        'data': this.data
-      };
-    } else if (Array.isArray(dialogState)) {
-      this.handleError_('Invalid dialog state');
-      return null;
-    }
     const expectedIntent = this.buildExpectedIntent_(this.StandardIntents.TEXT, []);
+    if (!expectedIntent) {
+      error('Error in building expected intent');
+      return null;
+    }
+    return this.buildAskHelper_(inputPrompt, [expectedIntent], dialogState);
+  }
+
+  /**
+   * Asks to collect user's input with a list.
+   *
+   * @example
+   * const app = new ActionsSdkApp({request, response});
+   *
+   * function welcomeIntent (app) {
+   *   app.askWithlist('Which of these looks good?',
+   *     app.buildList('List title')
+   *      .addItems([
+   *        app.buildOptionItem(SELECTION_KEY_ONE,
+   *          ['synonym of KEY_ONE 1', 'synonym of KEY_ONE 2'])
+   *          .setTitle('Number one'),
+   *        app.buildOptionItem(SELECTION_KEY_TWO,
+   *          ['synonym of KEY_TWO 1', 'synonym of KEY_TWO 2'])
+   *          .setTitle('Number two'),
+   *      ]));
+   * }
+   *
+   * function optionIntent (app) {
+   *   if (app.getSelectedOption() === SELECTION_KEY_ONE) {
+   *     app.tell('Number one is a great choice!');
+   *   } else {
+   *     app.tell('Number two is a great choice!');
+   *   }
+   * }
+   *
+   * const actionMap = new Map();
+   * actionMap.set(app.StandardIntents.TEXT, welcomeIntent);
+   * actionMap.set(app.StandardIntents.OPTION, optionIntent);
+   * app.handleRequest(actionMap);
+   *
+   * @param {Object|SimpleResponse|RichResponse} inputPrompt Holding initial and
+   *     no-input prompts. Cannot contain basic card.
+   * @param {List} list List built with {@link AssistantApp#buildList|buildList}.
+   * @param {Object=} dialogState JSON object the app uses to hold dialog state that
+   *     will be circulated back by Assistant.
+   * @return The response that is sent to Assistant to ask user to provide input.
+   * @actionssdk
+   */
+  askWithList (inputPrompt, list, dialogState) {
+    debug('askWithList: inputPrompt=%s, list=%s, dialogState=%s',
+      JSON.stringify(inputPrompt), JSON.stringify(list), JSON.stringify(dialogState));
+    if (!list || typeof list !== 'object') {
+      this.handleError_('Invalid list');
+      return null;
+    }
+    if (list.items.length < 2) {
+      this.handleError_('List requires more than 2 items');
+      return null;
+    }
+    const expectedIntent = this.buildExpectedIntent_(this.StandardIntents.OPTION, []);
+    if (!expectedIntent) {
+      error('Error in building expected intent');
+      return null;
+    }
+    if (this.isNotApiVersionOne_()) {
+      expectedIntent.inputValueData = Object.assign({
+        [this.ANY_TYPE_PROPERTY_]: this.InputValueDataTypes_.OPTION
+      }, {
+        listSelect: list
+      });
+    } else {
+      expectedIntent.inputValueSpec = {
+        optionValueSpec: {
+          listSelect: list
+        }
+      };
+    }
+    return this.buildAskHelper_(inputPrompt, [expectedIntent], dialogState);
+  }
+
+  /**
+   * Asks to collect user's input with a carousel.
+   *
+   * @example
+   * const app = new ActionsSdkApp({request, response});
+   *
+   * function welcomeIntent (app) {
+   *   app.askWithCarousel('Which of these looks good?',
+   *     app.buildCarousel()
+   *      .addItems([
+   *        app.buildOptionItem(SELECTION_KEY_ONE,
+   *          ['synonym of KEY_ONE 1', 'synonym of KEY_ONE 2'])
+   *          .setTitle('Number one'),
+   *        app.buildOptionItem(SELECTION_KEY_TWO,
+   *          ['synonym of KEY_TWO 1', 'synonym of KEY_TWO 2'])
+   *          .setTitle('Number two'),
+   *      ]));
+   * }
+   *
+   * function optionIntent (app) {
+   *   if (app.getSelectedOption() === SELECTION_KEY_ONE) {
+   *     app.tell('Number one is a great choice!');
+   *   } else {
+   *     app.tell('Number two is a great choice!');
+   *   }
+   * }
+   *
+   * const actionMap = new Map();
+   * actionMap.set(app.StandardIntents.TEXT, welcomeIntent);
+   * actionMap.set(app.StandardIntents.OPTION, optionIntent);
+   * app.handleRequest(actionMap);
+   *
+   * @param {Object|SimpleResponse|RichResponse} inputPrompt Holding initial and
+   *     no-input prompts. Cannot contain basic card.
+   * @param {Carousel} carousel Carousel built with
+   *      {@link AssistantApp#buildCarousel|buildCarousel}.
+   * @param {Object=} dialogState JSON object the app uses to hold dialog state that
+   *     will be circulated back by Assistant.
+   * @return The response that is sent to Assistant to ask user to provide input.
+   * @actionssdk
+   */
+  askWithCarousel (inputPrompt, carousel, dialogState) {
+    debug('askWithCarousel: inputPrompt=%s, carousel=%s, dialogState=%s',
+      JSON.stringify(inputPrompt), JSON.stringify(carousel), JSON.stringify(dialogState));
+    if (!carousel || typeof carousel !== 'object') {
+      this.handleError_('Invalid carousel');
+      return null;
+    }
+    if (carousel.items.length < 2) {
+      this.handleError_('Carousel requires more than 2 items');
+      return null;
+    }
+    const expectedIntent = this.buildExpectedIntent_(this.StandardIntents.OPTION, []);
+    if (!expectedIntent) {
+      error('Error in building expected intent');
+      return null;
+    }
+    if (this.isNotApiVersionOne_()) {
+      expectedIntent.inputValueData = Object.assign({
+        [this.ANY_TYPE_PROPERTY_]: this.InputValueDataTypes_.OPTION
+      }, {
+        carouselSelect: carousel
+      });
+    } else {
+      expectedIntent.inputValueSpec = {
+        optionValueSpec: {
+          carouselSelect: carousel
+        }
+      };
+    }
     return this.buildAskHelper_(inputPrompt, [expectedIntent], dialogState);
   }
 
@@ -405,34 +627,35 @@ const ActionsSdkAssistant = class extends Assistant {
    * Tells Assistant to render the speech response and close the mic.
    *
    * @example
-   * const assistant = new ActionsSdkAssistant({request: request, response: response});
+   * const app = new ActionsSdkApp({request: request, response: response});
    *
-   * function mainIntent (assistant) {
-   *   const inputPrompt = assistant.buildInputPrompt(true, '<speak>Hi! <break time="1"/> ' +
+   * function mainIntent (app) {
+   *   const inputPrompt = app.buildInputPrompt(true, '<speak>Hi! <break time="1"/> ' +
    *         'I can read out an ordinal like ' +
    *         '<say-as interpret-as="ordinal">123</say-as>. Say a number.</speak>',
    *         ['I didn\'t hear a number', 'If you\'re still there, what\'s the number?', 'What is the number?']);
-   *   assistant.ask(inputPrompt);
+   *   app.ask(inputPrompt);
    * }
    *
-   * function rawInput (assistant) {
-   *   if (assistant.getRawInput() === 'bye') {
-   *     assistant.tell('Goodbye!');
+   * function rawInput (app) {
+   *   if (app.getRawInput() === 'bye') {
+   *     app.tell('Goodbye!');
    *   } else {
-   *     const inputPrompt = assistant.buildInputPrompt(true, '<speak>You said, <say-as interpret-as="ordinal">' +
-   *       assistant.getRawInput() + '</say-as></speak>',
+   *     const inputPrompt = app.buildInputPrompt(true, '<speak>You said, <say-as interpret-as="ordinal">' +
+   *       app.getRawInput() + '</say-as></speak>',
    *         ['I didn\'t hear a number', 'If you\'re still there, what\'s the number?', 'What is the number?']);
-   *     assistant.ask(inputPrompt);
+   *     app.ask(inputPrompt);
    *   }
    * }
    *
    * const actionMap = new Map();
-   * actionMap.set(assistant.StandardIntents.MAIN, mainIntent);
-   * actionMap.set(assistant.StandardIntents.TEXT, rawInput);
+   * actionMap.set(app.StandardIntents.MAIN, mainIntent);
+   * actionMap.set(app.StandardIntents.TEXT, rawInput);
    *
-   * assistant.handleRequest(actionMap);
+   * app.handleRequest(actionMap);
    *
-   * @param {string} textToSpeech Final spoken response. Spoken response can be SSML.
+   * @param {string|SimpleResponse|RichResponse} textToSpeech Final response.
+   *     Spoken response can be SSML.
    * @return The HTTP response that is sent back to Assistant.
    * @actionssdk
    */
@@ -443,14 +666,27 @@ const ActionsSdkAssistant = class extends Assistant {
       return null;
     }
     const finalResponse = {};
-    if (this.isSsml_(textToSpeech)) {
-      finalResponse.speechResponse = {
-        ssml: textToSpeech
-      };
+    if (typeof textToSpeech === 'string') {
+      if (this.isSsml_(textToSpeech)) {
+        finalResponse.speechResponse = {
+          ssml: textToSpeech
+        };
+      } else {
+        finalResponse.speechResponse = {
+          textToSpeech: textToSpeech
+        };
+      }
     } else {
-      finalResponse.speechResponse = {
-        textToSpeech: textToSpeech
-      };
+      if (textToSpeech.items) {
+        finalResponse.richResponse = textToSpeech;
+      } else if (textToSpeech.speech) {
+        finalResponse.richResponse = this.buildRichResponse()
+          .addSimpleResponse(textToSpeech);
+      } else {
+        this.handleError_('Invalid speech response. Must be string, ' +
+          'RichResponse or SimpleResponse.');
+        return null;
+      }
     }
     const response = this.buildResponseHelper_(null, false, null, finalResponse);
     return this.doResponse_(response, RESPONSE_CODE_OK);
@@ -460,21 +696,21 @@ const ActionsSdkAssistant = class extends Assistant {
    * Builds the {@link https://developers.google.com/actions/reference/conversation#InputPrompt|InputPrompt object}
    * from initial prompt and no-input prompts.
    *
-   * The Assistant needs one initial prompt to start the conversation. If there is no user response,
-   * the Assistant re-opens the mic and renders the no-input prompts three times
+   * The App needs one initial prompt to start the conversation. If there is no user response,
+   * the App re-opens the mic and renders the no-input prompts three times
    * (one for each no-input prompt that was configured) to help the user
    * provide the right response.
    *
-   * Note: we highly recommend action to provide all the prompts required here in order to ensure a
+   * Note: we highly recommend app to provide all the prompts required here in order to ensure a
    * good user experience.
    *
    * @example
-   * const inputPrompt = assistant.buildInputPrompt(false, 'Welcome to action snippets! Say a number.',
+   * const inputPrompt = app.buildInputPrompt(false, 'Welcome to action snippets! Say a number.',
    *     ['Say any number', 'Pick a number', 'What is the number?']);
-   * assistant.ask(inputPrompt);
+   * app.ask(inputPrompt);
    *
    * @param {boolean} isSsml Indicates whether the text to speech is SSML or not.
-   * @param {string} initialPrompt The initial prompt the Assistant asks the user.
+   * @param {string} initialPrompt The initial prompt the App asks the user.
    * @param {Array<string>=} noInputs Array of re-prompts when the user does not respond (max 3).
    * @return {Object} An {@link https://developers.google.com/actions/reference/conversation#InputPrompt|InputPrompt object}.
    * @actionssdk
@@ -633,7 +869,7 @@ const ActionsSdkAssistant = class extends Assistant {
    *
    * @param {Object} permissionsSpec PermissionsValueSpec object containing
    *     the permissions prefix and the permissions requested.
-   * @param {Object} dialogState JSON object the action uses to hold dialog state that
+   * @param {Object} dialogState JSON object the app uses to hold dialog state that
    *     will be circulated back by Assistant.
    * @return {Object} HTTP response object.
    * @private
@@ -671,7 +907,7 @@ const ActionsSdkAssistant = class extends Assistant {
    *
    * @param {Object} inputPrompt Holding initial and no-input prompts.
    * @param {Array} possibleIntents Array of ExpectedIntents.
-   * @param {Object} dialogState JSON object the action uses to hold dialog state that
+   * @param {Object} dialogState JSON object the app uses to hold dialog state that
    *     will be circulated back by Assistant.
    * @return The response that is sent to Assistant to ask user to provide input.
    * @private
@@ -686,12 +922,22 @@ const ActionsSdkAssistant = class extends Assistant {
     }
     if (typeof inputPrompt === 'string') {
       inputPrompt = this.buildInputPrompt(this.isSsml_(inputPrompt), inputPrompt);
+    } else {
+      if (inputPrompt.speech) {
+        inputPrompt = { richInitialPrompt: this.buildRichResponse()
+          .addSimpleResponse(inputPrompt) };
+      } else if (inputPrompt.items) {
+        inputPrompt = { richInitialPrompt: inputPrompt };
+      }
     }
     if (!dialogState) {
       dialogState = {
         'state': (this.state instanceof State ? this.state.getName() : this.state),
         'data': this.data
       };
+    } else if (Array.isArray(dialogState)) {
+      this.handleError_('Invalid dialog state');
+      return null;
     }
     const expectedInputs = [{
       inputPrompt: inputPrompt,
@@ -707,12 +953,12 @@ const ActionsSdkAssistant = class extends Assistant {
   }
 
   /**
-   * Builds an ExpectedIntent object. Refer to {@link ActionsSdkAssistant#newRuntimeEntity} to create the list
+   * Builds an ExpectedIntent object. Refer to {@link ActionsSdkApp#newRuntimeEntity} to create the list
    * of runtime entities required by this method. Runtime entities need to be defined in
    * the Action Package.
    *
    * @param {string} intent Developer specified in-dialog intent inside the Action
-   *     Package or an Assistant built-in intent like
+   *     Package or an App built-in intent like
    *     'assistant.intent.action.TEXT'.
    * @return {Object} An {@link https://developers.google.com/actions/reference/conversation#ExpectedIntent|ExpectedIntent object}
          encapsulating the intent and the runtime entities.
@@ -732,4 +978,4 @@ const ActionsSdkAssistant = class extends Assistant {
   }
 };
 
-module.exports = ActionsSdkAssistant;
+module.exports = ActionsSdkApp;
