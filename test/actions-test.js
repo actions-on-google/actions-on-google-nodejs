@@ -2515,6 +2515,620 @@ describe('ApiAiApp#getTransactionDecision', function () {
 });
 
 /**
+ * Describes the behavior for ApiAiApp getUserConfirmation method.
+ */
+describe('ApiAiApp#getUserConfirmation', function () {
+  // Success case test, when the API returns a valid 200 response with the response object
+  it('Should validate assistant request positive user confirmation', function () {
+    let headers = {
+      'Content-Type': 'application/json'
+    };
+    let body = {
+      'originalRequest': {
+        'source': 'google',
+        'version': '2',
+        'data': {
+          'isInSandbox': true,
+          'surface': {
+            'capabilities': [
+              {
+                'name': 'actions.capability.AUDIO_OUTPUT'
+              },
+              {
+                'name': 'actions.capability.SCREEN_OUTPUT'
+              }
+            ]
+          },
+          'inputs': [
+            {
+              'rawInputs': [
+                {
+                  'query': 'i think so',
+                  'inputType': 'VOICE'
+                }
+              ],
+              'arguments': [
+                {
+                  'name': 'CONFIRMATION',
+                  'boolValue': true
+                }
+              ],
+              'intent': 'actions.intent.CONFIRMATION'
+            }
+          ],
+          'user': {
+            'userId': 'user123'
+          },
+          'device': {
+            'locale': 'en-US'
+          },
+          'conversation': {
+            'conversationId': '1494606917128',
+            'type': 'ACTIVE',
+            'conversationToken': '["_actions_on_google_"]'
+          }
+        }
+      },
+      'id': '8032dc31-9627-4fbe-9ffd-8e5cfb20cebf',
+      'timestamp': '2017-05-12T16:35:38.131Z',
+      'lang': 'en',
+      'result': {
+        'source': 'agent',
+        'resolvedQuery': 'actions_intent_CONFIRMATION',
+        'speech': '',
+        'action': 'confirmation.complete',
+        'actionIncomplete': false,
+        'parameters': {},
+        'contexts': [],
+        'metadata': {
+          'intentId': 'a15ac3ff-1a84-43d0-94e9-37862a3d89cf',
+          'webhookUsed': 'true',
+          'webhookForSlotFillingUsed': 'false',
+          'nluResponseTime': 2,
+          'intentName': 'confirmation_complete'
+        },
+        'fulfillment': {
+          'speech': '',
+          'messages': [
+            {
+              'type': 0,
+              'speech': ''
+            }
+          ]
+        },
+        'score': 1
+      },
+      'status': {
+        'code': 200,
+        'errorType': 'success'
+      },
+      'sessionId': '1494606917128'
+    };
+
+    let mockRequest = new MockRequest(headers, body);
+    let mockResponse = new MockResponse();
+
+    let app = new ApiAiApp({
+      request: mockRequest,
+      response: mockResponse
+    });
+
+    expect(app.getUserConfirmation()).to.equal(true);
+  });
+
+  // Success case test, when the API returns a valid 200 response with the response object
+  it('Should validate assistant request negative user confirmation', function () {
+    let headers = {
+      'Content-Type': 'application/json'
+    };
+    let body = {
+      'originalRequest': {
+        'source': 'google',
+        'version': '2',
+        'data': {
+          'isInSandbox': true,
+          'surface': {
+            'capabilities': [
+              {
+                'name': 'actions.capability.AUDIO_OUTPUT'
+              },
+              {
+                'name': 'actions.capability.SCREEN_OUTPUT'
+              }
+            ]
+          },
+          'inputs': [
+            {
+              'rawInputs': [
+                {
+                  'query': 'i think so',
+                  'inputType': 'VOICE'
+                }
+              ],
+              'arguments': [
+                {
+                  'name': 'CONFIRMATION',
+                  'boolValue': false
+                }
+              ],
+              'intent': 'actions.intent.CONFIRMATION'
+            }
+          ],
+          'user': {
+            'userId': 'user123'
+          },
+          'device': {
+            'locale': 'en-US'
+          },
+          'conversation': {
+            'conversationId': '1494606917128',
+            'type': 'ACTIVE',
+            'conversationToken': '["_actions_on_google_"]'
+          }
+        }
+      },
+      'id': '8032dc31-9627-4fbe-9ffd-8e5cfb20cebf',
+      'timestamp': '2017-05-12T16:35:38.131Z',
+      'lang': 'en',
+      'result': {
+        'source': 'agent',
+        'resolvedQuery': 'actions_intent_CONFIRMATION',
+        'speech': '',
+        'action': 'confirmation.complete',
+        'actionIncomplete': false,
+        'parameters': {},
+        'contexts': [],
+        'metadata': {
+          'intentId': 'a15ac3ff-1a84-43d0-94e9-37862a3d89cf',
+          'webhookUsed': 'true',
+          'webhookForSlotFillingUsed': 'false',
+          'nluResponseTime': 2,
+          'intentName': 'confirmation_complete'
+        },
+        'fulfillment': {
+          'speech': '',
+          'messages': [
+            {
+              'type': 0,
+              'speech': ''
+            }
+          ]
+        },
+        'score': 1
+      },
+      'status': {
+        'code': 200,
+        'errorType': 'success'
+      },
+      'sessionId': '1494606917128'
+    };
+
+    let mockRequest = new MockRequest(headers, body);
+    let mockResponse = new MockResponse();
+
+    let app = new ApiAiApp({
+      request: mockRequest,
+      response: mockResponse
+    });
+
+    expect(app.getUserConfirmation()).to.equal(false);
+  });
+});
+
+/**
+ * Describes the behavior for ApiAiApp getDateTime method.
+ */
+describe('ApiAiApp#getDateTime', function () {
+  // Success case test, when the API returns a valid 200 response with the response object
+  it('Should validate assistant datetime information', function () {
+    let headers = {
+      'Content-Type': 'application/json'
+    };
+    let body = {
+      'originalRequest': {
+        'source': 'google',
+        'version': '2',
+        'data': {
+          'isInSandbox': true,
+          'surface': {
+            'capabilities': [
+              {
+                'name': 'actions.capability.AUDIO_OUTPUT'
+              },
+              {
+                'name': 'actions.capability.SCREEN_OUTPUT'
+              }
+            ]
+          },
+          'inputs': [
+            {
+              'rawInputs': [
+                {
+                  'query': 'i think so',
+                  'inputType': 'VOICE'
+                }
+              ],
+              'arguments': [
+                {
+                  'datetimeValue': {
+                    'date': {
+                      'month': 5,
+                      'year': 2017,
+                      'day': 26
+                    },
+                    'time': {
+                      'hours': 9
+                    }
+                  },
+                  'name': 'DATETIME'
+                }
+              ],
+              'intent': 'actions.intent.DATETIME'
+            }
+          ],
+          'user': {
+            'userId': 'user123'
+          },
+          'device': {
+            'locale': 'en-US'
+          },
+          'conversation': {
+            'conversationId': '1494606917128',
+            'type': 'ACTIVE',
+            'conversationToken': '["_actions_on_google_"]'
+          }
+        }
+      },
+      'id': '8032dc31-9627-4fbe-9ffd-8e5cfb20cebf',
+      'timestamp': '2017-05-12T16:35:38.131Z',
+      'lang': 'en',
+      'result': {
+        'source': 'agent',
+        'resolvedQuery': 'actions_intent_CONFIRMATION',
+        'speech': '',
+        'action': 'confirmation.complete',
+        'actionIncomplete': false,
+        'parameters': {},
+        'contexts': [],
+        'metadata': {
+          'intentId': 'a15ac3ff-1a84-43d0-94e9-37862a3d89cf',
+          'webhookUsed': 'true',
+          'webhookForSlotFillingUsed': 'false',
+          'nluResponseTime': 2,
+          'intentName': 'confirmation_complete'
+        },
+        'fulfillment': {
+          'speech': '',
+          'messages': [
+            {
+              'type': 0,
+              'speech': ''
+            }
+          ]
+        },
+        'score': 1
+      },
+      'status': {
+        'code': 200,
+        'errorType': 'success'
+      },
+      'sessionId': '1494606917128'
+    };
+
+    let mockRequest = new MockRequest(headers, body);
+    let mockResponse = new MockResponse();
+
+    let app = new ApiAiApp({
+      request: mockRequest,
+      response: mockResponse
+    });
+
+    expect(app.getDateTime()).to.deep.equal({
+      date: {
+        month: 5,
+        year: 2017,
+        day: 26
+      },
+      time: {
+        hours: 9
+      }
+    });
+  });
+
+  // Success case test, when the API returns a valid 200 response with the response object
+  it('Should validate assistant request missing date/time information', function () {
+    let headers = {
+      'Content-Type': 'application/json'
+    };
+    let body = {
+      'originalRequest': {
+        'source': 'google',
+        'version': '2',
+        'data': {
+          'isInSandbox': true,
+          'surface': {
+            'capabilities': [
+              {
+                'name': 'actions.capability.AUDIO_OUTPUT'
+              },
+              {
+                'name': 'actions.capability.SCREEN_OUTPUT'
+              }
+            ]
+          },
+          'inputs': [
+            {
+              'rawInputs': [
+                {
+                  'query': 'i think so',
+                  'inputType': 'VOICE'
+                }
+              ],
+              'arguments': [ ],
+              'intent': 'actions.intent.CONFIRMATION'
+            }
+          ],
+          'user': {
+            'userId': 'user123'
+          },
+          'device': {
+            'locale': 'en-US'
+          },
+          'conversation': {
+            'conversationId': '1494606917128',
+            'type': 'ACTIVE',
+            'conversationToken': '["_actions_on_google_"]'
+          }
+        }
+      },
+      'id': '8032dc31-9627-4fbe-9ffd-8e5cfb20cebf',
+      'timestamp': '2017-05-12T16:35:38.131Z',
+      'lang': 'en',
+      'result': {
+        'source': 'agent',
+        'resolvedQuery': 'actions_intent_DATETIME',
+        'speech': '',
+        'action': 'datetime.complete',
+        'actionIncomplete': false,
+        'parameters': {},
+        'contexts': [],
+        'metadata': {
+          'intentId': 'a15ac3ff-1a84-43d0-94e9-37862a3d89cf',
+          'webhookUsed': 'true',
+          'webhookForSlotFillingUsed': 'false',
+          'nluResponseTime': 2,
+          'intentName': 'confirmation_complete'
+        },
+        'fulfillment': {
+          'speech': '',
+          'messages': [
+            {
+              'type': 0,
+              'speech': ''
+            }
+          ]
+        },
+        'score': 1
+      },
+      'status': {
+        'code': 200,
+        'errorType': 'success'
+      },
+      'sessionId': '1494606917128'
+    };
+
+    let mockRequest = new MockRequest(headers, body);
+    let mockResponse = new MockResponse();
+
+    let app = new ApiAiApp({
+      request: mockRequest,
+      response: mockResponse
+    });
+
+    expect(app.getDateTime()).to.equal(null);
+  });
+});
+
+/**
+ * Describes the behavior for ApiAiApp getSignInStatus method.
+ */
+describe('ApiAiApp#getSignInStatus', function () {
+  // Success case test, when the API returns a valid 200 response with the response object
+  it('Should validate assistant sign in status', function () {
+    let headers = {
+      'Content-Type': 'application/json'
+    };
+    let body = {
+      'originalRequest': {
+        'source': 'google',
+        'version': '2',
+        'data': {
+          'isInSandbox': true,
+          'surface': {
+            'capabilities': [
+              {
+                'name': 'actions.capability.AUDIO_OUTPUT'
+              },
+              {
+                'name': 'actions.capability.SCREEN_OUTPUT'
+              }
+            ]
+          },
+          'inputs': [
+            {
+              'rawInputs': [
+                {
+                  'query': 'i think so',
+                  'inputType': 'VOICE'
+                }
+              ],
+              'arguments': [
+                {
+                  'name': 'SIGN_IN',
+                  'extension': {
+                    '@type': 'type.googleapis.com/google.actions.v2.SignInValue',
+                    'status': 'foo_status'
+                  }
+                }
+              ],
+              'intent': 'actions.intent.SIGN_IN'
+            }
+          ],
+          'user': {
+            'userId': 'user123'
+          },
+          'device': {
+            'locale': 'en-US'
+          },
+          'conversation': {
+            'conversationId': '1494606917128',
+            'type': 'ACTIVE',
+            'conversationToken': '["_actions_on_google_"]'
+          }
+        }
+      },
+      'id': '8032dc31-9627-4fbe-9ffd-8e5cfb20cebf',
+      'timestamp': '2017-05-12T16:35:38.131Z',
+      'lang': 'en',
+      'result': {
+        'source': 'agent',
+        'resolvedQuery': 'actions_intent_SIGN_IN',
+        'speech': '',
+        'action': 'confirmation.complete',
+        'actionIncomplete': false,
+        'parameters': {},
+        'contexts': [],
+        'metadata': {
+          'intentId': 'a15ac3ff-1a84-43d0-94e9-37862a3d89cf',
+          'webhookUsed': 'true',
+          'webhookForSlotFillingUsed': 'false',
+          'nluResponseTime': 2,
+          'intentName': 'confirmation_complete'
+        },
+        'fulfillment': {
+          'speech': '',
+          'messages': [
+            {
+              'type': 0,
+              'speech': ''
+            }
+          ]
+        },
+        'score': 1
+      },
+      'status': {
+        'code': 200,
+        'errorType': 'success'
+      },
+      'sessionId': '1494606917128'
+    };
+
+    let mockRequest = new MockRequest(headers, body);
+    let mockResponse = new MockResponse();
+
+    let app = new ApiAiApp({
+      request: mockRequest,
+      response: mockResponse
+    });
+
+    expect(app.getSignInStatus()).to.equal('foo_status');
+  });
+
+  // Success case test, when the API returns a valid 200 response with the response object
+  it('Should validate assistant request missing sign in status', function () {
+    let headers = {
+      'Content-Type': 'application/json'
+    };
+    let body = {
+      'originalRequest': {
+        'source': 'google',
+        'version': '2',
+        'data': {
+          'isInSandbox': true,
+          'surface': {
+            'capabilities': [
+              {
+                'name': 'actions.capability.AUDIO_OUTPUT'
+              },
+              {
+                'name': 'actions.capability.SCREEN_OUTPUT'
+              }
+            ]
+          },
+          'inputs': [
+            {
+              'rawInputs': [
+                {
+                  'query': 'i think so',
+                  'inputType': 'VOICE'
+                }
+              ],
+              'arguments': [ ],
+              'intent': 'actions.intent.SIGN_IN'
+            }
+          ],
+          'user': {
+            'userId': 'user123'
+          },
+          'device': {
+            'locale': 'en-US'
+          },
+          'conversation': {
+            'conversationId': '1494606917128',
+            'type': 'ACTIVE',
+            'conversationToken': '["_actions_on_google_"]'
+          }
+        }
+      },
+      'id': '8032dc31-9627-4fbe-9ffd-8e5cfb20cebf',
+      'timestamp': '2017-05-12T16:35:38.131Z',
+      'lang': 'en',
+      'result': {
+        'source': 'agent',
+        'resolvedQuery': 'actions_intent_DATETIME',
+        'speech': '',
+        'action': 'datetime.complete',
+        'actionIncomplete': false,
+        'parameters': {},
+        'contexts': [],
+        'metadata': {
+          'intentId': 'a15ac3ff-1a84-43d0-94e9-37862a3d89cf',
+          'webhookUsed': 'true',
+          'webhookForSlotFillingUsed': 'false',
+          'nluResponseTime': 2,
+          'intentName': 'confirmation_complete'
+        },
+        'fulfillment': {
+          'speech': '',
+          'messages': [
+            {
+              'type': 0,
+              'speech': ''
+            }
+          ]
+        },
+        'score': 1
+      },
+      'status': {
+        'code': 200,
+        'errorType': 'success'
+      },
+      'sessionId': '1494606917128'
+    };
+
+    let mockRequest = new MockRequest(headers, body);
+    let mockResponse = new MockResponse();
+
+    let app = new ApiAiApp({
+      request: mockRequest,
+      response: mockResponse
+    });
+
+    expect(app.getSignInStatus()).to.equal(null);
+  });
+});
+
+/**
  * Describes the behavior for ApiAiApp askForTransactionRequirements method.
  */
 describe('ApiAiApp#askForTransactionRequirements', function () {
@@ -3042,6 +3656,530 @@ describe('ApiAiApp#askForTransactionDecision', function () {
                 }
               }
             }
+          }
+        }
+      },
+      'contextOut': [
+        {
+          'name': '_actions_on_google_',
+          'lifespan': 100,
+          'parameters': {}
+        }
+      ]
+    };
+
+    expect(mockResponse.body).to.deep.equal(expectedResponse);
+  });
+});
+
+/**
+ * Describes the behavior for ApiAiApp askForConfirmation method.
+ */
+describe('ApiAiApp#askForConfirmation', function () {
+  // Success case test, when the API returns a valid 200 response with the response object
+  it('Should return valid JSON confirmation request', function () {
+    let headers = {
+      'Content-Type': 'application/json',
+      'Google-Actions-API-Version': '2'
+    };
+    let body = {
+      'id': 'ce7295cc-b042-42d8-8d72-14b83597ac1e',
+      'timestamp': '2016-10-28T03:05:34.288Z',
+      'result': {
+        'source': 'agent',
+        'resolvedQuery': 'start guess a number game',
+        'speech': '',
+        'action': 'generate_answer',
+        'actionIncomplete': false,
+        'parameters': {},
+        'contexts': [],
+        'metadata': {
+          'intentId': '56da4637-0419-46b2-b851-d7bf726b1b1b',
+          'webhookUsed': 'true',
+          'intentName': 'start_game'
+        },
+        'fulfillment': {
+          'speech': ''
+        },
+        'score': 1
+      },
+      'status': {
+        'code': 200,
+        'errorType': 'success'
+      },
+      'sessionId': 'e420f007-501d-4bc8-b551-5d97772bc50c',
+      'originalRequest': {
+        'version': 2,
+        'data': {
+          'conversation': {
+            'type': 2
+          },
+          'user': {
+            'user_id': '11112226094657824893'
+          }
+        }
+      }
+    };
+
+    let mockRequest = new MockRequest(headers, body);
+    let mockResponse = new MockResponse();
+
+    let app = new ApiAiApp({
+      request: mockRequest,
+      response: mockResponse
+    });
+
+    app.handleRequest((app) => { app.askForConfirmation('You want to do that?'); });
+
+    let expectedResponse = {
+      'speech': 'PLACEHOLDER_FOR_CONFIRMATION',
+      'data': {
+        'google': {
+          'expectUserResponse': true,
+          'isSsml': false,
+          'noInputPrompts': [],
+          'systemIntent': {
+            'intent': 'actions.intent.CONFIRMATION',
+            'data': {
+              '@type': 'type.googleapis.com/google.actions.v2.ConfirmationValueSpec',
+              'dialogSpec': {
+                'requestConfirmationText': 'You want to do that?'
+              }
+            }
+          }
+        }
+      },
+      'contextOut': [
+        {
+          'name': '_actions_on_google_',
+          'lifespan': 100,
+          'parameters': {}
+        }
+      ]
+    };
+
+    expect(mockResponse.body).to.deep.equal(expectedResponse);
+  });
+
+  // Success case test, when the API returns a valid 200 response with the response object
+  it('Should return valid JSON confirmation request without prompt', function () {
+    let headers = {
+      'Content-Type': 'application/json',
+      'Google-Actions-API-Version': '2'
+    };
+    let body = {
+      'id': 'ce7295cc-b042-42d8-8d72-14b83597ac1e',
+      'timestamp': '2016-10-28T03:05:34.288Z',
+      'result': {
+        'source': 'agent',
+        'resolvedQuery': 'start guess a number game',
+        'speech': '',
+        'action': 'generate_answer',
+        'actionIncomplete': false,
+        'parameters': {},
+        'contexts': [],
+        'metadata': {
+          'intentId': '56da4637-0419-46b2-b851-d7bf726b1b1b',
+          'webhookUsed': 'true',
+          'intentName': 'start_game'
+        },
+        'fulfillment': {
+          'speech': ''
+        },
+        'score': 1
+      },
+      'status': {
+        'code': 200,
+        'errorType': 'success'
+      },
+      'sessionId': 'e420f007-501d-4bc8-b551-5d97772bc50c',
+      'originalRequest': {
+        'version': 2,
+        'data': {
+          'conversation': {
+            'type': 2
+          },
+          'user': {
+            'user_id': '11112226094657824893'
+          }
+        }
+      }
+    };
+
+    let mockRequest = new MockRequest(headers, body);
+    let mockResponse = new MockResponse();
+
+    let app = new ApiAiApp({
+      request: mockRequest,
+      response: mockResponse
+    });
+
+    app.handleRequest((app) => { app.askForConfirmation(); });
+
+    let expectedResponse = {
+      'speech': 'PLACEHOLDER_FOR_CONFIRMATION',
+      'data': {
+        'google': {
+          'expectUserResponse': true,
+          'isSsml': false,
+          'noInputPrompts': [],
+          'systemIntent': {
+            'intent': 'actions.intent.CONFIRMATION',
+            'data': {
+              '@type': 'type.googleapis.com/google.actions.v2.ConfirmationValueSpec'
+            }
+          }
+        }
+      },
+      'contextOut': [
+        {
+          'name': '_actions_on_google_',
+          'lifespan': 100,
+          'parameters': {}
+        }
+      ]
+    };
+
+    expect(mockResponse.body).to.deep.equal(expectedResponse);
+  });
+});
+
+/**
+ * Describes the behavior for ApiAiApp askForDateTime method.
+ */
+describe('ApiAiApp#askForDateTime', function () {
+  // Success case test, when the API returns a valid 200 response with the response object
+  it('Should return valid JSON datetime request', function () {
+    let headers = {
+      'Content-Type': 'application/json',
+      'Google-Actions-API-Version': '2'
+    };
+    let body = {
+      'id': 'ce7295cc-b042-42d8-8d72-14b83597ac1e',
+      'timestamp': '2016-10-28T03:05:34.288Z',
+      'result': {
+        'source': 'agent',
+        'resolvedQuery': 'start guess a number game',
+        'speech': '',
+        'action': 'generate_answer',
+        'actionIncomplete': false,
+        'parameters': {},
+        'contexts': [],
+        'metadata': {
+          'intentId': '56da4637-0419-46b2-b851-d7bf726b1b1b',
+          'webhookUsed': 'true',
+          'intentName': 'start_game'
+        },
+        'fulfillment': {
+          'speech': ''
+        },
+        'score': 1
+      },
+      'status': {
+        'code': 200,
+        'errorType': 'success'
+      },
+      'sessionId': 'e420f007-501d-4bc8-b551-5d97772bc50c',
+      'originalRequest': {
+        'version': 2,
+        'data': {
+          'conversation': {
+            'type': 2
+          },
+          'user': {
+            'user_id': '11112226094657824893'
+          }
+        }
+      }
+    };
+
+    let mockRequest = new MockRequest(headers, body);
+    let mockResponse = new MockResponse();
+
+    let app = new ApiAiApp({
+      request: mockRequest,
+      response: mockResponse
+    });
+
+    app.handleRequest((app) => {
+      app.askForDateTime('When do you want to come in?',
+        'What is the best date for you?',
+        'What time of day works best for you?');
+    });
+
+    let expectedResponse = {
+      'speech': 'PLACEHOLDER_FOR_DATETIME',
+      'data': {
+        'google': {
+          'expectUserResponse': true,
+          'isSsml': false,
+          'noInputPrompts': [],
+          'systemIntent': {
+            'intent': 'actions.intent.DATETIME',
+            'data': {
+              '@type': 'type.googleapis.com/google.actions.v2.DateTimeValueSpec',
+              'dialogSpec': {
+                'requestDatetimeText': 'When do you want to come in?',
+                'requestDateText': 'What is the best date for you?',
+                'requestTimeText': 'What time of day works best for you?'
+              }
+            }
+          }
+        }
+      },
+      'contextOut': [
+        {
+          'name': '_actions_on_google_',
+          'lifespan': 100,
+          'parameters': {}
+        }
+      ]
+    };
+
+    expect(mockResponse.body).to.deep.equal(expectedResponse);
+  });
+
+  // Success case test, when the API returns a valid 200 response with the response object
+  it('Should return valid JSON datetime request with partial prompts', function () {
+    let headers = {
+      'Content-Type': 'application/json',
+      'Google-Actions-API-Version': '2'
+    };
+    let body = {
+      'id': 'ce7295cc-b042-42d8-8d72-14b83597ac1e',
+      'timestamp': '2016-10-28T03:05:34.288Z',
+      'result': {
+        'source': 'agent',
+        'resolvedQuery': 'start guess a number game',
+        'speech': '',
+        'action': 'generate_answer',
+        'actionIncomplete': false,
+        'parameters': {},
+        'contexts': [],
+        'metadata': {
+          'intentId': '56da4637-0419-46b2-b851-d7bf726b1b1b',
+          'webhookUsed': 'true',
+          'intentName': 'start_game'
+        },
+        'fulfillment': {
+          'speech': ''
+        },
+        'score': 1
+      },
+      'status': {
+        'code': 200,
+        'errorType': 'success'
+      },
+      'sessionId': 'e420f007-501d-4bc8-b551-5d97772bc50c',
+      'originalRequest': {
+        'version': 2,
+        'data': {
+          'conversation': {
+            'type': 2
+          },
+          'user': {
+            'user_id': '11112226094657824893'
+          }
+        }
+      }
+    };
+
+    let mockRequest = new MockRequest(headers, body);
+    let mockResponse = new MockResponse();
+
+    let app = new ApiAiApp({
+      request: mockRequest,
+      response: mockResponse
+    });
+
+    app.handleRequest((app) => {
+      app.askForDateTime('When do you want to come in?', null);
+    });
+
+    let expectedResponse = {
+      'speech': 'PLACEHOLDER_FOR_DATETIME',
+      'data': {
+        'google': {
+          'expectUserResponse': true,
+          'isSsml': false,
+          'noInputPrompts': [],
+          'systemIntent': {
+            'intent': 'actions.intent.DATETIME',
+            'data': {
+              '@type': 'type.googleapis.com/google.actions.v2.DateTimeValueSpec',
+              'dialogSpec': {
+                'requestDatetimeText': 'When do you want to come in?'
+              }
+            }
+          }
+        }
+      },
+      'contextOut': [
+        {
+          'name': '_actions_on_google_',
+          'lifespan': 100,
+          'parameters': {}
+        }
+      ]
+    };
+
+    expect(JSON.parse(JSON.stringify(mockResponse.body))).to.deep.equal(expectedResponse);
+  });
+
+  // Success case test, when the API returns a valid 200 response with the response object
+  it('Should return valid JSON datetime request withouts prompt', function () {
+    let headers = {
+      'Content-Type': 'application/json',
+      'Google-Actions-API-Version': '2'
+    };
+    let body = {
+      'id': 'ce7295cc-b042-42d8-8d72-14b83597ac1e',
+      'timestamp': '2016-10-28T03:05:34.288Z',
+      'result': {
+        'source': 'agent',
+        'resolvedQuery': 'start guess a number game',
+        'speech': '',
+        'action': 'generate_answer',
+        'actionIncomplete': false,
+        'parameters': {},
+        'contexts': [],
+        'metadata': {
+          'intentId': '56da4637-0419-46b2-b851-d7bf726b1b1b',
+          'webhookUsed': 'true',
+          'intentName': 'start_game'
+        },
+        'fulfillment': {
+          'speech': ''
+        },
+        'score': 1
+      },
+      'status': {
+        'code': 200,
+        'errorType': 'success'
+      },
+      'sessionId': 'e420f007-501d-4bc8-b551-5d97772bc50c',
+      'originalRequest': {
+        'version': 2,
+        'data': {
+          'conversation': {
+            'type': 2
+          },
+          'user': {
+            'user_id': '11112226094657824893'
+          }
+        }
+      }
+    };
+
+    let mockRequest = new MockRequest(headers, body);
+    let mockResponse = new MockResponse();
+
+    let app = new ApiAiApp({
+      request: mockRequest,
+      response: mockResponse
+    });
+
+    app.handleRequest((app) => { app.askForDateTime(); });
+
+    let expectedResponse = {
+      'speech': 'PLACEHOLDER_FOR_DATETIME',
+      'data': {
+        'google': {
+          'expectUserResponse': true,
+          'isSsml': false,
+          'noInputPrompts': [],
+          'systemIntent': {
+            'intent': 'actions.intent.DATETIME',
+            'data': {
+              '@type': 'type.googleapis.com/google.actions.v2.DateTimeValueSpec'
+            }
+          }
+        }
+      },
+      'contextOut': [
+        {
+          'name': '_actions_on_google_',
+          'lifespan': 100,
+          'parameters': {}
+        }
+      ]
+    };
+
+    expect(mockResponse.body).to.deep.equal(expectedResponse);
+  });
+});
+
+/**
+ * Describes the behavior for ApiAiApp askForSignIn method.
+ */
+describe('ApiAiApp#askForSignIn', function () {
+  // Success case test, when the API returns a valid 200 response with the response object
+  it('Should return valid JSON sign in request', function () {
+    let headers = {
+      'Content-Type': 'application/json',
+      'Google-Actions-API-Version': '2'
+    };
+    let body = {
+      'id': 'ce7295cc-b042-42d8-8d72-14b83597ac1e',
+      'timestamp': '2016-10-28T03:05:34.288Z',
+      'result': {
+        'source': 'agent',
+        'resolvedQuery': 'start guess a number game',
+        'speech': '',
+        'action': 'generate_answer',
+        'actionIncomplete': false,
+        'parameters': {},
+        'contexts': [],
+        'metadata': {
+          'intentId': '56da4637-0419-46b2-b851-d7bf726b1b1b',
+          'webhookUsed': 'true',
+          'intentName': 'start_game'
+        },
+        'fulfillment': {
+          'speech': ''
+        },
+        'score': 1
+      },
+      'status': {
+        'code': 200,
+        'errorType': 'success'
+      },
+      'sessionId': 'e420f007-501d-4bc8-b551-5d97772bc50c',
+      'originalRequest': {
+        'version': 2,
+        'data': {
+          'conversation': {
+            'type': 2
+          },
+          'user': {
+            'user_id': '11112226094657824893'
+          }
+        }
+      }
+    };
+
+    let mockRequest = new MockRequest(headers, body);
+    let mockResponse = new MockResponse();
+
+    let app = new ApiAiApp({
+      request: mockRequest,
+      response: mockResponse
+    });
+
+    app.handleRequest((app) => {
+      app.askForSignIn();
+    });
+
+    let expectedResponse = {
+      'speech': 'PLACEHOLDER_FOR_SIGN_IN',
+      'data': {
+        'google': {
+          'expectUserResponse': true,
+          'isSsml': false,
+          'noInputPrompts': [],
+          'systemIntent': {
+            'intent': 'actions.intent.SIGN_IN',
+            'data': {}
           }
         }
       },
@@ -6458,7 +7596,9 @@ describe('ActionsSdkApp#askForTransactionRequirements', function () {
       'Google-Actions-API-Version': '2'
     };
     let body = {
-      'user': {},
+      'user': {
+
+      },
       'conversation': {
         'conversationId': '1480532856956',
         'type': 1
@@ -6472,7 +7612,9 @@ describe('ActionsSdkApp#askForTransactionRequirements', function () {
               'query': 'get me 2 items'
             }
           ],
-          'arguments': []
+          'arguments': [
+
+          ]
         }
       ]
     };
@@ -6498,7 +7640,7 @@ describe('ActionsSdkApp#askForTransactionRequirements', function () {
     };
 
     app.handleRequest((app) => {
-      app.askForTransactionRequirements(transactionConfig, {cartSize: 2});
+      app.askForTransactionRequirements(transactionConfig, { cartSize: 2 });
     });
 
     let expectedResponse = {
@@ -6512,7 +7654,8 @@ describe('ActionsSdkApp#askForTransactionRequirements', function () {
                 'textToSpeech': 'PLACEHOLDER_FOR_TXN_REQUIREMENTS'
               }
             ],
-            'noInputPrompts': []
+            'noInputPrompts': [
+            ]
           },
           'possibleIntents': [
             {
@@ -6554,7 +7697,9 @@ describe('ActionsSdkApp#askForTransactionRequirements', function () {
       'Google-Actions-API-Version': '2'
     };
     let body = {
-      'user': {},
+      'user': {
+
+      },
       'conversation': {
         'conversationId': '1480532856956',
         'type': 1
@@ -6568,7 +7713,9 @@ describe('ActionsSdkApp#askForTransactionRequirements', function () {
               'query': 'get me 2 items'
             }
           ],
-          'arguments': []
+          'arguments': [
+
+          ]
         }
       ]
     };
@@ -6588,7 +7735,7 @@ describe('ActionsSdkApp#askForTransactionRequirements', function () {
     };
 
     app.handleRequest((app) => {
-      app.askForTransactionRequirements(transactionConfig, {cartSize: 2});
+      app.askForTransactionRequirements(transactionConfig, { cartSize: 2 });
     });
 
     let expectedResponse = {
@@ -6602,7 +7749,8 @@ describe('ActionsSdkApp#askForTransactionRequirements', function () {
                 'textToSpeech': 'PLACEHOLDER_FOR_TXN_REQUIREMENTS'
               }
             ],
-            'noInputPrompts': []
+            'noInputPrompts': [
+            ]
           },
           'possibleIntents': [
             {
@@ -6719,9 +7867,7 @@ describe('ActionsSdkApp#askForTransactionDecision', function () {
       'Google-Actions-API-Version': '2'
     };
     let body = {
-      'user': {
-
-      },
+      'user': {},
       'conversation': {
         'conversationId': '1480532856956',
         'type': 1
@@ -6735,9 +7881,7 @@ describe('ActionsSdkApp#askForTransactionDecision', function () {
               'query': 'get me 2 items'
             }
           ],
-          'arguments': [
-
-          ]
+          'arguments': []
         }
       ]
     };
@@ -6763,8 +7907,8 @@ describe('ActionsSdkApp#askForTransactionDecision', function () {
     };
 
     app.handleRequest((app) => {
-      app.askForTransactionDecision({ fakeOrderId: 'order_id' }, transactionConfig,
-        { cartSize: 2 });
+      app.askForTransactionDecision({fakeOrderId: 'order_id'}, transactionConfig,
+        {cartSize: 2});
     });
 
     let expectedResponse = {
@@ -6778,8 +7922,7 @@ describe('ActionsSdkApp#askForTransactionDecision', function () {
                 'textToSpeech': 'PLACEHOLDER_FOR_TXN_DECISION'
               }
             ],
-            'noInputPrompts': [
-            ]
+            'noInputPrompts': []
           },
           'possibleIntents': [
             {
@@ -6822,6 +7965,234 @@ describe('ActionsSdkApp#askForTransactionDecision', function () {
       'Google-Actions-API-Version': '2'
     };
     let body = {
+      'user': {},
+      'conversation': {
+        'conversationId': '1480532856956',
+        'type': 1
+      },
+      'inputs': [
+        {
+          'intent': 'GET_RIDE',
+          'rawInputs': [
+            {
+              'inputType': 2,
+              'query': 'get me 2 items'
+            }
+          ],
+          'arguments': []
+        }
+      ]
+    };
+
+    let mockRequest = new MockRequest(headers, body);
+    let mockResponse = new MockResponse();
+
+    let app = new ActionsSdkApp({
+      request: mockRequest,
+      response: mockResponse
+    });
+
+    let transactionConfig = {
+      deliveryAddressRequired: true,
+      type: 'BANK',
+      displayName: 'Checking-4773'
+    };
+
+    app.handleRequest((app) => {
+      app.askForTransactionDecision({fakeOrderId: 'order_id'}, transactionConfig,
+        {cartSize: 2});
+    });
+
+    let expectedResponse = {
+      'conversationToken': '{"cartSize":2}',
+      'expectUserResponse': true,
+      'expectedInputs': [
+        {
+          'inputPrompt': {
+            'initialPrompts': [
+              {
+                'textToSpeech': 'PLACEHOLDER_FOR_TXN_DECISION'
+              }
+            ],
+            'noInputPrompts': []
+          },
+          'possibleIntents': [
+            {
+              'intent': 'actions.intent.TRANSACTION_DECISION',
+              'inputValueData': {
+                '@type': 'type.googleapis.com/google.actions.v2.TransactionDecisionValueSpec',
+                'proposedOrder': {'fakeOrderId': 'order_id'},
+                'orderOptions': {
+                  'requestDeliveryAddress': true
+                },
+                'paymentOptions': {
+                  'actionProvidedOptions': {
+                    'paymentType': 'BANK',
+                    'displayName': 'Checking-4773'
+                  }
+                }
+              }
+            }
+          ]
+        }
+      ]
+    };
+
+    expect(mockResponse.body).to.deep.equal(expectedResponse);
+  });
+});
+
+/**
+ * Describes the behavior for ActionsSdkApp askForConfirmation method.
+ */
+describe('ActionsSdkApp#askForConfirmation', function () {
+  // Success case test, when the API returns a valid 200 response with the response object
+  it('Should return valid JSON confirmation request', function () {
+    let headers = {
+      'Content-Type': 'application/json',
+      'Google-Actions-API-Version': '2'
+    };
+    let body = {
+      'user': {},
+      'conversation': {
+        'conversationId': '1480532856956',
+        'type': 1
+      },
+      'inputs': [
+        {
+          'intent': 'GET_RIDE',
+          'rawInputs': [
+            {
+              'inputType': 2,
+              'query': 'get me 2 items'
+            }
+          ],
+          'arguments': []
+        }
+      ]
+    };
+
+    let mockRequest = new MockRequest(headers, body);
+    let mockResponse = new MockResponse();
+
+    let app = new ActionsSdkApp({
+      request: mockRequest,
+      response: mockResponse
+    });
+
+    app.handleRequest((app) => {
+      app.askForConfirmation('You want to do that?', {cartSize: 2});
+    });
+
+    let expectedResponse = {
+      'conversationToken': '{"cartSize":2}',
+      'expectUserResponse': true,
+      'expectedInputs': [
+        {
+          'inputPrompt': {
+            'initialPrompts': [
+              {
+                'textToSpeech': 'PLACEHOLDER_FOR_CONFIRMATION'
+              }
+            ],
+            'noInputPrompts': []
+          },
+          'possibleIntents': [
+            {
+              'intent': 'actions.intent.CONFIRMATION',
+              'inputValueData': {
+                '@type': 'type.googleapis.com/google.actions.v2.ConfirmationValueSpec',
+                'dialogSpec': {
+                  'requestConfirmationText': 'You want to do that?'
+                }
+              }
+            }
+          ]
+        }
+      ]
+    };
+
+    expect(mockResponse.body).to.deep.equal(expectedResponse);
+  });
+
+  // Success case test, when the API returns a valid 200 response with the response object
+  it('Should return valid JSON confirmation request without prompt', function () {
+    let headers = {
+      'Content-Type': 'application/json',
+      'Google-Actions-API-Version': '2'
+    };
+    let body = {
+      'user': {},
+      'conversation': {
+        'conversationId': '1480532856956',
+        'type': 1
+      },
+      'inputs': [
+        {
+          'intent': 'GET_RIDE',
+          'rawInputs': [
+            {
+              'inputType': 2,
+              'query': 'get me 2 items'
+            }
+          ],
+          'arguments': []
+        }
+      ]
+    };
+
+    let mockRequest = new MockRequest(headers, body);
+    let mockResponse = new MockResponse();
+
+    let app = new ActionsSdkApp({
+      request: mockRequest,
+      response: mockResponse
+    });
+
+    app.handleRequest((app) => {
+      app.askForConfirmation();
+    });
+
+    let expectedResponse = {
+      'conversationToken': '{"state":null,"data":{}}',
+      'expectUserResponse': true,
+      'expectedInputs': [
+        {
+          'inputPrompt': {
+            'initialPrompts': [
+              {
+                'textToSpeech': 'PLACEHOLDER_FOR_CONFIRMATION'
+              }
+            ],
+            'noInputPrompts': []
+          },
+          'possibleIntents': [
+            {
+              'intent': 'actions.intent.CONFIRMATION',
+              'inputValueData': {
+                '@type': 'type.googleapis.com/google.actions.v2.ConfirmationValueSpec'
+              }
+            }
+          ]
+        }
+      ]
+    };
+
+    expect(mockResponse.body).to.deep.equal(expectedResponse);
+  });
+});
+
+/**
+ * Describes the behavior for ActionsSdkApp askForDateTime method.
+ */
+describe('ActionsSdkApp#askForDateTime', function () {
+  // Success case test, when the API returns a valid 200 response with the response object
+  it('Should return valid JSON datetime request', function () {
+    let headers = {
+      'Content-Type': 'application/json',
+      'Google-Actions-API-Version': '2'
+    };
+    let body = {
       'user': {
 
       },
@@ -6853,15 +8224,10 @@ describe('ActionsSdkApp#askForTransactionDecision', function () {
       response: mockResponse
     });
 
-    let transactionConfig = {
-      deliveryAddressRequired: true,
-      type: 'BANK',
-      displayName: 'Checking-4773'
-    };
-
     app.handleRequest((app) => {
-      app.askForTransactionDecision({ fakeOrderId: 'order_id' }, transactionConfig,
-        { cartSize: 2 });
+      app.askForDateTime('When do you want to come in?',
+        'What is the best date for you?',
+        'What time of day works best for you?', { cartSize: 2 });
     });
 
     let expectedResponse = {
@@ -6872,7 +8238,7 @@ describe('ActionsSdkApp#askForTransactionDecision', function () {
           'inputPrompt': {
             'initialPrompts': [
               {
-                'textToSpeech': 'PLACEHOLDER_FOR_TXN_DECISION'
+                'textToSpeech': 'PLACEHOLDER_FOR_DATETIME'
               }
             ],
             'noInputPrompts': [
@@ -6880,20 +8246,230 @@ describe('ActionsSdkApp#askForTransactionDecision', function () {
           },
           'possibleIntents': [
             {
-              'intent': 'actions.intent.TRANSACTION_DECISION',
+              'intent': 'actions.intent.DATETIME',
               'inputValueData': {
-                '@type': 'type.googleapis.com/google.actions.v2.TransactionDecisionValueSpec',
-                'proposedOrder': {'fakeOrderId': 'order_id'},
-                'orderOptions': {
-                  'requestDeliveryAddress': true
-                },
-                'paymentOptions': {
-                  'actionProvidedOptions': {
-                    'paymentType': 'BANK',
-                    'displayName': 'Checking-4773'
-                  }
+                '@type': 'type.googleapis.com/google.actions.v2.DateTimeValueSpec',
+                'dialogSpec': {
+                  'requestDatetimeText': 'When do you want to come in?',
+                  'requestDateText': 'What is the best date for you?',
+                  'requestTimeText': 'What time of day works best for you?'
                 }
               }
+            }
+          ]
+        }
+      ]
+    };
+
+    expect(mockResponse.body).to.deep.equal(expectedResponse);
+  });
+
+  // Success case test, when the API returns a valid 200 response with the response object
+  it('Should return valid JSON datetime request with partial prompts', function () {
+    let headers = {
+      'Content-Type': 'application/json',
+      'Google-Actions-API-Version': '2'
+    };
+    let body = {
+      'user': {
+
+      },
+      'conversation': {
+        'conversationId': '1480532856956',
+        'type': 1
+      },
+      'inputs': [
+        {
+          'intent': 'GET_RIDE',
+          'rawInputs': [
+            {
+              'inputType': 2,
+              'query': 'get me 2 items'
+            }
+          ],
+          'arguments': [
+
+          ]
+        }
+      ]
+    };
+
+    let mockRequest = new MockRequest(headers, body);
+    let mockResponse = new MockResponse();
+
+    let app = new ActionsSdkApp({
+      request: mockRequest,
+      response: mockResponse
+    });
+
+    app.handleRequest((app) => {
+      app.askForDateTime('When do you want to come in?',
+        null);
+    });
+
+    let expectedResponse = {
+      'conversationToken': '{"state":null,"data":{}}',
+      'expectUserResponse': true,
+      'expectedInputs': [
+        {
+          'inputPrompt': {
+            'initialPrompts': [
+              {
+                'textToSpeech': 'PLACEHOLDER_FOR_DATETIME'
+              }
+            ],
+            'noInputPrompts': [
+            ]
+          },
+          'possibleIntents': [
+            {
+              'intent': 'actions.intent.DATETIME',
+              'inputValueData': {
+                '@type': 'type.googleapis.com/google.actions.v2.DateTimeValueSpec',
+                'dialogSpec': {
+                  'requestDatetimeText': 'When do you want to come in?'
+                }
+              }
+            }
+          ]
+        }
+      ]
+    };
+
+    expect(JSON.parse(JSON.stringify(mockResponse.body))).to.deep.equal(expectedResponse);
+  });
+
+  // Success case test, when the API returns a valid 200 response with the response object
+  it('Should return valid JSON datetime request without prompts', function () {
+    let headers = {
+      'Content-Type': 'application/json',
+      'Google-Actions-API-Version': '2'
+    };
+    let body = {
+      'user': {
+
+      },
+      'conversation': {
+        'conversationId': '1480532856956',
+        'type': 1
+      },
+      'inputs': [
+        {
+          'intent': 'GET_RIDE',
+          'rawInputs': [
+            {
+              'inputType': 2,
+              'query': 'get me 2 items'
+            }
+          ],
+          'arguments': [
+
+          ]
+        }
+      ]
+    };
+
+    let mockRequest = new MockRequest(headers, body);
+    let mockResponse = new MockResponse();
+
+    let app = new ActionsSdkApp({
+      request: mockRequest,
+      response: mockResponse
+    });
+
+    app.handleRequest((app) => {
+      app.askForDateTime();
+    });
+
+    let expectedResponse = {
+      'conversationToken': '{"state":null,"data":{}}',
+      'expectUserResponse': true,
+      'expectedInputs': [
+        {
+          'inputPrompt': {
+            'initialPrompts': [
+              {
+                'textToSpeech': 'PLACEHOLDER_FOR_DATETIME'
+              }
+            ],
+            'noInputPrompts': [
+            ]
+          },
+          'possibleIntents': [
+            {
+              'intent': 'actions.intent.DATETIME',
+              'inputValueData': {
+                '@type': 'type.googleapis.com/google.actions.v2.DateTimeValueSpec'
+              }
+            }
+          ]
+        }
+      ]
+    };
+
+    expect(JSON.parse(JSON.stringify(mockResponse.body))).to.deep.equal(expectedResponse);
+  });
+});
+
+/**
+ * Describes the behavior for ActionsSdkApp askForSignIn method.
+ */
+describe('ActionsSdkApp#askForSignIn', function () {
+  // Success case test, when the API returns a valid 200 response with the response object
+  it('Should return valid JSON sign in request', function () {
+    let headers = {
+      'Content-Type': 'application/json',
+      'Google-Actions-API-Version': '2'
+    };
+    let body = {
+      'user': {},
+      'conversation': {
+        'conversationId': '1480532856956',
+        'type': 1
+      },
+      'inputs': [
+        {
+          'intent': 'GET_RIDE',
+          'rawInputs': [
+            {
+              'inputType': 2,
+              'query': 'get me 2 items'
+            }
+          ],
+          'arguments': []
+        }
+      ]
+    };
+
+    let mockRequest = new MockRequest(headers, body);
+    let mockResponse = new MockResponse();
+
+    let app = new ActionsSdkApp({
+      request: mockRequest,
+      response: mockResponse
+    });
+
+    app.handleRequest((app) => {
+      app.askForSignIn({cartSize: 2});
+    });
+
+    let expectedResponse = {
+      'conversationToken': '{"cartSize":2}',
+      'expectUserResponse': true,
+      'expectedInputs': [
+        {
+          'inputPrompt': {
+            'initialPrompts': [
+              {
+                'textToSpeech': 'PLACEHOLDER_FOR_SIGN_IN'
+              }
+            ],
+            'noInputPrompts': []
+          },
+          'possibleIntents': [
+            {
+              'intent': 'actions.intent.SIGN_IN',
+              'inputValueData': {}
             }
           ]
         }
@@ -7457,6 +9033,442 @@ describe('ActionsSdkApp#getTransactionDecision', function () {
         }
       }
     });
+  });
+});
+
+/**
+ * Describes the behavior for ActionsSdkApp getUserConfirmation method.
+ */
+describe('ActionsSdkApp#getUserConfirmation', function () {
+  // Success case test, when the API returns a valid 200 response with the response object
+  it('Should validate assistant positive confirmation decision', function () {
+    let headers = {
+      'Content-Type': 'application/json',
+      'Google-Actions-API-Version': 2
+    };
+    let body = {
+      'isInSandbox': true,
+      'surface': {
+        'capabilities': [
+          {
+            'name': 'actions.capability.AUDIO_OUTPUT'
+          },
+          {
+            'name': 'actions.capability.SCREEN_OUTPUT'
+          }
+        ]
+      },
+      'inputs': [
+        {
+          'rawInputs': [
+            {
+              'query': 'i think so',
+              'inputType': 'VOICE'
+            }
+          ],
+          'arguments': [
+            {
+              'name': 'CONFIRMATION',
+              'boolValue': true
+            }
+          ],
+          'intent': 'actions.intent.CONFIRMATION'
+        }
+      ],
+      'user': {
+        'userId': 'user123'
+      },
+      'device': {
+        'locale': 'en-US'
+      },
+      'conversation': {
+        'conversationId': '1494606917128',
+        'type': 'ACTIVE',
+        'conversationToken': '["_actions_on_google_"]'
+      }
+    };
+
+    let mockRequest = new MockRequest(headers, body);
+    let mockResponse = new MockResponse();
+
+    let app = new ActionsSdkApp({
+      request: mockRequest,
+      response: mockResponse
+    });
+
+    expect(app.getUserConfirmation()).to.equal(true);
+  });
+
+  // Success case test, when the API returns a valid 200 response with the response object
+  it('Should validate assistant negative confirmation decision', function () {
+    let headers = {
+      'Content-Type': 'application/json',
+      'Google-Actions-API-Version': 2
+    };
+    let body = {
+      'isInSandbox': true,
+      'surface': {
+        'capabilities': [
+          {
+            'name': 'actions.capability.AUDIO_OUTPUT'
+          },
+          {
+            'name': 'actions.capability.SCREEN_OUTPUT'
+          }
+        ]
+      },
+      'inputs': [
+        {
+          'rawInputs': [
+            {
+              'query': 'i think not',
+              'inputType': 'VOICE'
+            }
+          ],
+          'arguments': [
+            {
+              'name': 'CONFIRMATION',
+              'boolValue': false
+            }
+          ],
+          'intent': 'actions.intent.CONFIRMATION'
+        }
+      ],
+      'user': {
+        'userId': 'user123'
+      },
+      'device': {
+        'locale': 'en-US'
+      },
+      'conversation': {
+        'conversationId': '1494606917128',
+        'type': 'ACTIVE',
+        'conversationToken': '["_actions_on_google_"]'
+      }
+    };
+
+    let mockRequest = new MockRequest(headers, body);
+    let mockResponse = new MockResponse();
+
+    let app = new ActionsSdkApp({
+      request: mockRequest,
+      response: mockResponse
+    });
+
+    expect(app.getUserConfirmation()).to.equal(false);
+  });
+
+  // Success case test, when the API returns a valid 200 response with the response object
+  it('Should validate assistant missing confirmation decision', function () {
+    let headers = {
+      'Content-Type': 'application/json',
+      'Google-Actions-API-Version': 2
+    };
+    let body = {
+      'isInSandbox': true,
+      'surface': {
+        'capabilities': [
+          {
+            'name': 'actions.capability.AUDIO_OUTPUT'
+          },
+          {
+            'name': 'actions.capability.SCREEN_OUTPUT'
+          }
+        ]
+      },
+      'inputs': [
+        {
+          'rawInputs': [
+            {
+              'query': 'i think so',
+              'inputType': 'VOICE'
+            }
+          ],
+          'arguments': [ ],
+          'intent': 'actions.intent.CONFIRMATION'
+        }
+      ],
+      'user': {
+        'userId': 'user123'
+      },
+      'device': {
+        'locale': 'en-US'
+      },
+      'conversation': {
+        'conversationId': '1494606917128',
+        'type': 'ACTIVE',
+        'conversationToken': '["_actions_on_google_"]'
+      }
+    };
+
+    let mockRequest = new MockRequest(headers, body);
+    let mockResponse = new MockResponse();
+
+    let app = new ActionsSdkApp({
+      request: mockRequest,
+      response: mockResponse
+    });
+
+    expect(app.getUserConfirmation()).to.equal(null);
+  });
+});
+
+/**
+ * Describes the behavior for ActionsSdkApp getDateTime method.
+ */
+describe('ActionsSdkApp#getDateTime', function () {
+  // Success case test, when the API returns a valid 200 response with the response object
+  it('Should validate assistant date time info', function () {
+    let headers = {
+      'Content-Type': 'application/json',
+      'Google-Actions-API-Version': 2
+    };
+    let body = {
+      'isInSandbox': true,
+      'surface': {
+        'capabilities': [
+          {
+            'name': 'actions.capability.AUDIO_OUTPUT'
+          },
+          {
+            'name': 'actions.capability.SCREEN_OUTPUT'
+          }
+        ]
+      },
+      'inputs': [
+        {
+          'rawInputs': [
+            {
+              'query': 'i think so',
+              'inputType': 'VOICE'
+            }
+          ],
+          'arguments': [
+            {
+              'datetimeValue': {
+                'date': {
+                  'month': 5,
+                  'year': 2017,
+                  'day': 26
+                },
+                'time': {
+                  'hours': 9
+                }
+              },
+              'name': 'DATETIME'
+            }
+          ],
+          'intent': 'actions.intent.CONFIRMATION'
+        }
+      ],
+      'user': {
+        'userId': 'user123'
+      },
+      'device': {
+        'locale': 'en-US'
+      },
+      'conversation': {
+        'conversationId': '1494606917128',
+        'type': 'ACTIVE',
+        'conversationToken': '["_actions_on_google_"]'
+      }
+    };
+
+    let mockRequest = new MockRequest(headers, body);
+    let mockResponse = new MockResponse();
+
+    let app = new ActionsSdkApp({
+      request: mockRequest,
+      response: mockResponse
+    });
+
+    expect(app.getDateTime()).to.deep.equal({
+      date: {
+        month: 5,
+        year: 2017,
+        day: 26
+      },
+      time: {
+        hours: 9
+      }
+    });
+  });
+
+  // Success case test, when the API returns a valid 200 response with the response object
+  it('Should validate assistant missing date time info', function () {
+    let headers = {
+      'Content-Type': 'application/json',
+      'Google-Actions-API-Version': 2
+    };
+    let body = {
+      'isInSandbox': true,
+      'surface': {
+        'capabilities': [
+          {
+            'name': 'actions.capability.AUDIO_OUTPUT'
+          },
+          {
+            'name': 'actions.capability.SCREEN_OUTPUT'
+          }
+        ]
+      },
+      'inputs': [
+        {
+          'rawInputs': [
+            {
+              'query': 'i think so',
+              'inputType': 'VOICE'
+            }
+          ],
+          'arguments': [
+          ],
+          'intent': 'actions.intent.DATETIME'
+        }
+      ],
+      'user': {
+        'userId': 'user123'
+      },
+      'device': {
+        'locale': 'en-US'
+      },
+      'conversation': {
+        'conversationId': '1494606917128',
+        'type': 'ACTIVE',
+        'conversationToken': '["_actions_on_google_"]'
+      }
+    };
+
+    let mockRequest = new MockRequest(headers, body);
+    let mockResponse = new MockResponse();
+
+    let app = new ActionsSdkApp({
+      request: mockRequest,
+      response: mockResponse
+    });
+
+    expect(app.getDateTime()).to.equal(null);
+  });
+});
+
+/**
+ * Describes the behavior for ActionsSdkApp getSignInStatus method.
+ */
+describe('ActionsSdkApp#getSignInStatus', function () {
+  // Success case test, when the API returns a valid 200 response with the response object
+  it('Should validate assistant sign in status', function () {
+    let headers = {
+      'Content-Type': 'application/json',
+      'Google-Actions-API-Version': 2
+    };
+    let body = {
+      'isInSandbox': true,
+      'surface': {
+        'capabilities': [
+          {
+            'name': 'actions.capability.AUDIO_OUTPUT'
+          },
+          {
+            'name': 'actions.capability.SCREEN_OUTPUT'
+          }
+        ]
+      },
+      'inputs': [
+        {
+          'rawInputs': [
+            {
+              'query': 'i think so',
+              'inputType': 'VOICE'
+            }
+          ],
+          'arguments': [
+            {
+              'name': 'SIGN_IN',
+              'extension': {
+                '@type': 'type.googleapis.com/google.actions.v2.SignInValue',
+                'status': 'foo_status'
+              }
+            }
+          ],
+          'intent': 'actions.intent.SIGN_IN'
+        }
+      ],
+      'user': {
+        'userId': 'user123'
+      },
+      'device': {
+        'locale': 'en-US'
+      },
+      'conversation': {
+        'conversationId': '1494606917128',
+        'type': 'ACTIVE',
+        'conversationToken': '["_actions_on_google_"]'
+      }
+    };
+
+    let mockRequest = new MockRequest(headers, body);
+    let mockResponse = new MockResponse();
+
+    let app = new ActionsSdkApp({
+      request: mockRequest,
+      response: mockResponse
+    });
+
+    expect(app.getSignInStatus()).to.deep.equal('foo_status');
+  });
+
+  // Success case test, when the API returns a valid 200 response with the response object
+  it('Should validate assistant missing sign in status', function () {
+    let headers = {
+      'Content-Type': 'application/json',
+      'Google-Actions-API-Version': 2
+    };
+    let body = {
+      'isInSandbox': true,
+      'surface': {
+        'capabilities': [
+          {
+            'name': 'actions.capability.AUDIO_OUTPUT'
+          },
+          {
+            'name': 'actions.capability.SCREEN_OUTPUT'
+          }
+        ]
+      },
+      'inputs': [
+        {
+          'rawInputs': [
+            {
+              'query': 'i think so',
+              'inputType': 'VOICE'
+            }
+          ],
+          'arguments': [
+          ],
+          'intent': 'actions.intent.SIGN_IN'
+        }
+      ],
+      'user': {
+        'userId': 'user123'
+      },
+      'device': {
+        'locale': 'en-US'
+      },
+      'conversation': {
+        'conversationId': '1494606917128',
+        'type': 'ACTIVE',
+        'conversationToken': '["_actions_on_google_"]'
+      }
+    };
+
+    let mockRequest = new MockRequest(headers, body);
+    let mockResponse = new MockResponse();
+
+    let app = new ActionsSdkApp({
+      request: mockRequest,
+      response: mockResponse
+    });
+
+    expect(app.getSignInStatus()).to.equal(null);
   });
 });
 

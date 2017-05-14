@@ -217,6 +217,7 @@ const ActionsSdkApp = class extends AssistantApp {
     if (result && result.extension && result.extension.resultType) {
       return result.extension.resultType;
     }
+    debug('Failed to get transaction requirements result');
     return null;
   }
 
@@ -235,6 +236,59 @@ const ActionsSdkApp = class extends AssistantApp {
     if (result && result.extension) {
       return result.extension;
     }
+    debug('Failed to get transaction decision information');
+    return null;
+  }
+
+  /**
+   * Gets confirmation decision. Use after askForConfirmation.
+   *
+   * @return {boolean} True if the user replied with affirmative response.
+   *     False if user replied with negative response. Null if no user
+   *     confirmation decision given.
+   * @actionssdk
+   */
+  getUserConfirmation () {
+    debug('getUserConfirmation');
+    let result = this.getArgument_(this.BuiltInArgNames.CONFIRMATION);
+    if (result && result.boolValue !== undefined) {
+      return result.boolValue;
+    }
+    debug('Failed to get user confirmation information');
+    return null;
+  }
+
+  /**
+   * Gets user provided date and time. Use after askForDateTime.
+   *
+   * @return {DateTime} Date and time given by the user. Null if no user
+   *     date and time given.
+   * @actionssdk
+   */
+  getDateTime () {
+    debug('getDateTime');
+    let result = this.getArgument_(this.BuiltInArgNames.DATETIME);
+    if (result && result.datetimeValue) {
+      return result.datetimeValue;
+    }
+    debug('Failed to get date/time information');
+    return null;
+  }
+
+  /**
+   * Gets status of user sign in request.
+   *
+   * @return {string} Result of user sign in request. One of
+   *     ActionsSdkApp.SignInStatus. Null if no sign in status.
+   * @actionssdk
+   */
+  getSignInStatus () {
+    debug('getSignInStatus');
+    let result = this.getArgument_(this.BuiltInArgNames.SIGN_IN);
+    if (result && result.extension && result.extension.status) {
+      return result.extension.status;
+    }
+    debug('Failed to get sign in status');
     return null;
   }
 
@@ -1073,7 +1127,7 @@ const ActionsSdkApp = class extends AssistantApp {
    *     will be circulated back by Assistant.
    * @return {Object} HTTP response.
    * @private
-   * @apiai
+   * @actionssdk
    */
   fulfillTransactionDecision_ (transactionDecisionValueSpec, dialogState) {
     debug('fulfillTransactionDecision_: transactionDecisionValueSpec=%s,' +
@@ -1088,6 +1142,92 @@ const ActionsSdkApp = class extends AssistantApp {
     }, transactionDecisionValueSpec);
     // Send an Ask request to Assistant.
     const inputPrompt = this.buildInputPrompt(false, 'PLACEHOLDER_FOR_TXN_DECISION');
+    if (!dialogState) {
+      dialogState = {
+        'state': (this.state instanceof State ? this.state.getName() : this.state),
+        'data': this.data
+      };
+    }
+    return this.buildAskHelper_(inputPrompt, [expectedIntent], dialogState);
+  }
+
+  /**
+   * Uses ConfirmationValueSpec to construct and send a confirmation request to
+   * Google.
+   *
+   * @param {Object} confirmationValueSpec ConfirmationValueSpec object.
+   * @return {Object} HTTP response.
+   * @private
+   * @actionssdk
+   */
+  fulfillConfirmationRequest_ (confirmationValueSpec, dialogState) {
+    debug('fulfillConfirmationRequest_: confirmationValueSpec=%s,' +
+      ' dialogState=%s', JSON.stringify(confirmationValueSpec),
+      JSON.stringify(dialogState));
+    // Build an Expected Intent object.
+    const expectedIntent = {
+      intent: this.StandardIntents.CONFIRMATION
+    };
+    expectedIntent.inputValueData = Object.assign({
+      [this.ANY_TYPE_PROPERTY_]: this.InputValueDataTypes_.CONFIRMATION
+    }, confirmationValueSpec);
+    // Send an Ask request to Assistant.
+    const inputPrompt = this.buildInputPrompt(false, 'PLACEHOLDER_FOR_CONFIRMATION');
+    if (!dialogState) {
+      dialogState = {
+        'state': (this.state instanceof State ? this.state.getName() : this.state),
+        'data': this.data
+      };
+    }
+    return this.buildAskHelper_(inputPrompt, [expectedIntent], dialogState);
+  }
+
+  /**
+   * Uses DateTimeValueSpec to construct and send a datetime request to Google.
+   *
+   * @param {Object} dateTimeValueSpec DateTimeValueSpec object.
+   * @return {Object} HTTP response.
+   * @private
+   * @actionssdk
+   */
+  fulfillDateTimeRequest_ (dateTimeValueSpec, dialogState) {
+    debug('fulfillDateTimeRequest_: dateTimeValueSpec=%s,' +
+      ' dialogState=%s', JSON.stringify(dateTimeValueSpec),
+      JSON.stringify(dialogState));
+    // Build an Expected Intent object.
+    const expectedIntent = {
+      intent: this.StandardIntents.DATETIME
+    };
+    expectedIntent.inputValueData = Object.assign({
+      [this.ANY_TYPE_PROPERTY_]: this.InputValueDataTypes_.DATETIME
+    }, dateTimeValueSpec);
+    // Send an Ask request to Assistant.
+    const inputPrompt = this.buildInputPrompt(false, 'PLACEHOLDER_FOR_DATETIME');
+    if (!dialogState) {
+      dialogState = {
+        'state': (this.state instanceof State ? this.state.getName() : this.state),
+        'data': this.data
+      };
+    }
+    return this.buildAskHelper_(inputPrompt, [expectedIntent], dialogState);
+  }
+
+  /**
+   * Construct and send a sign in request to Google.
+   *
+   * @return {Object} HTTP response.
+   * @private
+   * @actionssdk
+   */
+  fulfillSignInRequest_ (dialogState) {
+    debug('fulfillSignInRequest_: dialogState=%s', JSON.stringify(dialogState));
+    // Build an Expected Intent object.
+    const expectedIntent = {
+      intent: this.StandardIntents.SIGN_IN
+    };
+    expectedIntent.inputValueData = {};
+    // Send an Ask request to Assistant.
+    const inputPrompt = this.buildInputPrompt(false, 'PLACEHOLDER_FOR_SIGN_IN');
     if (!dialogState) {
       dialogState = {
         'state': (this.state instanceof State ? this.state.getName() : this.state),

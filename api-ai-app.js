@@ -251,6 +251,83 @@ const ApiAiApp = class extends AssistantApp {
   }
 
   /**
+   * Gets confirmation decision. Use after askForConfirmation.
+   *
+   * @return {boolean} True if the user replied with affirmative response.
+   *     False if user replied with negative response. Null if no user
+   *     confirmation decision given.
+   * @apiai
+   */
+  getUserConfirmation () {
+    debug('getUserConfirmation');
+    if (this.body_.originalRequest && this.body_.originalRequest.data &&
+      this.body_.originalRequest.data.inputs) {
+      for (let input of this.body_.originalRequest.data.inputs) {
+        if (input.arguments) {
+          for (let argument of input.arguments) {
+            return argument.name === this.BuiltInArgNames.CONFIRMATION &&
+              argument.boolValue;
+          }
+        }
+      }
+    }
+    debug('Failed to get confirmation decision information');
+    return null;
+  }
+
+  /**
+   * Gets user provided date and time. Use after askForDateTime.
+   *
+   * @return {DateTime} Date and time given by the user. Null if no user
+   *     date and time given.
+   * @apiai
+   */
+  getDateTime () {
+    debug('getDateTime');
+    if (this.body_.originalRequest && this.body_.originalRequest.data &&
+      this.body_.originalRequest.data.inputs) {
+      for (let input of this.body_.originalRequest.data.inputs) {
+        if (input.arguments) {
+          for (let argument of input.arguments) {
+            if (argument.name === this.BuiltInArgNames.DATETIME &&
+              argument.datetimeValue) {
+              return argument.datetimeValue;
+            }
+          }
+        }
+      }
+    }
+    debug('Failed to get date/time information');
+    return null;
+  }
+
+  /**
+   * Gets status of user sign in request.
+   *
+   * @return {string} Result of user sign in request. One of
+   *     ApiAiApp.SignInStatus. Null if no sign in status.
+   * @apiai
+   */
+  getSignInStatus () {
+    debug('getSignInStatus');
+    if (this.body_.originalRequest && this.body_.originalRequest.data &&
+      this.body_.originalRequest.data.inputs) {
+      for (let input of this.body_.originalRequest.data.inputs) {
+        if (input.arguments) {
+          for (let argument of input.arguments) {
+            if (argument.name === this.BuiltInArgNames.SIGN_IN &&
+              argument.extension && argument.extension.status) {
+              return argument.extension.status;
+            }
+          }
+        }
+      }
+    }
+    debug('Failed to get sign in status');
+    return null;
+  }
+
+  /**
    * Returns true if the request follows a previous request asking for
    * permission from the user and the user granted the permission(s). Otherwise,
    * false. Use with {@link AssistantApp#askForPermissions|askForPermissions}.
@@ -1409,6 +1486,66 @@ const ApiAiApp = class extends AssistantApp {
     response.data.google.systemIntent.data = Object.assign({
       [this.ANY_TYPE_PROPERTY_]: this.InputValueDataTypes_.TRANSACTION_DECISION
     }, transactionDecisionValueSpec);
+    return this.doResponse_(response, RESPONSE_CODE_OK);
+  }
+
+  /**
+   * Uses ConfirmationValueSpec to construct and send a confirmation request to
+   * Google.
+   *
+   * @param {Object} confirmationValueSpec ConfirmationValueSpec object.
+   * @return {Object} HTTP response.
+   * @private
+   * @apiai
+   */
+  fulfillConfirmationRequest_ (confirmationValueSpec) {
+    debug('fulfillConfirmationRequest_: confirmationValueSpec=%s',
+      JSON.stringify(confirmationValueSpec));
+    const response = this.buildResponse_('PLACEHOLDER_FOR_CONFIRMATION', true);
+    response.data.google.systemIntent = {
+      intent: this.StandardIntents.CONFIRMATION
+    };
+    response.data.google.systemIntent.data = Object.assign({
+      [this.ANY_TYPE_PROPERTY_]: this.InputValueDataTypes_.CONFIRMATION
+    }, confirmationValueSpec);
+    return this.doResponse_(response, RESPONSE_CODE_OK);
+  }
+
+  /**
+   * Uses DateTimeValueSpec to construct and send a datetime request to Google.
+   *
+   * @param {Object} dateTimeValueSpec DateTimeValueSpec object.
+   * @return {Object} HTTP response.
+   * @private
+   * @apiai
+   */
+  fulfillDateTimeRequest_ (dateTimeValueSpec) {
+    debug('fulfillDateTimeRequest_: dateTimeValueSpec=%s',
+      JSON.stringify(dateTimeValueSpec));
+    const response = this.buildResponse_('PLACEHOLDER_FOR_DATETIME', true);
+    response.data.google.systemIntent = {
+      intent: this.StandardIntents.DATETIME
+    };
+    response.data.google.systemIntent.data = Object.assign({
+      [this.ANY_TYPE_PROPERTY_]: this.InputValueDataTypes_.DATETIME
+    }, dateTimeValueSpec);
+    return this.doResponse_(response, RESPONSE_CODE_OK);
+  }
+
+  /**
+   * Constructs and sends a sign in request to Google.
+   *
+   * @return {Object} HTTP response.
+   * @private
+   * @apiai
+   */
+  fulfillSignInRequest_ () {
+    debug('fulfillSignInRequest_');
+    const response = this.buildResponse_('PLACEHOLDER_FOR_SIGN_IN', true);
+    response.data.google.systemIntent = {
+      intent: this.StandardIntents.SIGN_IN
+    };
+    response.data.google.systemIntent.data = {};
     return this.doResponse_(response, RESPONSE_CODE_OK);
   }
 };

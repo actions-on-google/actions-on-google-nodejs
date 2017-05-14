@@ -218,7 +218,7 @@ const AssistantApp = class {
      * @apiai
      */
     this.StandardIntents = {
-      /** App fires MAIN intent for queries like [talk to $action]. */
+      /** App fires MAIN intent for queries like [talk to $app]. */
       MAIN: this.isNotApiVersionOne_() ? 'actions.intent.MAIN' : 'assistant.intent.action.MAIN',
       /** App fires TEXT intent when action issues ask intent. */
       TEXT: this.isNotApiVersionOne_() ? 'actions.intent.TEXT' : 'assistant.intent.action.TEXT',
@@ -231,7 +231,13 @@ const AssistantApp = class {
       /** App fires DELIVERY_ADDRESS intent when action asks for delivery address. */
       DELIVERY_ADDRESS: 'actions.intent.DELIVERY_ADDRESS',
       /** App fires TRANSACTION_DECISION intent when action asks for transaction decision. */
-      TRANSACTION_DECISION: 'actions.intent.TRANSACTION_DECISION'
+      TRANSACTION_DECISION: 'actions.intent.TRANSACTION_DECISION',
+      /** App fires CONFIRMATION intent when requesting affirmation from user. */
+      CONFIRMATION: 'actions.intent.CONFIRMATION',
+      /** App fires DATETIME intent when requesting date/time from user. */
+      DATETIME: 'actions.intent.DATETIME',
+      /** App fires SIGN_IN intent when requesting sign-in from user. */
+      SIGN_IN: 'actions.intent.SIGN_IN'
     };
 
     /**
@@ -276,7 +282,13 @@ const AssistantApp = class {
       /** Delivery address value argument. */
       DELIVERY_ADDRESS_VALUE: 'DELIVERY_ADDRESS_VALUE',
       /** Transactions decision argument. */
-      TRANSACTION_DECISION_VALUE: 'TRANSACTION_DECISION_VALUE'
+      TRANSACTION_DECISION_VALUE: 'TRANSACTION_DECISION_VALUE',
+      /** Confirmation argument. */
+      CONFIRMATION: 'CONFIRMATION',
+      /** DateTime argument. */
+      DATETIME: 'DATETIME',
+      /** Sign in status argument. */
+      SIGN_IN: 'SIGN_IN'
     };
 
     /**
@@ -305,7 +317,11 @@ const AssistantApp = class {
       /** Delivery Address Value Spec. */
       DELIVERY_ADDRESS: 'type.googleapis.com/google.actions.v2.DeliveryAddressValueSpec',
       /** Transaction Decision Value Spec. */
-      TRANSACTION_DECISION: 'type.googleapis.com/google.actions.v2.TransactionDecisionValueSpec'
+      TRANSACTION_DECISION: 'type.googleapis.com/google.actions.v2.TransactionDecisionValueSpec',
+      /** Confirmation Value Spec. */
+      CONFIRMATION: 'type.googleapis.com/google.actions.v2.ConfirmationValueSpec',
+      /** DateTime Value Spec. */
+      DATETIME: 'type.googleapis.com/google.actions.v2.DateTimeValueSpec'
     };
 
     /**
@@ -373,6 +389,24 @@ const AssistantApp = class {
        * Input given by keyboard (typed).
        */
       KEYBOARD: this.isNotApiVersionOne_() ? 'KEYBOARD' : 3
+    };
+
+    /**
+     * List of possible sign in result status values.
+     * @readonly
+     * @enum {string}
+     * @actionssdk
+     * @apiai
+     */
+    this.SignInStatus = {
+      // Unknown status.
+      UNSPECIFIED: 'SIGN_IN_STATUS_UNSPECIFIED',
+      // User successfully completed the account linking.
+      OK: 'OK',
+      // Cancelled or dismissed account linking.
+      CANCELLED: 'CANCELLED',
+      // System or network error.
+      ERROR: 'ERROR'
     };
 
     /**
@@ -777,6 +811,157 @@ const AssistantApp = class {
     return this.askForPermissions(context, [permission], dialogState);
   }
 
+  /**
+   * Asks user for a confirmation.
+   *
+   * @example
+   * const app = new ApiAiApp({ request, response });
+   * const WELCOME_INTENT = 'input.welcome';
+   * const CONFIRMATION = 'confirmation';
+   *
+   * function welcomeIntent (app) {
+   *   app.askForConfirmation('Are you sure you want to do that?');
+   * }
+   *
+   * function confirmation (app) {
+   *   if (app.getUserConfirmation()) {
+   *     app.tell('Great! I\'m glad you want to do it!');
+   *   } else {
+   *     app.tell('That\'s okay. Let\'s not do it now.');
+   *   }
+   * }
+   *
+   * const actionMap = new Map();
+   * actionMap.set(WELCOME_INTENT, welcomeIntent);
+   * actionMap.set(CONFIRMATION, confirmation);
+   * app.handleRequest(actionMap);
+   *
+   * @param {string=} prompt The confirmation prompt presented to the user to
+   *     query for an affirmative or negative response. If undefined or null,
+   *     Google will use a generic yes/no prompt.
+   * @param {Object=} dialogState JSON object the app uses to hold dialog state that
+   *     will be circulated back by Assistant. Used in {@link ActionsSdkAssistant}.
+   * @actionssdk
+   * @apiai
+   */
+  askForConfirmation (prompt, dialogState) {
+    debug('askForConfirmation: prompt=%s, dialogState=%s', prompt,
+      JSON.stringify(dialogState));
+    let confirmationValueSpec = {};
+    if (prompt) {
+      confirmationValueSpec.dialogSpec = {
+        requestConfirmationText: prompt
+      };
+    }
+    return this.fulfillConfirmationRequest_(confirmationValueSpec, dialogState);
+  }
+
+  /**
+   * Asks user for a timezone-agnostic date and time.
+   *
+   * @example
+   * const app = new ApiAiApp({ request, response });
+   * const WELCOME_INTENT = 'input.welcome';
+   * const DATETIME = 'datetime';
+   *
+   * function welcomeIntent (app) {
+   *   app.askForDateTime('When do you want to come in?',
+   *     'Which date works best for you?',
+   *     'What time of day works best for you?');
+   * }
+   *
+   * function datetime (app) {
+   *   app.tell({speech: 'Great see you at your appointment!',
+   *     displayText: 'Great, we will see you on '
+   *     + app.getDateTime().date.month
+   *     + '/' + app.getDateTime().date.day
+   *     + ' at ' + app.getDateTime().time.hours
+   *     + (app.getDateTime().time.minutes || '')});
+   * }
+   *
+   * const actionMap = new Map();
+   * actionMap.set(WELCOME_INTENT, welcomeIntent);
+   * actionMap.set(DATETIME, datetime);
+   * app.handleRequest(actionMap);
+   *
+   * @param {string=} initialPrompt The initial prompt used to ask for a
+   *     date and time. If undefined or null, Google will use a generic
+   *     prompt.
+   * @param {string=} datePrompt The prompt used to specifically ask for the
+   *     date if not provided by user. If undefined or null, Google will use a
+   *     generic prompt.
+   * @param {string=} timePrompt The prompt used to specifically ask for the
+   *     time if not provided by user. If undefined or null, Google will use a
+   *     generic prompt.
+   * @param {Object=} dialogState JSON object the app uses to hold dialog state that
+   *     will be circulated back by Assistant. Used in {@link ActionsSdkAssistant}.
+   * @actionssdk
+   * @apiai
+   */
+  askForDateTime (initialPrompt, datePrompt, timePrompt, dialogState) {
+    debug('askForConfirmation: initialPrompt=%s, datePrompt=%s, ' +
+      'timePrompt=%s, dialogState=%s', initialPrompt, datePrompt, timePrompt,
+      JSON.stringify(dialogState));
+    let confirmationValueSpec = {};
+    if (initialPrompt || datePrompt || timePrompt) {
+      confirmationValueSpec.dialogSpec = {
+        requestDatetimeText: initialPrompt || undefined,
+        requestDateText: datePrompt || undefined,
+        requestTimeText: timePrompt || undefined
+      };
+    }
+    return this.fulfillDateTimeRequest_(confirmationValueSpec, dialogState);
+  }
+
+  /**
+   * Asks user for a timezone-agnostic date and time.
+   *
+   * @example
+   * const app = new ApiAiApp({ request, response });
+   * const WELCOME_INTENT = 'input.welcome';
+   * const SIGN_IN = 'sign.in';
+   *
+   * function welcomeIntent (app) {
+   *   app.askForSignIn();
+   * }
+   *
+   * function signIn (app) {
+   *   if (app.getSignInStatus() === app.SignInstatus.OK) {
+   *     let accessToken = app.getUser().accessToken;
+   *     app.ask('Great, thanks for signing in!');
+   *   } else {
+   *     app.ask('I won\'t be able to save your data, but let\'s continue!');
+   *   }
+   * }
+   *
+   * const actionMap = new Map();
+   * actionMap.set(WELCOME_INTENT, welcomeIntent);
+   * actionMap.set(SIGN_IN, signIn);
+   * app.handleRequest(actionMap);
+   *
+   * @param {Object=} dialogState JSON object the app uses to hold dialog state that
+   *     will be circulated back by Assistant. Used in {@link ActionsSdkAssistant}.
+   * @actionssdk
+   * @apiai
+   */
+  askForSignIn (dialogState) {
+    debug('askForSignIn: dialogState=%s', JSON.stringify(dialogState));
+    return this.fulfillSignInRequest_(dialogState);
+  }
+
+  /**
+   * User provided date/time info.
+   * @typedef {Object} DateTime
+   * @property {Object} date
+   * @property {number} date.year
+   * @property {number} date.month
+   * @property {number} date.day
+   * @property {Object} time
+   * @property {number} time.hours
+   * @property {number} time.minutes
+   * @property {number} time.seconds
+   * @property {number} time.nanos
+   */
   /**
    * User's permissioned name info.
    * @typedef {Object} UserName
@@ -1191,6 +1376,44 @@ const AssistantApp = class {
    */
   fulfillPermissionsRequest_ () {
     debug('fulfillPermissionsRequest_');
+    return {};
+  }
+
+  /**
+   * Uses a ConfirmationValueSpec object to construct and send a
+   * confirmation request to user.
+   *
+   * Used in subclasses for Actions SDK and API.AI.
+   * @return {Object} HTTP response.
+   * @private
+   */
+  fulfillConfirmationRequest_ () {
+    debug('fulfillConfirmationRequest_');
+    return {};
+  }
+
+  /**
+   * Uses a DateTimeValueSpec object to construct and send a
+   * date time request to user.
+   *
+   * Used in subclasses for Actions SDK and API.AI.
+   * @return {Object} HTTP response.
+   * @private
+   */
+  fulfillDateTimeRequest_ () {
+    debug('fulfillDateTimeRequest_');
+    return {};
+  }
+
+  /**
+   * Construct and send a sign in request to user.
+   *
+   * Used in subclasses for Actions SDK and API.AI.
+   * @return {Object} HTTP response.
+   * @private
+   */
+  fulfillSignInRequest_ () {
+    debug('fulfillSignInRequest_');
     return {};
   }
 
