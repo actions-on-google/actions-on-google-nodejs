@@ -33,7 +33,6 @@ const transformToSnakeCase = require('./utils/transform').transformToSnakeCase;
 const CONVERSATION_API_AGENT_VERSION_HEADER = 'Agent-Version-Label';
 const RESPONSE_CODE_OK = 200;
 const INPUTS_MAX = 3;
-const SELECTED_KEY = 'OPTION';
 
 // Configure logging for hosting platforms that only support console.log and console.error
 debug.log = console.log.bind(console);
@@ -206,6 +205,69 @@ const ActionsSdkApp = class extends AssistantApp {
   }
 
   /**
+   * Gets transactability of user. Only use after calling
+   * askForTransactionRequirements. Null if no result given.
+   *
+   * @return {string} One of Transactions.ResultType.
+   * @actionssdk
+   */
+  getTransactionRequirementsResult () {
+    debug('getTransactionRequirementsResult');
+    let result = this.getArgument_(this.BuiltInArgNames.TRANSACTION_REQ_CHECK_RESULT);
+    if (result && result.extension && result.extension.resultType) {
+      return result.extension.resultType;
+    }
+    return null;
+  }
+
+  /**
+   * Gets transaction decision information. Only use after calling
+   * askForTransactionDecision.
+   *
+   * @return {TransactionDecision} Transaction decision data. Returns object with
+   *     userDecision. userDecision will be one of
+   *     Transactions.ConfirmationDecision. Null if no decision given.
+   * @actionssdk
+   */
+  getTransactionDecision () {
+    debug('getTransactionDecision');
+    let result = this.getArgument_(this.BuiltInArgNames.TRANSACTION_DECISION_VALUE);
+    if (result && result.extension) {
+      return result.extension;
+    }
+    return null;
+  }
+
+  /**
+   * Gets order delivery address. Only use after calling askForDeliveryAddress.
+   *
+   * @return {DeliveryAddress} Delivery address information. Null if user
+   *     denies permission, or no address given.
+   * @actionssdk
+   */
+  getDeliveryAddress () {
+    debug('getDeliveryAddress');
+    let result = this.getArgument_(this.BuiltInArgNames.DELIVERY_ADDRESS_VALUE) ||
+      this.getArgument_(this.BuiltInArgNames.TRANSACTION_DECISION_VALUE);
+    if (!result || !result.extension) {
+      debug('Failed to get order delivery address');
+      return null;
+    }
+    if (result.extension.userDecision ===
+      this.Transactions.DeliveryAddressDecision.ACCEPTED) {
+      const locationValue = result.extension.location;
+      if (!locationValue.postalAddress) {
+        debug('User accepted, but may not have configured address in app');
+        return null;
+      }
+      return locationValue;
+    } else {
+      debug('User rejected giving delivery address');
+      return null;
+    }
+  }
+
+  /**
    * Returns true if the request follows a previous request asking for
    * permission from the user and the user granted the permission(s). Otherwise,
    * false. Use with {@link AssistantApp#askForPermissions|askForPermissions}.
@@ -228,6 +290,18 @@ const ActionsSdkApp = class extends AssistantApp {
   isPermissionGranted () {
     debug('isPermissionGranted');
     return this.getArgument(this.BuiltInArgNames.PERMISSION_GRANTED) === 'true';
+  }
+
+  /**
+   * Returns true if the app is being tested in sandbox mode. Enable sandbox
+   * mode in the (Actions console)[console.actions.google.com] to test
+   * transactions.
+   *
+   * @return {boolean} True if app is being used in Sandbox mode.
+   * @actionssdk
+   */
+  isInSandbox () {
+    return this.body_ && this.body_.isInSandbox;
   }
 
   /**
@@ -421,8 +495,8 @@ const ActionsSdkApp = class extends AssistantApp {
    */
   getSelectedOption () {
     debug('getSelectedOption');
-    if (this.getArgument(SELECTED_KEY)) {
-      return this.getArgument(SELECTED_KEY);
+    if (this.getArgument(this.BuiltInArgNames.OPTION)) {
+      return this.getArgument(this.BuiltInArgNames.OPTION);
     }
     debug('Failed to get selected option');
     return null;
@@ -526,7 +600,7 @@ const ActionsSdkApp = class extends AssistantApp {
       return null;
     }
     if (list.items.length < 2) {
-      this.handleError_('List requires more than 2 items');
+      this.handleError_('List requires at least 2 items');
       return null;
     }
     const expectedIntent = this.buildExpectedIntent_(this.StandardIntents.OPTION, []);
@@ -547,6 +621,61 @@ const ActionsSdkApp = class extends AssistantApp {
         }
       };
     }
+    return this.buildAskHelper_(inputPrompt, [expectedIntent], dialogState);
+  }
+
+  /**
+   * Asks user for delivery address.
+   *
+   * @example
+   * const app = new ActionsSdkApp({request, response});
+   * const WELCOME_INTENT = app.StandardIntents.MAIN;
+   * const DELIVERY_INTENT = app.StandardIntents.DELIVERY_ADDRESS;
+   *
+   * function welcomeIntent (app) {
+   *   app.askForDeliveryAddress('To make sure I can deliver to you');
+   * }
+   *
+   * function addressIntent (app) {
+   *   const postalCode = app.getDeliveryAddress().postalAddress.postalCode;
+   *   if (isInDeliveryZone(postalCode)) {
+   *     app.tell('Great looks like you\'re in our delivery area!');
+   *   } else {
+   *     app.tell('I\'m sorry it looks like we can\'t deliver to you.');
+   *   }
+   * }
+   *
+   * const actionMap = new Map();
+   * actionMap.set(WELCOME_INTENT, welcomeIntent);
+   * actionMap.set(DELIVERY_INTENT, addressIntent);
+   * app.handleRequest(actionMap);
+   *
+   * @param {string} reason Reason given to user for asking delivery address.
+   * @param {Object=} dialogState JSON object the app uses to hold dialog state that
+   *     will be circulated back by Assistant.
+   * @return {Object} HTTP response.
+   * @apiai
+   */
+  askForDeliveryAddress (reason, dialogState) {
+    debug('askForDeliveryAddress: reason=%s', reason);
+    if (!reason) {
+      this.handleError_('reason cannot be empty');
+      return null;
+    }
+    const expectedIntent = this.buildExpectedIntent_(this.StandardIntents.DELIVERY_ADDRESS, []);
+    if (!expectedIntent) {
+      error('Error in building expected intent');
+      return null;
+    }
+    expectedIntent.inputValueData = Object.assign({
+      [this.ANY_TYPE_PROPERTY_]: this.InputValueDataTypes_.DELIVERY_ADDRESS
+    }, {
+      addressOptions: {
+        reason: reason
+      }
+    });
+    const inputPrompt = this.buildInputPrompt(false,
+      'PLACEHOLDER_FOR_DELIVERY_ADDRESS');
     return this.buildAskHelper_(inputPrompt, [expectedIntent], dialogState);
   }
 
@@ -599,7 +728,7 @@ const ActionsSdkApp = class extends AssistantApp {
       return null;
     }
     if (carousel.items.length < 2) {
-      this.handleError_('Carousel requires more than 2 items');
+      this.handleError_('Carousel requires at least 2 items');
       return null;
     }
     const expectedIntent = this.buildExpectedIntent_(this.StandardIntents.OPTION, []);
@@ -891,8 +1020,74 @@ const ActionsSdkApp = class extends AssistantApp {
         permissionValueSpec: permissionsSpec
       };
     }
-    // Send an Ask request to Assistant.
     const inputPrompt = this.buildInputPrompt(false, 'PLACEHOLDER_FOR_PERMISSION');
+    if (!dialogState) {
+      dialogState = {
+        'state': (this.state instanceof State ? this.state.getName() : this.state),
+        'data': this.data
+      };
+    }
+    return this.buildAskHelper_(inputPrompt, [expectedIntent], dialogState);
+  }
+
+  /**
+   * Uses TransactionRequirementsCheckValueSpec to construct and send a
+   * transaction requirements request to Google.
+   *
+   * @param {Object} transactionRequirementsSpec TransactionRequirementsSpec
+   *     object.
+   * @param {Object} dialogState JSON object the app uses to hold dialog state that
+   *     will be circulated back by Assistant.
+   * @return {Object} HTTP response.
+   * @private
+   * @actionssdk
+   */
+  fulfillTransactionRequirementsCheck_ (transactionRequirementsSpec, dialogState) {
+    debug('fulfillTransactionRequirementsCheck_: transactionRequirementsSpec=%s,' +
+      ' dialogState=%s',
+      JSON.stringify(transactionRequirementsSpec), JSON.stringify(dialogState));
+    // Build an Expected Intent object.
+    const expectedIntent = {
+      intent: this.StandardIntents.TRANSACTION_REQUIREMENTS_CHECK
+    };
+    expectedIntent.inputValueData = Object.assign({
+      [this.ANY_TYPE_PROPERTY_]: this.InputValueDataTypes_.TRANSACTION_REQ_CHECK
+    }, transactionRequirementsSpec);
+    const inputPrompt = this.buildInputPrompt(false, 'PLACEHOLDER_FOR_TXN_REQUIREMENTS');
+    if (!dialogState) {
+      dialogState = {
+        'state': (this.state instanceof State ? this.state.getName() : this.state),
+        'data': this.data
+      };
+    }
+    return this.buildAskHelper_(inputPrompt, [expectedIntent], dialogState);
+  }
+
+  /**
+   * Uses TransactionDecisionValueSpec to construct and send a transaction
+   * requirements request to Google.
+   *
+   * @param {Object} transactionDecisionValueSpec TransactionDecisionValueSpec
+   *     object.
+   * @param {Object} dialogState JSON object the app uses to hold dialog state that
+   *     will be circulated back by Assistant.
+   * @return {Object} HTTP response.
+   * @private
+   * @apiai
+   */
+  fulfillTransactionDecision_ (transactionDecisionValueSpec, dialogState) {
+    debug('fulfillTransactionDecision_: transactionDecisionValueSpec=%s,' +
+        ' dialogState=%s',
+      JSON.stringify(transactionDecisionValueSpec), JSON.stringify(dialogState));
+    // Build an Expected Intent object.
+    const expectedIntent = {
+      intent: this.StandardIntents.TRANSACTION_DECISION
+    };
+    expectedIntent.inputValueData = Object.assign({
+      [this.ANY_TYPE_PROPERTY_]: this.InputValueDataTypes_.TRANSACTION_DECISION
+    }, transactionDecisionValueSpec);
+    // Send an Ask request to Assistant.
+    const inputPrompt = this.buildInputPrompt(false, 'PLACEHOLDER_FOR_TXN_DECISION');
     if (!dialogState) {
       dialogState = {
         'state': (this.state instanceof State ? this.state.getName() : this.state),

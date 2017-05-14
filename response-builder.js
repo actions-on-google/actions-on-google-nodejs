@@ -157,7 +157,8 @@ const RichResponse = class {
       simpleResponse: this.buildSimpleResponseHelper_(simpleResponse)
     };
     // Check first if needs to replace BasicCard at beginning of items list
-    if (this.items.length > 0 && this.items[0].basicCard) {
+    if (this.items.length > 0 && (this.items[0].basicCard ||
+      this.items[0].structuredResponse)) {
       this.items.unshift(simpleResponseObj);
     } else {
       this.items.push(simpleResponseObj);
@@ -231,6 +232,33 @@ const RichResponse = class {
       destinationName: destinationName,
       url: suggestionUrl
     };
+    return this;
+  }
+
+  /**
+   * Adds an order update to this response. Use after a successful transaction
+   * decision to confirm the order.
+   *
+   * @param {OrderUpdate} orderUpdate
+   * @return {RichResponse} Returns current constructed RichResponse.
+   */
+  addOrderUpdate (orderUpdate) {
+    if (!orderUpdate) {
+      error('Invalid orderUpdate');
+      return this;
+    }
+    // Validate if RichResponse already contains StructuredResponse object
+    for (let item of this.items) {
+      if (item.structuredResponse) {
+        debug('Cannot include >1 StructuredResponses in RichResponse');
+        return this;
+      }
+    }
+    this.items.push({
+      structuredResponse: {
+        orderUpdate: orderUpdate
+      }
+    });
     return this;
   }
 

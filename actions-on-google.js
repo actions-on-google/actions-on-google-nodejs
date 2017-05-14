@@ -28,6 +28,8 @@ module.exports = {
   State: AssistantApp.State,
   ActionsSdkApp: require('./actions-sdk-app'),
   ApiAiApp: require('./api-ai-app'),
+  Transactions: require('./transactions'),
+  Responses: require('./response-builder'),
   // Backwards compatibility
   Assistant: AssistantApp.AssistantApp,
   ActionsSdkAssistant: require('./actions-sdk-app'),

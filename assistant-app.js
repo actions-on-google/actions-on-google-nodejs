@@ -36,6 +36,13 @@ const Carousel = require('./response-builder').Carousel;
 const OptionItem = require('./response-builder').OptionItem;
 const isSsml = require('./response-builder').isSsml;
 
+// Transaction classes
+const TransactionValues = require('./transactions').TransactionValues;
+const Order = require('./transactions').Order;
+const Cart = require('./transactions').Cart;
+const LineItem = require('./transactions').LineItem;
+const OrderUpdate = require('./transactions').OrderUpdate;
+
 const transformToSnakeCase = require('./utils/transform').transformToSnakeCase;
 const transformToCamelCase = require('./utils/transform').transformToCamelCase;
 
@@ -211,14 +218,20 @@ const AssistantApp = class {
      * @apiai
      */
     this.StandardIntents = {
-      /** Assistant fires MAIN intent for queries like [talk to $action]. */
+      /** App fires MAIN intent for queries like [talk to $action]. */
       MAIN: this.isNotApiVersionOne_() ? 'actions.intent.MAIN' : 'assistant.intent.action.MAIN',
-      /** Assistant fires TEXT intent when action issues ask intent. */
+      /** App fires TEXT intent when action issues ask intent. */
       TEXT: this.isNotApiVersionOne_() ? 'actions.intent.TEXT' : 'assistant.intent.action.TEXT',
-      /** Assistant fires PERMISSION intent when action invokes askForPermission. */
+      /** App fires PERMISSION intent when action invokes askForPermission. */
       PERMISSION: this.isNotApiVersionOne_() ? 'actions.intent.PERMISSION' : 'assistant.intent.action.PERMISSION',
       /** App fires OPTION intent when user chooses from options provided. */
-      OPTION: 'actions.intent.OPTION'
+      OPTION: 'actions.intent.OPTION',
+      /** App fires TRANSACTION_REQUIREMENTS_CHECK intent when action sets up transaction. */
+      TRANSACTION_REQUIREMENTS_CHECK: 'actions.intent.TRANSACTION_REQUIREMENTS_CHECK',
+      /** App fires DELIVERY_ADDRESS intent when action asks for delivery address. */
+      DELIVERY_ADDRESS: 'actions.intent.DELIVERY_ADDRESS',
+      /** App fires TRANSACTION_DECISION intent when action asks for transaction decision. */
+      TRANSACTION_DECISION: 'actions.intent.TRANSACTION_DECISION'
     };
 
     /**
@@ -255,7 +268,15 @@ const AssistantApp = class {
      */
     this.BuiltInArgNames = {
       /** Permission granted argument. */
-      PERMISSION_GRANTED: this.isNotApiVersionOne_() ? 'PERMISSION' : 'permission_granted'
+      PERMISSION_GRANTED: this.isNotApiVersionOne_() ? 'PERMISSION' : 'permission_granted',
+      /** Option selected argument. */
+      OPTION: 'OPTION',
+      /** Transaction requirements check result argument. */
+      TRANSACTION_REQ_CHECK_RESULT: 'TRANSACTION_REQUIREMENTS_CHECK_RESULT',
+      /** Delivery address value argument. */
+      DELIVERY_ADDRESS_VALUE: 'DELIVERY_ADDRESS_VALUE',
+      /** Transactions decision argument. */
+      TRANSACTION_DECISION_VALUE: 'TRANSACTION_DECISION_VALUE'
     };
 
     /**
@@ -278,7 +299,13 @@ const AssistantApp = class {
       /** Permission Value Spec. */
       PERMISSION: 'type.googleapis.com/google.actions.v2.PermissionValueSpec',
       /** Option Value Spec. */
-      OPTION: 'type.googleapis.com/google.actions.v2.OptionValueSpec'
+      OPTION: 'type.googleapis.com/google.actions.v2.OptionValueSpec',
+      /** Transaction Requirements Check Value Spec. */
+      TRANSACTION_REQ_CHECK: 'type.googleapis.com/google.actions.v2.TransactionRequirementsCheckSpec',
+      /** Delivery Address Value Spec. */
+      DELIVERY_ADDRESS: 'type.googleapis.com/google.actions.v2.DeliveryAddressValueSpec',
+      /** Transaction Decision Value Spec. */
+      TRANSACTION_DECISION: 'type.googleapis.com/google.actions.v2.TransactionDecisionValueSpec'
     };
 
     /**
@@ -360,6 +387,13 @@ const AssistantApp = class {
       this.apiVersion_ = this.request_.get(CONVERSATION_API_VERSION_HEADER);
       debug('Assistant API version: ' + this.apiVersion_);
     }
+
+    /**
+     * Values related to supporting {@link Transactions}.
+     * @readonly
+     * @type {object}
+     */
+    this.Transactions = TransactionValues;
   }
 
   // ---------------------------------------------------------------------------
@@ -510,7 +544,7 @@ const AssistantApp = class {
    * @param {Array<string>} permissions Array of permissions App supports, each of
    *     which comes from AssistantApp.SupportedPermissions.
    * @param {Object=} dialogState JSON object the app uses to hold dialog state that
-   *     will be circulated back by Assistant.
+   *     will be circulated back by Assistant. Used in {@link ActionsSdkAssistant}.
    * @return A response is sent to Assistant to ask for the user's permission; for any
    *     invalid input, we return null.
    * @actionssdk
@@ -547,6 +581,140 @@ const AssistantApp = class {
       optContext: context,
       permissions: permissions
     }, dialogState);
+  }
+
+  /**
+   * Checks whether user is in transactable state.
+   *
+   * @example
+   * const app = new ApiAiApp({request: request, response: response});
+   * const WELCOME_INTENT = 'input.welcome';
+   * const TXN_REQ_COMPLETE = 'txn.req.complete';
+   *
+   * let transactionConfig = {
+   *     deliveryAddressRequired: false,
+   *     type: app.Transactions.PaymentType.BANK,
+   *     displayName: 'Checking-1234'
+   * };
+   * function welcomeIntent (app) {
+   *   app.askForTransactionRequirements(transactionConfig);
+   * }
+   *
+   * function txnReqCheck (app) {
+   *   if (app.getTransactionRequirementsResult() === app.Transactions.ResultType.OK) {
+   *     // continue cart building flow
+   *   } else {
+   *     // don't continue cart building
+   *   }
+   * }
+   *
+   * const actionMap = new Map();
+   * actionMap.set(WELCOME_INTENT, welcomeIntent);
+   * actionMap.set(TXN_REQ_COMPLETE, txnReqCheck);
+   * app.handleRequest(actionMap);
+   *
+   * @param {ActionPaymentTransactionConfig|GooglePaymentTransactionConfig=}
+   *     transactionConfig Configuration for the transaction. Includes payment
+   *     options and order options. Optional if order has no payment or
+   *     delivery.
+   * @param {Object=} dialogState JSON object the app uses to hold dialog state that
+   *     will be circulated back by Assistant. Used in {@link ActionsSdkAssistant}.
+   * @return {Object} HTTP response.
+   * @actionssdk
+   * @apiai
+   */
+  askForTransactionRequirements (transactionConfig, dialogState) {
+    debug('checkForTransactionRequirements: transactionConfig=%s,' +
+      ' dialogState=%s',
+      JSON.stringify(transactionConfig), JSON.stringify(dialogState));
+    if (transactionConfig && transactionConfig.type &&
+      transactionConfig.cardNetworks) {
+      this.handleError_('Invalid transaction configuration. Must be of type' +
+        'ActionPaymentTransactionConfig or GooglePaymentTransactionConfig');
+      return null;
+    }
+    const transactionRequirementsCheckSpec = {};
+    if (transactionConfig && transactionConfig.deliveryAddressRequired) {
+      transactionRequirementsCheckSpec.orderOptions = {
+        requestDeliveryAddress: transactionConfig.deliveryAddressRequired
+      };
+    }
+    if (transactionConfig && (transactionConfig.type ||
+      transactionConfig.cardNetworks)) {
+      transactionRequirementsCheckSpec.paymentOptions =
+        this.buildPaymentOptions_(transactionConfig);
+    }
+    return this.fulfillTransactionRequirementsCheck_(transactionRequirementsCheckSpec,
+      dialogState);
+  }
+
+  /**
+   * Asks user to confirm transaction information.
+   *
+   * @example
+   * const app = new ApiAiApp({request: request, response: response});
+   * const WELCOME_INTENT = 'input.welcome';
+   * const TXN_COMPLETE = 'txn.complete';
+   *
+   * let transactionConfig = {
+   *     deliveryAddressRequired: false,
+   *     type: app.Transactions.PaymentType.BANK,
+   *     displayName: 'Checking-1234'
+   * };
+   *
+   * let order = app.buildOrder();
+   * // fill order cart
+   *
+   * function welcomeIntent (app) {
+   *   app.askForTransaction(order, transactionConfig);
+   * }
+   *
+   * function txnComplete (app) {
+   *   // respond with order update
+   * }
+   *
+   * const actionMap = new Map();
+   * actionMap.set(WELCOME_INTENT, welcomeIntent);
+   * actionMap.set(TXN_COMPLETE, txnComplete);
+   * app.handleRequest(actionMap);
+   *
+   * @param {Object} order Order built with buildOrder().
+   * @param {ActionPaymentTransactionConfig|GooglePaymentTransactionConfig}
+   *     transactionConfig Configuration for the transaction. Includes payment
+   *     options and order options.
+   * @param {Object=} dialogState JSON object the app uses to hold dialog state that
+   *     will be circulated back by Assistant. Used in {@link ActionsSdkAssistant}.
+   * @apiai
+   */
+  askForTransactionDecision (order, transactionConfig, dialogState) {
+    debug('askForTransactionDecision: order=%s, transactionConfig=%s,' +
+      ' dialogState=%s', JSON.stringify(order),
+      JSON.stringify(transactionConfig), JSON.stringify(dialogState));
+    if (!order) {
+      this.handleError_('Invalid order');
+      return null;
+    }
+    if (transactionConfig && transactionConfig.type &&
+      transactionConfig.cardNetworks) {
+      this.handleError_('Invalid transaction configuration. Must be of type' +
+        'ActionPaymentTransactionConfig or GooglePaymentTransactionConfig');
+      return null;
+    }
+    const transactionDecisionValueSpec = {
+      proposedOrder: order
+    };
+    if (transactionConfig && transactionConfig.deliveryAddressRequired) {
+      transactionDecisionValueSpec.orderOptions = {
+        requestDeliveryAddress: transactionConfig.deliveryAddressRequired
+      };
+    }
+    if (transactionConfig && (transactionConfig.type ||
+      transactionConfig.cardNetworks)) {
+      transactionDecisionValueSpec.paymentOptions =
+        this.buildPaymentOptions_(transactionConfig);
+    }
+    return this.fulfillTransactionDecision_(transactionDecisionValueSpec,
+      dialogState);
   }
 
   /**
@@ -794,6 +962,53 @@ const AssistantApp = class {
   }
 
   // ---------------------------------------------------------------------------
+  //                   Transaction Builders
+  // ---------------------------------------------------------------------------
+
+  /**
+   * Constructs Order with chainable property setters.
+   *
+   * @param {string} orderId Unique identifier for the order.
+   * @return {Order} Constructed Order.
+   */
+  buildOrder (orderId) {
+    return new Order(orderId);
+  }
+
+  /**
+   * Constructs Cart with chainable property setters.
+   *
+   * @param {string=} cartId Unique identifier for the cart.
+   * @return {Cart} Constructed Cart.
+   */
+  buildCart (cartId) {
+    return new Cart(cartId);
+  }
+
+  /**
+   * Constructs LineItem with chainable property setters.
+   *
+   * @param {string} name Name of the line item.
+   * @param {string} id Unique identifier for the item.
+   * @return {LineItem} Constructed LineItem.
+   */
+  buildLineItem (name, id) {
+    return new LineItem(name, id);
+  }
+
+  /**
+   * Constructs OrderUpdate with chainable property setters.
+   *
+   * @param {string} orderId Unique identifier of the order.
+   * @param {boolean} isGoogleOrderId True if the order ID is provided by
+   *     Google. False if the order ID is app provided.
+   * @return {OrderUpdate} Constructed OrderUpdate.
+   */
+  buildOrderUpdate (orderId, isGoogleOrderId) {
+    return new OrderUpdate(orderId, isGoogleOrderId);
+  }
+
+  // ---------------------------------------------------------------------------
   //                   Private Helpers
   // ---------------------------------------------------------------------------
 
@@ -980,6 +1195,32 @@ const AssistantApp = class {
   }
 
   /**
+   * Uses a TransactionRequirementsCheckValueSpec object to construct and send a
+   * transaction requirements request to user.
+   *
+   * Used in subclasses for Actions SDK and API.AI.
+   * @return {Object} HTTP response.
+   * @private
+   */
+  fulfillTransactionRequirementsCheck_ () {
+    debug('fulfillTransactionRequirementsCheck_');
+    return {};
+  }
+
+  /**
+   * Uses a TransactionDecisionValueSpec object to construct and send a
+   * transaction confirmation request to user.
+   *
+   * Used in subclasses for Actions SDK and API.AI.
+   * @return {Object} HTTP response.
+   * @private
+   */
+  fulfillTransactionDecision_ () {
+    debug('fulfillTransactionDecision_');
+    return {};
+  }
+
+  /**
    * Helper to build prompts from SSML's.
    *
    * @param {Array<string>} ssmls Array of ssml.
@@ -1015,6 +1256,39 @@ const AssistantApp = class {
       prompts.push(prompt);
     }
     return prompts;
+  }
+
+  /**
+   * Helper to process a transaction config and create a payment options object.
+   *
+   * @param {ActionPaymentTransactionConfig|GooglePaymentTransactionConfig}
+   *     transactionConfig Configuration for the transaction. Includes payment
+   *     options and order options.
+   * @return {object} paymentOptions
+   * @private
+   */
+  buildPaymentOptions_ (transactionConfig) {
+    debug('buildPromptsFromPlainTextHelper_: transactionConfig=%s',
+      JSON.stringify(transactionConfig));
+    let paymentOptions = {};
+    if (transactionConfig.type) { // Action payment
+      paymentOptions.actionProvidedOptions = {
+        paymentType: transactionConfig.type,
+        displayName: transactionConfig.displayName
+      };
+    } else { // Google payment
+      paymentOptions.googleProvidedOptions = {
+        supportedCardNetworks: transactionConfig.cardNetworks,
+        prepaidCardDisallowed: transactionConfig.prepaidCardDisallowed
+      };
+      if (transactionConfig.tokenizationParameters) {
+        paymentOptions.googleProvidedOptions.tokenizationParameters = {
+          tokenizationType: 'PAYMENT_GATEWAY',
+          parameters: transactionConfig.tokenizationParameters
+        };
+      }
+    }
+    return paymentOptions;
   }
 };
 

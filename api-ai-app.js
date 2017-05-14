@@ -35,7 +35,6 @@ const MAX_LIFESPAN = 100;
 const INPUTS_MAX = 3;
 const ORIGINAL_SUFFIX = '.original';
 const SELECT_EVENT = 'actions_intent_option';
-const SELECTED_KEY = 'OPTION';
 
 // API.AI Rich Response item types
 const SIMPLE_RESPONSE = 'simple_response';
@@ -161,6 +160,97 @@ const ApiAiApp = class extends AssistantApp {
   }
 
   /**
+   * Gets transactability of user. Only use after calling
+   * askForTransactionRequirements. Null if no result given.
+   *
+   * @return {string} One of Transactions.ResultType.
+   * @apiai
+   */
+  getTransactionRequirementsResult () {
+    debug('getTransactionRequirementsResult');
+    if (this.body_.originalRequest && this.body_.originalRequest.data &&
+      this.body_.originalRequest.data.inputs) {
+      for (let input of this.body_.originalRequest.data.inputs) {
+        if (input.arguments) {
+          for (let argument of input.arguments) {
+            if (argument.name === this.BuiltInArgNames.TRANSACTION_REQ_CHECK_RESULT &&
+              argument.extension && argument.extension.resultType) {
+              return argument.extension.resultType;
+            }
+          }
+        }
+      }
+    }
+    return null;
+  }
+
+  /**
+   * Gets order delivery address. Only use after calling askForDeliveryAddress.
+   *
+   * @return {DeliveryAddress} Delivery address information. Null if user
+   *     denies permission, or no address given.
+   * @apiai
+   */
+  getDeliveryAddress () {
+    debug('getDeliveryAddress');
+    if (this.body_.originalRequest && this.body_.originalRequest.data &&
+         this.body_.originalRequest.data.inputs) {
+      for (let input of this.body_.originalRequest.data.inputs) {
+        if (input.arguments) {
+          for (let argument of input.arguments) {
+            if ((argument.name === this.BuiltInArgNames.DELIVERY_ADDRESS_VALUE ||
+                 argument.name === this.BuiltInArgNames.TRANSACTION_DECISION_VALUE) &&
+                 argument.extension) {
+              if (argument.extension.userDecision ===
+                   this.Transactions.DeliveryAddressDecision.ACCEPTED) {
+                const locationValue = argument.extension.location;
+                if (!locationValue.postalAddress) {
+                  debug('User accepted, but may not have configured address in app');
+                  return null;
+                }
+                return locationValue;
+              } else {
+                debug('User rejected giving delivery address');
+                return null;
+              }
+            }
+          }
+        }
+      }
+    }
+    debug('Failed to get order delivery address');
+    return null;
+  }
+
+  /**
+   * Gets transaction decision information. Only use after calling
+   * askForTransactionDecision.
+   *
+   * @return {TransactionDecision} Transaction decision data. Returns object with
+   *     userDecision only if user declines. userDecision will be one of
+   *     Transactions.ConfirmationDecision. Null if no decision given.
+   * @apiai
+   */
+  getTransactionDecision () {
+    debug('getTransactionDecision');
+    if (this.body_.originalRequest && this.body_.originalRequest.data &&
+      this.body_.originalRequest.data.inputs) {
+      for (let input of this.body_.originalRequest.data.inputs) {
+        if (input.arguments) {
+          for (let argument of input.arguments) {
+            if (argument.name === this.BuiltInArgNames.TRANSACTION_DECISION_VALUE &&
+              argument.extension) {
+              return argument.extension;
+            }
+          }
+        }
+      }
+    }
+    debug('Failed to get order decision information');
+    return null;
+  }
+
+  /**
    * Returns true if the request follows a previous request asking for
    * permission from the user and the user granted the permission(s). Otherwise,
    * false. Use with {@link AssistantApp#askForPermissions|askForPermissions}.
@@ -182,15 +272,32 @@ const ApiAiApp = class extends AssistantApp {
    */
   isPermissionGranted () {
     debug('isPermissionGranted');
-    for (let input of this.body_.originalRequest.data.inputs) {
-      if (input.arguments) {
-        for (let argument of input.arguments) {
-          return argument.name === this.BuiltInArgNames.PERMISSION_GRANTED &&
-            argument.textValue === 'true';
+    if (this.body_.originalRequest && this.body_.originalRequest.data &&
+      this.body_.originalRequest.data.inputs) {
+      for (let input of this.body_.originalRequest.data.inputs) {
+        if (input.arguments) {
+          for (let argument of input.arguments) {
+            return argument.name === this.BuiltInArgNames.PERMISSION_GRANTED &&
+              argument.textValue === 'true';
+          }
         }
       }
     }
     return false;
+  }
+
+  /**
+   * Returns true if the app is being tested in sandbox mode. Enable sandbox
+   * mode in the (Actions console)[console.actions.google.com] to test
+   * transactions.
+   *
+   * @return {boolean} True if app is being used in Sandbox mode.
+   * @apiai
+   */
+  isInSandbox () {
+    return this.body_ && this.body_.originalRequest &&
+      this.body_.originalRequest.data &&
+      this.body_.originalRequest.data.isInSandbox;
   }
 
   /**
@@ -626,11 +733,11 @@ const ApiAiApp = class extends AssistantApp {
    */
   getSelectedOption () {
     debug('getSelectedOption');
-    if (this.getContextArgument(SELECT_EVENT, SELECTED_KEY) &&
-      this.getContextArgument(SELECT_EVENT, SELECTED_KEY).value) {
-      return this.getContextArgument(SELECT_EVENT, SELECTED_KEY).value;
-    } else if (this.getArgument(SELECTED_KEY)) {
-      return this.getArgument(SELECTED_KEY);
+    if (this.getContextArgument(SELECT_EVENT, this.BuiltInArgNames.OPTION) &&
+      this.getContextArgument(SELECT_EVENT, this.BuiltInArgNames.OPTION).value) {
+      return this.getContextArgument(SELECT_EVENT, this.BuiltInArgNames.OPTION).value;
+    } else if (this.getArgument(this.BuiltInArgNames.OPTION)) {
+      return this.getArgument(this.BuiltInArgNames.OPTION);
     }
     debug('Failed to get selected option');
     return null;
@@ -735,7 +842,7 @@ const ApiAiApp = class extends AssistantApp {
       return null;
     }
     if (list.items.length < 2) {
-      this.handleError_('List requires more than 2 items');
+      this.handleError_('List requires at least 2 items');
       return null;
     }
     const response = this.buildResponse_(inputPrompt, true);
@@ -815,7 +922,7 @@ const ApiAiApp = class extends AssistantApp {
       return null;
     }
     if (carousel.items.length < 2) {
-      this.handleError_('Carousel requires more than 2 items');
+      this.handleError_('Carousel requires at least 2 items');
       return null;
     }
     const response = this.buildResponse_(inputPrompt, true);
@@ -839,6 +946,56 @@ const ApiAiApp = class extends AssistantApp {
         }
       };
     }
+    return this.doResponse_(response, RESPONSE_CODE_OK);
+  }
+
+  /**
+   * Asks user for delivery address.
+   *
+   * @example
+   * const app = new ApiAiApp({request: request, response: response});
+   * const WELCOME_INTENT = 'input.welcome';
+   * const DELIVERY_INTENT = 'delivery.address';
+   *
+   * function welcomeIntent (app) {
+   *   app.askForDeliveryAddress('To make sure I can deliver to you');
+   * }
+   *
+   * function addressIntent (app) {
+   *   const postalCode = app.getDeliveryAddress().postalAddress.postalCode;
+   *   if (isInDeliveryZone(postalCode)) {
+   *     app.tell('Great looks like you\'re in our delivery area!');
+   *   } else {
+   *     app.tell('I\'m sorry it looks like we can\'t deliver to you.');
+   *   }
+   * }
+   *
+   * const actionMap = new Map();
+   * actionMap.set(WELCOME_INTENT, welcomeIntent);
+   * actionMap.set(DELIVERY_INTENT, addressIntent);
+   * app.handleRequest(actionMap);
+   *
+   * @param {string} reason Reason given to user for asking delivery address.
+   * @return {Object} HTTP response.
+   * @apiai
+   */
+  askForDeliveryAddress (reason) {
+    debug('askForDeliveryAddress: reason=%s', reason);
+    if (!reason) {
+      this.handleError_('reason cannot be empty');
+      return null;
+    }
+    const response = this.buildResponse_('PLACEHOLDER_FOR_DELIVERY_ADDRESS', true);
+    response.data.google.systemIntent = {
+      intent: this.StandardIntents.DELIVERY_ADDRESS
+    };
+    response.data.google.systemIntent.data = Object.assign({
+      [this.ANY_TYPE_PROPERTY_]: this.InputValueDataTypes_.DELIVERY_ADDRESS
+    }, {
+      addressOptions: {
+        reason: reason
+      }
+    });
     return this.doResponse_(response, RESPONSE_CODE_OK);
   }
 
@@ -1206,6 +1363,52 @@ const ApiAiApp = class extends AssistantApp {
         permissionValueSpec: permissionsSpec
       };
     }
+    return this.doResponse_(response, RESPONSE_CODE_OK);
+  }
+
+  /**
+   * Uses TransactionRequirementsCheckValueSpec to construct and send a
+   * transaction requirements request to Google.
+   *
+   * @param {Object} transactionRequirementsSpec TransactionRequirementsSpec
+   *     object.
+   * @return {Object} HTTP response.
+   * @private
+   * @apiai
+   */
+  fulfillTransactionRequirementsCheck_ (transactionRequirementsSpec) {
+    debug('fulfillTransactionRequirementsCheck_: transactionRequirementsSpec=%s',
+      JSON.stringify(transactionRequirementsSpec));
+    const response = this.buildResponse_('PLACEHOLDER_FOR_TXN_REQUIREMENTS', true);
+    response.data.google.systemIntent = {
+      intent: this.StandardIntents.TRANSACTION_REQUIREMENTS_CHECK
+    };
+    response.data.google.systemIntent.data = Object.assign({
+      [this.ANY_TYPE_PROPERTY_]: this.InputValueDataTypes_.TRANSACTION_REQ_CHECK
+    }, transactionRequirementsSpec);
+    return this.doResponse_(response, RESPONSE_CODE_OK);
+  }
+
+  /**
+   * Uses TransactionDecisionValueSpec to construct and send a transaction
+   * requirements request to Google.
+   *
+   * @param {Object} transactionDecisionValueSpec TransactionDecisionValueSpec
+   *     object.
+   * @return {Object} HTTP response.
+   * @private
+   * @apiai
+   */
+  fulfillTransactionDecision_ (transactionDecisionValueSpec) {
+    debug('fulfillTransactionDecision_: transactionDecisionValueSpec=%s',
+      JSON.stringify(transactionDecisionValueSpec));
+    const response = this.buildResponse_('PLACEHOLDER_FOR_TXN_DECISION', true);
+    response.data.google.systemIntent = {
+      intent: this.StandardIntents.TRANSACTION_DECISION
+    };
+    response.data.google.systemIntent.data = Object.assign({
+      [this.ANY_TYPE_PROPERTY_]: this.InputValueDataTypes_.TRANSACTION_DECISION
+    }, transactionDecisionValueSpec);
     return this.doResponse_(response, RESPONSE_CODE_OK);
   }
 };

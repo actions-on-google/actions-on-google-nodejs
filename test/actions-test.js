@@ -1874,6 +1874,1191 @@ describe('ApiAiApp#getDeviceLocation', function () {
 });
 
 /**
+ * Describes the behavior for ApiAiApp getTransactionRequirementsResult method.
+ */
+describe('ApiAiApp#getTransactionRequirementsResult', function () {
+  // Success case test, when the API returns a valid 200 response with the response object
+  it('Should validate assistant request transaction result.', function () {
+    let headers = {
+      'Content-Type': 'application/json'
+    };
+    let body = {
+      'originalRequest': {
+        'source': 'google',
+        'version': '2',
+        'data': {
+          'isInSandbox': true,
+          'surface': {
+            'capabilities': [
+              {
+                'name': 'actions.capability.AUDIO_OUTPUT'
+              },
+              {
+                'name': 'actions.capability.SCREEN_OUTPUT'
+              }
+            ]
+          },
+          'inputs': [
+            {
+              'rawInputs': [
+                {
+                  'query': 'check transaction',
+                  'inputType': 'VOICE'
+                }
+              ],
+              'arguments': [
+                {
+                  'extension': {
+                    'canTransact': true,
+                    '@type': 'type.googleapis.com/google.actions.v2.TransactionRequirementsCheckResult',
+                    'resultType': 'OK'
+                  },
+                  'name': 'TRANSACTION_REQUIREMENTS_CHECK_RESULT'
+                }
+              ],
+              'intent': 'actions.intent.TRANSACTION_REQUIREMENTS_CHECK'
+            }
+          ],
+          'user': {
+            'userId': 'user123'
+          },
+          'device': {
+            'locale': 'en-US'
+          },
+          'conversation': {
+            'conversationId': '1494603963782',
+            'type': 'ACTIVE',
+            'conversationToken': '["_actions_on_google_"]'
+          }
+        }
+      },
+      'id': 'e169144c-9d31-4a9d-82a0-b14922ce21a7',
+      'timestamp': '2017-05-12T15:46:08.594Z',
+      'lang': 'en',
+      'result': {
+        'source': 'agent',
+        'resolvedQuery': 'actions_intent_TRANSACTION_REQUIREMENTS_CHECK',
+        'speech': '',
+        'action': 'transaction.check.complete',
+        'actionIncomplete': false,
+        'parameters': {
+          'test': '@test'
+        },
+        'metadata': {
+          'intentId': 'fd16d86b-60db-4d19-a683-5b52a22f4795',
+          'webhookUsed': 'true',
+          'webhookForSlotFillingUsed': 'false',
+          'nluResponseTime': 19,
+          'intentName': 'transactioncheck_complete'
+        },
+        'fulfillment': {
+          'speech': '',
+          'messages': [
+            {
+              'type': 0,
+              'speech': ''
+            }
+          ]
+        },
+        'score': 1
+      },
+      'status': {
+        'code': 200,
+        'errorType': 'success'
+      },
+      'sessionId': '1494603963782'
+    };
+
+    let mockRequest = new MockRequest(headers, body);
+    let mockResponse = new MockResponse();
+
+    let app = new ApiAiApp({
+      request: mockRequest,
+      response: mockResponse
+    });
+
+    expect(app.getTransactionRequirementsResult()).to.equal('OK');
+  });
+});
+
+/**
+ * Describes the behavior for ApiAiApp getDeliveryAddress method.
+ */
+describe('ApiAiApp#getDeliveryAddress', function () {
+  // Success case test, when the API returns a valid 200 response with the response object
+  it('Should validate assistant request delivery address', function () {
+    let headers = {
+      'Content-Type': 'application/json'
+    };
+    let body = {
+      'originalRequest': {
+        'source': 'google',
+        'version': '2',
+        'data': {
+          'isInSandbox': true,
+          'surface': {
+            'capabilities': [
+              {
+                'name': 'actions.capability.AUDIO_OUTPUT'
+              },
+              {
+                'name': 'actions.capability.SCREEN_OUTPUT'
+              }
+            ]
+          },
+          'inputs': [
+            {
+              'rawInputs': [
+                {
+                  'query': '1600 Amphitheatre Parkway',
+                  'inputType': 'VOICE'
+                }
+              ],
+              'arguments': [
+                {
+                  'extension': {
+                    'userDecision': 'ACCEPTED',
+                    '@type': 'type.googleapis.com/google.actions.v2.DeliveryAddressValue',
+                    'location': {
+                      'zipCode': '94043',
+                      'postalAddress': {
+                        'regionCode': 'US',
+                        'recipients': [
+                          'Jane Smith'
+                        ],
+                        'postalCode': '94043',
+                        'locality': 'Mountain View',
+                        'addressLines': [
+                          '1600 Amphitheatre Parkway'
+                        ],
+                        'administrativeArea': 'CA'
+                      },
+                      'phoneNumber': '+1 415-555-1234',
+                      'city': 'Mountain View'
+                    }
+                  },
+                  'name': 'DELIVERY_ADDRESS_VALUE'
+                }
+              ],
+              'intent': 'actions.intent.DELIVERY_ADDRESS'
+            }
+          ],
+          'user': {
+            'userId': 'user123'
+          },
+          'device': {
+            'locale': 'en-US'
+          },
+          'conversation': {
+            'conversationId': '1494606917128',
+            'type': 'ACTIVE',
+            'conversationToken': '["_actions_on_google_"]'
+          }
+        }
+      },
+      'id': '8032dc31-9627-4fbe-9ffd-8e5cfb20cebf',
+      'timestamp': '2017-05-12T16:35:38.131Z',
+      'lang': 'en',
+      'result': {
+        'source': 'agent',
+        'resolvedQuery': 'actions_intent_DELIVERY_ADDRESS',
+        'speech': '',
+        'action': 'delivery.address.complete',
+        'actionIncomplete': false,
+        'parameters': {},
+        'contexts': [
+        ],
+        'metadata': {
+          'intentId': 'a15ac3ff-1a84-43d0-94e9-37862a3d89cf',
+          'webhookUsed': 'true',
+          'webhookForSlotFillingUsed': 'false',
+          'nluResponseTime': 2,
+          'intentName': 'deliveryaddress_complete'
+        },
+        'fulfillment': {
+          'speech': '',
+          'messages': [
+            {
+              'type': 0,
+              'speech': ''
+            }
+          ]
+        },
+        'score': 1
+      },
+      'status': {
+        'code': 200,
+        'errorType': 'success'
+      },
+      'sessionId': '1494606917128'
+    };
+
+    let mockRequest = new MockRequest(headers, body);
+    let mockResponse = new MockResponse();
+
+    let app = new ApiAiApp({
+      request: mockRequest,
+      response: mockResponse
+    });
+
+    expect(app.getDeliveryAddress()).to.deep.equal({
+      zipCode: '94043',
+      postalAddress: {
+        regionCode: 'US',
+        recipients: [
+          'Jane Smith'
+        ],
+        postalCode: '94043',
+        locality: 'Mountain View',
+        addressLines: [
+          '1600 Amphitheatre Parkway'
+        ],
+        administrativeArea: 'CA'
+      },
+      phoneNumber: '+1 415-555-1234',
+      city: 'Mountain View'
+    });
+  });
+
+  // Success case test, when the API returns a valid 200 response with the response object
+  it('Should validate assistant request delivery address for txn decision', function () {
+    let headers = {
+      'Content-Type': 'application/json'
+    };
+    let body = {
+      'originalRequest': {
+        'source': 'google',
+        'version': '2',
+        'data': {
+          'isInSandbox': true,
+          'surface': {
+            'capabilities': [
+              {
+                'name': 'actions.capability.AUDIO_OUTPUT'
+              },
+              {
+                'name': 'actions.capability.SCREEN_OUTPUT'
+              }
+            ]
+          },
+          'inputs': [
+            {
+              'rawInputs': [
+                {
+                  'query': '1600 Amphitheatre Parkway',
+                  'inputType': 'VOICE'
+                }
+              ],
+              'arguments': [
+                {
+                  'extension': {
+                    'userDecision': 'ACCEPTED',
+                    '@type': 'type.googleapis.com/google.actions.v2.TransactionDecisionValue',
+                    'location': {
+                      'zipCode': '94043',
+                      'postalAddress': {
+                        'regionCode': 'US',
+                        'recipients': [
+                          'Jane Smith'
+                        ],
+                        'postalCode': '94043',
+                        'locality': 'Mountain View',
+                        'addressLines': [
+                          '1600 Amphitheatre Parkway'
+                        ],
+                        'administrativeArea': 'CA'
+                      },
+                      'phoneNumber': '+1 415-555-1234',
+                      'city': 'Mountain View'
+                    }
+                  },
+                  'name': 'TRANSACTION_DECISION_VALUE'
+                }
+              ],
+              'intent': 'actions.intent.TRANSACTION_DECISION'
+            }
+          ],
+          'user': {
+            'userId': 'user123'
+          },
+          'device': {
+            'locale': 'en-US'
+          },
+          'conversation': {
+            'conversationId': '1494606917128',
+            'type': 'ACTIVE',
+            'conversationToken': '["_actions_on_google_"]'
+          }
+        }
+      },
+      'id': '8032dc31-9627-4fbe-9ffd-8e5cfb20cebf',
+      'timestamp': '2017-05-12T16:35:38.131Z',
+      'lang': 'en',
+      'result': {
+        'source': 'agent',
+        'resolvedQuery': 'actions_intent_DELIVERY_ADDRESS',
+        'speech': '',
+        'action': 'delivery.address.complete',
+        'actionIncomplete': false,
+        'parameters': {},
+        'contexts': [
+        ],
+        'metadata': {
+          'intentId': 'a15ac3ff-1a84-43d0-94e9-37862a3d89cf',
+          'webhookUsed': 'true',
+          'webhookForSlotFillingUsed': 'false',
+          'nluResponseTime': 2,
+          'intentName': 'deliveryaddress_complete'
+        },
+        'fulfillment': {
+          'speech': '',
+          'messages': [
+            {
+              'type': 0,
+              'speech': ''
+            }
+          ]
+        },
+        'score': 1
+      },
+      'status': {
+        'code': 200,
+        'errorType': 'success'
+      },
+      'sessionId': '1494606917128'
+    };
+
+    let mockRequest = new MockRequest(headers, body);
+    let mockResponse = new MockResponse();
+
+    let app = new ApiAiApp({
+      request: mockRequest,
+      response: mockResponse
+    });
+
+    expect(app.getDeliveryAddress()).to.deep.equal({
+      zipCode: '94043',
+      postalAddress: {
+        regionCode: 'US',
+        recipients: [
+          'Jane Smith'
+        ],
+        postalCode: '94043',
+        locality: 'Mountain View',
+        addressLines: [
+          '1600 Amphitheatre Parkway'
+        ],
+        administrativeArea: 'CA'
+      },
+      phoneNumber: '+1 415-555-1234',
+      city: 'Mountain View'
+    });
+  });
+
+  // Success case test, when the API returns a valid 200 response with the response object
+  it('Should return null when user rejects', function () {
+    let headers = {
+      'Content-Type': 'application/json'
+    };
+    let body = {
+      'originalRequest': {
+        'source': 'google',
+        'version': '2',
+        'data': {
+          'isInSandbox': true,
+          'surface': {
+            'capabilities': [
+              {
+                'name': 'actions.capability.AUDIO_OUTPUT'
+              },
+              {
+                'name': 'actions.capability.SCREEN_OUTPUT'
+              }
+            ]
+          },
+          'inputs': [
+            {
+              'rawInputs': [
+                {
+                  'query': '1600 Amphitheatre Parkway',
+                  'inputType': 'VOICE'
+                }
+              ],
+              'arguments': [
+                {
+                  'extension': {
+                    'userDecision': 'REJECTED',
+                    '@type': 'type.googleapis.com/google.actions.v2.DeliveryAddressValue',
+                    'location': {
+                      'zipCode': '94043',
+                      'postalAddress': {
+                        'regionCode': 'US',
+                        'recipients': [
+                          'Jane Smith'
+                        ],
+                        'postalCode': '94043',
+                        'locality': 'Mountain View',
+                        'addressLines': [
+                          '1600 Amphitheatre Parkway'
+                        ],
+                        'administrativeArea': 'CA'
+                      },
+                      'phoneNumber': '+1 415-555-1234',
+                      'city': 'Mountain View'
+                    }
+                  },
+                  'name': 'DELIVERY_ADDRESS_VALUE'
+                }
+              ],
+              'intent': 'actions.intent.DELIVERY_ADDRESS'
+            }
+          ],
+          'user': {
+            'userId': 'user123'
+          },
+          'device': {
+            'locale': 'en-US'
+          },
+          'conversation': {
+            'conversationId': '1494606917128',
+            'type': 'ACTIVE',
+            'conversationToken': '["_actions_on_google_"]'
+          }
+        }
+      },
+      'id': '8032dc31-9627-4fbe-9ffd-8e5cfb20cebf',
+      'timestamp': '2017-05-12T16:35:38.131Z',
+      'lang': 'en',
+      'result': {
+        'source': 'agent',
+        'resolvedQuery': 'actions_intent_DELIVERY_ADDRESS',
+        'speech': '',
+        'action': 'delivery.address.complete',
+        'actionIncomplete': false,
+        'parameters': {},
+        'contexts': [
+        ],
+        'metadata': {
+          'intentId': 'a15ac3ff-1a84-43d0-94e9-37862a3d89cf',
+          'webhookUsed': 'true',
+          'webhookForSlotFillingUsed': 'false',
+          'nluResponseTime': 2,
+          'intentName': 'deliveryaddress_complete'
+        },
+        'fulfillment': {
+          'speech': '',
+          'messages': [
+            {
+              'type': 0,
+              'speech': ''
+            }
+          ]
+        },
+        'score': 1
+      },
+      'status': {
+        'code': 200,
+        'errorType': 'success'
+      },
+      'sessionId': '1494606917128'
+    };
+
+    let mockRequest = new MockRequest(headers, body);
+    let mockResponse = new MockResponse();
+
+    let app = new ApiAiApp({
+      request: mockRequest,
+      response: mockResponse
+    });
+
+    expect(app.getDeliveryAddress()).to.equal(null);
+  });
+});
+
+/**
+ * Describes the behavior for ApiAiApp getTransactionDecision method.
+ */
+describe('ApiAiApp#getTransactionDecision', function () {
+  // Success case test, when the API returns a valid 200 response with the response object
+  it('Should validate assistant request delivery address', function () {
+    let headers = {
+      'Content-Type': 'application/json'
+    };
+    let body = {
+      'originalRequest': {
+        'source': 'google',
+        'version': '2',
+        'data': {
+          'isInSandbox': true,
+          'surface': {
+            'capabilities': [
+              {
+                'name': 'actions.capability.AUDIO_OUTPUT'
+              },
+              {
+                'name': 'actions.capability.SCREEN_OUTPUT'
+              }
+            ]
+          },
+          'inputs': [
+            {
+              'rawInputs': [
+                {
+                  'query': '1600 Amphitheatre Parkway',
+                  'inputType': 'VOICE'
+                }
+              ],
+              'arguments': [
+                {
+                  'extension': {
+                    'userDecision': 'ORDER_ACCEPTED',
+                    'checkResult': {
+                      'resultType': 'OK',
+                      'order': {
+                        'finalOrder': { 'fakeOrder': 'fake_order' },
+                        'googleOrderId': 'goog_123',
+                        'actionOrderId': 'action_123',
+                        'orderDate': {
+                          'seconds': 40,
+                          'nanos': 880000000
+                        },
+                        'paymentInfo': { 'fakePayment': 'fake_payment' },
+                        'customerInfo': {
+                          'email': 'username@example.com'
+                        }
+                      }
+                    }
+                  },
+                  'name': 'TRANSACTION_DECISION_VALUE'
+                }
+              ],
+              'intent': 'actions.intent.TRANSACTION_DECISION'
+            }
+          ],
+          'user': {
+            'userId': 'user123'
+          },
+          'device': {
+            'locale': 'en-US'
+          },
+          'conversation': {
+            'conversationId': '1494606917128',
+            'type': 'ACTIVE',
+            'conversationToken': '["_actions_on_google_"]'
+          }
+        }
+      },
+      'id': '8032dc31-9627-4fbe-9ffd-8e5cfb20cebf',
+      'timestamp': '2017-05-12T16:35:38.131Z',
+      'lang': 'en',
+      'result': {
+        'source': 'agent',
+        'resolvedQuery': 'actions_intent_DELIVERY_ADDRESS',
+        'speech': '',
+        'action': 'delivery.address.complete',
+        'actionIncomplete': false,
+        'parameters': {},
+        'contexts': [],
+        'metadata': {
+          'intentId': 'a15ac3ff-1a84-43d0-94e9-37862a3d89cf',
+          'webhookUsed': 'true',
+          'webhookForSlotFillingUsed': 'false',
+          'nluResponseTime': 2,
+          'intentName': 'deliveryaddress_complete'
+        },
+        'fulfillment': {
+          'speech': '',
+          'messages': [
+            {
+              'type': 0,
+              'speech': ''
+            }
+          ]
+        },
+        'score': 1
+      },
+      'status': {
+        'code': 200,
+        'errorType': 'success'
+      },
+      'sessionId': '1494606917128'
+    };
+
+    let mockRequest = new MockRequest(headers, body);
+    let mockResponse = new MockResponse();
+
+    let app = new ApiAiApp({
+      request: mockRequest,
+      response: mockResponse
+    });
+
+    expect(app.getTransactionDecision()).to.deep.equal({
+      'userDecision': 'ORDER_ACCEPTED',
+      'checkResult': {
+        'resultType': 'OK',
+        'order': {
+          'finalOrder': { 'fakeOrder': 'fake_order' },
+          'googleOrderId': 'goog_123',
+          'actionOrderId': 'action_123',
+          'orderDate': {
+            'seconds': 40,
+            'nanos': 880000000
+          },
+          'paymentInfo': { 'fakePayment': 'fake_payment' },
+          'customerInfo': {
+            'email': 'username@example.com'
+          }
+        }
+      }
+    });
+  });
+});
+
+/**
+ * Describes the behavior for ApiAiApp askForTransactionRequirements method.
+ */
+describe('ApiAiApp#askForTransactionRequirements', function () {
+  // Success case test, when the API returns a valid 200 response with the response object
+  it('Should return valid JSON transaction requirements with Google payment options', function () {
+    let headers = {
+      'Content-Type': 'application/json',
+      'Google-Actions-API-Version': '2'
+    };
+    let body = {
+      'id': 'ce7295cc-b042-42d8-8d72-14b83597ac1e',
+      'timestamp': '2016-10-28T03:05:34.288Z',
+      'result': {
+        'source': 'agent',
+        'resolvedQuery': 'start guess a number game',
+        'speech': '',
+        'action': 'generate_answer',
+        'actionIncomplete': false,
+        'parameters': {
+
+        },
+        'contexts': [
+
+        ],
+        'metadata': {
+          'intentId': '56da4637-0419-46b2-b851-d7bf726b1b1b',
+          'webhookUsed': 'true',
+          'intentName': 'start_game'
+        },
+        'fulfillment': {
+          'speech': ''
+        },
+        'score': 1
+      },
+      'status': {
+        'code': 200,
+        'errorType': 'success'
+      },
+      'sessionId': 'e420f007-501d-4bc8-b551-5d97772bc50c',
+      'originalRequest': {
+        'version': 2,
+        'data': {
+          'conversation': {
+            'type': 2
+          },
+          'user': {
+            'user_id': '11112226094657824893'
+          }
+        }
+      }
+    };
+
+    let mockRequest = new MockRequest(headers, body);
+    let mockResponse = new MockResponse();
+
+    let app = new ApiAiApp({
+      request: mockRequest,
+      response: mockResponse
+    });
+
+    let transactionConfig = {
+      deliveryAddressRequired: true,
+      tokenizationParameters: {
+        myParam: 'myParam'
+      },
+      cardNetworks: [
+        'VISA',
+        'MASTERCARD'
+      ],
+      prepaidCardDisallowed: false
+    };
+
+    app.handleRequest((app) => {
+      app.askForTransactionRequirements(transactionConfig);
+    });
+
+    let expectedResponse = {
+      'speech': 'PLACEHOLDER_FOR_TXN_REQUIREMENTS',
+      'data': {
+        'google': {
+          'expectUserResponse': true,
+          'isSsml': false,
+          'noInputPrompts': [],
+          'systemIntent': {
+            'intent': 'actions.intent.TRANSACTION_REQUIREMENTS_CHECK',
+            'data': {
+              '@type': 'type.googleapis.com/google.actions.v2.TransactionRequirementsCheckSpec',
+              'orderOptions': {
+                'requestDeliveryAddress': true
+              },
+              'paymentOptions': {
+                'googleProvidedOptions': {
+                  'tokenizationParameters': {
+                    'tokenizationType': 'PAYMENT_GATEWAY',
+                    'parameters': {
+                      'myParam': 'myParam'
+                    }
+                  },
+                  'supportedCardNetworks': [
+                    'VISA',
+                    'MASTERCARD'
+                  ],
+                  'prepaidCardDisallowed': false
+                }
+              }
+            }
+          }
+        }
+      },
+      'contextOut': [
+        {
+          'name': '_actions_on_google_',
+          'lifespan': 100,
+          'parameters': {}
+        }
+      ]
+    };
+
+    expect(mockResponse.body).to.deep.equal(expectedResponse);
+  });
+
+  // Success case test, when the API returns a valid 200 response with the response object
+  it('Should return valid JSON transaction requirements with Action payment options', function () {
+    let headers = {
+      'Content-Type': 'application/json',
+      'Google-Actions-API-Version': '2'
+    };
+    let body = {
+      'id': 'ce7295cc-b042-42d8-8d72-14b83597ac1e',
+      'timestamp': '2016-10-28T03:05:34.288Z',
+      'result': {
+        'source': 'agent',
+        'resolvedQuery': 'start guess a number game',
+        'speech': '',
+        'action': 'generate_answer',
+        'actionIncomplete': false,
+        'parameters': {
+
+        },
+        'contexts': [
+
+        ],
+        'metadata': {
+          'intentId': '56da4637-0419-46b2-b851-d7bf726b1b1b',
+          'webhookUsed': 'true',
+          'intentName': 'start_game'
+        },
+        'fulfillment': {
+          'speech': ''
+        },
+        'score': 1
+      },
+      'status': {
+        'code': 200,
+        'errorType': 'success'
+      },
+      'sessionId': 'e420f007-501d-4bc8-b551-5d97772bc50c',
+      'originalRequest': {
+        'version': 2,
+        'data': {
+          'conversation': {
+            'type': 2
+          },
+          'user': {
+            'user_id': '11112226094657824893'
+          }
+        }
+      }
+    };
+
+    let mockRequest = new MockRequest(headers, body);
+    let mockResponse = new MockResponse();
+
+    let app = new ApiAiApp({
+      request: mockRequest,
+      response: mockResponse
+    });
+
+    let transactionConfig = {
+      deliveryAddressRequired: true,
+      type: 'BANK',
+      displayName: 'Checking-4773'
+    };
+
+    app.handleRequest((app) => {
+      app.askForTransactionRequirements(transactionConfig);
+    });
+
+    let expectedResponse = {
+      'speech': 'PLACEHOLDER_FOR_TXN_REQUIREMENTS',
+      'data': {
+        'google': {
+          'expectUserResponse': true,
+          'isSsml': false,
+          'noInputPrompts': [],
+          'systemIntent': {
+            'intent': 'actions.intent.TRANSACTION_REQUIREMENTS_CHECK',
+            'data': {
+              '@type': 'type.googleapis.com/google.actions.v2.TransactionRequirementsCheckSpec',
+              'orderOptions': {
+                'requestDeliveryAddress': true
+              },
+              'paymentOptions': {
+                'actionProvidedOptions': {
+                  'paymentType': 'BANK',
+                  'displayName': 'Checking-4773'
+                }
+              }
+            }
+          }
+        }
+      },
+      'contextOut': [
+        {
+          'name': '_actions_on_google_',
+          'lifespan': 100,
+          'parameters': {}
+        }
+      ]
+    };
+
+    expect(mockResponse.body).to.deep.equal(expectedResponse);
+  });
+});
+
+/**
+ * Describes the behavior for ApiAiApp askForDeliveryAddress method.
+ */
+describe('ApiAiApp#askForDeliveryAddress', function () {
+  // Success case test, when the API returns a valid 200 response with the response object
+  it('Should return valid JSON delivery address', function () {
+    let headers = {
+      'Content-Type': 'application/json',
+      'Google-Actions-API-Version': '2'
+    };
+    let body = {
+      'id': 'ce7295cc-b042-42d8-8d72-14b83597ac1e',
+      'timestamp': '2016-10-28T03:05:34.288Z',
+      'result': {
+        'source': 'agent',
+        'resolvedQuery': 'start guess a number game',
+        'speech': '',
+        'action': 'generate_answer',
+        'actionIncomplete': false,
+        'parameters': {},
+        'contexts': [],
+        'metadata': {
+          'intentId': '56da4637-0419-46b2-b851-d7bf726b1b1b',
+          'webhookUsed': 'true',
+          'intentName': 'start_game'
+        },
+        'fulfillment': {
+          'speech': ''
+        },
+        'score': 1
+      },
+      'status': {
+        'code': 200,
+        'errorType': 'success'
+      },
+      'sessionId': 'e420f007-501d-4bc8-b551-5d97772bc50c',
+      'originalRequest': {
+        'version': 2,
+        'data': {
+          'conversation': {
+            'type': 2
+          },
+          'user': {
+            'user_id': '11112226094657824893'
+          }
+        }
+      }
+    };
+
+    let mockRequest = new MockRequest(headers, body);
+    let mockResponse = new MockResponse();
+
+    let app = new ApiAiApp({
+      request: mockRequest,
+      response: mockResponse
+    });
+
+    app.handleRequest((app) => { app.askForDeliveryAddress('Just because'); });
+
+    let expectedResponse = {
+      'speech': 'PLACEHOLDER_FOR_DELIVERY_ADDRESS',
+      'data': {
+        'google': {
+          'expectUserResponse': true,
+          'isSsml': false,
+          'noInputPrompts': [],
+          'systemIntent': {
+            'intent': 'actions.intent.DELIVERY_ADDRESS',
+            'data': {
+              '@type': 'type.googleapis.com/google.actions.v2.DeliveryAddressValueSpec',
+              'addressOptions': {
+                'reason': 'Just because'
+              }
+            }
+          }
+        }
+      },
+      'contextOut': [
+        {
+          'name': '_actions_on_google_',
+          'lifespan': 100,
+          'parameters': {}
+        }
+      ]
+    };
+
+    expect(mockResponse.body).to.deep.equal(expectedResponse);
+  });
+});
+
+/**
+ * Describes the behavior for ApiAiApp askForTransactionDecision method.
+ */
+describe('ApiAiApp#askForTransactionDecision', function () {
+  // Success case test, when the API returns a valid 200 response with the response object
+  it('Should return valid JSON transaction decision with Google payment options', function () {
+    let headers = {
+      'Content-Type': 'application/json',
+      'Google-Actions-API-Version': '2'
+    };
+    let body = {
+      'id': 'ce7295cc-b042-42d8-8d72-14b83597ac1e',
+      'timestamp': '2016-10-28T03:05:34.288Z',
+      'result': {
+        'source': 'agent',
+        'resolvedQuery': 'start guess a number game',
+        'speech': '',
+        'action': 'generate_answer',
+        'actionIncomplete': false,
+        'parameters': {
+
+        },
+        'contexts': [
+
+        ],
+        'metadata': {
+          'intentId': '56da4637-0419-46b2-b851-d7bf726b1b1b',
+          'webhookUsed': 'true',
+          'intentName': 'start_game'
+        },
+        'fulfillment': {
+          'speech': ''
+        },
+        'score': 1
+      },
+      'status': {
+        'code': 200,
+        'errorType': 'success'
+      },
+      'sessionId': 'e420f007-501d-4bc8-b551-5d97772bc50c',
+      'originalRequest': {
+        'version': 2,
+        'data': {
+          'conversation': {
+            'type': 2
+          },
+          'user': {
+            'user_id': '11112226094657824893'
+          }
+        }
+      }
+    };
+
+    let mockRequest = new MockRequest(headers, body);
+    let mockResponse = new MockResponse();
+
+    let app = new ApiAiApp({
+      request: mockRequest,
+      response: mockResponse
+    });
+
+    let transactionConfig = {
+      deliveryAddressRequired: true,
+      tokenizationParameters: {
+        myParam: 'myParam'
+      },
+      cardNetworks: [
+        'VISA',
+        'MASTERCARD'
+      ],
+      prepaidCardDisallowed: false
+    };
+
+    app.handleRequest((app) => {
+      app.askForTransactionDecision({ fakeOrderId: 'order_id' }, transactionConfig);
+    });
+
+    let expectedResponse = {
+      'speech': 'PLACEHOLDER_FOR_TXN_DECISION',
+      'data': {
+        'google': {
+          'expectUserResponse': true,
+          'isSsml': false,
+          'noInputPrompts': [],
+          'systemIntent': {
+            'intent': 'actions.intent.TRANSACTION_DECISION',
+            'data': {
+              '@type': 'type.googleapis.com/google.actions.v2.TransactionDecisionValueSpec',
+              'proposedOrder': { 'fakeOrderId': 'order_id' },
+              'orderOptions': {
+                'requestDeliveryAddress': true
+              },
+              'paymentOptions': {
+                'googleProvidedOptions': {
+                  'tokenizationParameters': {
+                    'tokenizationType': 'PAYMENT_GATEWAY',
+                    'parameters': {
+                      'myParam': 'myParam'
+                    }
+                  },
+                  'supportedCardNetworks': [
+                    'VISA',
+                    'MASTERCARD'
+                  ],
+                  'prepaidCardDisallowed': false
+                }
+              }
+            }
+          }
+        }
+      },
+      'contextOut': [
+        {
+          'name': '_actions_on_google_',
+          'lifespan': 100,
+          'parameters': {}
+        }
+      ]
+    };
+
+    expect(mockResponse.body).to.deep.equal(expectedResponse);
+  });
+
+  // Success case test, when the API returns a valid 200 response with the response object
+  it('Should return valid JSON transaction decision with Action payment options', function () {
+    let headers = {
+      'Content-Type': 'application/json',
+      'Google-Actions-API-Version': '2'
+    };
+    let body = {
+      'id': 'ce7295cc-b042-42d8-8d72-14b83597ac1e',
+      'timestamp': '2016-10-28T03:05:34.288Z',
+      'result': {
+        'source': 'agent',
+        'resolvedQuery': 'start guess a number game',
+        'speech': '',
+        'action': 'generate_answer',
+        'actionIncomplete': false,
+        'parameters': {
+
+        },
+        'contexts': [
+
+        ],
+        'metadata': {
+          'intentId': '56da4637-0419-46b2-b851-d7bf726b1b1b',
+          'webhookUsed': 'true',
+          'intentName': 'start_game'
+        },
+        'fulfillment': {
+          'speech': ''
+        },
+        'score': 1
+      },
+      'status': {
+        'code': 200,
+        'errorType': 'success'
+      },
+      'sessionId': 'e420f007-501d-4bc8-b551-5d97772bc50c',
+      'originalRequest': {
+        'version': 2,
+        'data': {
+          'conversation': {
+            'type': 2
+          },
+          'user': {
+            'user_id': '11112226094657824893'
+          }
+        }
+      }
+    };
+
+    let mockRequest = new MockRequest(headers, body);
+    let mockResponse = new MockResponse();
+
+    let app = new ApiAiApp({
+      request: mockRequest,
+      response: mockResponse
+    });
+
+    let transactionConfig = {
+      deliveryAddressRequired: true,
+      type: 'BANK',
+      displayName: 'Checking-4773'
+    };
+
+    app.handleRequest((app) => {
+      app.askForTransactionDecision({ fakeOrderId: 'order_id' }, transactionConfig);
+    });
+
+    let expectedResponse = {
+      'speech': 'PLACEHOLDER_FOR_TXN_DECISION',
+      'data': {
+        'google': {
+          'expectUserResponse': true,
+          'isSsml': false,
+          'noInputPrompts': [],
+          'systemIntent': {
+            'intent': 'actions.intent.TRANSACTION_DECISION',
+            'data': {
+              '@type': 'type.googleapis.com/google.actions.v2.TransactionDecisionValueSpec',
+              'proposedOrder': { 'fakeOrderId': 'order_id' },
+              'orderOptions': {
+                'requestDeliveryAddress': true
+              },
+              'paymentOptions': {
+                'actionProvidedOptions': {
+                  'paymentType': 'BANK',
+                  'displayName': 'Checking-4773'
+                }
+              }
+            }
+          }
+        }
+      },
+      'contextOut': [
+        {
+          'name': '_actions_on_google_',
+          'lifespan': 100,
+          'parameters': {}
+        }
+      ]
+    };
+
+    expect(mockResponse.body).to.deep.equal(expectedResponse);
+  });
+});
+
+/**
  * Describes the behavior for ApiAiApp isPermissionGranted method.
  */
 describe('ApiAiApp#isPermissionGranted', function () {
@@ -1951,6 +3136,109 @@ describe('ApiAiApp#isPermissionGranted', function () {
     });
 
     expect(app.isPermissionGranted()).to.equal(false);
+  });
+});
+
+/**
+ * Describes the behavior for ApiAiApp isInSandbox method.
+ */
+describe('ApiAiApp#isInSandbox', function () {
+  // Success case test, when the API returns a valid 200 response with the response object
+  it('Should validate assistant request user.', function () {
+    let headers = {
+      'Content-Type': 'application/json',
+      'google-assistant-api-version': 'v1'
+    };
+    let body = {
+      'originalRequest': {
+        'source': 'google',
+        'version': '2',
+        'data': {
+          'isInSandbox': true,
+          'surface': {
+            'capabilities': [
+              {
+                'name': 'actions.capability.AUDIO_OUTPUT'
+              },
+              {
+                'name': 'actions.capability.SCREEN_OUTPUT'
+              }
+            ]
+          },
+          'inputs': [],
+          'user': {
+            'userId': 'user123'
+          },
+          'device': {
+            'locale': 'en-US'
+          },
+          'conversation': {
+            'conversationId': '1494603963782',
+            'type': 'ACTIVE',
+            'conversationToken': '["_actions_on_google_"]'
+          }
+        }
+      },
+      'id': 'e169144c-9d31-4a9d-82a0-b14922ce21a7',
+      'timestamp': '2017-05-12T15:46:08.594Z',
+      'lang': 'en',
+      'result': {
+        'source': 'agent',
+        'resolvedQuery': 'actions_intent_TRANSACTION_REQUIREMENTS_CHECK',
+        'speech': '',
+        'action': 'transaction.check.complete',
+        'actionIncomplete': false,
+        'parameters': {
+          'test': '@test'
+        },
+        'metadata': {
+          'intentId': 'fd16d86b-60db-4d19-a683-5b52a22f4795',
+          'webhookUsed': 'true',
+          'webhookForSlotFillingUsed': 'false',
+          'nluResponseTime': 19,
+          'intentName': 'transactioncheck_complete'
+        },
+        'fulfillment': {
+          'speech': '',
+          'messages': [
+            {
+              'type': 0,
+              'speech': ''
+            }
+          ]
+        },
+        'score': 1
+      },
+      'status': {
+        'code': 200,
+        'errorType': 'success'
+      },
+      'sessionId': '1494603963782'
+    };
+
+    let mockRequest = new MockRequest(headers, body);
+    let mockResponse = new MockResponse();
+
+    let app = new ApiAiApp({
+      request: mockRequest,
+      response: mockResponse
+    });
+
+    expect(app.isInSandbox()).to.be.true;
+
+    // Test the false case
+
+    body.originalRequest.data.isInSandbox = false;
+
+    mockRequest = new MockRequest(headers, body);
+    mockResponse = new MockResponse();
+
+    app = new ApiAiApp({
+      request: mockRequest,
+      response: mockResponse
+    });
+
+    expect(app.isInSandbox()).to.be.false;
   });
 });
 
@@ -5160,6 +6448,463 @@ describe('ActionsSdkApp#askForPermissions', function () {
 });
 
 /**
+ * Describes the behavior for ActionsSdkApp askForTransactionRequirements method.
+ */
+describe('ActionsSdkApp#askForTransactionRequirements', function () {
+  // Success case test, when the API returns a valid 200 response with the response object
+  it('Should return valid JSON transaction requirements with Google payment options', function () {
+    let headers = {
+      'Content-Type': 'application/json',
+      'Google-Actions-API-Version': '2'
+    };
+    let body = {
+      'user': {},
+      'conversation': {
+        'conversationId': '1480532856956',
+        'type': 1
+      },
+      'inputs': [
+        {
+          'intent': 'GET_RIDE',
+          'rawInputs': [
+            {
+              'inputType': 2,
+              'query': 'get me 2 items'
+            }
+          ],
+          'arguments': []
+        }
+      ]
+    };
+
+    let mockRequest = new MockRequest(headers, body);
+    let mockResponse = new MockResponse();
+
+    let app = new ActionsSdkApp({
+      request: mockRequest,
+      response: mockResponse
+    });
+
+    let transactionConfig = {
+      deliveryAddressRequired: true,
+      tokenizationParameters: {
+        myParam: 'myParam'
+      },
+      cardNetworks: [
+        'VISA',
+        'MASTERCARD'
+      ],
+      prepaidCardDisallowed: false
+    };
+
+    app.handleRequest((app) => {
+      app.askForTransactionRequirements(transactionConfig, {cartSize: 2});
+    });
+
+    let expectedResponse = {
+      'conversationToken': '{"cartSize":2}',
+      'expectUserResponse': true,
+      'expectedInputs': [
+        {
+          'inputPrompt': {
+            'initialPrompts': [
+              {
+                'textToSpeech': 'PLACEHOLDER_FOR_TXN_REQUIREMENTS'
+              }
+            ],
+            'noInputPrompts': []
+          },
+          'possibleIntents': [
+            {
+              'intent': 'actions.intent.TRANSACTION_REQUIREMENTS_CHECK',
+              'inputValueData': {
+                '@type': 'type.googleapis.com/google.actions.v2.TransactionRequirementsCheckSpec',
+                'orderOptions': {
+                  'requestDeliveryAddress': true
+                },
+                'paymentOptions': {
+                  'googleProvidedOptions': {
+                    'tokenizationParameters': {
+                      'tokenizationType': 'PAYMENT_GATEWAY',
+                      'parameters': {
+                        'myParam': 'myParam'
+                      }
+                    },
+                    'supportedCardNetworks': [
+                      'VISA',
+                      'MASTERCARD'
+                    ],
+                    'prepaidCardDisallowed': false
+                  }
+                }
+              }
+            }
+          ]
+        }
+      ]
+    };
+
+    expect(mockResponse.body).to.deep.equal(expectedResponse);
+  });
+
+  // Success case test, when the API returns a valid 200 response with the response object
+  it('Should return valid JSON transaction requirements with Action payment options', function () {
+    let headers = {
+      'Content-Type': 'application/json',
+      'Google-Actions-API-Version': '2'
+    };
+    let body = {
+      'user': {},
+      'conversation': {
+        'conversationId': '1480532856956',
+        'type': 1
+      },
+      'inputs': [
+        {
+          'intent': 'GET_RIDE',
+          'rawInputs': [
+            {
+              'inputType': 2,
+              'query': 'get me 2 items'
+            }
+          ],
+          'arguments': []
+        }
+      ]
+    };
+
+    let mockRequest = new MockRequest(headers, body);
+    let mockResponse = new MockResponse();
+
+    let app = new ActionsSdkApp({
+      request: mockRequest,
+      response: mockResponse
+    });
+
+    let transactionConfig = {
+      deliveryAddressRequired: true,
+      type: 'BANK',
+      displayName: 'Checking-4773'
+    };
+
+    app.handleRequest((app) => {
+      app.askForTransactionRequirements(transactionConfig, {cartSize: 2});
+    });
+
+    let expectedResponse = {
+      'conversationToken': '{"cartSize":2}',
+      'expectUserResponse': true,
+      'expectedInputs': [
+        {
+          'inputPrompt': {
+            'initialPrompts': [
+              {
+                'textToSpeech': 'PLACEHOLDER_FOR_TXN_REQUIREMENTS'
+              }
+            ],
+            'noInputPrompts': []
+          },
+          'possibleIntents': [
+            {
+              'intent': 'actions.intent.TRANSACTION_REQUIREMENTS_CHECK',
+              'inputValueData': {
+                '@type': 'type.googleapis.com/google.actions.v2.TransactionRequirementsCheckSpec',
+                'orderOptions': {
+                  'requestDeliveryAddress': true
+                },
+                'paymentOptions': {
+                  'actionProvidedOptions': {
+                    'paymentType': 'BANK',
+                    'displayName': 'Checking-4773'
+                  }
+                }
+              }
+            }
+          ]
+        }
+      ]
+    };
+
+    expect(mockResponse.body).to.deep.equal(expectedResponse);
+  });
+});
+
+/**
+ * Describes the behavior for ActionsSdkApp askForDeliveryAddress method.
+ */
+describe('ActionsSdkApp#askForDeliveryAddress', function () {
+  // Success case test, when the API returns a valid 200 response with the response object
+  it('Should return valid JSON delivery address', function () {
+    let headers = {
+      'Content-Type': 'application/json',
+      'Google-Actions-API-Version': '2'
+    };
+    let body = {
+      'user': {
+
+      },
+      'conversation': {
+        'conversationId': '1480532856956',
+        'type': 1
+      },
+      'inputs': [
+        {
+          'intent': 'GET_RIDE',
+          'rawInputs': [
+            {
+              'inputType': 2,
+              'query': 'get me 2 items'
+            }
+          ],
+          'arguments': [
+
+          ]
+        }
+      ]
+    };
+
+    let mockRequest = new MockRequest(headers, body);
+    let mockResponse = new MockResponse();
+
+    let app = new ActionsSdkApp({
+      request: mockRequest,
+      response: mockResponse
+    });
+
+    app.handleRequest((app) => {
+      app.askForDeliveryAddress('Just because', { cartSize: 2 });
+    });
+
+    let expectedResponse = {
+      'conversationToken': '{"cartSize":2}',
+      'expectUserResponse': true,
+      'expectedInputs': [
+        {
+          'inputPrompt': {
+            'initialPrompts': [
+              {
+                'textToSpeech': 'PLACEHOLDER_FOR_DELIVERY_ADDRESS'
+              }
+            ],
+            'noInputPrompts': [
+            ]
+          },
+          'possibleIntents': [
+            {
+              'intent': 'actions.intent.DELIVERY_ADDRESS',
+              'inputValueData': {
+                '@type': 'type.googleapis.com/google.actions.v2.DeliveryAddressValueSpec',
+                'addressOptions': {
+                  'reason': 'Just because'
+                }
+              }
+            }
+          ]
+        }
+      ]
+    };
+
+    expect(mockResponse.body).to.deep.equal(expectedResponse);
+  });
+});
+
+/**
+ * Describes the behavior for ActionsSdkApp askForTransactionDecision method.
+ */
+describe('ActionsSdkApp#askForTransactionDecision', function () {
+  // Success case test, when the API returns a valid 200 response with the response object
+  it('Should return valid JSON transaction decision with Google payment options', function () {
+    let headers = {
+      'Content-Type': 'application/json',
+      'Google-Actions-API-Version': '2'
+    };
+    let body = {
+      'user': {
+
+      },
+      'conversation': {
+        'conversationId': '1480532856956',
+        'type': 1
+      },
+      'inputs': [
+        {
+          'intent': 'GET_RIDE',
+          'rawInputs': [
+            {
+              'inputType': 2,
+              'query': 'get me 2 items'
+            }
+          ],
+          'arguments': [
+
+          ]
+        }
+      ]
+    };
+
+    let mockRequest = new MockRequest(headers, body);
+    let mockResponse = new MockResponse();
+
+    let app = new ActionsSdkApp({
+      request: mockRequest,
+      response: mockResponse
+    });
+
+    let transactionConfig = {
+      deliveryAddressRequired: true,
+      tokenizationParameters: {
+        myParam: 'myParam'
+      },
+      cardNetworks: [
+        'VISA',
+        'MASTERCARD'
+      ],
+      prepaidCardDisallowed: false
+    };
+
+    app.handleRequest((app) => {
+      app.askForTransactionDecision({ fakeOrderId: 'order_id' }, transactionConfig,
+        { cartSize: 2 });
+    });
+
+    let expectedResponse = {
+      'conversationToken': '{"cartSize":2}',
+      'expectUserResponse': true,
+      'expectedInputs': [
+        {
+          'inputPrompt': {
+            'initialPrompts': [
+              {
+                'textToSpeech': 'PLACEHOLDER_FOR_TXN_DECISION'
+              }
+            ],
+            'noInputPrompts': [
+            ]
+          },
+          'possibleIntents': [
+            {
+              'intent': 'actions.intent.TRANSACTION_DECISION',
+              'inputValueData': {
+                '@type': 'type.googleapis.com/google.actions.v2.TransactionDecisionValueSpec',
+                'proposedOrder': {'fakeOrderId': 'order_id'},
+                'orderOptions': {
+                  'requestDeliveryAddress': true
+                },
+                'paymentOptions': {
+                  'googleProvidedOptions': {
+                    'tokenizationParameters': {
+                      'tokenizationType': 'PAYMENT_GATEWAY',
+                      'parameters': {
+                        'myParam': 'myParam'
+                      }
+                    },
+                    'supportedCardNetworks': [
+                      'VISA',
+                      'MASTERCARD'
+                    ],
+                    'prepaidCardDisallowed': false
+                  }
+                }
+              }
+            }
+          ]
+        }
+      ]
+    };
+
+    expect(mockResponse.body).to.deep.equal(expectedResponse);
+  });
+
+  // Success case test, when the API returns a valid 200 response with the response object
+  it('Should return valid JSON transaction decision with Action payment options', function () {
+    let headers = {
+      'Content-Type': 'application/json',
+      'Google-Actions-API-Version': '2'
+    };
+    let body = {
+      'user': {
+
+      },
+      'conversation': {
+        'conversationId': '1480532856956',
+        'type': 1
+      },
+      'inputs': [
+        {
+          'intent': 'GET_RIDE',
+          'rawInputs': [
+            {
+              'inputType': 2,
+              'query': 'get me 2 items'
+            }
+          ],
+          'arguments': [
+
+          ]
+        }
+      ]
+    };
+
+    let mockRequest = new MockRequest(headers, body);
+    let mockResponse = new MockResponse();
+
+    let app = new ActionsSdkApp({
+      request: mockRequest,
+      response: mockResponse
+    });
+
+    let transactionConfig = {
+      deliveryAddressRequired: true,
+      type: 'BANK',
+      displayName: 'Checking-4773'
+    };
+
+    app.handleRequest((app) => {
+      app.askForTransactionDecision({ fakeOrderId: 'order_id' }, transactionConfig,
+        { cartSize: 2 });
+    });
+
+    let expectedResponse = {
+      'conversationToken': '{"cartSize":2}',
+      'expectUserResponse': true,
+      'expectedInputs': [
+        {
+          'inputPrompt': {
+            'initialPrompts': [
+              {
+                'textToSpeech': 'PLACEHOLDER_FOR_TXN_DECISION'
+              }
+            ],
+            'noInputPrompts': [
+            ]
+          },
+          'possibleIntents': [
+            {
+              'intent': 'actions.intent.TRANSACTION_DECISION',
+              'inputValueData': {
+                '@type': 'type.googleapis.com/google.actions.v2.TransactionDecisionValueSpec',
+                'proposedOrder': {'fakeOrderId': 'order_id'},
+                'orderOptions': {
+                  'requestDeliveryAddress': true
+                },
+                'paymentOptions': {
+                  'actionProvidedOptions': {
+                    'paymentType': 'BANK',
+                    'displayName': 'Checking-4773'
+                  }
+                }
+              }
+            }
+          ]
+        }
+      ]
+    };
+
+    expect(mockResponse.body).to.deep.equal(expectedResponse);
+  });
+});
+
+/**
  * Describes the behavior for ActionsSdkApp getUser method.
  */
 describe('ActionsSdkApp#getUser', function () {
@@ -5274,6 +7019,444 @@ describe('ActionsSdkApp#getUserName', function () {
     });
 
     expect(app.getUserName()).to.equal(null);
+  });
+});
+
+/**
+ * Describes the behavior for ActionsSdkApp getTransactionRequirementsResult method.
+ */
+describe('ActionsSdkApp#getTransactionRequirementsResult', function () {
+  // Success case test, when the API returns a valid 200 response with the response object
+  it('Should validate assistant request user.', function () {
+    let headers = {
+      'Content-Type': 'application/json',
+      'Google-Actions-API-Version': '2'
+    };
+    let body = {
+      'isInSandbox': true,
+      'surface': {
+        'capabilities': [
+          {
+            'name': 'actions.capability.AUDIO_OUTPUT'
+          },
+          {
+            'name': 'actions.capability.SCREEN_OUTPUT'
+          }
+        ]
+      },
+      'inputs': [
+        {
+          'rawInputs': [
+            {
+              'query': 'check transaction',
+              'inputType': 'VOICE'
+            }
+          ],
+          'arguments': [
+            {
+              'extension': {
+                'canTransact': true,
+                '@type': 'type.googleapis.com/google.actions.v2.TransactionRequirementsCheckResult',
+                'resultType': 'OK'
+              },
+              'name': 'TRANSACTION_REQUIREMENTS_CHECK_RESULT'
+            }
+          ],
+          'intent': 'actions.intent.TRANSACTION_REQUIREMENTS_CHECK'
+        }
+      ],
+      'user': {
+        'userId': 'user123'
+      },
+      'device': {
+        'locale': 'en-US'
+      },
+      'conversation': {
+        'conversationId': '1494603963782',
+        'type': 'ACTIVE',
+        'conversationToken': '["_actions_on_google_"]'
+      }
+    };
+    let mockRequest = new MockRequest(headers, body);
+    let mockResponse = new MockResponse();
+
+    let app = new ActionsSdkApp({
+      request: mockRequest,
+      response: mockResponse
+    });
+
+    expect(app.getTransactionRequirementsResult()).to.equal('OK');
+  });
+});
+
+/**
+ * Describes the behavior for ActionsSdkApp getDeliveryAddress method.
+ */
+describe('ActionsSdkApp#getDeliveryAddress', function () {
+  // Success case test, when the API returns a valid 200 response with the response object
+  it('Should validate assistant request delivery address', function () {
+    let headers = {
+      'Content-Type': 'application/json'
+    };
+    let body = {
+      'isInSandbox': true,
+      'surface': {
+        'capabilities': [
+          {
+            'name': 'actions.capability.AUDIO_OUTPUT'
+          },
+          {
+            'name': 'actions.capability.SCREEN_OUTPUT'
+          }
+        ]
+      },
+      'inputs': [
+        {
+          'rawInputs': [
+            {
+              'query': '1600 Amphitheatre Parkway',
+              'inputType': 'VOICE'
+            }
+          ],
+          'arguments': [
+            {
+              'extension': {
+                'userDecision': 'ACCEPTED',
+                '@type': 'type.googleapis.com/google.actions.v2.TransactionDecisionValue',
+                'location': {
+                  'zipCode': '94043',
+                  'postalAddress': {
+                    'regionCode': 'US',
+                    'recipients': [
+                      'Jane Smith'
+                    ],
+                    'postalCode': '94043',
+                    'locality': 'Mountain View',
+                    'addressLines': [
+                      '1600 Amphitheatre Parkway'
+                    ],
+                    'administrativeArea': 'CA'
+                  },
+                  'phoneNumber': '+1 415-555-1234',
+                  'city': 'Mountain View'
+                }
+              },
+              'name': 'TRANSACTION_DECISION_VALUE'
+            }
+          ],
+          'intent': 'actions.intent.TRANSACTION_DECISION'
+        }
+      ],
+      'user': {
+        'userId': 'user123'
+      },
+      'device': {
+        'locale': 'en-US'
+      },
+      'conversation': {
+        'conversationId': '1494606917128',
+        'type': 'ACTIVE',
+        'conversationToken': '["_actions_on_google_"]'
+      }
+    };
+
+    let mockRequest = new MockRequest(headers, body);
+    let mockResponse = new MockResponse();
+
+    let app = new ActionsSdkApp({
+      request: mockRequest,
+      response: mockResponse
+    });
+
+    expect(app.getDeliveryAddress()).to.deep.equal({
+      zipCode: '94043',
+      postalAddress: {
+        regionCode: 'US',
+        recipients: [
+          'Jane Smith'
+        ],
+        postalCode: '94043',
+        locality: 'Mountain View',
+        addressLines: [
+          '1600 Amphitheatre Parkway'
+        ],
+        administrativeArea: 'CA'
+      },
+      phoneNumber: '+1 415-555-1234',
+      city: 'Mountain View'
+    });
+  });
+
+  // Success case test, when the API returns a valid 200 response with the response object
+  it('Should validate assistant request delivery address for txn decision', function () {
+    let headers = {
+      'Content-Type': 'application/json'
+    };
+    let body = {
+      'isInSandbox': true,
+      'surface': {
+        'capabilities': [
+          {
+            'name': 'actions.capability.AUDIO_OUTPUT'
+          },
+          {
+            'name': 'actions.capability.SCREEN_OUTPUT'
+          }
+        ]
+      },
+      'inputs': [
+        {
+          'rawInputs': [
+            {
+              'query': '1600 Amphitheatre Parkway',
+              'inputType': 'VOICE'
+            }
+          ],
+          'arguments': [
+            {
+              'extension': {
+                'userDecision': 'ACCEPTED',
+                '@type': 'type.googleapis.com/google.actions.v2.DeliveryAddressValue',
+                'location': {
+                  'zipCode': '94043',
+                  'postalAddress': {
+                    'regionCode': 'US',
+                    'recipients': [
+                      'Jane Smith'
+                    ],
+                    'postalCode': '94043',
+                    'locality': 'Mountain View',
+                    'addressLines': [
+                      '1600 Amphitheatre Parkway'
+                    ],
+                    'administrativeArea': 'CA'
+                  },
+                  'phoneNumber': '+1 415-555-1234',
+                  'city': 'Mountain View'
+                }
+              },
+              'name': 'DELIVERY_ADDRESS_VALUE'
+            }
+          ],
+          'intent': 'actions.intent.DELIVERY_ADDRESS'
+        }
+      ],
+      'user': {
+        'userId': 'user123'
+      },
+      'device': {
+        'locale': 'en-US'
+      },
+      'conversation': {
+        'conversationId': '1494606917128',
+        'type': 'ACTIVE',
+        'conversationToken': '["_actions_on_google_"]'
+      }
+    };
+
+    let mockRequest = new MockRequest(headers, body);
+    let mockResponse = new MockResponse();
+
+    let app = new ActionsSdkApp({
+      request: mockRequest,
+      response: mockResponse
+    });
+
+    expect(app.getDeliveryAddress()).to.deep.equal({
+      zipCode: '94043',
+      postalAddress: {
+        regionCode: 'US',
+        recipients: [
+          'Jane Smith'
+        ],
+        postalCode: '94043',
+        locality: 'Mountain View',
+        addressLines: [
+          '1600 Amphitheatre Parkway'
+        ],
+        administrativeArea: 'CA'
+      },
+      phoneNumber: '+1 415-555-1234',
+      city: 'Mountain View'
+    });
+  });
+
+  // Success case test, when the API returns a valid 200 response with the response object
+  it('Should return null when user rejects', function () {
+    let headers = {
+      'Content-Type': 'application/json'
+    };
+    let body = {
+      'isInSandbox': true,
+      'surface': {
+        'capabilities': [
+          {
+            'name': 'actions.capability.AUDIO_OUTPUT'
+          },
+          {
+            'name': 'actions.capability.SCREEN_OUTPUT'
+          }
+        ]
+      },
+      'inputs': [
+        {
+          'rawInputs': [
+            {
+              'query': '1600 Amphitheatre Parkway',
+              'inputType': 'VOICE'
+            }
+          ],
+          'arguments': [
+            {
+              'extension': {
+                'userDecision': 'REJECTED',
+                '@type': 'type.googleapis.com/google.actions.v2.DeliveryAddressValue',
+                'location': {
+                  'zipCode': '94043',
+                  'postalAddress': {
+                    'regionCode': 'US',
+                    'recipients': [
+                      'Jane Smith'
+                    ],
+                    'postalCode': '94043',
+                    'locality': 'Mountain View',
+                    'addressLines': [
+                      '1600 Amphitheatre Parkway'
+                    ],
+                    'administrativeArea': 'CA'
+                  },
+                  'phoneNumber': '+1 415-555-1234',
+                  'city': 'Mountain View'
+                }
+              },
+              'name': 'DELIVERY_ADDRESS_VALUE'
+            }
+          ],
+          'intent': 'actions.intent.DELIVERY_ADDRESS'
+        }
+      ],
+      'user': {
+        'userId': 'user123'
+      },
+      'device': {
+        'locale': 'en-US'
+      },
+      'conversation': {
+        'conversationId': '1494606917128',
+        'type': 'ACTIVE',
+        'conversationToken': '["_actions_on_google_"]'
+      }
+    };
+
+    let mockRequest = new MockRequest(headers, body);
+    let mockResponse = new MockResponse();
+
+    let app = new ActionsSdkApp({
+      request: mockRequest,
+      response: mockResponse
+    });
+
+    expect(app.getDeliveryAddress()).to.equal(null);
+  });
+});
+
+/**
+ * Describes the behavior for ActionsSdkApp getTransactionDecision method.
+ */
+describe('ActionsSdkApp#getTransactionDecision', function () {
+  // Success case test, when the API returns a valid 200 response with the response object
+  it('Should validate assistant request delivery address', function () {
+    let headers = {
+      'Content-Type': 'application/json',
+      'Google-Actions-API-Version': 2
+    };
+    let body = {
+      'isInSandbox': true,
+      'surface': {
+        'capabilities': [
+          {
+            'name': 'actions.capability.AUDIO_OUTPUT'
+          },
+          {
+            'name': 'actions.capability.SCREEN_OUTPUT'
+          }
+        ]
+      },
+      'inputs': [
+        {
+          'rawInputs': [
+            {
+              'query': '1600 Amphitheatre Parkway',
+              'inputType': 'VOICE'
+            }
+          ],
+          'arguments': [
+            {
+              'extension': {
+                'userDecision': 'ORDER_ACCEPTED',
+                'checkResult': {
+                  'resultType': 'OK',
+                  'order': {
+                    'finalOrder': { 'fakeOrder': 'fake_order' },
+                    'googleOrderId': 'goog_123',
+                    'actionOrderId': 'action_123',
+                    'orderDate': {
+                      'seconds': 40,
+                      'nanos': 880000000
+                    },
+                    'paymentInfo': { 'fakePayment': 'fake_payment' },
+                    'customerInfo': {
+                      'email': 'username@example.com'
+                    }
+                  }
+                }
+              },
+              'name': 'TRANSACTION_DECISION_VALUE'
+            }
+          ],
+          'intent': 'actions.intent.TRANSACTION_DECISION'
+        }
+      ],
+      'user': {
+        'userId': 'user123'
+      },
+      'device': {
+        'locale': 'en-US'
+      },
+      'conversation': {
+        'conversationId': '1494606917128',
+        'type': 'ACTIVE',
+        'conversationToken': '["_actions_on_google_"]'
+      }
+    };
+
+    let mockRequest = new MockRequest(headers, body);
+    let mockResponse = new MockResponse();
+
+    let app = new ActionsSdkApp({
+      request: mockRequest,
+      response: mockResponse
+    });
+
+    expect(app.getTransactionDecision()).to.deep.equal({
+      'userDecision': 'ORDER_ACCEPTED',
+      'checkResult': {
+        'resultType': 'OK',
+        'order': {
+          'finalOrder': { 'fakeOrder': 'fake_order' },
+          'googleOrderId': 'goog_123',
+          'actionOrderId': 'action_123',
+          'orderDate': {
+            'seconds': 40,
+            'nanos': 880000000
+          },
+          'paymentInfo': { 'fakePayment': 'fake_payment' },
+          'customerInfo': {
+            'email': 'username@example.com'
+          }
+        }
+      }
+    });
   });
 });
 
@@ -5416,6 +7599,79 @@ describe('ActionsSdkApp#isPermissionGranted', function () {
     });
 
     expect(app.isPermissionGranted()).to.equal(false);
+  });
+});
+
+/**
+ * Describes the behavior for ActionsSdkApp isInSandbox method.
+ */
+describe('ActionsSdkApp#isInSandbox', function () {
+  // Success case test, when the API returns a valid 200 response with the response object
+  it('Should validate assistant request delivery address', function () {
+    let headers = {
+      'Content-Type': 'application/json',
+      'Google-Actions-API-Version': 2
+    };
+    let body = {
+      'isInSandbox': true,
+      'surface': {
+        'capabilities': [
+          {
+            'name': 'actions.capability.AUDIO_OUTPUT'
+          },
+          {
+            'name': 'actions.capability.SCREEN_OUTPUT'
+          }
+        ]
+      },
+      'inputs': [
+        {
+          'rawInputs': [
+            {
+              'query': '1600 Amphitheatre Parkway',
+              'inputType': 'VOICE'
+            }
+          ],
+          'arguments': [],
+          'intent': 'actions.intent.TRANSACTION_DECISION'
+        }
+      ],
+      'user': {
+        'userId': 'user123'
+      },
+      'device': {
+        'locale': 'en-US'
+      },
+      'conversation': {
+        'conversationId': '1494606917128',
+        'type': 'ACTIVE',
+        'conversationToken': '["_actions_on_google_"]'
+      }
+    };
+
+    let mockRequest = new MockRequest(headers, body);
+    let mockResponse = new MockResponse();
+
+    let app = new ActionsSdkApp({
+      request: mockRequest,
+      response: mockResponse
+    });
+
+    expect(app.isInSandbox()).to.be.true;
+
+    // Test the false case
+
+    body.isInSandbox = false;
+
+    mockRequest = new MockRequest(headers, body);
+    mockResponse = new MockResponse();
+
+    app = new ActionsSdkApp({
+      request: mockRequest,
+      response: mockResponse
+    });
+
+    expect(app.isInSandbox()).to.be.false;
   });
 });
 

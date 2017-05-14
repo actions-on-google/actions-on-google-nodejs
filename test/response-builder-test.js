@@ -30,6 +30,7 @@ const BasicCard = require('.././response-builder').BasicCard;
 const List = require('.././response-builder').List;
 const Carousel = require('.././response-builder').Carousel;
 const OptionItem = require('.././response-builder').OptionItem;
+const OrderUpdate = require('.././transactions').OrderUpdate;
 
 // Default logger
 winston.loggers.add('DEFAULT_LOGGER', {
@@ -157,6 +158,36 @@ describe('RichResponse', () => {
             textToSpeech: 'text'
           }
         });
+    });
+
+    it('should replace a structured response at first position', () => {
+      richResponse.addOrderUpdate(new OrderUpdate());
+      richResponse.addSimpleResponse('text');
+      expect(richResponse.items[0]).to.deep.equal(
+        {
+          simpleResponse: {
+            textToSpeech: 'text'
+          }
+        });
+    });
+  });
+
+  describe('#addOrderUpdate', () => {
+    let richResponse;
+
+    beforeEach(() => {
+      richResponse = new RichResponse();
+    });
+
+    it('should add an order update', () => {
+      richResponse.addOrderUpdate(new OrderUpdate());
+      expect(richResponse.items[0].structuredResponse.orderUpdate).to.exist;
+    });
+
+    it('should not add more than one order update', () => {
+      richResponse.addOrderUpdate(new OrderUpdate());
+      richResponse.addOrderUpdate(new OrderUpdate());
+      expect(richResponse.items.length).to.equal(1);
     });
   });
 
