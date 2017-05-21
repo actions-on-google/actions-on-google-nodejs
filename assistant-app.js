@@ -44,7 +44,6 @@ const LineItem = require('./transactions').LineItem;
 const OrderUpdate = require('./transactions').OrderUpdate;
 
 const transformToSnakeCase = require('./utils/transform').transformToSnakeCase;
-const transformToCamelCase = require('./utils/transform').transformToCamelCase;
 
 // Constants
 const ERROR_MESSAGE = 'Sorry, I am unable to process your request.';
@@ -143,15 +142,6 @@ const AssistantApp = class {
       this.body_.originalRequest.version) {
       this.actionsApiVersion_ = this.body_.originalRequest.version;
       debug('Actions API version from APIAI: ' + this.actionsApiVersion_);
-    }
-
-    // If request is in Proto2 format, convert to Proto3
-    if (!this.isNotApiVersionOne_()) {
-      if (this.body_.originalRequest) {
-        this.body_.originalRequest = transformToCamelCase(this.body_.originalRequest);
-      } else {
-        this.body_ = transformToCamelCase(this.body_);
-      }
     }
 
     /**
@@ -302,6 +292,7 @@ const AssistantApp = class {
 
     /**
      * List of built-in value type names.
+     * @private
      * @readonly
      * @enum {string}
      * @actionssdk
@@ -1032,7 +1023,7 @@ const AssistantApp = class {
   /**
    * Returns true if user device has a given surface capability.
    *
-   * @param {string} capability Must be one of AssistantApp.SurfaceCapabilities.
+   * @param {string} capability Must be one of {@link SurfaceCapabilities}.
    * @return {boolean} True if user device has the given capability.
    *
    * @example

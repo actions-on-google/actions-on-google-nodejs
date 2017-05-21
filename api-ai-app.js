@@ -27,6 +27,7 @@ const app = require('./assistant-app');
 const AssistantApp = app.AssistantApp;
 const State = app.State;
 const transformToSnakeCase = require('./utils/transform').transformToSnakeCase;
+const transformToCamelCase = require('./utils/transform').transformToCamelCase;
 
 // Constants
 const RESPONSE_CODE_OK = 200;
@@ -75,6 +76,11 @@ const ApiAiApp = class extends AssistantApp {
   constructor (options) {
     debug('ApiAiApp constructor');
     super(options);
+
+    // If request contains originalRequest, convert to Proto3.
+    if (this.body_ && this.body_.originalRequest && !this.isNotApiVersionOne_()) {
+      this.body_.originalRequest = transformToCamelCase(this.body_.originalRequest);
+    }
 
     if (this.body_ &&
       this.body_.originalRequest &&

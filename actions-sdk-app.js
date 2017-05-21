@@ -28,6 +28,7 @@ const app = require('./assistant-app');
 const AssistantApp = app.AssistantApp;
 const State = app.State;
 const transformToSnakeCase = require('./utils/transform').transformToSnakeCase;
+const transformToCamelCase = require('./utils/transform').transformToCamelCase;
 
 // Constants
 const CONVERSATION_API_AGENT_VERSION_HEADER = 'Agent-Version-Label';
@@ -61,6 +62,11 @@ const ActionsSdkApp = class extends AssistantApp {
   constructor (options) {
     debug('ActionsSdkApp constructor');
     super(options);
+
+    // If request is from AoG and in Proto2 format, convert to Proto3.
+    if (this.body_ && !this.isNotApiVersionOne_()) {
+      this.body_ = transformToCamelCase(this.body_);
+    }
 
     if (this.body_ &&
         this.body_.conversation &&

@@ -400,6 +400,149 @@ describe('ApiAiApp#constructor', function () {
     expect(app.StandardIntents.PERMISSION).to
       .equal('assistant.intent.action.PERMISSION');
   });
+
+  it('Does not detect v2 and transform originalRequest when version not present', function () {
+    let headers = {
+      'Content-Type': 'application/json',
+      'google-assistant-api-version': 'v1'
+    };
+    const mockRequest = new MockRequest(headers, {
+      'id': '1234',
+      'timestamp': '2017-05-19T22:08:53.363Z',
+      'lang': 'en',
+      'result': {
+        'source': 'agent',
+        'resolvedQuery': 'blue',
+        'action': 'ask.me',
+        'actionIncomplete': false,
+        'parameters': {
+          'foo-param': 'blue'
+        },
+        'contexts': [
+          {
+            'name': '_actions_on_google_',
+            'parameters': {},
+            'lifespan': 100
+          }
+        ],
+        'metadata': {
+          'intentId': '1234',
+          'webhookUsed': 'true',
+          'webhookForSlotFillingUsed': 'false',
+          'webhookResponseTime': 555,
+          'intentName': 'welcome'
+        },
+        'fulfillment': {
+          'speech': 'Welcome!',
+          'messages': [
+            {
+              'type': 0,
+              'speech': 'Welcome!',
+              'foo_message': 'bar_val'
+            }
+          ],
+          'data': {
+            'google': {
+              'expect_user_response': true,
+              'is_ssml': false,
+              'no_input_prompts': []
+            }
+          }
+        },
+        'score': 1
+      },
+      'originalRequest': {
+        'foo_prop': 'bar_val'
+      },
+      'status': {
+        'code': 200,
+        'errorType': 'success'
+      },
+      'sessionId': '1234',
+      'foo_field': 'bar_val'
+    });
+    const mockResponse = new MockResponse();
+
+    const app = new ApiAiApp({request: mockRequest, response: mockResponse});
+
+    expect(app.isNotApiVersionOne_()).to.equal(false);
+    expect(app.body_['foo_field']).to.equal('bar_val');
+    expect(app.body_.result.parameters['foo-param']).to.equal('blue');
+    expect(app.body_.result.fulfillment.messages[0]['foo_message']).to.equal('bar_val');
+    expect(app.body_.originalRequest['fooProp']).to.equal('bar_val');
+  });
+
+  it('Does detect v2 and not transform originalRequest when version is present', function () {
+    let headers = {
+      'Content-Type': 'application/json',
+      'google-assistant-api-version': 'v1'
+    };
+    const mockRequest = new MockRequest(headers, {
+      'id': '1234',
+      'timestamp': '2017-05-19T22:08:53.363Z',
+      'lang': 'en',
+      'result': {
+        'source': 'agent',
+        'resolvedQuery': 'blue',
+        'action': 'ask.me',
+        'actionIncomplete': false,
+        'parameters': {
+          'foo-param': 'blue'
+        },
+        'contexts': [
+          {
+            'name': '_actions_on_google_',
+            'parameters': {},
+            'lifespan': 100
+          }
+        ],
+        'metadata': {
+          'intentId': '1234',
+          'webhookUsed': 'true',
+          'webhookForSlotFillingUsed': 'false',
+          'webhookResponseTime': 555,
+          'intentName': 'welcome'
+        },
+        'fulfillment': {
+          'speech': 'Welcome!',
+          'messages': [
+            {
+              'type': 0,
+              'speech': 'Welcome!',
+              'foo_message': 'bar_val'
+            }
+          ],
+          'data': {
+            'google': {
+              'expect_user_response': true,
+              'is_ssml': false,
+              'no_input_prompts': []
+            }
+          }
+        },
+        'score': 1
+      },
+      'originalRequest': {
+        'version': '2',
+        'foo_prop': 'bar_val'
+      },
+      'status': {
+        'code': 200,
+        'errorType': 'success'
+      },
+      'sessionId': '1234',
+      'foo_field': 'bar_val'
+    });
+    const mockResponse = new MockResponse();
+
+    const app = new ApiAiApp({request: mockRequest, response: mockResponse});
+
+    expect(app.isNotApiVersionOne_()).to.equal(true);
+    expect(app.body_['foo_field']).to.equal('bar_val');
+    expect(app.body_.result.parameters['foo-param']).to.equal('blue');
+    expect(app.body_.result.fulfillment.messages[0]['foo_message']).to.equal('bar_val');
+    expect(app.body_.originalRequest['foo_prop']).to.equal('bar_val');
+  });
 });
 
 /**
@@ -4644,8 +4787,7 @@ describe('ApiAiApp#getIncomingRichResponse', function () {
   // Success case test, when the API returns a valid 200 response with the response object
   it('Should get the incoming rich response for the success case.', function () {
     let headers = {
-      'Content-Type': 'application/json',
-      'Google-Assistant-API-Version': 'v1'
+      'Content-Type': 'application/json'
     };
     let body = {
       'id': 'db2c39ce-1755-4163-a8df-ea033d713dbb',
@@ -4670,12 +4812,12 @@ describe('ApiAiApp#getIncomingRichResponse', function () {
             {
               'type': 'simple_response',
               'platform': 'google',
-              'text_to_speech': 'Simple response one'
+              'textToSpeech': 'Simple response one'
             },
             {
               'type': 'basic_card',
               'platform': 'google',
-              'formatted_text': 'my text',
+              'formattedText': 'my text',
               'buttons': []
             },
             {
@@ -4690,7 +4832,7 @@ describe('ApiAiApp#getIncomingRichResponse', function () {
             {
               'type': 'link_out_chip',
               'platform': 'google',
-              'destination_name': 'google',
+              'destinationName': 'google',
               'url': 'google.com'
             },
             {
@@ -4734,8 +4876,7 @@ describe('ApiAiApp#getIncomingList', function () {
   // Success case test, when the API returns a valid 200 response with the response object
   it('Should get the incoming list for the success case.', function () {
     let headers = {
-      'Content-Type': 'application/json',
-      'Google-Assistant-API-Version': 'v1'
+      'Content-Type': 'application/json'
     };
     let body = {
       'id': 'db2c39ce-1755-4163-a8df-ea033d713dbb',
@@ -4760,7 +4901,7 @@ describe('ApiAiApp#getIncomingList', function () {
             {
               'type': 'simple_response',
               'platform': 'google',
-              'text_to_speech': 'Check out these options'
+              'textToSpeech': 'Check out these options'
             },
             {
               'type': 'list_card',
@@ -4768,14 +4909,14 @@ describe('ApiAiApp#getIncomingList', function () {
               'title': 'list_title',
               'items': [
                 {
-                  'option_info': {
+                  'optionInfo': {
                     'key': 'first_item',
                     'synonyms': []
                   },
                   'title': 'first item'
                 },
                 {
-                  'option_info': {
+                  'optionInfo': {
                     'key': 'second_item',
                     'synonyms': []
                   },
@@ -4824,8 +4965,7 @@ describe('ApiAiApp#getIncomingCarousel', function () {
   // Success case test, when the API returns a valid 200 response with the response object
   it('Should get the incoming list for the success case.', function () {
     let headers = {
-      'Content-Type': 'application/json',
-      'Google-Assistant-API-Version': 'v1'
+      'Content-Type': 'application/json'
     };
     let body = {
       'id': 'db2c39ce-1755-4163-a8df-ea033d713dbb',
@@ -4850,14 +4990,14 @@ describe('ApiAiApp#getIncomingCarousel', function () {
             {
               'type': 'simple_response',
               'platform': 'google',
-              'text_to_speech': 'Check out these options'
+              'textToSpeech': 'Check out these options'
             },
             {
               'type': 'carousel_card',
               'platform': 'google',
               'items': [
                 {
-                  'option_info': {
+                  'optionInfo': {
                     'key': 'first_item',
                     'synonyms': []
                   },
@@ -4865,7 +5005,7 @@ describe('ApiAiApp#getIncomingCarousel', function () {
                   'description': 'Your first choice'
                 },
                 {
-                  'option_info': {
+                  'optionInfo': {
                     'key': 'second_item',
                     'synonyms': []
                   },
@@ -6072,7 +6212,7 @@ describe('ActionsSdkApp#constructor', function () {
     expect(sessionStartedSpy).to.have.been.called();
   });
 
-  // Does not call sessionStarted when not new sessoin
+  // Does not call sessionStarted when not new session
   it('Does not call sessionStarted when not new session ', function () {
     let headers = {
       'Content-Type': 'application/json',
@@ -6117,6 +6257,118 @@ describe('ActionsSdkApp#constructor', function () {
     app.handleRequest();
 
     expect(sessionStartedSpy).to.not.have.been.called();
+  });
+
+  // Does transform to Proto3
+  it('Does not detect v2 and transform body when version not present', function () {
+    let headers = {
+      'Content-Type': 'application/json',
+      'Google-Assistant-API-Version': 'v1'
+    };
+    let body = {
+      'user': {
+        'user_id': '11112226094657824893'
+      },
+      'conversation': {
+        'conversation_id': '1480373842830',
+        'type': 2
+      },
+      'inputs': [
+        {
+          'intent': 'assistant.intent.action.MAIN',
+          'raw_inputs': [
+            {
+              'input_type': 2,
+              'query': 'talk to hello action'
+            }
+          ],
+          'arguments': [
+            {
+              'name': 'agent_info'
+            }
+          ]
+        }
+      ]
+    };
+    const mockRequest = new MockRequest(headers, body);
+    const mockResponse = new MockResponse();
+
+    const app = new ActionsSdkApp({
+      request: mockRequest,
+      response: mockResponse
+    });
+
+    app.handleRequest();
+
+    expect(app.body_).to.deep.equal({
+      'user': {
+        'userId': '11112226094657824893'
+      },
+      'conversation': {
+        'conversationId': '1480373842830',
+        'type': 2
+      },
+      'inputs': [
+        {
+          'intent': 'assistant.intent.action.MAIN',
+          'rawInputs': [
+            {
+              'inputType': 2,
+              'query': 'talk to hello action'
+            }
+          ],
+          'arguments': [
+            {
+              'name': 'agent_info'
+            }
+          ]
+        }
+      ]
+    });
+  });
+
+  // Does not transform to Proto3
+  it('Does detect v2 and not transform body when version is present', function () {
+    let headers = {
+      'Content-Type': 'application/json',
+      'Google-Actions-API-Version': '2'
+    };
+    let body = {
+      'user': {
+        'user_id': '11112226094657824893'
+      },
+      'conversation': {
+        'conversation_id': '1480373842830',
+        'type': 2
+      },
+      'inputs': [
+        {
+          'intent': 'assistant.intent.action.MAIN',
+          'raw_inputs': [
+            {
+              'input_type': 2,
+              'query': 'talk to hello action'
+            }
+          ],
+          'arguments': [
+            {
+              'name': 'agent_info'
+            }
+          ]
+        }
+      ]
+    };
+    const mockRequest = new MockRequest(headers, body);
+    const mockResponse = new MockResponse();
+
+    const app = new ActionsSdkApp({
+      request: mockRequest,
+      response: mockResponse
+    });
+
+    app.handleRequest();
+
+    expect(app.body_).to.deep.equal(body);
   });
 });
 
