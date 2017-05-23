@@ -97,76 +97,58 @@ const MockResponse = class {
  * Describes the behavior for Assistant isNotApiVersionOne_ method.
  */
 describe('ApiAiApp#isNotApiVersionOne_', function () {
+  let mockResponse;
+  let invalidHeader = {
+    'Content-Type': 'application/json',
+    'google-assistant-api-version': 'v1',
+    'Google-Actions-API-Version': '1'
+  };
+  let headerV1 = {
+    'Content-Type': 'application/json',
+    'google-assistant-api-version': 'v1'
+  };
+
+  beforeEach(function () {
+    mockResponse = new MockResponse();
+  });
+
   it('Should detect Proto2 when header isn\'t present', function () {
-    let headers = {
-      'Content-Type': 'application/json',
-      'google-assistant-api-version': 'v1'
-    };
-    const mockRequest = new MockRequest(headers, {});
-    const mockResponse = new MockResponse();
-
+    const mockRequest = new MockRequest(headerV1, {});
     const app = new ApiAiApp({request: mockRequest, response: mockResponse});
-
     expect(app.isNotApiVersionOne_()).to.equal(false);
   });
+
   it('Should detect v1 when header is present', function () {
-    let headers = {
-      'Content-Type': 'application/json',
-      'google-assistant-api-version': 'v1',
-      'Google-Actions-API-Version': '1'
-    };
-    const mockRequest = new MockRequest(headers, {});
-    const mockResponse = new MockResponse();
-
+    const mockRequest = new MockRequest(invalidHeader, {});
     const app = new ApiAiApp({request: mockRequest, response: mockResponse});
-
     expect(app.isNotApiVersionOne_()).to.equal(false);
   });
+
   it('Should detect v2 when version is present in APIAI req', function () {
-    let headers = {
-      'Content-Type': 'application/json',
-      'google-assistant-api-version': 'v1',
-      'Google-Actions-API-Version': '2'
-    };
-    const mockRequest = new MockRequest(headers, {
+    const mockRequest = new MockRequest(headerV1, {
       'originalRequest': {
         'version': 1
       }
     });
-    const mockResponse = new MockResponse();
-
     const app = new ApiAiApp({request: mockRequest, response: mockResponse});
-
     expect(app.isNotApiVersionOne_()).to.equal(false);
   });
+
   it('Should detect v2 when header is present', function () {
-    let headers = {
-      'Content-Type': 'application/json',
-      'google-assistant-api-version': 'v1',
-      'Google-Actions-API-Version': '2'
-    };
-    const mockRequest = new MockRequest(headers, {});
-    const mockResponse = new MockResponse();
-
+    let headerWithV2 = JSON.parse(JSON.stringify(headerV1));
+    headerWithV2['Google-Actions-API-Version'] = '2';
+    const mockRequest = new MockRequest(headerWithV2, {});
     const app = new ApiAiApp({request: mockRequest, response: mockResponse});
-
     expect(app.isNotApiVersionOne_()).to.equal(true);
   });
+
   it('Should detect v2 when version is present in APIAI req', function () {
-    let headers = {
-      'Content-Type': 'application/json',
-      'google-assistant-api-version': 'v1',
-      'Google-Actions-API-Version': '2'
-    };
-    const mockRequest = new MockRequest(headers, {
+    const mockRequest = new MockRequest(headerV1, {
       'originalRequest': {
         'version': 2
       }
     });
-    const mockResponse = new MockResponse();
-
     const app = new ApiAiApp({request: mockRequest, response: mockResponse});
-
     expect(app.isNotApiVersionOne_()).to.equal(true);
   });
 });
