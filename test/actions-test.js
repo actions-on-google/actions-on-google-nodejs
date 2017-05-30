@@ -94,6 +94,10 @@ const headerV1 = {
   'google-assistant-api-version': 'v1'
 };
 
+const headerV2 = {
+  'Content-Type': 'application/json',
+  'Google-Actions-API-Version': '2'
+};
 const fakeTimeStamp = '2017-01-01T12:00:00';
 const fakeSessionId = '0123456789101112';
 const fakeIntentId = '1a2b3c4d-5e6f-7g8h-9i10-11j12k13l14m15n16o';
@@ -907,73 +911,32 @@ describe('ApiAiApp#getUserName', function () {
  * Describes the behavior for ApiAiApp getDeviceLocation method.
  */
 describe('ApiAiApp#getDeviceLocation', function () {
-  // Success case test, when the API returns a valid 200 response with the response object
-  it('Should validate assistant request user.', function () {
-    let headers = {
-      'Content-Type': 'application/json',
-      'google-assistant-api-version': 'v1'
-    };
-    let body = {
-      'id': 'ce7295cc-b042-42d8-8d72-14b83597ac1e',
-      'timestamp': '2016-10-28T03:05:34.288Z',
-      'result': {
-        'source': 'agent',
-        'resolvedQuery': 'start guess a number game',
-        'speech': '',
-        'action': 'generate_answer',
-        'actionIncomplete': false,
-        'parameters': {
+  let mockResponse, mockRequest, body, app;
 
+  beforeEach(function () {
+    body = createLiveSessionApiAppBody();
+    body.originalRequest.data.device = {
+      'location': {
+        'coordinates': {
+          'latitude': 37.3861,
+          'longitude': 122.0839
         },
-        'contexts': [
-
-        ],
-        'metadata': {
-          'intentId': '56da4637-0419-46b2-b851-d7bf726b1b1b',
-          'webhookUsed': 'true',
-          'intentName': 'start_game'
-        },
-        'fulfillment': {
-          'speech': ''
-        },
-        'score': 1
-      },
-      'status': {
-        'code': 200,
-        'errorType': 'success'
-      },
-      'sessionId': 'e420f007-501d-4bc8-b551-5d97772bc50c',
-      'originalRequest': {
-        'data': {
-          'conversation': {
-            'type': 2
-          },
-          'user': {
-            'user_id': '11112226094657824893'
-          },
-          'device': {
-            'location': {
-              'coordinates': {
-                'latitude': 37.3861,
-                'longitude': 122.0839
-              },
-              'formatted_address': '123 Main St, Anytown, CA 12345, United States',
-              'zip_code': '12345',
-              'city': 'Anytown'
-            }
-          }
-        }
+        'formatted_address': '123 Main St, Anytown, CA 12345, United States',
+        'zip_code': '12345',
+        'city': 'Anytown'
       }
     };
+  });
 
-    let mockRequest = new MockRequest(headers, body);
-    let mockResponse = new MockResponse();
+  function initMockApp () {
+    mockRequest = new MockRequest(headerV1, body);
+    mockResponse = new MockResponse();
+    app = new ApiAiApp({request: mockRequest, response: mockResponse});
+  }
 
-    let app = new ApiAiApp({
-      request: mockRequest,
-      response: mockResponse
-    });
-
+  // Success case test, when the API returns a valid 200 response with the response object
+  it('Should validate assistant request user.', function () {
+    initMockApp();
     expect(app.getDeviceLocation().coordinates).to.deep.equal({
       latitude: 37.3861,
       longitude: 122.0839
@@ -982,19 +945,12 @@ describe('ApiAiApp#getDeviceLocation', function () {
       .to.equal('123 Main St, Anytown, CA 12345, United States');
     expect(app.getDeviceLocation().zipCode).to.equal('12345');
     expect(app.getDeviceLocation().city).to.equal('Anytown');
+  });
 
+  it('Should validate faulty assistant request user.', function () {
     // Test the false case
-
     body.originalRequest.data.device = undefined;
-
-    mockRequest = new MockRequest(headers, body);
-    mockResponse = new MockResponse();
-
-    app = new ApiAiApp({
-      request: mockRequest,
-      response: mockResponse
-    });
-
+    initMockApp();
     expect(app.getDeviceLocation()).to.equal(null);
   });
 });
@@ -1003,106 +959,30 @@ describe('ApiAiApp#getDeviceLocation', function () {
  * Describes the behavior for ApiAiApp getTransactionRequirementsResult method.
  */
 describe('ApiAiApp#getTransactionRequirementsResult', function () {
+  function addTransactionToBody () {
+    let body = createLiveSessionApiAppBody();
+    body.originalRequest.data.inputs[0].arguments = [
+      {
+        'extension': {
+          'canTransact': true,
+          '@type': 'type.googleapis.com/google.actions.v2.TransactionRequirementsCheckResult',
+          'resultType': 'OK'
+        },
+        'name': 'TRANSACTION_REQUIREMENTS_CHECK_RESULT'
+      }
+    ];
+    return body;
+  }
+
   // Success case test, when the API returns a valid 200 response with the response object
   it('Should validate assistant request transaction result.', function () {
-    let headers = {
-      'Content-Type': 'application/json'
-    };
-    let body = {
-      'originalRequest': {
-        'source': 'google',
-        'version': '2',
-        'data': {
-          'isInSandbox': true,
-          'surface': {
-            'capabilities': [
-              {
-                'name': 'actions.capability.AUDIO_OUTPUT'
-              },
-              {
-                'name': 'actions.capability.SCREEN_OUTPUT'
-              }
-            ]
-          },
-          'inputs': [
-            {
-              'rawInputs': [
-                {
-                  'query': 'check transaction',
-                  'inputType': 'VOICE'
-                }
-              ],
-              'arguments': [
-                {
-                  'extension': {
-                    'canTransact': true,
-                    '@type': 'type.googleapis.com/google.actions.v2.TransactionRequirementsCheckResult',
-                    'resultType': 'OK'
-                  },
-                  'name': 'TRANSACTION_REQUIREMENTS_CHECK_RESULT'
-                }
-              ],
-              'intent': 'actions.intent.TRANSACTION_REQUIREMENTS_CHECK'
-            }
-          ],
-          'user': {
-            'userId': 'user123'
-          },
-          'device': {
-            'locale': 'en-US'
-          },
-          'conversation': {
-            'conversationId': '1494603963782',
-            'type': 'ACTIVE',
-            'conversationToken': '["_actions_on_google_"]'
-          }
-        }
-      },
-      'id': 'e169144c-9d31-4a9d-82a0-b14922ce21a7',
-      'timestamp': '2017-05-12T15:46:08.594Z',
-      'lang': 'en',
-      'result': {
-        'source': 'agent',
-        'resolvedQuery': 'actions_intent_TRANSACTION_REQUIREMENTS_CHECK',
-        'speech': '',
-        'action': 'transaction.check.complete',
-        'actionIncomplete': false,
-        'parameters': {
-          'test': '@test'
-        },
-        'metadata': {
-          'intentId': 'fd16d86b-60db-4d19-a683-5b52a22f4795',
-          'webhookUsed': 'true',
-          'webhookForSlotFillingUsed': 'false',
-          'nluResponseTime': 19,
-          'intentName': 'transactioncheck_complete'
-        },
-        'fulfillment': {
-          'speech': '',
-          'messages': [
-            {
-              'type': 0,
-              'speech': ''
-            }
-          ]
-        },
-        'score': 1
-      },
-      'status': {
-        'code': 200,
-        'errorType': 'success'
-      },
-      'sessionId': '1494603963782'
-    };
-
-    let mockRequest = new MockRequest(headers, body);
+    let body = addTransactionToBody();
+    let mockRequest = new MockRequest(headerV1, body);
     let mockResponse = new MockResponse();
-
     let app = new ApiAiApp({
       request: mockRequest,
       response: mockResponse
     });
-
     expect(app.getTransactionRequirementsResult()).to.equal('OK');
   });
 });
@@ -1111,122 +991,46 @@ describe('ApiAiApp#getTransactionRequirementsResult', function () {
  * Describes the behavior for ApiAiApp getDeliveryAddress method.
  */
 describe('ApiAiApp#getDeliveryAddress', function () {
+  let body, mockResponse;
+
+  beforeEach(function () {
+    body = createLiveSessionApiAppBody();
+    body.originalRequest.data.inputs[0].arguments = [
+      {
+        'extension': {
+          'userDecision': 'ACCEPTED',
+          '@type': 'type.googleapis.com/google.actions.v2.DeliveryAddressValue',
+          'location': {
+            'zipCode': '94043',
+            'postalAddress': {
+              'regionCode': 'US',
+              'recipients': [
+                'Jane Smith'
+              ],
+              'postalCode': '94043',
+              'locality': 'Mountain View',
+              'addressLines': [
+                '1600 Amphitheatre Parkway'
+              ],
+              'administrativeArea': 'CA'
+            },
+            'phoneNumber': '+1 415-555-1234',
+            'city': 'Mountain View'
+          }
+        },
+        'name': 'DELIVERY_ADDRESS_VALUE'
+      }
+    ];
+    mockResponse = new MockResponse();
+  });
+
   // Success case test, when the API returns a valid 200 response with the response object
   it('Should validate assistant request delivery address', function () {
-    let headers = {
-      'Content-Type': 'application/json'
-    };
-    let body = {
-      'originalRequest': {
-        'source': 'google',
-        'version': '2',
-        'data': {
-          'isInSandbox': true,
-          'surface': {
-            'capabilities': [
-              {
-                'name': 'actions.capability.AUDIO_OUTPUT'
-              },
-              {
-                'name': 'actions.capability.SCREEN_OUTPUT'
-              }
-            ]
-          },
-          'inputs': [
-            {
-              'rawInputs': [
-                {
-                  'query': '1600 Amphitheatre Parkway',
-                  'inputType': 'VOICE'
-                }
-              ],
-              'arguments': [
-                {
-                  'extension': {
-                    'userDecision': 'ACCEPTED',
-                    '@type': 'type.googleapis.com/google.actions.v2.DeliveryAddressValue',
-                    'location': {
-                      'zipCode': '94043',
-                      'postalAddress': {
-                        'regionCode': 'US',
-                        'recipients': [
-                          'Jane Smith'
-                        ],
-                        'postalCode': '94043',
-                        'locality': 'Mountain View',
-                        'addressLines': [
-                          '1600 Amphitheatre Parkway'
-                        ],
-                        'administrativeArea': 'CA'
-                      },
-                      'phoneNumber': '+1 415-555-1234',
-                      'city': 'Mountain View'
-                    }
-                  },
-                  'name': 'DELIVERY_ADDRESS_VALUE'
-                }
-              ],
-              'intent': 'actions.intent.DELIVERY_ADDRESS'
-            }
-          ],
-          'user': {
-            'userId': 'user123'
-          },
-          'device': {
-            'locale': 'en-US'
-          },
-          'conversation': {
-            'conversationId': '1494606917128',
-            'type': 'ACTIVE',
-            'conversationToken': '["_actions_on_google_"]'
-          }
-        }
-      },
-      'id': '8032dc31-9627-4fbe-9ffd-8e5cfb20cebf',
-      'timestamp': '2017-05-12T16:35:38.131Z',
-      'lang': 'en',
-      'result': {
-        'source': 'agent',
-        'resolvedQuery': 'actions_intent_DELIVERY_ADDRESS',
-        'speech': '',
-        'action': 'delivery.address.complete',
-        'actionIncomplete': false,
-        'parameters': {},
-        'contexts': [
-        ],
-        'metadata': {
-          'intentId': 'a15ac3ff-1a84-43d0-94e9-37862a3d89cf',
-          'webhookUsed': 'true',
-          'webhookForSlotFillingUsed': 'false',
-          'nluResponseTime': 2,
-          'intentName': 'deliveryaddress_complete'
-        },
-        'fulfillment': {
-          'speech': '',
-          'messages': [
-            {
-              'type': 0,
-              'speech': ''
-            }
-          ]
-        },
-        'score': 1
-      },
-      'status': {
-        'code': 200,
-        'errorType': 'success'
-      },
-      'sessionId': '1494606917128'
-    };
-
-    let mockRequest = new MockRequest(headers, body);
-    let mockResponse = new MockResponse();
-
+    let mockRequest = new MockRequest(headerV1, body);
     let app = new ApiAiApp({
       request: mockRequest,
       response: mockResponse
     });
-
     expect(app.getDeliveryAddress()).to.deep.equal({
       zipCode: '94043',
       postalAddress: {
@@ -1248,115 +1052,8 @@ describe('ApiAiApp#getDeliveryAddress', function () {
 
   // Success case test, when the API returns a valid 200 response with the response object
   it('Should validate assistant request delivery address for txn decision', function () {
-    let headers = {
-      'Content-Type': 'application/json'
-    };
-    let body = {
-      'originalRequest': {
-        'source': 'google',
-        'version': '2',
-        'data': {
-          'isInSandbox': true,
-          'surface': {
-            'capabilities': [
-              {
-                'name': 'actions.capability.AUDIO_OUTPUT'
-              },
-              {
-                'name': 'actions.capability.SCREEN_OUTPUT'
-              }
-            ]
-          },
-          'inputs': [
-            {
-              'rawInputs': [
-                {
-                  'query': '1600 Amphitheatre Parkway',
-                  'inputType': 'VOICE'
-                }
-              ],
-              'arguments': [
-                {
-                  'extension': {
-                    'userDecision': 'ACCEPTED',
-                    '@type': 'type.googleapis.com/google.actions.v2.TransactionDecisionValue',
-                    'location': {
-                      'zipCode': '94043',
-                      'postalAddress': {
-                        'regionCode': 'US',
-                        'recipients': [
-                          'Jane Smith'
-                        ],
-                        'postalCode': '94043',
-                        'locality': 'Mountain View',
-                        'addressLines': [
-                          '1600 Amphitheatre Parkway'
-                        ],
-                        'administrativeArea': 'CA'
-                      },
-                      'phoneNumber': '+1 415-555-1234',
-                      'city': 'Mountain View'
-                    }
-                  },
-                  'name': 'TRANSACTION_DECISION_VALUE'
-                }
-              ],
-              'intent': 'actions.intent.TRANSACTION_DECISION'
-            }
-          ],
-          'user': {
-            'userId': 'user123'
-          },
-          'device': {
-            'locale': 'en-US'
-          },
-          'conversation': {
-            'conversationId': '1494606917128',
-            'type': 'ACTIVE',
-            'conversationToken': '["_actions_on_google_"]'
-          }
-        }
-      },
-      'id': '8032dc31-9627-4fbe-9ffd-8e5cfb20cebf',
-      'timestamp': '2017-05-12T16:35:38.131Z',
-      'lang': 'en',
-      'result': {
-        'source': 'agent',
-        'resolvedQuery': 'actions_intent_DELIVERY_ADDRESS',
-        'speech': '',
-        'action': 'delivery.address.complete',
-        'actionIncomplete': false,
-        'parameters': {},
-        'contexts': [
-        ],
-        'metadata': {
-          'intentId': 'a15ac3ff-1a84-43d0-94e9-37862a3d89cf',
-          'webhookUsed': 'true',
-          'webhookForSlotFillingUsed': 'false',
-          'nluResponseTime': 2,
-          'intentName': 'deliveryaddress_complete'
-        },
-        'fulfillment': {
-          'speech': '',
-          'messages': [
-            {
-              'type': 0,
-              'speech': ''
-            }
-          ]
-        },
-        'score': 1
-      },
-      'status': {
-        'code': 200,
-        'errorType': 'success'
-      },
-      'sessionId': '1494606917128'
-    };
-
-    let mockRequest = new MockRequest(headers, body);
-    let mockResponse = new MockResponse();
-
+    body.originalRequest.data.inputs[0].arguments[0].name = 'TRANSACTION_DECISION_VALUE';
+    let mockRequest = new MockRequest(headerV1, body);
     let app = new ApiAiApp({
       request: mockRequest,
       response: mockResponse
@@ -1383,120 +1080,12 @@ describe('ApiAiApp#getDeliveryAddress', function () {
 
   // Success case test, when the API returns a valid 200 response with the response object
   it('Should return null when user rejects', function () {
-    let headers = {
-      'Content-Type': 'application/json'
-    };
-    let body = {
-      'originalRequest': {
-        'source': 'google',
-        'version': '2',
-        'data': {
-          'isInSandbox': true,
-          'surface': {
-            'capabilities': [
-              {
-                'name': 'actions.capability.AUDIO_OUTPUT'
-              },
-              {
-                'name': 'actions.capability.SCREEN_OUTPUT'
-              }
-            ]
-          },
-          'inputs': [
-            {
-              'rawInputs': [
-                {
-                  'query': '1600 Amphitheatre Parkway',
-                  'inputType': 'VOICE'
-                }
-              ],
-              'arguments': [
-                {
-                  'extension': {
-                    'userDecision': 'REJECTED',
-                    '@type': 'type.googleapis.com/google.actions.v2.DeliveryAddressValue',
-                    'location': {
-                      'zipCode': '94043',
-                      'postalAddress': {
-                        'regionCode': 'US',
-                        'recipients': [
-                          'Jane Smith'
-                        ],
-                        'postalCode': '94043',
-                        'locality': 'Mountain View',
-                        'addressLines': [
-                          '1600 Amphitheatre Parkway'
-                        ],
-                        'administrativeArea': 'CA'
-                      },
-                      'phoneNumber': '+1 415-555-1234',
-                      'city': 'Mountain View'
-                    }
-                  },
-                  'name': 'DELIVERY_ADDRESS_VALUE'
-                }
-              ],
-              'intent': 'actions.intent.DELIVERY_ADDRESS'
-            }
-          ],
-          'user': {
-            'userId': 'user123'
-          },
-          'device': {
-            'locale': 'en-US'
-          },
-          'conversation': {
-            'conversationId': '1494606917128',
-            'type': 'ACTIVE',
-            'conversationToken': '["_actions_on_google_"]'
-          }
-        }
-      },
-      'id': '8032dc31-9627-4fbe-9ffd-8e5cfb20cebf',
-      'timestamp': '2017-05-12T16:35:38.131Z',
-      'lang': 'en',
-      'result': {
-        'source': 'agent',
-        'resolvedQuery': 'actions_intent_DELIVERY_ADDRESS',
-        'speech': '',
-        'action': 'delivery.address.complete',
-        'actionIncomplete': false,
-        'parameters': {},
-        'contexts': [
-        ],
-        'metadata': {
-          'intentId': 'a15ac3ff-1a84-43d0-94e9-37862a3d89cf',
-          'webhookUsed': 'true',
-          'webhookForSlotFillingUsed': 'false',
-          'nluResponseTime': 2,
-          'intentName': 'deliveryaddress_complete'
-        },
-        'fulfillment': {
-          'speech': '',
-          'messages': [
-            {
-              'type': 0,
-              'speech': ''
-            }
-          ]
-        },
-        'score': 1
-      },
-      'status': {
-        'code': 200,
-        'errorType': 'success'
-      },
-      'sessionId': '1494606917128'
-    };
-
-    let mockRequest = new MockRequest(headers, body);
-    let mockResponse = new MockResponse();
-
+    body.originalRequest.data.inputs[0].arguments[0].extension.userDecision = 'REJECTED';
+    let mockRequest = new MockRequest(headerV1, body);
     let app = new ApiAiApp({
       request: mockRequest,
       response: mockResponse
     });
-
     expect(app.getDeliveryAddress()).to.equal(null);
   });
 });
@@ -1507,110 +1096,32 @@ describe('ApiAiApp#getDeliveryAddress', function () {
 describe('ApiAiApp#getTransactionDecision', function () {
   // Success case test, when the API returns a valid 200 response with the response object
   it('Should validate assistant request delivery address', function () {
-    let headers = {
-      'Content-Type': 'application/json'
-    };
-    let body = {
-      'originalRequest': {
-        'source': 'google',
-        'version': '2',
-        'data': {
-          'isInSandbox': true,
-          'surface': {
-            'capabilities': [
-              {
-                'name': 'actions.capability.AUDIO_OUTPUT'
+    let body = createLiveSessionApiAppBody();
+    body.originalRequest.data.inputs[0].arguments = [
+      {
+        'extension': {
+          'userDecision': 'ORDER_ACCEPTED',
+          'checkResult': {
+            'resultType': 'OK',
+            'order': {
+              'finalOrder': { 'fakeOrder': 'fake_order' },
+              'googleOrderId': 'goog_123',
+              'actionOrderId': 'action_123',
+              'orderDate': {
+                'seconds': 40,
+                'nanos': 880000000
               },
-              {
-                'name': 'actions.capability.SCREEN_OUTPUT'
+              'paymentInfo': { 'fakePayment': 'fake_payment' },
+              'customerInfo': {
+                'email': 'username@example.com'
               }
-            ]
-          },
-          'inputs': [
-            {
-              'rawInputs': [
-                {
-                  'query': '1600 Amphitheatre Parkway',
-                  'inputType': 'VOICE'
-                }
-              ],
-              'arguments': [
-                {
-                  'extension': {
-                    'userDecision': 'ORDER_ACCEPTED',
-                    'checkResult': {
-                      'resultType': 'OK',
-                      'order': {
-                        'finalOrder': { 'fakeOrder': 'fake_order' },
-                        'googleOrderId': 'goog_123',
-                        'actionOrderId': 'action_123',
-                        'orderDate': {
-                          'seconds': 40,
-                          'nanos': 880000000
-                        },
-                        'paymentInfo': { 'fakePayment': 'fake_payment' },
-                        'customerInfo': {
-                          'email': 'username@example.com'
-                        }
-                      }
-                    }
-                  },
-                  'name': 'TRANSACTION_DECISION_VALUE'
-                }
-              ],
-              'intent': 'actions.intent.TRANSACTION_DECISION'
             }
-          ],
-          'user': {
-            'userId': 'user123'
-          },
-          'device': {
-            'locale': 'en-US'
-          },
-          'conversation': {
-            'conversationId': '1494606917128',
-            'type': 'ACTIVE',
-            'conversationToken': '["_actions_on_google_"]'
           }
-        }
-      },
-      'id': '8032dc31-9627-4fbe-9ffd-8e5cfb20cebf',
-      'timestamp': '2017-05-12T16:35:38.131Z',
-      'lang': 'en',
-      'result': {
-        'source': 'agent',
-        'resolvedQuery': 'actions_intent_DELIVERY_ADDRESS',
-        'speech': '',
-        'action': 'delivery.address.complete',
-        'actionIncomplete': false,
-        'parameters': {},
-        'contexts': [],
-        'metadata': {
-          'intentId': 'a15ac3ff-1a84-43d0-94e9-37862a3d89cf',
-          'webhookUsed': 'true',
-          'webhookForSlotFillingUsed': 'false',
-          'nluResponseTime': 2,
-          'intentName': 'deliveryaddress_complete'
         },
-        'fulfillment': {
-          'speech': '',
-          'messages': [
-            {
-              'type': 0,
-              'speech': ''
-            }
-          ]
-        },
-        'score': 1
-      },
-      'status': {
-        'code': 200,
-        'errorType': 'success'
-      },
-      'sessionId': '1494606917128'
-    };
-
-    let mockRequest = new MockRequest(headers, body);
+        'name': 'TRANSACTION_DECISION_VALUE'
+      }
+    ];
+    let mockRequest = new MockRequest(headerV1, body);
     let mockResponse = new MockResponse();
 
     let app = new ApiAiApp({
@@ -1646,192 +1157,34 @@ describe('ApiAiApp#getTransactionDecision', function () {
 describe('ApiAiApp#getUserConfirmation', function () {
   // Success case test, when the API returns a valid 200 response with the response object
   it('Should validate assistant request positive user confirmation', function () {
-    let headers = {
-      'Content-Type': 'application/json'
-    };
-    let body = {
-      'originalRequest': {
-        'source': 'google',
-        'version': '2',
-        'data': {
-          'isInSandbox': true,
-          'surface': {
-            'capabilities': [
-              {
-                'name': 'actions.capability.AUDIO_OUTPUT'
-              },
-              {
-                'name': 'actions.capability.SCREEN_OUTPUT'
-              }
-            ]
-          },
-          'inputs': [
-            {
-              'rawInputs': [
-                {
-                  'query': 'i think so',
-                  'inputType': 'VOICE'
-                }
-              ],
-              'arguments': [
-                {
-                  'name': 'CONFIRMATION',
-                  'boolValue': true
-                }
-              ],
-              'intent': 'actions.intent.CONFIRMATION'
-            }
-          ],
-          'user': {
-            'userId': 'user123'
-          },
-          'device': {
-            'locale': 'en-US'
-          },
-          'conversation': {
-            'conversationId': '1494606917128',
-            'type': 'ACTIVE',
-            'conversationToken': '["_actions_on_google_"]'
-          }
-        }
-      },
-      'id': '8032dc31-9627-4fbe-9ffd-8e5cfb20cebf',
-      'timestamp': '2017-05-12T16:35:38.131Z',
-      'lang': 'en',
-      'result': {
-        'source': 'agent',
-        'resolvedQuery': 'actions_intent_CONFIRMATION',
-        'speech': '',
-        'action': 'confirmation.complete',
-        'actionIncomplete': false,
-        'parameters': {},
-        'contexts': [],
-        'metadata': {
-          'intentId': 'a15ac3ff-1a84-43d0-94e9-37862a3d89cf',
-          'webhookUsed': 'true',
-          'webhookForSlotFillingUsed': 'false',
-          'nluResponseTime': 2,
-          'intentName': 'confirmation_complete'
-        },
-        'fulfillment': {
-          'speech': '',
-          'messages': [
-            {
-              'type': 0,
-              'speech': ''
-            }
-          ]
-        },
-        'score': 1
-      },
-      'status': {
-        'code': 200,
-        'errorType': 'success'
-      },
-      'sessionId': '1494606917128'
-    };
-
-    let mockRequest = new MockRequest(headers, body);
+    let body = createLiveSessionApiAppBody();
+    body.originalRequest.data.inputs[0].arguments = [
+      {
+        'name': 'CONFIRMATION',
+        'boolValue': true
+      }
+    ];
+    let mockRequest = new MockRequest(headerV1, body);
     let mockResponse = new MockResponse();
 
     let app = new ApiAiApp({
       request: mockRequest,
       response: mockResponse
     });
-
     expect(app.getUserConfirmation()).to.equal(true);
   });
 
   // Success case test, when the API returns a valid 200 response with the response object
   it('Should validate assistant request negative user confirmation', function () {
-    let headers = {
-      'Content-Type': 'application/json'
-    };
-    let body = {
-      'originalRequest': {
-        'source': 'google',
-        'version': '2',
-        'data': {
-          'isInSandbox': true,
-          'surface': {
-            'capabilities': [
-              {
-                'name': 'actions.capability.AUDIO_OUTPUT'
-              },
-              {
-                'name': 'actions.capability.SCREEN_OUTPUT'
-              }
-            ]
-          },
-          'inputs': [
-            {
-              'rawInputs': [
-                {
-                  'query': 'i think so',
-                  'inputType': 'VOICE'
-                }
-              ],
-              'arguments': [
-                {
-                  'name': 'CONFIRMATION',
-                  'boolValue': false
-                }
-              ],
-              'intent': 'actions.intent.CONFIRMATION'
-            }
-          ],
-          'user': {
-            'userId': 'user123'
-          },
-          'device': {
-            'locale': 'en-US'
-          },
-          'conversation': {
-            'conversationId': '1494606917128',
-            'type': 'ACTIVE',
-            'conversationToken': '["_actions_on_google_"]'
-          }
-        }
-      },
-      'id': '8032dc31-9627-4fbe-9ffd-8e5cfb20cebf',
-      'timestamp': '2017-05-12T16:35:38.131Z',
-      'lang': 'en',
-      'result': {
-        'source': 'agent',
-        'resolvedQuery': 'actions_intent_CONFIRMATION',
-        'speech': '',
-        'action': 'confirmation.complete',
-        'actionIncomplete': false,
-        'parameters': {},
-        'contexts': [],
-        'metadata': {
-          'intentId': 'a15ac3ff-1a84-43d0-94e9-37862a3d89cf',
-          'webhookUsed': 'true',
-          'webhookForSlotFillingUsed': 'false',
-          'nluResponseTime': 2,
-          'intentName': 'confirmation_complete'
-        },
-        'fulfillment': {
-          'speech': '',
-          'messages': [
-            {
-              'type': 0,
-              'speech': ''
-            }
-          ]
-        },
-        'score': 1
-      },
-      'status': {
-        'code': 200,
-        'errorType': 'success'
-      },
-      'sessionId': '1494606917128'
-    };
-
-    let mockRequest = new MockRequest(headers, body);
+    let body = createLiveSessionApiAppBody();
+    body.originalRequest.data.inputs[0].arguments = [
+      {
+        'name': 'CONFIRMATION',
+        'boolValue': false
+      }
+    ];
+    let mockRequest = new MockRequest(headerV1, body);
     let mockResponse = new MockResponse();
-
     let app = new ApiAiApp({
       request: mockRequest,
       response: mockResponse
@@ -1847,101 +1200,23 @@ describe('ApiAiApp#getUserConfirmation', function () {
 describe('ApiAiApp#getDateTime', function () {
   // Success case test, when the API returns a valid 200 response with the response object
   it('Should validate assistant datetime information', function () {
-    let headers = {
-      'Content-Type': 'application/json'
-    };
-    let body = {
-      'originalRequest': {
-        'source': 'google',
-        'version': '2',
-        'data': {
-          'isInSandbox': true,
-          'surface': {
-            'capabilities': [
-              {
-                'name': 'actions.capability.AUDIO_OUTPUT'
-              },
-              {
-                'name': 'actions.capability.SCREEN_OUTPUT'
-              }
-            ]
+    let body = createLiveSessionApiAppBody();
+    body.originalRequest.data.inputs[0].arguments = [
+      {
+        'datetimeValue': {
+          'date': {
+            'month': 5,
+            'year': 2017,
+            'day': 26
           },
-          'inputs': [
-            {
-              'rawInputs': [
-                {
-                  'query': 'i think so',
-                  'inputType': 'VOICE'
-                }
-              ],
-              'arguments': [
-                {
-                  'datetimeValue': {
-                    'date': {
-                      'month': 5,
-                      'year': 2017,
-                      'day': 26
-                    },
-                    'time': {
-                      'hours': 9
-                    }
-                  },
-                  'name': 'DATETIME'
-                }
-              ],
-              'intent': 'actions.intent.DATETIME'
-            }
-          ],
-          'user': {
-            'userId': 'user123'
-          },
-          'device': {
-            'locale': 'en-US'
-          },
-          'conversation': {
-            'conversationId': '1494606917128',
-            'type': 'ACTIVE',
-            'conversationToken': '["_actions_on_google_"]'
+          'time': {
+            'hours': 9
           }
-        }
-      },
-      'id': '8032dc31-9627-4fbe-9ffd-8e5cfb20cebf',
-      'timestamp': '2017-05-12T16:35:38.131Z',
-      'lang': 'en',
-      'result': {
-        'source': 'agent',
-        'resolvedQuery': 'actions_intent_CONFIRMATION',
-        'speech': '',
-        'action': 'confirmation.complete',
-        'actionIncomplete': false,
-        'parameters': {},
-        'contexts': [],
-        'metadata': {
-          'intentId': 'a15ac3ff-1a84-43d0-94e9-37862a3d89cf',
-          'webhookUsed': 'true',
-          'webhookForSlotFillingUsed': 'false',
-          'nluResponseTime': 2,
-          'intentName': 'confirmation_complete'
         },
-        'fulfillment': {
-          'speech': '',
-          'messages': [
-            {
-              'type': 0,
-              'speech': ''
-            }
-          ]
-        },
-        'score': 1
-      },
-      'status': {
-        'code': 200,
-        'errorType': 'success'
-      },
-      'sessionId': '1494606917128'
-    };
-
-    let mockRequest = new MockRequest(headers, body);
+        'name': 'DATETIME'
+      }
+    ];
+    let mockRequest = new MockRequest(headerV1, body);
     let mockResponse = new MockResponse();
 
     let app = new ApiAiApp({
@@ -1963,94 +1238,15 @@ describe('ApiAiApp#getDateTime', function () {
 
   // Success case test, when the API returns a valid 200 response with the response object
   it('Should validate assistant request missing date/time information', function () {
-    let headers = {
-      'Content-Type': 'application/json'
-    };
-    let body = {
-      'originalRequest': {
-        'source': 'google',
-        'version': '2',
-        'data': {
-          'isInSandbox': true,
-          'surface': {
-            'capabilities': [
-              {
-                'name': 'actions.capability.AUDIO_OUTPUT'
-              },
-              {
-                'name': 'actions.capability.SCREEN_OUTPUT'
-              }
-            ]
-          },
-          'inputs': [
-            {
-              'rawInputs': [
-                {
-                  'query': 'i think so',
-                  'inputType': 'VOICE'
-                }
-              ],
-              'arguments': [ ],
-              'intent': 'actions.intent.CONFIRMATION'
-            }
-          ],
-          'user': {
-            'userId': 'user123'
-          },
-          'device': {
-            'locale': 'en-US'
-          },
-          'conversation': {
-            'conversationId': '1494606917128',
-            'type': 'ACTIVE',
-            'conversationToken': '["_actions_on_google_"]'
-          }
-        }
-      },
-      'id': '8032dc31-9627-4fbe-9ffd-8e5cfb20cebf',
-      'timestamp': '2017-05-12T16:35:38.131Z',
-      'lang': 'en',
-      'result': {
-        'source': 'agent',
-        'resolvedQuery': 'actions_intent_DATETIME',
-        'speech': '',
-        'action': 'datetime.complete',
-        'actionIncomplete': false,
-        'parameters': {},
-        'contexts': [],
-        'metadata': {
-          'intentId': 'a15ac3ff-1a84-43d0-94e9-37862a3d89cf',
-          'webhookUsed': 'true',
-          'webhookForSlotFillingUsed': 'false',
-          'nluResponseTime': 2,
-          'intentName': 'confirmation_complete'
-        },
-        'fulfillment': {
-          'speech': '',
-          'messages': [
-            {
-              'type': 0,
-              'speech': ''
-            }
-          ]
-        },
-        'score': 1
-      },
-      'status': {
-        'code': 200,
-        'errorType': 'success'
-      },
-      'sessionId': '1494606917128'
-    };
-
-    let mockRequest = new MockRequest(headers, body);
+    let body = createLiveSessionApiAppBody();
+    body.originalRequest.data.inputs[0].arguments = [];
+    let mockRequest = new MockRequest(headerV1, body);
     let mockResponse = new MockResponse();
 
     let app = new ApiAiApp({
       request: mockRequest,
       response: mockResponse
     });
-
     expect(app.getDateTime()).to.equal(null);
   });
 });
@@ -2061,95 +1257,17 @@ describe('ApiAiApp#getDateTime', function () {
 describe('ApiAiApp#getSignInStatus', function () {
   // Success case test, when the API returns a valid 200 response with the response object
   it('Should validate assistant sign in status', function () {
-    let headers = {
-      'Content-Type': 'application/json'
-    };
-    let body = {
-      'originalRequest': {
-        'source': 'google',
-        'version': '2',
-        'data': {
-          'isInSandbox': true,
-          'surface': {
-            'capabilities': [
-              {
-                'name': 'actions.capability.AUDIO_OUTPUT'
-              },
-              {
-                'name': 'actions.capability.SCREEN_OUTPUT'
-              }
-            ]
-          },
-          'inputs': [
-            {
-              'rawInputs': [
-                {
-                  'query': 'i think so',
-                  'inputType': 'VOICE'
-                }
-              ],
-              'arguments': [
-                {
-                  'name': 'SIGN_IN',
-                  'extension': {
-                    '@type': 'type.googleapis.com/google.actions.v2.SignInValue',
-                    'status': 'foo_status'
-                  }
-                }
-              ],
-              'intent': 'actions.intent.SIGN_IN'
-            }
-          ],
-          'user': {
-            'userId': 'user123'
-          },
-          'device': {
-            'locale': 'en-US'
-          },
-          'conversation': {
-            'conversationId': '1494606917128',
-            'type': 'ACTIVE',
-            'conversationToken': '["_actions_on_google_"]'
-          }
+    let body = createLiveSessionApiAppBody();
+    body.originalRequest.data.inputs[0].arguments = [
+      {
+        'name': 'SIGN_IN',
+        'extension': {
+          '@type': 'type.googleapis.com/google.actions.v2.SignInValue',
+          'status': 'foo_status'
         }
-      },
-      'id': '8032dc31-9627-4fbe-9ffd-8e5cfb20cebf',
-      'timestamp': '2017-05-12T16:35:38.131Z',
-      'lang': 'en',
-      'result': {
-        'source': 'agent',
-        'resolvedQuery': 'actions_intent_SIGN_IN',
-        'speech': '',
-        'action': 'confirmation.complete',
-        'actionIncomplete': false,
-        'parameters': {},
-        'contexts': [],
-        'metadata': {
-          'intentId': 'a15ac3ff-1a84-43d0-94e9-37862a3d89cf',
-          'webhookUsed': 'true',
-          'webhookForSlotFillingUsed': 'false',
-          'nluResponseTime': 2,
-          'intentName': 'confirmation_complete'
-        },
-        'fulfillment': {
-          'speech': '',
-          'messages': [
-            {
-              'type': 0,
-              'speech': ''
-            }
-          ]
-        },
-        'score': 1
-      },
-      'status': {
-        'code': 200,
-        'errorType': 'success'
-      },
-      'sessionId': '1494606917128'
-    };
-
-    let mockRequest = new MockRequest(headers, body);
+      }
+    ];
+    let mockRequest = new MockRequest(headerV1, body);
     let mockResponse = new MockResponse();
 
     let app = new ApiAiApp({
@@ -2162,87 +1280,9 @@ describe('ApiAiApp#getSignInStatus', function () {
 
   // Success case test, when the API returns a valid 200 response with the response object
   it('Should validate assistant request missing sign in status', function () {
-    let headers = {
-      'Content-Type': 'application/json'
-    };
-    let body = {
-      'originalRequest': {
-        'source': 'google',
-        'version': '2',
-        'data': {
-          'isInSandbox': true,
-          'surface': {
-            'capabilities': [
-              {
-                'name': 'actions.capability.AUDIO_OUTPUT'
-              },
-              {
-                'name': 'actions.capability.SCREEN_OUTPUT'
-              }
-            ]
-          },
-          'inputs': [
-            {
-              'rawInputs': [
-                {
-                  'query': 'i think so',
-                  'inputType': 'VOICE'
-                }
-              ],
-              'arguments': [ ],
-              'intent': 'actions.intent.SIGN_IN'
-            }
-          ],
-          'user': {
-            'userId': 'user123'
-          },
-          'device': {
-            'locale': 'en-US'
-          },
-          'conversation': {
-            'conversationId': '1494606917128',
-            'type': 'ACTIVE',
-            'conversationToken': '["_actions_on_google_"]'
-          }
-        }
-      },
-      'id': '8032dc31-9627-4fbe-9ffd-8e5cfb20cebf',
-      'timestamp': '2017-05-12T16:35:38.131Z',
-      'lang': 'en',
-      'result': {
-        'source': 'agent',
-        'resolvedQuery': 'actions_intent_DATETIME',
-        'speech': '',
-        'action': 'datetime.complete',
-        'actionIncomplete': false,
-        'parameters': {},
-        'contexts': [],
-        'metadata': {
-          'intentId': 'a15ac3ff-1a84-43d0-94e9-37862a3d89cf',
-          'webhookUsed': 'true',
-          'webhookForSlotFillingUsed': 'false',
-          'nluResponseTime': 2,
-          'intentName': 'confirmation_complete'
-        },
-        'fulfillment': {
-          'speech': '',
-          'messages': [
-            {
-              'type': 0,
-              'speech': ''
-            }
-          ]
-        },
-        'score': 1
-      },
-      'status': {
-        'code': 200,
-        'errorType': 'success'
-      },
-      'sessionId': '1494606917128'
-    };
-
-    let mockRequest = new MockRequest(headers, body);
+    let body = createLiveSessionApiAppBody();
+    body.originalRequest.data.inputs[0].arguments = [];
+    let mockRequest = new MockRequest(headerV1, body);
     let mockResponse = new MockResponse();
 
     let app = new ApiAiApp({
@@ -2258,63 +1298,20 @@ describe('ApiAiApp#getSignInStatus', function () {
  * Describes the behavior for ApiAiApp askForTransactionRequirements method.
  */
 describe('ApiAiApp#askForTransactionRequirements', function () {
-  // Success case test, when the API returns a valid 200 response with the response object
-  it('Should return valid JSON transaction requirements with Google payment options', function () {
-    let headers = {
-      'Content-Type': 'application/json',
-      'Google-Actions-API-Version': '2'
-    };
-    let body = {
-      'id': 'ce7295cc-b042-42d8-8d72-14b83597ac1e',
-      'timestamp': '2016-10-28T03:05:34.288Z',
-      'result': {
-        'source': 'agent',
-        'resolvedQuery': 'start guess a number game',
-        'speech': '',
-        'action': 'generate_answer',
-        'actionIncomplete': false,
-        'parameters': {
+  let body, mockRequest, mockResponse, app;
 
-        },
-        'contexts': [
-
-        ],
-        'metadata': {
-          'intentId': '56da4637-0419-46b2-b851-d7bf726b1b1b',
-          'webhookUsed': 'true',
-          'intentName': 'start_game'
-        },
-        'fulfillment': {
-          'speech': ''
-        },
-        'score': 1
-      },
-      'status': {
-        'code': 200,
-        'errorType': 'success'
-      },
-      'sessionId': 'e420f007-501d-4bc8-b551-5d97772bc50c',
-      'originalRequest': {
-        'version': 2,
-        'data': {
-          'conversation': {
-            'type': 2
-          },
-          'user': {
-            'user_id': '11112226094657824893'
-          }
-        }
-      }
-    };
-
-    let mockRequest = new MockRequest(headers, body);
-    let mockResponse = new MockResponse();
-
-    let app = new ApiAiApp({
+  beforeEach(function () {
+    body = createLiveSessionApiAppBody();
+    mockRequest = new MockRequest(headerV2, body);
+    mockResponse = new MockResponse();
+    app = new ApiAiApp({
       request: mockRequest,
       response: mockResponse
     });
+  });
 
+  // Success case test, when the API returns a valid 200 response with the response object
+  it('Should return valid JSON transaction requirements with Google payment options', function () {
     let transactionConfig = {
       deliveryAddressRequired: true,
       tokenizationParameters: {
@@ -2327,9 +1324,7 @@ describe('ApiAiApp#askForTransactionRequirements', function () {
       prepaidCardDisallowed: false
     };
 
-    app.handleRequest((app) => {
-      app.askForTransactionRequirements(transactionConfig);
-    });
+    app.askForTransactionRequirements(transactionConfig);
 
     let expectedResponse = {
       'speech': 'PLACEHOLDER_FOR_TXN_REQUIREMENTS',
@@ -2378,70 +1373,13 @@ describe('ApiAiApp#askForTransactionRequirements', function () {
 
   // Success case test, when the API returns a valid 200 response with the response object
   it('Should return valid JSON transaction requirements with Action payment options', function () {
-    let headers = {
-      'Content-Type': 'application/json',
-      'Google-Actions-API-Version': '2'
-    };
-    let body = {
-      'id': 'ce7295cc-b042-42d8-8d72-14b83597ac1e',
-      'timestamp': '2016-10-28T03:05:34.288Z',
-      'result': {
-        'source': 'agent',
-        'resolvedQuery': 'start guess a number game',
-        'speech': '',
-        'action': 'generate_answer',
-        'actionIncomplete': false,
-        'parameters': {
-
-        },
-        'contexts': [
-
-        ],
-        'metadata': {
-          'intentId': '56da4637-0419-46b2-b851-d7bf726b1b1b',
-          'webhookUsed': 'true',
-          'intentName': 'start_game'
-        },
-        'fulfillment': {
-          'speech': ''
-        },
-        'score': 1
-      },
-      'status': {
-        'code': 200,
-        'errorType': 'success'
-      },
-      'sessionId': 'e420f007-501d-4bc8-b551-5d97772bc50c',
-      'originalRequest': {
-        'version': 2,
-        'data': {
-          'conversation': {
-            'type': 2
-          },
-          'user': {
-            'user_id': '11112226094657824893'
-          }
-        }
-      }
-    };
-
-    let mockRequest = new MockRequest(headers, body);
-    let mockResponse = new MockResponse();
-
-    let app = new ApiAiApp({
-      request: mockRequest,
-      response: mockResponse
-    });
-
     let transactionConfig = {
       deliveryAddressRequired: true,
       type: 'BANK',
       displayName: 'Checking-4773'
     };
 
-    app.handleRequest((app) => {
-      app.askForTransactionRequirements(transactionConfig);
-    });
+    app.askForTransactionRequirements(transactionConfig);
 
     let expectedResponse = {
       'speech': 'PLACEHOLDER_FOR_TXN_REQUIREMENTS',
@@ -2486,50 +1424,8 @@ describe('ApiAiApp#askForTransactionRequirements', function () {
 describe('ApiAiApp#askForDeliveryAddress', function () {
   // Success case test, when the API returns a valid 200 response with the response object
   it('Should return valid JSON delivery address', function () {
-    let headers = {
-      'Content-Type': 'application/json',
-      'Google-Actions-API-Version': '2'
-    };
-    let body = {
-      'id': 'ce7295cc-b042-42d8-8d72-14b83597ac1e',
-      'timestamp': '2016-10-28T03:05:34.288Z',
-      'result': {
-        'source': 'agent',
-        'resolvedQuery': 'start guess a number game',
-        'speech': '',
-        'action': 'generate_answer',
-        'actionIncomplete': false,
-        'parameters': {},
-        'contexts': [],
-        'metadata': {
-          'intentId': '56da4637-0419-46b2-b851-d7bf726b1b1b',
-          'webhookUsed': 'true',
-          'intentName': 'start_game'
-        },
-        'fulfillment': {
-          'speech': ''
-        },
-        'score': 1
-      },
-      'status': {
-        'code': 200,
-        'errorType': 'success'
-      },
-      'sessionId': 'e420f007-501d-4bc8-b551-5d97772bc50c',
-      'originalRequest': {
-        'version': 2,
-        'data': {
-          'conversation': {
-            'type': 2
-          },
-          'user': {
-            'user_id': '11112226094657824893'
-          }
-        }
-      }
-    };
-
-    let mockRequest = new MockRequest(headers, body);
+    let body = createLiveSessionApiAppBody();
+    let mockRequest = new MockRequest(headerV2, body);
     let mockResponse = new MockResponse();
 
     let app = new ApiAiApp({
@@ -2537,7 +1433,7 @@ describe('ApiAiApp#askForDeliveryAddress', function () {
       response: mockResponse
     });
 
-    app.handleRequest((app) => { app.askForDeliveryAddress('Just because'); });
+    app.askForDeliveryAddress('Just because');
 
     let expectedResponse = {
       'speech': 'PLACEHOLDER_FOR_DELIVERY_ADDRESS',
@@ -2574,63 +1470,19 @@ describe('ApiAiApp#askForDeliveryAddress', function () {
  * Describes the behavior for ApiAiApp askForTransactionDecision method.
  */
 describe('ApiAiApp#askForTransactionDecision', function () {
-  // Success case test, when the API returns a valid 200 response with the response object
-  it('Should return valid JSON transaction decision with Google payment options', function () {
-    let headers = {
-      'Content-Type': 'application/json',
-      'Google-Actions-API-Version': '2'
-    };
-    let body = {
-      'id': 'ce7295cc-b042-42d8-8d72-14b83597ac1e',
-      'timestamp': '2016-10-28T03:05:34.288Z',
-      'result': {
-        'source': 'agent',
-        'resolvedQuery': 'start guess a number game',
-        'speech': '',
-        'action': 'generate_answer',
-        'actionIncomplete': false,
-        'parameters': {
+  let body, app, mockRequest, mockResponse;
 
-        },
-        'contexts': [
-
-        ],
-        'metadata': {
-          'intentId': '56da4637-0419-46b2-b851-d7bf726b1b1b',
-          'webhookUsed': 'true',
-          'intentName': 'start_game'
-        },
-        'fulfillment': {
-          'speech': ''
-        },
-        'score': 1
-      },
-      'status': {
-        'code': 200,
-        'errorType': 'success'
-      },
-      'sessionId': 'e420f007-501d-4bc8-b551-5d97772bc50c',
-      'originalRequest': {
-        'version': 2,
-        'data': {
-          'conversation': {
-            'type': 2
-          },
-          'user': {
-            'user_id': '11112226094657824893'
-          }
-        }
-      }
-    };
-
-    let mockRequest = new MockRequest(headers, body);
-    let mockResponse = new MockResponse();
-
-    let app = new ApiAiApp({
+  beforeEach(function () {
+    body = createLiveSessionApiAppBody();
+    mockRequest = new MockRequest(headerV2, body);
+    mockResponse = new MockResponse();
+    app = new ApiAiApp({
       request: mockRequest,
       response: mockResponse
     });
-
+  });
+  // Success case test, when the API returns a valid 200 response with the response object
+  it('Should return valid JSON transaction decision with Google payment options', function () {
     let transactionConfig = {
       deliveryAddressRequired: true,
       tokenizationParameters: {
@@ -2643,9 +1495,7 @@ describe('ApiAiApp#askForTransactionDecision', function () {
       prepaidCardDisallowed: false
     };
 
-    app.handleRequest((app) => {
-      app.askForTransactionDecision({ fakeOrderId: 'order_id' }, transactionConfig);
-    });
+    app.askForTransactionDecision({ fakeOrderId: 'order_id' }, transactionConfig);
 
     let expectedResponse = {
       'speech': 'PLACEHOLDER_FOR_TXN_DECISION',
@@ -2695,70 +1545,13 @@ describe('ApiAiApp#askForTransactionDecision', function () {
 
   // Success case test, when the API returns a valid 200 response with the response object
   it('Should return valid JSON transaction decision with Action payment options', function () {
-    let headers = {
-      'Content-Type': 'application/json',
-      'Google-Actions-API-Version': '2'
-    };
-    let body = {
-      'id': 'ce7295cc-b042-42d8-8d72-14b83597ac1e',
-      'timestamp': '2016-10-28T03:05:34.288Z',
-      'result': {
-        'source': 'agent',
-        'resolvedQuery': 'start guess a number game',
-        'speech': '',
-        'action': 'generate_answer',
-        'actionIncomplete': false,
-        'parameters': {
-
-        },
-        'contexts': [
-
-        ],
-        'metadata': {
-          'intentId': '56da4637-0419-46b2-b851-d7bf726b1b1b',
-          'webhookUsed': 'true',
-          'intentName': 'start_game'
-        },
-        'fulfillment': {
-          'speech': ''
-        },
-        'score': 1
-      },
-      'status': {
-        'code': 200,
-        'errorType': 'success'
-      },
-      'sessionId': 'e420f007-501d-4bc8-b551-5d97772bc50c',
-      'originalRequest': {
-        'version': 2,
-        'data': {
-          'conversation': {
-            'type': 2
-          },
-          'user': {
-            'user_id': '11112226094657824893'
-          }
-        }
-      }
-    };
-
-    let mockRequest = new MockRequest(headers, body);
-    let mockResponse = new MockResponse();
-
-    let app = new ApiAiApp({
-      request: mockRequest,
-      response: mockResponse
-    });
-
     let transactionConfig = {
       deliveryAddressRequired: true,
       type: 'BANK',
       displayName: 'Checking-4773'
     };
 
-    app.handleRequest((app) => {
-      app.askForTransactionDecision({ fakeOrderId: 'order_id' }, transactionConfig);
-    });
+    app.askForTransactionDecision({ fakeOrderId: 'order_id' }, transactionConfig);
 
     let expectedResponse = {
       'speech': 'PLACEHOLDER_FOR_TXN_DECISION',
@@ -2802,61 +1595,21 @@ describe('ApiAiApp#askForTransactionDecision', function () {
  * Describes the behavior for ApiAiApp askForConfirmation method.
  */
 describe('ApiAiApp#askForConfirmation', function () {
-  // Success case test, when the API returns a valid 200 response with the response object
-  it('Should return valid JSON confirmation request', function () {
-    let headers = {
-      'Content-Type': 'application/json',
-      'Google-Actions-API-Version': '2'
-    };
-    let body = {
-      'id': 'ce7295cc-b042-42d8-8d72-14b83597ac1e',
-      'timestamp': '2016-10-28T03:05:34.288Z',
-      'result': {
-        'source': 'agent',
-        'resolvedQuery': 'start guess a number game',
-        'speech': '',
-        'action': 'generate_answer',
-        'actionIncomplete': false,
-        'parameters': {},
-        'contexts': [],
-        'metadata': {
-          'intentId': '56da4637-0419-46b2-b851-d7bf726b1b1b',
-          'webhookUsed': 'true',
-          'intentName': 'start_game'
-        },
-        'fulfillment': {
-          'speech': ''
-        },
-        'score': 1
-      },
-      'status': {
-        'code': 200,
-        'errorType': 'success'
-      },
-      'sessionId': 'e420f007-501d-4bc8-b551-5d97772bc50c',
-      'originalRequest': {
-        'version': 2,
-        'data': {
-          'conversation': {
-            'type': 2
-          },
-          'user': {
-            'user_id': '11112226094657824893'
-          }
-        }
-      }
-    };
+  let body, app, mockRequest, mockResponse;
 
-    let mockRequest = new MockRequest(headers, body);
-    let mockResponse = new MockResponse();
-
-    let app = new ApiAiApp({
+  beforeEach(function () {
+    body = createLiveSessionApiAppBody();
+    mockRequest = new MockRequest(headerV2, body);
+    mockResponse = new MockResponse();
+    app = new ApiAiApp({
       request: mockRequest,
       response: mockResponse
     });
+  });
 
-    app.handleRequest((app) => { app.askForConfirmation('You want to do that?'); });
-
+  // Success case test, when the API returns a valid 200 response with the response object
+  it('Should return valid JSON confirmation request', function () {
+    app.askForConfirmation('You want to do that?');
     let expectedResponse = {
       'speech': 'PLACEHOLDER_FOR_CONFIRMATION',
       'data': {
@@ -2889,58 +1642,7 @@ describe('ApiAiApp#askForConfirmation', function () {
 
   // Success case test, when the API returns a valid 200 response with the response object
   it('Should return valid JSON confirmation request without prompt', function () {
-    let headers = {
-      'Content-Type': 'application/json',
-      'Google-Actions-API-Version': '2'
-    };
-    let body = {
-      'id': 'ce7295cc-b042-42d8-8d72-14b83597ac1e',
-      'timestamp': '2016-10-28T03:05:34.288Z',
-      'result': {
-        'source': 'agent',
-        'resolvedQuery': 'start guess a number game',
-        'speech': '',
-        'action': 'generate_answer',
-        'actionIncomplete': false,
-        'parameters': {},
-        'contexts': [],
-        'metadata': {
-          'intentId': '56da4637-0419-46b2-b851-d7bf726b1b1b',
-          'webhookUsed': 'true',
-          'intentName': 'start_game'
-        },
-        'fulfillment': {
-          'speech': ''
-        },
-        'score': 1
-      },
-      'status': {
-        'code': 200,
-        'errorType': 'success'
-      },
-      'sessionId': 'e420f007-501d-4bc8-b551-5d97772bc50c',
-      'originalRequest': {
-        'version': 2,
-        'data': {
-          'conversation': {
-            'type': 2
-          },
-          'user': {
-            'user_id': '11112226094657824893'
-          }
-        }
-      }
-    };
-
-    let mockRequest = new MockRequest(headers, body);
-    let mockResponse = new MockResponse();
-
-    let app = new ApiAiApp({
-      request: mockRequest,
-      response: mockResponse
-    });
-
-    app.handleRequest((app) => { app.askForConfirmation(); });
+    app.askForConfirmation();
 
     let expectedResponse = {
       'speech': 'PLACEHOLDER_FOR_CONFIRMATION',
@@ -2974,64 +1676,23 @@ describe('ApiAiApp#askForConfirmation', function () {
  * Describes the behavior for ApiAiApp askForDateTime method.
  */
 describe('ApiAiApp#askForDateTime', function () {
-  // Success case test, when the API returns a valid 200 response with the response object
-  it('Should return valid JSON datetime request', function () {
-    let headers = {
-      'Content-Type': 'application/json',
-      'Google-Actions-API-Version': '2'
-    };
-    let body = {
-      'id': 'ce7295cc-b042-42d8-8d72-14b83597ac1e',
-      'timestamp': '2016-10-28T03:05:34.288Z',
-      'result': {
-        'source': 'agent',
-        'resolvedQuery': 'start guess a number game',
-        'speech': '',
-        'action': 'generate_answer',
-        'actionIncomplete': false,
-        'parameters': {},
-        'contexts': [],
-        'metadata': {
-          'intentId': '56da4637-0419-46b2-b851-d7bf726b1b1b',
-          'webhookUsed': 'true',
-          'intentName': 'start_game'
-        },
-        'fulfillment': {
-          'speech': ''
-        },
-        'score': 1
-      },
-      'status': {
-        'code': 200,
-        'errorType': 'success'
-      },
-      'sessionId': 'e420f007-501d-4bc8-b551-5d97772bc50c',
-      'originalRequest': {
-        'version': 2,
-        'data': {
-          'conversation': {
-            'type': 2
-          },
-          'user': {
-            'user_id': '11112226094657824893'
-          }
-        }
-      }
-    };
+  let body, app, mockRequest, mockResponse;
 
-    let mockRequest = new MockRequest(headers, body);
-    let mockResponse = new MockResponse();
-
-    let app = new ApiAiApp({
+  beforeEach(function () {
+    body = createLiveSessionApiAppBody();
+    mockRequest = new MockRequest(headerV2, body);
+    mockResponse = new MockResponse();
+    app = new ApiAiApp({
       request: mockRequest,
       response: mockResponse
     });
+  });
 
-    app.handleRequest((app) => {
-      app.askForDateTime('When do you want to come in?',
+  // Success case test, when the API returns a valid 200 response with the response object
+  it('Should return valid JSON datetime request', function () {
+    app.askForDateTime('When do you want to come in?',
         'What is the best date for you?',
         'What time of day works best for you?');
-    });
 
     let expectedResponse = {
       'speech': 'PLACEHOLDER_FOR_DATETIME',
@@ -3067,61 +1728,7 @@ describe('ApiAiApp#askForDateTime', function () {
 
   // Success case test, when the API returns a valid 200 response with the response object
   it('Should return valid JSON datetime request with partial prompts', function () {
-    let headers = {
-      'Content-Type': 'application/json',
-      'Google-Actions-API-Version': '2'
-    };
-    let body = {
-      'id': 'ce7295cc-b042-42d8-8d72-14b83597ac1e',
-      'timestamp': '2016-10-28T03:05:34.288Z',
-      'result': {
-        'source': 'agent',
-        'resolvedQuery': 'start guess a number game',
-        'speech': '',
-        'action': 'generate_answer',
-        'actionIncomplete': false,
-        'parameters': {},
-        'contexts': [],
-        'metadata': {
-          'intentId': '56da4637-0419-46b2-b851-d7bf726b1b1b',
-          'webhookUsed': 'true',
-          'intentName': 'start_game'
-        },
-        'fulfillment': {
-          'speech': ''
-        },
-        'score': 1
-      },
-      'status': {
-        'code': 200,
-        'errorType': 'success'
-      },
-      'sessionId': 'e420f007-501d-4bc8-b551-5d97772bc50c',
-      'originalRequest': {
-        'version': 2,
-        'data': {
-          'conversation': {
-            'type': 2
-          },
-          'user': {
-            'user_id': '11112226094657824893'
-          }
-        }
-      }
-    };
-
-    let mockRequest = new MockRequest(headers, body);
-    let mockResponse = new MockResponse();
-
-    let app = new ApiAiApp({
-      request: mockRequest,
-      response: mockResponse
-    });
-
-    app.handleRequest((app) => {
-      app.askForDateTime('When do you want to come in?', null);
-    });
-
+    app.askForDateTime('When do you want to come in?', null);
     let expectedResponse = {
       'speech': 'PLACEHOLDER_FOR_DATETIME',
       'data': {
@@ -3154,58 +1761,7 @@ describe('ApiAiApp#askForDateTime', function () {
 
   // Success case test, when the API returns a valid 200 response with the response object
   it('Should return valid JSON datetime request withouts prompt', function () {
-    let headers = {
-      'Content-Type': 'application/json',
-      'Google-Actions-API-Version': '2'
-    };
-    let body = {
-      'id': 'ce7295cc-b042-42d8-8d72-14b83597ac1e',
-      'timestamp': '2016-10-28T03:05:34.288Z',
-      'result': {
-        'source': 'agent',
-        'resolvedQuery': 'start guess a number game',
-        'speech': '',
-        'action': 'generate_answer',
-        'actionIncomplete': false,
-        'parameters': {},
-        'contexts': [],
-        'metadata': {
-          'intentId': '56da4637-0419-46b2-b851-d7bf726b1b1b',
-          'webhookUsed': 'true',
-          'intentName': 'start_game'
-        },
-        'fulfillment': {
-          'speech': ''
-        },
-        'score': 1
-      },
-      'status': {
-        'code': 200,
-        'errorType': 'success'
-      },
-      'sessionId': 'e420f007-501d-4bc8-b551-5d97772bc50c',
-      'originalRequest': {
-        'version': 2,
-        'data': {
-          'conversation': {
-            'type': 2
-          },
-          'user': {
-            'user_id': '11112226094657824893'
-          }
-        }
-      }
-    };
-
-    let mockRequest = new MockRequest(headers, body);
-    let mockResponse = new MockResponse();
-
-    let app = new ApiAiApp({
-      request: mockRequest,
-      response: mockResponse
-    });
-
-    app.handleRequest((app) => { app.askForDateTime(); });
+    app.askForDateTime();
 
     let expectedResponse = {
       'speech': 'PLACEHOLDER_FOR_DATETIME',
@@ -3239,63 +1795,21 @@ describe('ApiAiApp#askForDateTime', function () {
  * Describes the behavior for ApiAiApp askForSignIn method.
  */
 describe('ApiAiApp#askForSignIn', function () {
-  // Success case test, when the API returns a valid 200 response with the response object
-  it('Should return valid JSON sign in request', function () {
-    let headers = {
-      'Content-Type': 'application/json',
-      'Google-Actions-API-Version': '2'
-    };
-    let body = {
-      'id': 'ce7295cc-b042-42d8-8d72-14b83597ac1e',
-      'timestamp': '2016-10-28T03:05:34.288Z',
-      'result': {
-        'source': 'agent',
-        'resolvedQuery': 'start guess a number game',
-        'speech': '',
-        'action': 'generate_answer',
-        'actionIncomplete': false,
-        'parameters': {},
-        'contexts': [],
-        'metadata': {
-          'intentId': '56da4637-0419-46b2-b851-d7bf726b1b1b',
-          'webhookUsed': 'true',
-          'intentName': 'start_game'
-        },
-        'fulfillment': {
-          'speech': ''
-        },
-        'score': 1
-      },
-      'status': {
-        'code': 200,
-        'errorType': 'success'
-      },
-      'sessionId': 'e420f007-501d-4bc8-b551-5d97772bc50c',
-      'originalRequest': {
-        'version': 2,
-        'data': {
-          'conversation': {
-            'type': 2
-          },
-          'user': {
-            'user_id': '11112226094657824893'
-          }
-        }
-      }
-    };
+  let body, app, mockRequest, mockResponse;
 
-    let mockRequest = new MockRequest(headers, body);
-    let mockResponse = new MockResponse();
-
-    let app = new ApiAiApp({
+  beforeEach(function () {
+    body = createLiveSessionApiAppBody();
+    mockRequest = new MockRequest(headerV2, body);
+    mockResponse = new MockResponse();
+    app = new ApiAiApp({
       request: mockRequest,
       response: mockResponse
     });
+  });
 
-    app.handleRequest((app) => {
-      app.askForSignIn();
-    });
-
+  // Success case test, when the API returns a valid 200 response with the response object
+  it('Should return valid JSON sign in request', function () {
+    app.askForSignIn();
     let expectedResponse = {
       'speech': 'PLACEHOLDER_FOR_SIGN_IN',
       'data': {
@@ -3326,79 +1840,30 @@ describe('ApiAiApp#askForSignIn', function () {
  * Describes the behavior for ApiAiApp isPermissionGranted method.
  */
 describe('ApiAiApp#isPermissionGranted', function () {
-  // Success case test, when the API returns a valid 200 response with the response object
-  it('Should validate assistant request user.', function () {
-    let headers = {
-      'Content-Type': 'application/json',
-      'google-assistant-api-version': 'v1'
-    };
-    let body = {
-      'id': 'ce7295cc-b042-42d8-8d72-14b83597ac1e',
-      'timestamp': '2016-10-28T03:05:34.288Z',
-      'result': {
-        'source': 'agent',
-        'resolvedQuery': 'start guess a number game',
-        'speech': '',
-        'action': 'generate_answer',
-        'actionIncomplete': false,
-        'parameters': {
+  let body, app, mockRequest, mockResponse;
 
-        },
-        'contexts': [
-
-        ],
-        'metadata': {
-          'intentId': '56da4637-0419-46b2-b851-d7bf726b1b1b',
-          'webhookUsed': 'true',
-          'intentName': 'start_game'
-        },
-        'fulfillment': {
-          'speech': ''
-        },
-        'score': 1
-      },
-      'status': {
-        'code': 200,
-        'errorType': 'success'
-      },
-      'sessionId': 'e420f007-501d-4bc8-b551-5d97772bc50c',
-      'originalRequest': {
-        'data': {
-          'conversation': {
-            'type': 2
-          },
-          'inputs': [{
-            'arguments': [{
-              'name': 'permission_granted',
-              'text_value': 'true'
-            }]
-          }]
-        }
-      }
-    };
-
-    let mockRequest = new MockRequest(headers, body);
-    let mockResponse = new MockResponse();
-
-    let app = new ApiAiApp({
-      request: mockRequest,
-      response: mockResponse
-    });
-
-    expect(app.isPermissionGranted()).to.equal(true);
-
-    // Test the false case
-
-    body.originalRequest.data.inputs[0].arguments[0].text_value = false;
-
-    mockRequest = new MockRequest(headers, body);
+  function initMockApp () {
+    mockRequest = new MockRequest(headerV1, body);
     mockResponse = new MockResponse();
-
     app = new ApiAiApp({
       request: mockRequest,
       response: mockResponse
     });
+  }
 
+  // Success case test, when the API returns a valid 200 response with the response object
+  it('Should validate assistant request user.', function () {
+    body = createLiveSessionApiAppBody();
+    body.originalRequest.data.inputs[0].arguments = [{
+      'name': 'permission_granted',
+      'text_value': 'true'
+    }];
+    initMockApp();
+    expect(app.isPermissionGranted()).to.equal(true);
+
+    // Test the false case
+    body.originalRequest.data.inputs[0].arguments[0].text_value = false;
+    initMockApp();
     expect(app.isPermissionGranted()).to.equal(false);
   });
 });
@@ -3407,101 +1872,27 @@ describe('ApiAiApp#isPermissionGranted', function () {
  * Describes the behavior for ApiAiApp isInSandbox method.
  */
 describe('ApiAiApp#isInSandbox', function () {
-  // Success case test, when the API returns a valid 200 response with the response object
-  it('Should validate assistant request user.', function () {
-    let headers = {
-      'Content-Type': 'application/json',
-      'google-assistant-api-version': 'v1'
-    };
-    let body = {
-      'originalRequest': {
-        'source': 'google',
-        'version': '2',
-        'data': {
-          'isInSandbox': true,
-          'surface': {
-            'capabilities': [
-              {
-                'name': 'actions.capability.AUDIO_OUTPUT'
-              },
-              {
-                'name': 'actions.capability.SCREEN_OUTPUT'
-              }
-            ]
-          },
-          'inputs': [],
-          'user': {
-            'userId': 'user123'
-          },
-          'device': {
-            'locale': 'en-US'
-          },
-          'conversation': {
-            'conversationId': '1494603963782',
-            'type': 'ACTIVE',
-            'conversationToken': '["_actions_on_google_"]'
-          }
-        }
-      },
-      'id': 'e169144c-9d31-4a9d-82a0-b14922ce21a7',
-      'timestamp': '2017-05-12T15:46:08.594Z',
-      'lang': 'en',
-      'result': {
-        'source': 'agent',
-        'resolvedQuery': 'actions_intent_TRANSACTION_REQUIREMENTS_CHECK',
-        'speech': '',
-        'action': 'transaction.check.complete',
-        'actionIncomplete': false,
-        'parameters': {
-          'test': '@test'
-        },
-        'metadata': {
-          'intentId': 'fd16d86b-60db-4d19-a683-5b52a22f4795',
-          'webhookUsed': 'true',
-          'webhookForSlotFillingUsed': 'false',
-          'nluResponseTime': 19,
-          'intentName': 'transactioncheck_complete'
-        },
-        'fulfillment': {
-          'speech': '',
-          'messages': [
-            {
-              'type': 0,
-              'speech': ''
-            }
-          ]
-        },
-        'score': 1
-      },
-      'status': {
-        'code': 200,
-        'errorType': 'success'
-      },
-      'sessionId': '1494603963782'
-    };
+  let body, app, mockRequest, mockResponse;
 
-    let mockRequest = new MockRequest(headers, body);
-    let mockResponse = new MockResponse();
-
-    let app = new ApiAiApp({
-      request: mockRequest,
-      response: mockResponse
-    });
-
-    expect(app.isInSandbox()).to.be.true;
-
-    // Test the false case
-
-    body.originalRequest.data.isInSandbox = false;
-
-    mockRequest = new MockRequest(headers, body);
+  function setUpApp () {
+    mockRequest = new MockRequest(headerV1, body);
     mockResponse = new MockResponse();
-
     app = new ApiAiApp({
       request: mockRequest,
       response: mockResponse
     });
+  }
 
+  // Success case test, when the API returns a valid 200 response with the response object
+  it('Should validate assistant request user.', function () {
+    body = createLiveSessionApiAppBody();
+    body.originalRequest.data.isInSandbox = true;
+    setUpApp();
+    expect(app.isInSandbox()).to.be.true;
+
+    // Test the false case
+    body.originalRequest.data.isInSandbox = false;
+    setUpApp();
     expect(app.isInSandbox()).to.be.false;
   });
 });
@@ -3512,65 +1903,9 @@ describe('ApiAiApp#isInSandbox', function () {
 describe('ApiAiApp#getIntent', function () {
   // Success case test, when the API returns a valid 200 response with the response object
   it('Should get the intent value for the success case.', function () {
-    let headers = {
-      'Content-Type': 'application/json',
-      'Google-Assistant-API-Version': 'v1'
-    };
-    let body = {
-      'id': '9c4394e3-4f5a-4e68-b1af-088b75ad3071',
-      'timestamp': '2016-10-28T03:41:39.957Z',
-      'result': {
-        'source': 'agent',
-        'resolvedQuery': '50',
-        'speech': '',
-        'action': 'check_guess',
-        'actionIncomplete': false,
-        'parameters': {
-          'guess': '50'
-        },
-        'contexts': [
-          {
-            'name': 'game',
-            'parameters': {
-              'guess.original': '50',
-              'guess': '50'
-            },
-            'lifespan': 5
-          },
-          {
-            'name': '_assistant_',
-            'parameters': {
-              'answer': 68,
-              'guess.original': '50',
-              'guess': '50'
-            },
-            'lifespan': 99
-          }
-        ],
-        'metadata': {
-          'intentId': '1e46ffc2-651f-4ac0-a54e-9698feb88880',
-          'webhookUsed': 'true',
-          'intentName': 'provide_guess'
-        },
-        'fulfillment': {
-          'speech': ''
-        },
-        'score': 1
-      },
-      'status': {
-        'code': 200,
-        'errorType': 'success'
-      },
-      'sessionId': 'e420f007-501d-4bc8-b551-5d97772bc50c',
-      'originalRequest': {
-        'data': {
-          'conversation': {
-            'type': 2
-          }
-        }
-      }
-    };
-    const mockRequest = new MockRequest(headers, body);
+    let body = createLiveSessionApiAppBody();
+    body.result.action = 'check_guess';
+    const mockRequest = new MockRequest(headerV1, body);
     const mockResponse = new MockResponse();
 
     const app = new ApiAiApp({
