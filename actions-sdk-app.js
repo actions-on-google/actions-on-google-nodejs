@@ -1021,7 +1021,7 @@ const ActionsSdkApp = class extends AssistantApp {
       this.handleError_('Missing action');
       return null;
     }
-    if (!arguments) {
+    if (!input.arguments) {
       debug('No arguments included in request');
       return null;
     }
