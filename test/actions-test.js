@@ -1874,7 +1874,7 @@ describe('ApiAiApp#isPermissionGranted', function () {
 describe('ApiAiApp#isInSandbox', function () {
   let body, app, mockRequest, mockResponse;
 
-  function setUpApp () {
+  function initMockApp () {
     mockRequest = new MockRequest(headerV1, body);
     mockResponse = new MockResponse();
     app = new ApiAiApp({
@@ -1887,12 +1887,12 @@ describe('ApiAiApp#isInSandbox', function () {
   it('Should validate assistant request user.', function () {
     body = createLiveSessionApiAppBody();
     body.originalRequest.data.isInSandbox = true;
-    setUpApp();
+    initMockApp();
     expect(app.isInSandbox()).to.be.true;
 
     // Test the false case
     body.originalRequest.data.isInSandbox = false;
-    setUpApp();
+    initMockApp();
     expect(app.isInSandbox()).to.be.false;
   });
 });
@@ -1923,83 +1923,23 @@ describe('ApiAiApp#getIntent', function () {
 describe('ApiAiApp#getArgument', function () {
   // Success case test, when the API returns a valid 200 response with the response object
   it('Should get the argument value for the success case.', function () {
-    let headers = {
-      'Content-Type': 'application/json',
-      'Google-Assistant-API-Version': 'v1'
-    };
-    let body = {
-      'id': '9c4394e3-4f5a-4e68-b1af-088b75ad3071',
-      'timestamp': '2016-10-28T03:41:39.957Z',
-      'result': {
-        'source': 'agent',
-        'resolvedQuery': '50',
-        'speech': '',
-        'action': 'check_guess',
-        'actionIncomplete': false,
-        'parameters': {
-          'guess': '50'
-        },
-        'contexts': [
-          {
-            'name': 'game',
-            'parameters': {
-              'guess.original': '50',
-              'guess': '50'
-            },
-            'lifespan': 5
-          },
-          {
-            'name': '_assistant_',
-            'parameters': {
-              'answer': 68,
-              'guess.original': '50',
-              'guess': '50'
-            },
-            'lifespan': 99
-          }
-        ],
-        'metadata': {
-          'intentId': '1e46ffc2-651f-4ac0-a54e-9698feb88880',
-          'webhookUsed': 'true',
-          'intentName': 'provide_guess'
-        },
-        'fulfillment': {
-          'speech': ''
-        },
-        'score': 1
+    let body = createLiveSessionApiAppBody();
+    body.result.parameters.guess = '50';
+    body.originalRequest.data.inputs[0].arguments = [
+      {
+        'raw_text': 'raw text one',
+        'text_value': 'text value one',
+        'name': 'arg_value_one'
       },
-      'status': {
-        'code': 200,
-        'errorType': 'success'
-      },
-      'sessionId': 'e420f007-501d-4bc8-b551-5d97772bc50c',
-      'originalRequest': {
-        'data': {
-          'inputs': [
-            {
-              'arguments': [
-                {
-                  'raw_text': 'raw text one',
-                  'text_value': 'text value one',
-                  'name': 'arg_value_one'
-                },
-                {
-                  'name': 'other_value',
-                  'raw_text': '45',
-                  'other_value': {
-                    'key': 'value'
-                  }
-                }
-              ]
-            }
-          ],
-          'conversation': {
-            'type': 2
-          }
+      {
+        'name': 'other_value',
+        'raw_text': '45',
+        'other_value': {
+          'key': 'value'
         }
       }
-    };
-    const mockRequest = new MockRequest(headers, body);
+    ];
+    const mockRequest = new MockRequest(headerV1, body);
     const mockResponse = new MockResponse();
 
     const app = new ApiAiApp({
@@ -2025,65 +1965,27 @@ describe('ApiAiApp#getArgument', function () {
 describe('ApiAiApp#getContextArgument', function () {
   // Success case test, when the API returns a valid 200 response with the response object
   it('Should get the context argument value for the success case.', function () {
-    let headers = {
-      'Content-Type': 'application/json',
-      'Google-Assistant-API-Version': 'v1'
-    };
-    let body = {
-      'id': '9c4394e3-4f5a-4e68-b1af-088b75ad3071',
-      'timestamp': '2016-10-28T03:41:39.957Z',
-      'result': {
-        'source': 'agent',
-        'resolvedQuery': '50',
-        'speech': '',
-        'action': 'check_guess',
-        'actionIncomplete': false,
+    let body = createLiveSessionApiAppBody();
+    body.result.contexts = [
+      {
+        'name': 'game',
         'parameters': {
+          'guess.original': '50',
           'guess': '50'
         },
-        'contexts': [
-          {
-            'name': 'game',
-            'parameters': {
-              'guess.original': '50',
-              'guess': '50'
-            },
-            'lifespan': 5
-          },
-          {
-            'name': 'previous_answer',
-            'parameters': {
-              'answer': '68',
-              'guess.original': '50',
-              'guess': '50'
-            },
-            'lifespan': 99
-          }
-        ],
-        'metadata': {
-          'intentId': '1e46ffc2-651f-4ac0-a54e-9698feb88880',
-          'webhookUsed': 'true',
-          'intentName': 'provide_guess'
-        },
-        'fulfillment': {
-          'speech': ''
-        },
-        'score': 1
+        'lifespan': 5
       },
-      'status': {
-        'code': 200,
-        'errorType': 'success'
-      },
-      'sessionId': 'e420f007-501d-4bc8-b551-5d97772bc50c',
-      'originalRequest': {
-        'data': {
-          'conversation': {
-            'type': 2
-          }
-        }
+      {
+        'name': 'previous_answer',
+        'parameters': {
+          'answer': '68',
+          'guess.original': '51',
+          'guess': '50'
+        },
+        'lifespan': 99
       }
-    };
-    const mockRequest = new MockRequest(headers, body);
+    ];
+    const mockRequest = new MockRequest(headerV1, body);
     const mockResponse = new MockResponse();
 
     const app = new ApiAiApp({
@@ -2104,70 +2006,41 @@ describe('ApiAiApp#getContextArgument', function () {
 describe('ApiAiApp#getIncomingRichResponse', function () {
   // Success case test, when the API returns a valid 200 response with the response object
   it('Should get the incoming rich response for the success case.', function () {
-    let headers = {
-      'Content-Type': 'application/json'
-    };
-    let body = {
-      'id': 'db2c39ce-1755-4163-a8df-ea033d713dbb',
-      'timestamp': '2017-04-21T22:15:25.611Z',
-      'lang': 'en',
-      'result': {
-        'source': 'agent',
-        'resolvedQuery': 'hi',
-        'action': 'input.welcome',
-        'actionIncomplete': false,
-        'parameters': {},
-        'contexts': [],
-        'metadata': {
-          'intentId': '784690f8-8d87-4f0d-a40f-3e6c99ecd1e0',
-          'webhookUsed': 'false',
-          'webhookForSlotFillingUsed': 'false',
-          'intentName': 'Default Welcome Intent'
-        },
-        'fulfillment': {
-          'speech': 'Hi!',
-          'messages': [
-            {
-              'type': 'simple_response',
-              'platform': 'google',
-              'textToSpeech': 'Simple response one'
-            },
-            {
-              'type': 'basic_card',
-              'platform': 'google',
-              'formattedText': 'my text',
-              'buttons': []
-            },
-            {
-              'type': 'suggestion_chips',
-              'platform': 'google',
-              'suggestions': [
-                {
-                  'title': 'suggestion one'
-                }
-              ]
-            },
-            {
-              'type': 'link_out_chip',
-              'platform': 'google',
-              'destinationName': 'google',
-              'url': 'google.com'
-            },
-            {
-              'type': 0,
-              'speech': 'Good day!'
-            }
-          ]
-        },
-        'score': 1
+    let body = createLiveSessionApiAppBody();
+    body.result.fulfillment.messages = [
+      {
+        'type': 'simple_response',
+        'platform': 'google',
+        'textToSpeech': 'Simple response one'
       },
-      'status': {
-        'code': 200,
-        'errorType': 'success'
+      {
+        'type': 'basic_card',
+        'platform': 'google',
+        'formattedText': 'my text',
+        'buttons': []
       },
-      'sessionId': 'cb92ecc5-0899-41f8-84a4-4ff329907512'
-    };
-    const mockRequest = new MockRequest(headers, body);
+      {
+        'type': 'suggestion_chips',
+        'platform': 'google',
+        'suggestions': [
+          {
+            'title': 'suggestion one'
+          }
+        ]
+      },
+      {
+        'type': 'link_out_chip',
+        'platform': 'google',
+        'destinationName': 'google',
+        'url': 'google.com'
+      },
+      {
+        'type': 0,
+        'speech': 'Good day!'
+      }
+    ];
+
+    const mockRequest = new MockRequest(headerV1, body);
     const mockResponse = new MockResponse();
 
     const app = new ApiAiApp({
@@ -2193,70 +2066,29 @@ describe('ApiAiApp#getIncomingRichResponse', function () {
 describe('ApiAiApp#getIncomingList', function () {
   // Success case test, when the API returns a valid 200 response with the response object
   it('Should get the incoming list for the success case.', function () {
-    let headers = {
-      'Content-Type': 'application/json'
-    };
-    let body = {
-      'id': 'db2c39ce-1755-4163-a8df-ea033d713dbb',
-      'timestamp': '2017-04-21T22:15:25.611Z',
-      'lang': 'en',
-      'result': {
-        'source': 'agent',
-        'resolvedQuery': 'hi',
-        'action': 'input.welcome',
-        'actionIncomplete': false,
-        'parameters': {},
-        'contexts': [],
-        'metadata': {
-          'intentId': '784690f8-8d87-4f0d-a40f-3e6c99ecd1e0',
-          'webhookUsed': 'false',
-          'webhookForSlotFillingUsed': 'false',
-          'intentName': 'Default Welcome Intent'
+    let body = createLiveSessionApiAppBody();
+    body.result.fulfillment.messages.push({
+      'type': 'list_card',
+      'platform': 'google',
+      'title': 'list_title',
+      'items': [
+        {
+          'optionInfo': {
+            'key': 'first_item',
+            'synonyms': []
+          },
+          'title': 'first item'
         },
-        'fulfillment': {
-          'speech': 'Hi!',
-          'messages': [
-            {
-              'type': 'simple_response',
-              'platform': 'google',
-              'textToSpeech': 'Check out these options'
-            },
-            {
-              'type': 'list_card',
-              'platform': 'google',
-              'title': 'list_title',
-              'items': [
-                {
-                  'optionInfo': {
-                    'key': 'first_item',
-                    'synonyms': []
-                  },
-                  'title': 'first item'
-                },
-                {
-                  'optionInfo': {
-                    'key': 'second_item',
-                    'synonyms': []
-                  },
-                  'title': 'second item'
-                }
-              ]
-            },
-            {
-              'type': 0,
-              'speech': 'unused'
-            }
-          ]
-        },
-        'score': 1
-      },
-      'status': {
-        'code': 200,
-        'errorType': 'success'
-      },
-      'sessionId': 'cb92ecc5-0899-41f8-84a4-4ff329907512'
-    };
-    const mockRequest = new MockRequest(headers, body);
+        {
+          'optionInfo': {
+            'key': 'second_item',
+            'synonyms': []
+          },
+          'title': 'second item'
+        }
+      ]
+    });
+    const mockRequest = new MockRequest(headerV1, body);
     const mockResponse = new MockResponse();
 
     const app = new ApiAiApp({
@@ -2282,71 +2114,31 @@ describe('ApiAiApp#getIncomingList', function () {
 describe('ApiAiApp#getIncomingCarousel', function () {
   // Success case test, when the API returns a valid 200 response with the response object
   it('Should get the incoming list for the success case.', function () {
-    let headers = {
-      'Content-Type': 'application/json'
-    };
-    let body = {
-      'id': 'db2c39ce-1755-4163-a8df-ea033d713dbb',
-      'timestamp': '2017-04-21T22:15:25.611Z',
-      'lang': 'en',
-      'result': {
-        'source': 'agent',
-        'resolvedQuery': 'hi',
-        'action': 'input.welcome',
-        'actionIncomplete': false,
-        'parameters': {},
-        'contexts': [],
-        'metadata': {
-          'intentId': '784690f8-8d87-4f0d-a40f-3e6c99ecd1e0',
-          'webhookUsed': 'false',
-          'webhookForSlotFillingUsed': 'false',
-          'intentName': 'Default Welcome Intent'
+    let body = createLiveSessionApiAppBody();
+    body.result.fulfillment.messages.push({
+      'type': 'carousel_card',
+      'platform': 'google',
+      'items': [
+        {
+          'optionInfo': {
+            'key': 'first_item',
+            'synonyms': []
+          },
+          'title': 'first item',
+          'description': 'Your first choice'
         },
-        'fulfillment': {
-          'speech': 'Hi!',
-          'messages': [
-            {
-              'type': 'simple_response',
-              'platform': 'google',
-              'textToSpeech': 'Check out these options'
-            },
-            {
-              'type': 'carousel_card',
-              'platform': 'google',
-              'items': [
-                {
-                  'optionInfo': {
-                    'key': 'first_item',
-                    'synonyms': []
-                  },
-                  'title': 'first item',
-                  'description': 'Your first choice'
-                },
-                {
-                  'optionInfo': {
-                    'key': 'second_item',
-                    'synonyms': []
-                  },
-                  'title': 'second item',
-                  'description': 'Your second choice'
-                }
-              ]
-            },
-            {
-              'type': 0,
-              'speech': 'unused'
-            }
-          ]
-        },
-        'score': 1
-      },
-      'status': {
-        'code': 200,
-        'errorType': 'success'
-      },
-      'sessionId': 'cb92ecc5-0899-41f8-84a4-4ff329907512'
-    };
-    const mockRequest = new MockRequest(headers, body);
+        {
+          'optionInfo': {
+            'key': 'second_item',
+            'synonyms': []
+          },
+          'title': 'second item',
+          'description': 'Your second choice'
+        }
+      ]
+    });
+
+    const mockRequest = new MockRequest(headerV1, body);
     const mockResponse = new MockResponse();
 
     const app = new ApiAiApp({
@@ -2371,159 +2163,72 @@ describe('ApiAiApp#getIncomingCarousel', function () {
  * Describes the behavior for ApiAiApp getSelectedOption method.
  */
 describe('ApiAiApp#getSelectedOption', function () {
+  let mockRequest, mockResponse, app;
+  beforeEach(function () {
+    mockRequest = new MockRequest(headerV1, {});
+    mockResponse = new MockResponse();
+  });
+
   // Success case test, when the API returns a valid 200 response with the response object
   it('Should get the selected option when given in APIAI context.', function () {
-    let headers = {
-      'Content-Type': 'application/json',
-      'Google-Assistant-API-Version': 'v1'
-    };
-    let body = {
-      'originalRequest': {
-        'source': 'google',
-        'data': {
-          'inputs': [
-            {
-              'arguments': [
-                {
-                  'text_value': 'first_item',
-                  'name': 'OPTION'
-                }
-              ],
-              'intent': 'actions.intent.OPTION',
-              'raw_inputs': [
-                {
-                  'query': 'firstitem',
-                  'input_type': 2,
-                  'annotation_sets': []
-                }
-              ]
-            }
-          ]
+    let body = createLiveSessionApiAppBody();
+    body.originalRequest.data.inputs[0] = {
+      'arguments': [
+        {
+          'text_value': 'first_item',
+          'name': 'OPTION'
         }
-      },
-      'id': 'db2c39ce-1755-4163-a8df-ea033d713dbb',
-      'timestamp': '2017-04-21T22:15:25.611Z',
-      'lang': 'en',
-      'result': {
-        'source': 'agent',
-        'resolvedQuery': 'hi',
-        'action': 'input.welcome',
-        'actionIncomplete': false,
-        'parameters': {},
-        'contexts': [
-          {
-            'name': 'actions_intent_option',
-            'parameters': {
-              'OPTION': 'first_item'
-            },
-            'lifespan': 0
-          }
-        ],
-        'metadata': {
-          'intentId': '784690f8-8d87-4f0d-a40f-3e6c99ecd1e0',
-          'webhookUsed': 'false',
-          'webhookForSlotFillingUsed': 'false',
-          'intentName': 'Default Welcome Intent'
-        },
-        'fulfillment': {
-          'speech': 'Hi!',
-          'messages': [
-            {
-              'type': 0,
-              'speech': 'unused'
-            }
-          ]
-        },
-        'score': 1
-      },
-      'status': {
-        'code': 200,
-        'errorType': 'success'
-      },
-      'sessionId': 'cb92ecc5-0899-41f8-84a4-4ff329907512'
+      ],
+      'intent': 'actions.intent.OPTION',
+      'raw_inputs': [
+        {
+          'query': 'firstitem',
+          'input_type': 2,
+          'annotation_sets': []
+        }
+      ]
     };
-    const mockRequest = new MockRequest(headers, body);
-    const mockResponse = new MockResponse();
-
-    const app = new ApiAiApp({
+    body.result.contexts = [
+      {
+        'name': 'actions_intent_option',
+        'parameters': {
+          'OPTION': 'first_item'
+        },
+        'lifespan': 0
+      }
+    ];
+    mockRequest.body = body;
+    app = new ApiAiApp({
       request: mockRequest,
       response: mockResponse
     });
-
     expect(app.getSelectedOption()).to.equal('first_item');
   });
 
   // Success case test, when the API returns a valid 200 response with the response object
   it('Should get the selected option when not given in APIAI context.', function () {
-    let headers = {
-      'Content-Type': 'application/json',
-      'Google-Assistant-API-Version': 'v1'
-    };
-    let body = {
-      'originalRequest': {
-        'source': 'google',
-        'data': {
-          'inputs': [
-            {
-              'arguments': [
-                {
-                  'text_value': 'first_item',
-                  'name': 'OPTION'
-                }
-              ],
-              'intent': 'actions.intent.OPTION',
-              'raw_inputs': [
-                {
-                  'query': 'firstitem',
-                  'input_type': 2,
-                  'annotation_sets': []
-                }
-              ]
-            }
-          ]
+    let body = createLiveSessionApiAppBody();
+    body.originalRequest.data.inputs[0] = {
+      'arguments': [
+        {
+          'text_value': 'first_item',
+          'name': 'OPTION'
         }
-      },
-      'id': 'db2c39ce-1755-4163-a8df-ea033d713dbb',
-      'timestamp': '2017-04-21T22:15:25.611Z',
-      'lang': 'en',
-      'result': {
-        'source': 'agent',
-        'resolvedQuery': 'hi',
-        'action': 'input.welcome',
-        'actionIncomplete': false,
-        'parameters': {},
-        'contexts': [],
-        'metadata': {
-          'intentId': '784690f8-8d87-4f0d-a40f-3e6c99ecd1e0',
-          'webhookUsed': 'false',
-          'webhookForSlotFillingUsed': 'false',
-          'intentName': 'Default Welcome Intent'
-        },
-        'fulfillment': {
-          'speech': 'Hi!',
-          'messages': [
-            {
-              'type': 0,
-              'speech': 'unused'
-            }
-          ]
-        },
-        'score': 1
-      },
-      'status': {
-        'code': 200,
-        'errorType': 'success'
-      },
-      'sessionId': 'cb92ecc5-0899-41f8-84a4-4ff329907512'
+      ],
+      'intent': 'actions.intent.OPTION',
+      'raw_inputs': [
+        {
+          'query': 'firstitem',
+          'input_type': 2,
+          'annotation_sets': []
+        }
+      ]
     };
-    const mockRequest = new MockRequest(headers, body);
-    const mockResponse = new MockResponse();
-
-    const app = new ApiAiApp({
+    mockRequest.body = body;
+    app = new ApiAiApp({
       request: mockRequest,
       response: mockResponse
     });
-
     expect(app.getSelectedOption()).to.equal('first_item');
   });
 });
@@ -2534,64 +2239,9 @@ describe('ApiAiApp#getSelectedOption', function () {
 describe('ApiAiApp#isRequestFromApiAi', function () {
   // Success case test, when the API returns a valid 200 response with the response object
   it('Should confirm request is from API.ai.', function () {
-    let headers = {
-      'Content-Type': 'application/json',
-      'Google-Assistant-API-Version': 'v1',
-      'Google-Assistant-Signature': 'YOUR_PRIVATE_KEY'
-    };
-    let body = {
-      'id': '93ada919-582d-4694-a965-4278453a6503',
-      'timestamp': '2016-12-01T17:36:16.886Z',
-      'result': {
-        'source': 'agent',
-        'resolvedQuery': 'talk to action snippets',
-        'speech': '',
-        'action': 'input.welcome',
-        'actionIncomplete': false,
-        'parameters': {
-
-        },
-        'contexts': [
-          {
-            'name': 'number',
-            'lifespan': 5
-          },
-          {
-            'name': '_actions_on_google_',
-            'lifespan': 99
-          }
-        ],
-        'metadata': {
-          'intentId': '1b1f35cb-ef66-41c4-9703-89446c00cfe8',
-          'webhookUsed': 'true',
-          'webhookForSlotFillingUsed': 'false',
-          'intentName': 'Default Welcome Intent'
-        },
-        'fulfillment': {
-          'speech': 'Good day!',
-          'messages': [
-            {
-              'type': 0,
-              'speech': 'Hello!'
-            }
-          ]
-        },
-        'score': 1
-      },
-      'status': {
-        'code': 200,
-        'errorType': 'success'
-      },
-      'sessionId': 'f23e77a5-8b09-495d-b9b3-6835d737abf3',
-      'originalRequest': {
-        'data': {
-          'conversation': {
-            'type': 2
-          }
-        }
-      }
-    };
-    const mockRequest = new MockRequest(headers, body);
+    let header = JSON.parse(JSON.stringify(headerV1));
+    header['Google-Assistant-Signature'] = 'YOUR_PRIVATE_KEY';
+    const mockRequest = new MockRequest(header, createLiveSessionApiAppBody());
     const mockResponse = new MockResponse();
 
     const app = new ApiAiApp({
@@ -2604,51 +2254,11 @@ describe('ApiAiApp#isRequestFromApiAi', function () {
 
     expect(app.isRequestFromApiAi(HEADER_KEY, HEADER_VALUE)).to.equal(true);
   });
-});
 
-/**
- * Describes the behavior for ApiAiApp isRequestFromApiAi method.
- */
-describe('ApiAiApp#isRequestFromApiAi', function () {
-  // Success case test, when the API returns a valid 200 response with the response object
   it('Should confirm request is NOT from API.ai.', function () {
-    let headers = {
-      'Content-Type': 'application/json',
-      'Google-Assistant-API-Version': 'v1'
-    };
-    let body = {
-      'user': {
-        'user_id': '11112226094657824893'
-      },
-      'conversation': {
-        'conversation_id': '1480373842830',
-        'type': 1
-      },
-      'inputs': [
-        {
-          'intent': 'assistant.intent.action.MAIN',
-          'raw_inputs': [
-            {
-              'input_type': 2,
-              'query': 'talk to hello action'
-            }
-          ],
-          'arguments': [
-            {
-              'name': 'agent_info'
-            }
-          ]
-        }
-      ],
-      'originalRequest': {
-        'data': {
-          'conversation': {
-            'type': 2
-          }
-        }
-      }
-    };
-    const mockRequest = new MockRequest(headers, body);
+    let header = JSON.parse(JSON.stringify(headerV1));
+    let body = createLiveSessionApiAppBody();
+    const mockRequest = new MockRequest(header, body);
     const mockResponse = new MockResponse();
 
     const app = new ApiAiApp({
@@ -2669,78 +2279,19 @@ describe('ApiAiApp#isRequestFromApiAi', function () {
 describe('ApiAiApp#hasSurfaceCapability', function () {
   // Success case test, when the API returns a valid 200 response with the response object
   it('Should return true for a valid capability from incoming JSON for the success case.', function () {
-    let headers = {
-      'Content-Type': 'application/json',
-      'Google-Assistant-API-Version': 'v1'
-    };
-    let body = {
-      'id': '4bef6e67-c09d-4a43-ae7b-97c4457582c7',
-      'timestamp': '2016-12-01T19:27:58.837Z',
-      'result': {
-        'source': 'agent',
-        'resolvedQuery': 'talk to action snippets',
-        'speech': '',
-        'action': 'input.welcome',
-        'actionIncomplete': false,
-        'parameters': {
-
+    let body = createLiveSessionApiAppBody();
+    body.originalRequest.data.surface = {
+      'capabilities': [
+        {
+          'name': 'actions.capability.AUDIO_OUTPUT'
         },
-        'contexts': [
-
-        ],
-        'metadata': {
-          'intentId': '1b1f35cb-ef66-41c4-9703-89446c00cfe8',
-          'webhookUsed': 'true',
-          'webhookForSlotFillingUsed': 'false',
-          'intentName': 'Default Welcome Intent'
-        },
-        'fulfillment': {
-          'speech': 'Good day!',
-          'messages': [
-            {
-              'type': 0,
-              'speech': 'Hi!'
-            }
-          ]
-        },
-        'score': 1
-      },
-      'status': {
-        'code': 200,
-        'errorType': 'success'
-      },
-      'sessionId': 'f23e77a5-8b09-495d-b9b3-6835d737abf3',
-      'originalRequest': {
-        'data': {
-          'surface': {
-            'capabilities': [
-              {
-                'name': 'actions.capability.AUDIO_OUTPUT'
-              },
-              {
-                'name': 'actions.capability.SCREEN_OUTPUT'
-              }
-            ]
-          },
-          'inputs': [
-            {
-              'raw_inputs': [
-                {
-                  'query': 'basic card',
-                  'input_type': 3,
-                  'annotation_sets': []
-                }
-              ]
-            }
-          ],
-          'conversation': {
-            'type': 2
-          }
+        {
+          'name': 'actions.capability.SCREEN_OUTPUT'
         }
-      }
+      ]
     };
 
-    let mockRequest = new MockRequest(headers, body);
+    let mockRequest = new MockRequest(headerV1, body);
     const mockResponse = new MockResponse();
 
     let app = new ApiAiApp({
@@ -2763,78 +2314,19 @@ describe('ApiAiApp#hasSurfaceCapability', function () {
 describe('ApiAiApp#getSurfaceCapabilities', function () {
   // Success case test, when the API returns a valid 200 response with the response object
   it('Should return valid list of capabilities from incoming JSON for the success case.', function () {
-    let headers = {
-      'Content-Type': 'application/json',
-      'Google-Assistant-API-Version': 'v1'
-    };
-    let body = {
-      'id': '4bef6e67-c09d-4a43-ae7b-97c4457582c7',
-      'timestamp': '2016-12-01T19:27:58.837Z',
-      'result': {
-        'source': 'agent',
-        'resolvedQuery': 'talk to action snippets',
-        'speech': '',
-        'action': 'input.welcome',
-        'actionIncomplete': false,
-        'parameters': {
-
+    let body = createLiveSessionApiAppBody();
+    body.originalRequest.data.surface = {
+      'capabilities': [
+        {
+          'name': 'actions.capability.AUDIO_OUTPUT'
         },
-        'contexts': [
-
-        ],
-        'metadata': {
-          'intentId': '1b1f35cb-ef66-41c4-9703-89446c00cfe8',
-          'webhookUsed': 'true',
-          'webhookForSlotFillingUsed': 'false',
-          'intentName': 'Default Welcome Intent'
-        },
-        'fulfillment': {
-          'speech': 'Good day!',
-          'messages': [
-            {
-              'type': 0,
-              'speech': 'Hi!'
-            }
-          ]
-        },
-        'score': 1
-      },
-      'status': {
-        'code': 200,
-        'errorType': 'success'
-      },
-      'sessionId': 'f23e77a5-8b09-495d-b9b3-6835d737abf3',
-      'originalRequest': {
-        'data': {
-          'surface': {
-            'capabilities': [
-              {
-                'name': 'actions.capability.AUDIO_OUTPUT'
-              },
-              {
-                'name': 'actions.capability.SCREEN_OUTPUT'
-              }
-            ]
-          },
-          'inputs': [
-            {
-              'raw_inputs': [
-                {
-                  'query': 'basic card',
-                  'input_type': 3,
-                  'annotation_sets': []
-                }
-              ]
-            }
-          ],
-          'conversation': {
-            'type': 2
-          }
+        {
+          'name': 'actions.capability.SCREEN_OUTPUT'
         }
-      }
+      ]
     };
 
-    let mockRequest = new MockRequest(headers, body);
+    let mockRequest = new MockRequest(headerV1, body);
     const mockResponse = new MockResponse();
 
     let app = new ApiAiApp({
@@ -2856,68 +2348,19 @@ describe('ApiAiApp#getSurfaceCapabilities', function () {
 describe('ApiAiApp#getInputType', function () {
   // Success case test, when the API returns a valid 200 response with the response object
   it('Should return valid input type from incoming JSON for the success case.', function () {
-    let headers = {
-      'Content-Type': 'application/json',
-      'Google-Assistant-API-Version': 'v1'
-    };
-    let body = {
-      'id': '4bef6e67-c09d-4a43-ae7b-97c4457582c7',
-      'timestamp': '2016-12-01T19:27:58.837Z',
-      'result': {
-        'source': 'agent',
-        'resolvedQuery': 'talk to action snippets',
-        'speech': '',
-        'action': 'input.welcome',
-        'actionIncomplete': false,
-        'parameters': {
-
-        },
-        'contexts': [
-
-        ],
-        'metadata': {
-          'intentId': '1b1f35cb-ef66-41c4-9703-89446c00cfe8',
-          'webhookUsed': 'true',
-          'webhookForSlotFillingUsed': 'false',
-          'intentName': 'Default Welcome Intent'
-        },
-        'fulfillment': {
-          'speech': 'Good day!',
-          'messages': [
-            {
-              'type': 0,
-              'speech': 'Hi!'
-            }
-          ]
-        },
-        'score': 1
-      },
-      'status': {
-        'code': 200,
-        'errorType': 'success'
-      },
-      'sessionId': 'f23e77a5-8b09-495d-b9b3-6835d737abf3',
-      'originalRequest': {
-        'data': {
-          'inputs': [
-            {
-              'raw_inputs': [
-                {
-                  'input_type': 3
-                }
-              ]
-            }
-          ],
-          'conversation': {
-            'type': 2
+    let body = createLiveSessionApiAppBody();
+    const KEYBOARD = 3;
+    body.originalRequest.data.inputs = [
+      {
+        'raw_inputs': [
+          {
+            'input_type': KEYBOARD
           }
-        }
+        ]
       }
-    };
-
-    let mockRequest = new MockRequest(headers, body);
+    ];
+    let mockRequest = new MockRequest(headerV1, body);
     const mockResponse = new MockResponse();
-
     let app = new ApiAiApp({
       request: mockRequest,
       response: mockResponse
@@ -2934,72 +2377,10 @@ describe('ApiAiApp#getInputType', function () {
 describe('ApiAiApp#getRawInput', function () {
   // Success case test, when the API returns a valid 200 response with the response object
   it('Should raw input from API.ai.', function () {
-    let headers = {
-      'Content-Type': 'application/json',
-      'Google-Assistant-API-Version': 'v1',
-      'Google-Assistant-Signature': 'YOUR_PRIVATE_KEY'
-    };
-    let body = {
-      'id': 'fdeca0bc-264a-4152-81fe-7d3c3d92bdfb',
-      'timestamp': '2016-12-01T19:02:49.021Z',
-      'result': {
-        'source': 'agent',
-        'resolvedQuery': 'is it 667',
-        'speech': '',
-        'action': 'input.number',
-        'actionIncomplete': false,
-        'parameters': {
-          'number': '667'
-        },
-        'contexts': [
-          {
-            'name': 'number',
-            'parameters': {
-              'number': '667',
-              'number.original': '667'
-            },
-            'lifespan': 5
-          },
-          {
-            'name': '_actions_on_google_',
-            'parameters': {
-              'number': '667',
-              'number.original': '667'
-            },
-            'lifespan': 99
-          }
-        ],
-        'metadata': {
-          'intentId': '18ac04d6-9e5d-43ae-ab46-7b51a8658746',
-          'webhookUsed': 'true',
-          'webhookForSlotFillingUsed': 'false',
-          'intentName': 'number_intent'
-        },
-        'fulfillment': {
-          'speech': '',
-          'messages': [
-            {
-              'type': 0,
-              'speech': ''
-            }
-          ]
-        },
-        'score': 1
-      },
-      'status': {
-        'code': 200,
-        'errorType': 'success'
-      },
-      'sessionId': 'f23e77a5-8b09-495d-b9b3-6835d737abf3',
-      'originalRequest': {
-        'data': {
-          'conversation': {
-            'type': 2
-          }
-        }
-      }
-    };
-    const mockRequest = new MockRequest(headers, body);
+    let body = createLiveSessionApiAppBody();
+    body.result.resolvedQuery = 'is it 667';
+
+    const mockRequest = new MockRequest(headerV1, body);
     const mockResponse = new MockResponse();
 
     const app = new ApiAiApp({
@@ -3017,77 +2398,17 @@ describe('ApiAiApp#getRawInput', function () {
 describe('ApiAiApp#setContext', function () {
   // Success case test, when the API returns a valid 200 response with the response object
   it('Should return the valid JSON in the response object for the success case.', function () {
-    let headers = {
-      'Content-Type': 'application/json',
-      'Google-Assistant-API-Version': 'v1'
-    };
-    let body = {
-      'id': '4bef6e67-c09d-4a43-ae7b-97c4457582c7',
-      'timestamp': '2016-12-01T19:27:58.837Z',
-      'result': {
-        'source': 'agent',
-        'resolvedQuery': 'talk to action snippets',
-        'speech': '',
-        'action': 'input.welcome',
-        'actionIncomplete': false,
-        'parameters': {
-
-        },
-        'contexts': [
-          {
-            'name': 'number',
-            'lifespan': 5
-          }
-        ],
-        'metadata': {
-          'intentId': '1b1f35cb-ef66-41c4-9703-89446c00cfe8',
-          'webhookUsed': 'true',
-          'webhookForSlotFillingUsed': 'false',
-          'intentName': 'Default Welcome Intent'
-        },
-        'fulfillment': {
-          'speech': 'Good day!',
-          'messages': [
-            {
-              'type': 0,
-              'speech': 'Hi!'
-            }
-          ]
-        },
-        'score': 1
-      },
-      'status': {
-        'code': 200,
-        'errorType': 'success'
-      },
-      'sessionId': 'f23e77a5-8b09-495d-b9b3-6835d737abf3',
-      'originalRequest': {
-        'data': {
-          'conversation': {
-            'type': 2
-          }
-        }
-      }
-    };
-    const mockRequest = new MockRequest(headers, body);
+    let body = createLiveSessionApiAppBody();
+    const mockRequest = new MockRequest(headerV1, body);
     const mockResponse = new MockResponse();
-
     const app = new ApiAiApp({
       request: mockRequest,
       response: mockResponse
     });
 
     const CONTEXT_NUMBER = 'number';
-
-    function handler (app) {
-      app.setContext(CONTEXT_NUMBER);
-      app.ask('Welcome to action snippets! Say a number.');
-    }
-
-    let actionMap = new Map();
-    actionMap.set('input.welcome', handler);
-
-    app.handleRequest(actionMap);
+    app.setContext(CONTEXT_NUMBER);
+    app.ask('Welcome to action snippets! Say a number.');
 
     // Validating the response object
     let expectedResponse = {
@@ -3110,7 +2431,7 @@ describe('ApiAiApp#setContext', function () {
           }
         },
         {
-          'name': 'number',
+          'name': CONTEXT_NUMBER,
           'lifespan': 1
         }
       ]
@@ -3123,85 +2444,48 @@ describe('ApiAiApp#setContext', function () {
  * Describes the behavior for ApiAiApp getContexts method.
  */
 describe('ApiAiApp#getContexts', function () {
-  // Success case test, when the API returns a valid 200 response with the response object
-  it('Should return the active contexts from incoming JSON for the success case.', function () {
-    let headers = {
-      'Content-Type': 'application/json',
-      'Google-Assistant-API-Version': 'v1'
-    };
-    let body = {
-      'id': '4bef6e67-c09d-4a43-ae7b-97c4457582c7',
-      'timestamp': '2016-12-01T19:27:58.837Z',
-      'result': {
-        'source': 'agent',
-        'resolvedQuery': 'talk to action snippets',
-        'speech': '',
-        'action': 'input.welcome',
-        'actionIncomplete': false,
-        'parameters': {
+  let body, app, mockRequest, mockResponse;
 
-        },
-        'contexts': [
-          {
-            'name': '_actions_on_google_'
-          },
-          {
-            'name': 'number',
-            'lifespan': 5,
-            'parameters': {
-              'parameterOne': '23',
-              'parameterTwo': '24'
-            }
-          },
-          {
-            'name': 'word',
-            'lifespan': 1,
-            'parameters': {
-              'parameterOne': 'wordOne',
-              'parameterTwo': 'wordTwo'
-            }
-          }
-        ],
-        'metadata': {
-          'intentId': '1b1f35cb-ef66-41c4-9703-89446c00cfe8',
-          'webhookUsed': 'true',
-          'webhookForSlotFillingUsed': 'false',
-          'intentName': 'Default Welcome Intent'
-        },
-        'fulfillment': {
-          'speech': 'Good day!',
-          'messages': [
-            {
-              'type': 0,
-              'speech': 'Hi!'
-            }
-          ]
-        },
-        'score': 1
-      },
-      'status': {
-        'code': 200,
-        'errorType': 'success'
-      },
-      'sessionId': 'f23e77a5-8b09-495d-b9b3-6835d737abf3',
-      'originalRequest': {
-        'data': {
-          'conversation': {
-            'type': 2
-          }
-        }
-      }
-    };
-    let mockRequest = new MockRequest(headers, body);
-    const mockResponse = new MockResponse();
+  beforeEach(function () {
+    body = createLiveSessionApiAppBody();
+    mockRequest = new MockRequest(headerV1, body);
+    mockResponse = new MockResponse();
+  });
 
-    let app = new ApiAiApp({
+  function initMockApp () {
+    app = new ApiAiApp({
       request: mockRequest,
       response: mockResponse
     });
+  }
 
+  // Success case test, when the API returns a valid 200 response with the response object
+  it('Should return the active contexts from incoming JSON for the success case.', function () {
+      // let body = createLiveSessionApiAppBody();
+    body.result.contexts = [
+      {
+        'name': '_actions_on_google_'
+      },
+      {
+        'name': 'number',
+        'lifespan': 5,
+        'parameters': {
+          'parameterOne': '23',
+          'parameterTwo': '24'
+        }
+      },
+      {
+        'name': 'word',
+        'lifespan': 1,
+        'parameters': {
+          'parameterOne': 'wordOne',
+          'parameterTwo': 'wordTwo'
+        }
+      }
+    ];
+    mockRequest.body = body;
+    initMockApp();
     let mockContexts = app.getContexts();
-
     let expectedContexts = [
       {
         'name': 'number',
@@ -3221,29 +2505,22 @@ describe('ApiAiApp#getContexts', function () {
       }
     ];
     expect(mockContexts).to.deep.equal(expectedContexts);
-
-    // Check the case with only app.data incoming
-    body.result.contexts = [ { 'name': '_actions_on_google_' } ];
-    mockRequest = new MockRequest(headers, body);
-
-    app = new ApiAiApp({
-      request: mockRequest,
-      response: mockResponse
-    });
-    mockContexts = app.getContexts();
-    expectedContexts = [];
+  });
+  it('Should return the active contexts from incoming JSON when only app.data incoming', function () {
+    body.result.contexts = [{'name': '_actions_on_google_'}];
+    mockRequest.body = body;
+    initMockApp();
+    let mockContexts = app.getContexts();
+    let expectedContexts = [];
     expect(mockContexts).to.deep.equal(expectedContexts);
-
+  });
+  it('Should return the active contexts from incoming JSON when no contexts provided.', function () {
     // Check the empty case
     body.result.contexts = [];
-    mockRequest = new MockRequest(headers, body);
-
-    app = new ApiAiApp({
-      request: mockRequest,
-      response: mockResponse
-    });
-    mockContexts = app.getContexts();
-    expectedContexts = [];
+    mockRequest.body = body;
+    initMockApp();
+    let mockContexts = app.getContexts();
+    let expectedContexts = [];
     expect(mockContexts).to.deep.equal(expectedContexts);
   });
 });
@@ -3252,85 +2529,36 @@ describe('ApiAiApp#getContexts', function () {
  * Describes the behavior for ApiAiApp getContext method.
  */
 describe('ApiAiApp#getContext', function () {
-  // Success case test, when the API returns a valid 200 response with the response object
-  it('Should return the context by name from incoming JSON for the success case.', function () {
-    let headers = {
-      'Content-Type': 'application/json',
-      'Google-Assistant-API-Version': 'v1'
-    };
-    let body = {
-      'id': '4bef6e67-c09d-4a43-ae7b-97c4457582c7',
-      'timestamp': '2016-12-01T19:27:58.837Z',
-      'result': {
-        'source': 'agent',
-        'resolvedQuery': 'talk to action snippets',
-        'speech': '',
-        'action': 'input.welcome',
-        'actionIncomplete': false,
-        'parameters': {
+  let body, app, mockRequest, mockResponse;
 
-        },
-        'contexts': [
-          {
-            'name': '_actions_on_google_'
-          },
-          {
-            'name': 'number',
-            'lifespan': 5,
-            'parameters': {
-              'parameterOne': '23',
-              'parameterTwo': '24'
-            }
-          },
-          {
-            'name': 'word',
-            'lifespan': 1,
-            'parameters': {
-              'parameterOne': 'wordOne',
-              'parameterTwo': 'wordTwo'
-            }
-          }
-        ],
-        'metadata': {
-          'intentId': '1b1f35cb-ef66-41c4-9703-89446c00cfe8',
-          'webhookUsed': 'true',
-          'webhookForSlotFillingUsed': 'false',
-          'intentName': 'Default Welcome Intent'
-        },
-        'fulfillment': {
-          'speech': 'Good day!',
-          'messages': [
-            {
-              'type': 0,
-              'speech': 'Hi!'
-            }
-          ]
-        },
-        'score': 1
-      },
-      'status': {
-        'code': 200,
-        'errorType': 'success'
-      },
-      'sessionId': 'f23e77a5-8b09-495d-b9b3-6835d737abf3',
-      'originalRequest': {
-        'data': {
-          'conversation': {
-            'type': 2
-          }
-        }
-      }
-    };
-    let mockRequest = new MockRequest(headers, body);
-    const mockResponse = new MockResponse();
+  beforeEach(function () {
+    body = createLiveSessionApiAppBody();
+    mockRequest = new MockRequest(headerV1, body);
+    mockResponse = new MockResponse();
+  });
 
-    let app = new ApiAiApp({
+  function initMockApp () {
+    app = new ApiAiApp({
       request: mockRequest,
       response: mockResponse
     });
+  }
+
+  // Success case test, when the API returns a valid 200 response with the response object
+  it('Should return the context by name from incoming JSON for the success case.', function () {
+    let body = createLiveSessionApiAppBody();
+    body.result.contexts = [{
+      'name': 'number',
+      'lifespan': 5,
+      'parameters': {
+        'parameterOne': '23',
+        'parameterTwo': '24'
+      }
+    }];
+    mockRequest.body = body;
+    initMockApp();
 
     let mockContext = app.getContext('number');
-
     let expectedContext = {
       'name': 'number',
       'lifespan': 5,
@@ -3340,17 +2568,15 @@ describe('ApiAiApp#getContext', function () {
       }
     };
     expect(mockContext).to.deep.equal(expectedContext);
+  });
 
+  it('Should return the context by name from incoming JSON when no context provided.', function () {
     //  Check the empty case
     body.result.contexts = [];
-    mockRequest = new MockRequest(headers, body);
-
-    app = new ApiAiApp({
-      request: mockRequest,
-      response: mockResponse
-    });
-    mockContext = app.getContext('name');
-    expectedContext = null;
+    mockRequest.body = body;
+    initMockApp();
+    let mockContext = app.getContext('name');
+    let expectedContext = null;
     expect(mockContext).to.equal(expectedContext);
   });
 });
@@ -3361,87 +2587,17 @@ describe('ApiAiApp#getContext', function () {
 describe('ApiAiApp#ask', function () {
   // Success case test, when the API returns a valid 200 response with the response object
   it('Should return the valid JSON in the response object for the success case.', function () {
-    let headers = {
-      'Content-Type': 'application/json',
-      'Google-Assistant-API-Version': 'v1'
-    };
-    let body = {
-      'id': '2a8b7faa-29c0-4ccf-a973-726f9eaf3e2c',
-      'timestamp': '2016-12-04T18:34:31.218Z',
-      'result': {
-        'source': 'agent',
-        'resolvedQuery': 'talk to action snippets',
-        'speech': '',
-        'action': 'input.welcome',
-        'actionIncomplete': false,
-        'parameters': {
-
-        },
-        'contexts': [
-          {
-            'name': 'number',
-            'parameters': {
-
-            },
-            'lifespan': 5
-          },
-          {
-            'name': '_actions_on_google_',
-            'parameters': {
-
-            },
-            'lifespan': 99
-          }
-        ],
-        'metadata': {
-          'intentId': '1b1f35cb-ef66-41c4-9703-89446c00cfe8',
-          'webhookUsed': 'true',
-          'webhookForSlotFillingUsed': 'false',
-          'intentName': 'Default Welcome Intent'
-        },
-        'fulfillment': {
-          'speech': 'Hello!',
-          'messages': [
-            {
-              'type': 0,
-              'speech': 'Hello!'
-            }
-          ]
-        },
-        'score': 1
-      },
-      'status': {
-        'code': 200,
-        'errorType': 'success'
-      },
-      'sessionId': 'f23e77a5-8b09-495d-b9b3-6835d737abf3',
-      'originalRequest': {
-        'data': {
-          'conversation': {
-            'type': 2
-          }
-        }
-      }
-    };
-    const mockRequest = new MockRequest(headers, body);
+    let body = createLiveSessionApiAppBody();
+    const mockRequest = new MockRequest(headerV1, body);
     const mockResponse = new MockResponse();
-
     const app = new ApiAiApp({
       request: mockRequest,
       response: mockResponse
     });
 
-    function handler (app) {
-      app.ask('Welcome to action snippets! Say a number.',
-        ['Say any number', 'Pick a number', 'What is the number?']);
-    }
+    app.ask('Welcome to action snippets! Say a number.',
+      ['Say any number', 'Pick a number', 'What is the number?']);
 
-    let actionMap = new Map();
-    actionMap.set('input.welcome', handler);
-
-    app.handleRequest(actionMap);
-
-    // Validating the response object
     let expectedResponse = {
       'speech': 'Welcome to action snippets! Say a number.',
       'data': {
