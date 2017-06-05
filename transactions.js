@@ -24,6 +24,9 @@
 const Debug = require('debug');
 const error = Debug('actions-on-google:error');
 
+const ORDER_LOCATION_LIMIT = 2;
+const GENERIC_EXTENSION_TYPE = 'type.googleapis.com/google.actions.v2.orders.GenericExtension';
+
 /**
  * Price type.
  * @typedef {Object} Price
@@ -102,10 +105,8 @@ const error = Debug('actions-on-google:error');
  */
 
 /**
- * Delivery address returned when calling getDeliveryAddress().
- * @typedef {Object} DeliveryAddress
- * @property {string} userDecision. - Either Transactions.ConfirmationDecision.ACCEPTED
- *     or Transactions.ConfirmationDecision.REJECTED.
+ * Generic Location type.
+ * @typedef {Object} Location
  * @property {Object} postalAddress
  * @property {string} postalAddress.regionCode
  * @property {string} postalAddress.languageCode
@@ -443,7 +444,6 @@ const TransactionValues = {
      */
     REGION_NOT_SUPPORTED: 'ASSISTANT_SURFACE_NOT_SUPPORTED'
   },
-
   /**
    * List of possible user decisions to give delivery address.
    * @readonly
@@ -462,6 +462,56 @@ const TransactionValues = {
      * User denied to give delivery address.
      */
     REJECTED: 'REJECTED'
+  },
+  /**
+   * List of possible order location types.
+   * @readonly
+   * @enum {string}
+   */
+  LocationType: {
+    /**
+     * Unknown.
+     */
+    UNKNOWN: 'UNKNOWN',
+    /**
+     * Delivery location for an order.
+     */
+    DELIVERY: 'DELIVERY',
+    /**
+     * Business location of order provider.
+     */
+    BUSINESS: 'BUSINESS',
+    /**
+     * Origin of the order.
+     */
+    ORIGIN: 'ORIGIN',
+    /**
+     * Destination of the order.
+     */
+    DESTINATION: 'DESTINATION'
+  },
+  /**
+   * List of possible order time types.
+   * @readonly
+   * @enum {string}
+   */
+  TimeType: {
+    /**
+     * Unknown.
+     */
+    UNKNOWN: 'UNKNOWN',
+    /**
+     * Date of delivery for the order.
+     */
+    DELIVERY_DATE: 'DELIVERY_DATE',
+    /**
+     * Estimated Time of Arrival for order.
+     */
+    ETA: 'ETA',
+    /**
+     * Reservation time.
+     */
+    RESERVATION_SLOT: 'RESERVATION_SLOT'
   }
 };
 
@@ -510,6 +560,13 @@ const Order = class {
      * @type {Price}
      */
     this.totalPrice = undefined;
+
+    /**
+     * Extensions for this order. Used for vertical-specific order attributes,
+     * like times and locations.
+     * @type {Object}
+     */
+    this.extension = undefined;
   }
 
   /**
@@ -622,6 +679,65 @@ const Order = class {
         nanos: nanos || 0
       }
     };
+    return this;
+  }
+
+  /**
+   * Adds an associated location to the order. Up to 2 locations can be added.
+   *
+   * @param {string} type One of TransactionValues.LocationType.
+   * @param {Location} location Location to add.
+   * @return {Order} Returns current constructed Order.
+   */
+  addLocation (type, location) {
+    if (!type) {
+      error('type cannot be empty');
+      return this;
+    }
+    if (!location) {
+      error('location cannot be null');
+      return this;
+    }
+    if (!this.extension) {
+      this.extension = {
+        '@type': GENERIC_EXTENSION_TYPE
+      };
+    }
+    if (!this.extension.locations) {
+      this.extension.locations = [];
+    }
+    if (this.extension.locations.length >= ORDER_LOCATION_LIMIT) {
+      error('Order can have no more than ' + ORDER_LOCATION_LIMIT +
+        ' associated locations');
+      return this;
+    }
+    this.extension.locations.push({ type, location });
+    return this;
+  }
+
+  /**
+   * Sets an associated time to the order.
+   *
+   * @param {string} type One of TransactionValues.TimeType.
+   * @param {string} time Time to add. Time should be ISO 8601 representation
+   *     of time value. Could be date, datetime, or duration.
+   * @return {Order} Returns current constructed Order.
+   */
+  setTime (type, time) {
+    if (!type) {
+      error('type cannot be empty');
+      return this;
+    }
+    if (!time) {
+      error('time cannot be empty');
+      return this;
+    }
+    if (!this.extension) {
+      this.extension = {
+        '@type': GENERIC_EXTENSION_TYPE
+      };
+    }
+    this.extension.time = { type, time_iso8601: time };
     return this;
   }
 };
