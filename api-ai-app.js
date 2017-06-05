@@ -14,10 +14,6 @@
  * limitations under the License.
  */
 
-/**
- * This is the class that handles the communication with API.ai's backend..
- */
-
 'use strict';
 
 const Debug = require('debug');
@@ -26,7 +22,6 @@ const error = Debug('actions-on-google:error');
 const app = require('./assistant-app');
 const AssistantApp = app.AssistantApp;
 const State = app.State;
-const transformToSnakeCase = require('./utils/transform').transformToSnakeCase;
 const transformToCamelCase = require('./utils/transform').transformToCamelCase;
 
 // Constants
@@ -56,26 +51,35 @@ error.log = console.error.bind(console);
 // ---------------------------------------------------------------------------
 
 /**
- * Constructor for ApiAiApp object. To be used in the API.AI
- * fulfillment webhook logic.
- *
- * @example
- * const ApiAiApp = require('actions-on-google').ApiAiApp;
- * const app = new ApiAiApp({request: request, response: response,
- *   sessionStarted:sessionStarted});
- *
- * @param {Object} options JSON configuration.
- * @param {Object} options.request Express HTTP request object.
- * @param {Object} options.response Express HTTP response object.
- * @param {Function=} options.sessionStarted Function callback when session starts.
- *     Only called if webhook is enabled for welcome/triggering intents, and
- *     called from Web Simulator or Google Home device (i.e., not API.AI simulator).
- * @apiai
+ * This is the class that handles the communication with API.AI's fulfillment API.
  */
-const ApiAiApp = class extends AssistantApp {
+class ApiAiApp extends AssistantApp {
+  /**
+   * Constructor for ApiAiApp object.
+   * To be used in the API.AI fulfillment webhook logic.
+   *
+   * @example
+   * const ApiAiApp = require('actions-on-google').ApiAiApp;
+   * const app = new ApiAiApp({request: request, response: response,
+   *   sessionStarted:sessionStarted});
+   *
+   * @param {Object} options JSON configuration.
+   * @param {Object} options.request Express HTTP request object.
+   * @param {Object} options.response Express HTTP response object.
+   * @param {Function=} options.sessionStarted Function callback when session starts.
+   *     Only called if webhook is enabled for welcome/triggering intents, and
+   *     called from Web Simulator or Google Home device (i.e., not API.AI simulator).
+   * @apiai
+   */
   constructor (options) {
     debug('ApiAiApp constructor');
-    super(options);
+    super(options, () => {
+      const originalRequest = this.body_.originalRequest;
+      if (!(originalRequest && originalRequest.data)) {
+        return null;
+      }
+      return originalRequest.data;
+    });
 
     // If request contains originalRequest, convert to Proto3.
     if (this.body_ && this.body_.originalRequest && !this.isNotApiVersionOne_()) {
@@ -94,294 +98,6 @@ const ApiAiApp = class extends AssistantApp {
         this.handleError_('options.sessionStarted must be a Function');
       }
     }
-  }
-
-  /**
-   * Gets the {@link User} object.
-   * The user object contains information about the user, including
-   * a string identifier and personal information (requires requesting permissions,
-   * see {@link AssistantApp#askForPermissions|askForPermissions}).
-   *
-   * @example
-   * const app = new ApiAiApp({request: request, response: response});
-   * const userId = app.getUser().userId;
-   *
-   * @return {User} Null if no value.
-   * @apiai
-   */
-  getUser () {
-    debug('getUser');
-    if (!(this.body_.originalRequest &&
-        this.body_.originalRequest.data &&
-        this.body_.originalRequest.data.user)) {
-      this.handleError_('No user object');
-      return null;
-    }
-    // User object includes original API properties
-    const user = {
-      userId: this.body_.originalRequest.data.user.userId,
-      user_id: this.body_.originalRequest.data.user.userId,
-      userName: this.body_.originalRequest.data.user.profile ? {
-        displayName: this.body_.originalRequest.data.user.profile.displayName,
-        givenName: this.body_.originalRequest.data.user.profile.givenName,
-        familyName: this.body_.originalRequest.data.user.profile.familyName
-      } : null,
-      profile: this.body_.originalRequest.data.user.profile,
-      accessToken: this.body_.originalRequest.data.user.accessToken,
-      access_token: this.body_.originalRequest.data.user.accessToken,
-      locale: this.body_.originalRequest.data.user.locale
-    };
-    return user;
-  }
-
-  /**
-   * If granted permission to device's location in previous intent, returns device's
-   * location (see {@link AssistantApp#askForPermissions|askForPermissions}).
-   * If device info is unavailable, returns null.
-   *
-   * @example
-   * const app = new ApiAiApp({request: req, response: res});
-   * app.askForPermission("To get you a ride",
-   *   app.SupportedPermissions.DEVICE_PRECISE_LOCATION);
-   * // ...
-   * // In response handler for permissions fallback intent:
-   * if (app.isPermissionGranted()) {
-   *   sendCarTo(app.getDeviceLocation().coordinates);
-   * }
-   *
-   * @return {DeviceLocation} Null if location permission is not granted.
-   * @apiai
-   */
-  getDeviceLocation () {
-    debug('getDeviceLocation');
-    if (!this.body_.originalRequest.data.device || !this.body_.originalRequest.data.device.location) {
-      return null;
-    }
-    const deviceLocation = {
-      coordinates: this.body_.originalRequest.data.device.location.coordinates,
-      address: this.body_.originalRequest.data.device.location.formattedAddress,
-      zipCode: this.body_.originalRequest.data.device.location.zipCode,
-      city: this.body_.originalRequest.data.device.location.city
-    };
-    return deviceLocation;
-  }
-
-  /**
-   * Gets transactability of user. Only use after calling
-   * askForTransactionRequirements. Null if no result given.
-   *
-   * @return {string} One of Transactions.ResultType.
-   * @apiai
-   */
-  getTransactionRequirementsResult () {
-    debug('getTransactionRequirementsResult');
-    if (this.body_.originalRequest && this.body_.originalRequest.data &&
-      this.body_.originalRequest.data.inputs) {
-      for (let input of this.body_.originalRequest.data.inputs) {
-        if (input.arguments) {
-          for (let argument of input.arguments) {
-            if (argument.name === this.BuiltInArgNames.TRANSACTION_REQ_CHECK_RESULT &&
-              argument.extension && argument.extension.resultType) {
-              return argument.extension.resultType;
-            }
-          }
-        }
-      }
-    }
-    return null;
-  }
-
-  /**
-   * Gets order delivery address. Only use after calling askForDeliveryAddress.
-   *
-   * @return {Location} Delivery address information. Null if user
-   *     denies permission, or no address given.
-   * @apiai
-   */
-  getDeliveryAddress () {
-    debug('getDeliveryAddress');
-    if (this.body_.originalRequest && this.body_.originalRequest.data &&
-         this.body_.originalRequest.data.inputs) {
-      for (let input of this.body_.originalRequest.data.inputs) {
-        if (input.arguments) {
-          for (let argument of input.arguments) {
-            if ((argument.name === this.BuiltInArgNames.DELIVERY_ADDRESS_VALUE ||
-                 argument.name === this.BuiltInArgNames.TRANSACTION_DECISION_VALUE) &&
-                 argument.extension) {
-              if (argument.extension.userDecision ===
-                   this.Transactions.DeliveryAddressDecision.ACCEPTED) {
-                const locationValue = argument.extension.location;
-                if (!locationValue.postalAddress) {
-                  debug('User accepted, but may not have configured address in app');
-                  return null;
-                }
-                return locationValue;
-              } else {
-                debug('User rejected giving delivery address');
-                return null;
-              }
-            }
-          }
-        }
-      }
-    }
-    debug('Failed to get order delivery address');
-    return null;
-  }
-
-  /**
-   * Gets transaction decision information. Only use after calling
-   * askForTransactionDecision.
-   *
-   * @return {TransactionDecision} Transaction decision data. Returns object with
-   *     userDecision only if user declines. userDecision will be one of
-   *     Transactions.ConfirmationDecision. Null if no decision given.
-   * @apiai
-   */
-  getTransactionDecision () {
-    debug('getTransactionDecision');
-    if (this.body_.originalRequest && this.body_.originalRequest.data &&
-      this.body_.originalRequest.data.inputs) {
-      for (let input of this.body_.originalRequest.data.inputs) {
-        if (input.arguments) {
-          for (let argument of input.arguments) {
-            if (argument.name === this.BuiltInArgNames.TRANSACTION_DECISION_VALUE &&
-              argument.extension) {
-              return argument.extension;
-            }
-          }
-        }
-      }
-    }
-    debug('Failed to get order decision information');
-    return null;
-  }
-
-  /**
-   * Gets confirmation decision. Use after askForConfirmation.
-   *
-   * @return {boolean} True if the user replied with affirmative response.
-   *     False if user replied with negative response. Null if no user
-   *     confirmation decision given.
-   * @apiai
-   */
-  getUserConfirmation () {
-    debug('getUserConfirmation');
-    if (this.body_.originalRequest && this.body_.originalRequest.data &&
-      this.body_.originalRequest.data.inputs) {
-      for (let input of this.body_.originalRequest.data.inputs) {
-        if (input.arguments) {
-          for (let argument of input.arguments) {
-            return argument.name === this.BuiltInArgNames.CONFIRMATION &&
-              argument.boolValue;
-          }
-        }
-      }
-    }
-    debug('Failed to get confirmation decision information');
-    return null;
-  }
-
-  /**
-   * Gets user provided date and time. Use after askForDateTime.
-   *
-   * @return {DateTime} Date and time given by the user. Null if no user
-   *     date and time given.
-   * @apiai
-   */
-  getDateTime () {
-    debug('getDateTime');
-    if (this.body_.originalRequest && this.body_.originalRequest.data &&
-      this.body_.originalRequest.data.inputs) {
-      for (let input of this.body_.originalRequest.data.inputs) {
-        if (input.arguments) {
-          for (let argument of input.arguments) {
-            if (argument.name === this.BuiltInArgNames.DATETIME &&
-              argument.datetimeValue) {
-              return argument.datetimeValue;
-            }
-          }
-        }
-      }
-    }
-    debug('Failed to get date/time information');
-    return null;
-  }
-
-  /**
-   * Gets status of user sign in request.
-   *
-   * @return {string} Result of user sign in request. One of
-   *     ApiAiApp.SignInStatus. Null if no sign in status.
-   * @apiai
-   */
-  getSignInStatus () {
-    debug('getSignInStatus');
-    if (this.body_.originalRequest && this.body_.originalRequest.data &&
-      this.body_.originalRequest.data.inputs) {
-      for (let input of this.body_.originalRequest.data.inputs) {
-        if (input.arguments) {
-          for (let argument of input.arguments) {
-            if (argument.name === this.BuiltInArgNames.SIGN_IN &&
-              argument.extension && argument.extension.status) {
-              return argument.extension.status;
-            }
-          }
-        }
-      }
-    }
-    debug('Failed to get sign in status');
-    return null;
-  }
-
-  /**
-   * Returns true if the request follows a previous request asking for
-   * permission from the user and the user granted the permission(s). Otherwise,
-   * false. Use with {@link AssistantApp#askForPermissions|askForPermissions}.
-   *
-   * @example
-   * const app = new ApiAiApp({request: request, response: response});
-   * app.askForPermissions("To get you a ride", [
-   *   app.SupportedPermissions.NAME,
-   *   app.SupportedPermissions.DEVICE_PRECISE_LOCATION
-   * ]);
-   * // ...
-   * // In response handler for permissions fallback intent:
-   * if (app.isPermissionGranted()) {
-   *  // Use the requested permission(s) to get the user a ride
-   * }
-   *
-   * @return {boolean} True if permissions granted.
-   * @apiai
-   */
-  isPermissionGranted () {
-    debug('isPermissionGranted');
-    if (this.body_.originalRequest && this.body_.originalRequest.data &&
-      this.body_.originalRequest.data.inputs) {
-      for (let input of this.body_.originalRequest.data.inputs) {
-        if (input.arguments) {
-          for (let argument of input.arguments) {
-            return argument.name === this.BuiltInArgNames.PERMISSION_GRANTED &&
-              argument.textValue === 'true';
-          }
-        }
-      }
-    }
-    return false;
-  }
-
-  /**
-   * Returns true if the app is being tested in sandbox mode. Enable sandbox
-   * mode in the (Actions console)[console.actions.google.com] to test
-   * transactions.
-   *
-   * @return {boolean} True if app is being used in Sandbox mode.
-   * @apiai
-   */
-  isInSandbox () {
-    return this.body_ && this.body_.originalRequest &&
-      this.body_.originalRequest.data &&
-      this.body_.originalRequest.data.isInSandbox;
   }
 
   /**
@@ -405,57 +121,6 @@ const ApiAiApp = class extends AssistantApp {
       return false;
     }
     return this.request_.get(key) === value;
-  }
-
-  /**
-   * Gets surface capabilities of user device.
-   *
-   * @return {Array<string>} Supported surface capabilities, as defined in
-   *     AssistantApp.SurfaceCapabilities.
-   * @apiai
-   */
-  getSurfaceCapabilities () {
-    debug('getSurfaceCapabilities');
-    if (this.body_.originalRequest &&
-      this.body_.originalRequest.data &&
-      this.body_.originalRequest.data.surface &&
-      this.body_.originalRequest.data.surface.capabilities) {
-      const capabilities = [];
-      for (let capability of this.body_.originalRequest.data.surface.capabilities) {
-        capabilities.push(capability.name);
-      }
-      return capabilities;
-    } else {
-      error('No surface capabilities in incoming request');
-      return null;
-    }
-  }
-
-  /**
-   * Gets type of input used for this request.
-   *
-   * @return {number} One of ApiAiApp.InputTypes.
-   *     Null if no input type given.
-   * @apiai
-   */
-  getInputType () {
-    debug('getInputType');
-    if (this.body_.originalRequest &&
-      this.body_.originalRequest.data &&
-      this.body_.originalRequest.data.inputs) {
-      for (let input of this.body_.originalRequest.data.inputs) {
-        if (input.rawInputs) {
-          for (let rawInput of input.rawInputs) {
-            if (rawInput.inputType) {
-              return rawInput.inputType;
-            }
-          }
-        }
-      }
-    } else {
-      error('No input type in incoming request');
-      return null;
-    }
   }
 
   /**
@@ -533,31 +198,11 @@ const ApiAiApp = class extends AssistantApp {
       this.handleError_('Invalid argument name');
       return null;
     }
-    if (this.body_.result.parameters && this.body_.result.parameters[argName]) {
-      return this.body_.result.parameters[argName];
+    const { parameters } = this.body_.result;
+    if (parameters && parameters[argName]) {
+      return parameters[argName];
     }
-    if (this.body_.originalRequest && this.body_.originalRequest.data &&
-      this.body_.originalRequest.data.inputs) {
-      for (let input of this.body_.originalRequest.data.inputs) {
-        if (input.arguments) {
-          for (let argument of input.arguments) {
-            if (argument.name === argName) {
-              if (argument.textValue) {
-                return argument.textValue;
-              } else {
-                if (!this.isNotApiVersionOne_()) {
-                  return transformToSnakeCase(argument);
-                } else {
-                  return argument;
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-    debug('Failed to get argument value: %s', argName);
-    return null;
+    return this.getArgumentCommon(argName);
   }
 
   /**
@@ -1555,6 +1200,6 @@ const ApiAiApp = class extends AssistantApp {
     response.data.google.systemIntent.data = {};
     return this.doResponse_(response, RESPONSE_CODE_OK);
   }
-};
+}
 
 module.exports = ApiAiApp;

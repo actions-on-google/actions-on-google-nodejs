@@ -117,4 +117,3 @@ module.exports = {
   transformToCamelCase,
   transformToSnakeCase
 };
-

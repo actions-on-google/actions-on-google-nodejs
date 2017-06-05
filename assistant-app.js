@@ -1,5 +1,5 @@
 /**
- * Copyright 201 Google Inc. All Rights Reserved.
+ * Copyright 2017 Google Inc. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,19 +14,14 @@
  * limitations under the License.
  */
 
-/**
- * The Actions on Google client library AssistantApp base class.
- *
- * This class contains the methods that are shared between platforms to support the conversation API
- * protocol from Assistant. It also exports the 'State' class as a helper to represent states by
- * name.
- */
-
 'use strict';
 
 const Debug = require('debug');
 const debug = Debug('actions-on-google:debug');
 const error = Debug('actions-on-google:error');
+
+// RequestExtractor
+const RequestExtractor = require('./request-extractor');
 
 // Response Builder classes
 const RichResponse = require('./response-builder').RichResponse;
@@ -61,17 +56,26 @@ debug.log = console.log.bind(console);
 error.log = console.error.bind(console);
 
 /**
- * Constructor for AssistantApp object.
- * Should not be instantiated; rather instantiate one of the subclasses
- * {@link ActionsSdkApp} or {@link ApiAiApp}.
+ * The Actions on Google client library AssistantApp base class.
  *
- * @param {Object} options JSON configuration.
- * @param {Object} options.request Express HTTP request object.
- * @param {Object} options.response Express HTTP response object.
- * @param {Function=} options.sessionStarted Function callback when session starts.
+ * This class contains the methods that are shared between platforms to support the conversation API
+ * protocol from Assistant. It also exports the 'State' class as a helper to represent states by
+ * name.
  */
-const AssistantApp = class {
-  constructor (options) {
+class AssistantApp {
+  /**
+   * Constructor for AssistantApp object.
+   * Should not be instantiated; rather instantiate one of the subclasses
+   * {@link ActionsSdkApp} or {@link ApiAiApp}.
+   *
+   * @param {Object} options JSON configuration.
+   * @param {Object} options.request Express HTTP request object.
+   * @param {Object} options.response Express HTTP response object.
+   * @param {Function=} options.sessionStarted Function callback when session starts.
+   * @param {function(): *} requestData Function that returns the
+   *     request data object to be processed.
+   */
+  constructor (options, requestData) {
     debug('AssistantApp constructor');
 
     if (!options) {
@@ -419,6 +423,12 @@ const AssistantApp = class {
      * @type {object}
      */
     this.Transactions = TransactionValues;
+
+    /**
+     * RequestExtractor for extracting common request data
+     */
+    const requestExtractor = new RequestExtractor(requestData);
+    requestExtractor.inject(this);
   }
 
   // ---------------------------------------------------------------------------
@@ -1524,7 +1534,7 @@ const AssistantApp = class {
     }
     return paymentOptions;
   }
-};
+}
 
 /**
  * Utility class for representing intents by name.

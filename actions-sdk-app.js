@@ -14,11 +14,6 @@
  * limitations under the License.
  */
 
-/**
- * This is the class that handles the converstaion API directly from Assistant, providing
- * implementation for all the methods available in the API.
- */
-
 'use strict';
 
 const Debug = require('debug');
@@ -27,7 +22,6 @@ const error = Debug('actions-on-google:error');
 const app = require('./assistant-app');
 const AssistantApp = app.AssistantApp;
 const State = app.State;
-const transformToSnakeCase = require('./utils/transform').transformToSnakeCase;
 const transformToCamelCase = require('./utils/transform').transformToCamelCase;
 
 // Constants
@@ -44,24 +38,28 @@ error.log = console.error.bind(console);
 // ---------------------------------------------------------------------------
 
 /**
- * Constructor for ActionsSdkApp object. To be used in the Actions SDK
- * HTTP endpoint logic.
- *
- * @example
- * const ActionsSdkApp = require('actions-on-google').ActionsSdkApp;
- * const app = new ActionsSdkApp({request: request, response: response,
- *   sessionStarted:sessionStarted});
- *
- * @param {Object} options JSON configuration.
- * @param {Object} options.request Express HTTP request object.
- * @param {Object} options.response Express HTTP response object.
- * @param {Function=} options.sessionStarted Function callback when session starts.
- * @actionssdk
+ * This is the class that handles the conversation API directly from Assistant,
+ * providing implementation for all the methods available in the API.
  */
-const ActionsSdkApp = class extends AssistantApp {
+class ActionsSdkApp extends AssistantApp {
+  /**
+   * Constructor for ActionsSdkApp object.
+   * To be used in the Actions SDK HTTP endpoint logic.
+   *
+   * @example
+   * const ActionsSdkApp = require('actions-on-google').ActionsSdkApp;
+   * const app = new ActionsSdkApp({request: request, response: response,
+   *   sessionStarted:sessionStarted});
+   *
+   * @param {Object} options JSON configuration.
+   * @param {Object} options.request Express HTTP request object.
+   * @param {Object} options.response Express HTTP response object.
+   * @param {Function=} options.sessionStarted Function callback when session starts.
+   * @actionssdk
+   */
   constructor (options) {
     debug('ActionsSdkApp constructor');
-    super(options);
+    super(options, () => this.body_);
 
     // If request is from AoG and in Proto2 format, convert to Proto3.
     if (this.body_ && !this.isNotApiVersionOne_()) {
@@ -144,228 +142,6 @@ const ActionsSdkApp = class extends AssistantApp {
   }
 
   /**
-   * Gets the {@link User} object.
-   * The user object contains information about the user, including
-   * a string identifier and personal information (requires requesting permissions,
-   * see {@link AssistantApp#askForPermissions|askForPermissions}).
-   *
-   * @example
-   * const app = new ActionsSdkApp({request: request, response: response});
-   * const userId = app.getUser().userId;
-   *
-   * @return {User} Null if no value.
-   * @actionssdk
-   */
-  getUser () {
-    debug('getUser');
-    if (!this.body_.user) {
-      this.handleError_('No user object');
-      return null;
-    }
-    // User object includes original API properties
-    const user = {
-      userId: this.body_.user.userId,
-      user_id: this.body_.user.userId,
-      userName: this.body_.user.profile ? {
-        displayName: this.body_.user.profile.displayName,
-        givenName: this.body_.user.profile.givenName,
-        familyName: this.body_.user.profile.familyName
-      } : null,
-      profile: this.body_.user.profile,
-      accessToken: this.body_.user.accessToken,
-      access_token: this.body_.user.accessToken,
-      locale: this.body_.user.locale
-    };
-    return user;
-  }
-
-  /**
-   * If granted permission to device's location in previous intent, returns device's
-   * location (see {@link AssistantApp#askForPermissions|askForPermissions}).
-   * If device info is unavailable, returns null.
-   *
-   * @example
-   * const app = new ActionsSdkApp({request: req, response: res});
-   * app.askForPermission("To get you a ride",
-   *   app.SupportedPermissions.DEVICE_PRECISE_LOCATION);
-   * // ...
-   * // In response handler for subsequent intent:
-   * if (app.isPermissionGranted()) {
-   *   sendCarTo(app.getDeviceLocation().coordinates);
-   * }
-   *
-   * @return {DeviceLocation} Null if location permission is not granted.
-   * @actionssdk
-   */
-  getDeviceLocation () {
-    debug('getDeviceLocation');
-    if (!this.body_.device || !this.body_.device.location) {
-      return null;
-    }
-    const deviceLocation = {
-      coordinates: this.body_.device.location.coordinates,
-      address: this.body_.device.location.formattedAddress,
-      zipCode: this.body_.device.location.zipCode,
-      city: this.body_.device.location.city
-    };
-    return deviceLocation;
-  }
-
-  /**
-   * Gets transactability of user. Only use after calling
-   * askForTransactionRequirements. Null if no result given.
-   *
-   * @return {string} One of Transactions.ResultType.
-   * @actionssdk
-   */
-  getTransactionRequirementsResult () {
-    debug('getTransactionRequirementsResult');
-    let result = this.getArgument_(this.BuiltInArgNames.TRANSACTION_REQ_CHECK_RESULT);
-    if (result && result.extension && result.extension.resultType) {
-      return result.extension.resultType;
-    }
-    debug('Failed to get transaction requirements result');
-    return null;
-  }
-
-  /**
-   * Gets transaction decision information. Only use after calling
-   * askForTransactionDecision.
-   *
-   * @return {TransactionDecision} Transaction decision data. Returns object with
-   *     userDecision. userDecision will be one of
-   *     Transactions.ConfirmationDecision. Null if no decision given.
-   * @actionssdk
-   */
-  getTransactionDecision () {
-    debug('getTransactionDecision');
-    let result = this.getArgument_(this.BuiltInArgNames.TRANSACTION_DECISION_VALUE);
-    if (result && result.extension) {
-      return result.extension;
-    }
-    debug('Failed to get transaction decision information');
-    return null;
-  }
-
-  /**
-   * Gets confirmation decision. Use after askForConfirmation.
-   *
-   * @return {boolean} True if the user replied with affirmative response.
-   *     False if user replied with negative response. Null if no user
-   *     confirmation decision given.
-   * @actionssdk
-   */
-  getUserConfirmation () {
-    debug('getUserConfirmation');
-    let result = this.getArgument_(this.BuiltInArgNames.CONFIRMATION);
-    if (result && result.boolValue !== undefined) {
-      return result.boolValue;
-    }
-    debug('Failed to get user confirmation information');
-    return null;
-  }
-
-  /**
-   * Gets user provided date and time. Use after askForDateTime.
-   *
-   * @return {DateTime} Date and time given by the user. Null if no user
-   *     date and time given.
-   * @actionssdk
-   */
-  getDateTime () {
-    debug('getDateTime');
-    let result = this.getArgument_(this.BuiltInArgNames.DATETIME);
-    if (result && result.datetimeValue) {
-      return result.datetimeValue;
-    }
-    debug('Failed to get date/time information');
-    return null;
-  }
-
-  /**
-   * Gets status of user sign in request.
-   *
-   * @return {string} Result of user sign in request. One of
-   *     ActionsSdkApp.SignInStatus. Null if no sign in status.
-   * @actionssdk
-   */
-  getSignInStatus () {
-    debug('getSignInStatus');
-    let result = this.getArgument_(this.BuiltInArgNames.SIGN_IN);
-    if (result && result.extension && result.extension.status) {
-      return result.extension.status;
-    }
-    debug('Failed to get sign in status');
-    return null;
-  }
-
-  /**
-   * Gets order delivery address. Only use after calling askForDeliveryAddress.
-   *
-   * @return {Location} Delivery address information. Null if user
-   *     denies permission, or no address given.
-   * @actionssdk
-   */
-  getDeliveryAddress () {
-    debug('getDeliveryAddress');
-    let result = this.getArgument_(this.BuiltInArgNames.DELIVERY_ADDRESS_VALUE) ||
-      this.getArgument_(this.BuiltInArgNames.TRANSACTION_DECISION_VALUE);
-    if (!result || !result.extension) {
-      debug('Failed to get order delivery address');
-      return null;
-    }
-    if (result.extension.userDecision ===
-      this.Transactions.DeliveryAddressDecision.ACCEPTED) {
-      const locationValue = result.extension.location;
-      if (!locationValue.postalAddress) {
-        debug('User accepted, but may not have configured address in app');
-        return null;
-      }
-      return locationValue;
-    } else {
-      debug('User rejected giving delivery address');
-      return null;
-    }
-  }
-
-  /**
-   * Returns true if the request follows a previous request asking for
-   * permission from the user and the user granted the permission(s). Otherwise,
-   * false. Use with {@link AssistantApp#askForPermissions|askForPermissions}.
-   *
-   * @example
-   * const app = new ActionsSdkApp({request: request, response: response});
-   * app.askForPermissions("To get you a ride", [
-   *   app.SupportedPermissions.NAME,
-   *   app.SupportedPermissions.DEVICE_PRECISE_LOCATION
-   * ]);
-   * // ...
-   * // In response handler for subsequent intent:
-   * if (app.isPermissionGranted()) {
-   *  // Use the requested permission(s) to get the user a ride
-   * }
-   *
-   * @return {boolean} true if permissions granted.
-   * @actionssdk
-   */
-  isPermissionGranted () {
-    debug('isPermissionGranted');
-    return this.getArgument(this.BuiltInArgNames.PERMISSION_GRANTED) === 'true';
-  }
-
-  /**
-   * Returns true if the app is being tested in sandbox mode. Enable sandbox
-   * mode in the (Actions console)[console.actions.google.com] to test
-   * transactions.
-   *
-   * @return {boolean} True if app is being used in Sandbox mode.
-   * @actionssdk
-   */
-  isInSandbox () {
-    return this.body_ && this.body_.isInSandbox;
-  }
-
-  /**
    * Gets the "versionLabel" specified inside the Action Package.
    * Used by app to do version control.
    *
@@ -444,53 +220,6 @@ const ActionsSdkApp = class extends AssistantApp {
   }
 
   /**
-   * Gets surface capabilities of user device.
-   *
-   * @return {Array<string>} Supported surface capabilities, as defined in
-   *     ActionsSdkApp.SurfaceCapabilities.
-   * @actionssdk
-   */
-  getSurfaceCapabilities () {
-    debug('getSurfaceCapabilities');
-    if (this.body_.surface &&
-      this.body_.surface.capabilities) {
-      const capabilities = [];
-      for (let capability of this.body_.surface.capabilities) {
-        capabilities.push(capability.name);
-      }
-      return capabilities;
-    } else {
-      error('No surface capabilities in incoming request');
-      return null;
-    }
-  }
-
-  /**
-   * Gets type of input used for this request.
-   *
-   * @return {number} One of ActionsSdkApp.InputTypes.
-   *     Null if no input type given.
-   * @actionssdk
-   */
-  getInputType () {
-    debug('getInputType');
-    if (this.body_.inputs) {
-      for (let input of this.body_.inputs) {
-        if (input.rawInputs) {
-          for (let rawInput of input.rawInputs) {
-            if (rawInput.inputType) {
-              return rawInput.inputType;
-            }
-          }
-        }
-      }
-    } else {
-      error('No input type in incoming request');
-      return null;
-    }
-  }
-
-  /**
    * Get the argument value by name from the current intent. If the argument
    * is not a text argument, the entire argument object is returned.
    *
@@ -503,24 +232,7 @@ const ActionsSdkApp = class extends AssistantApp {
    * @actionssdk
    */
   getArgument (argName) {
-    debug('getArgument: argName=%s', argName);
-    if (!argName) {
-      this.handleError_('Invalid argument name');
-      return null;
-    }
-    const argument = this.getArgument_(argName);
-    if (!argument) {
-      debug('Failed to get argument value: %s', argName);
-      return null;
-    } else if (argument.textValue) {
-      return argument.textValue;
-    } else {
-      if (!this.isNotApiVersionOne_()) {
-        return transformToSnakeCase(argument);
-      } else {
-        return argument;
-      }
-    }
+    return this.getArgumentCommon(argName);
   }
 
   /**
@@ -1003,39 +715,6 @@ const ActionsSdkApp = class extends AssistantApp {
   }
 
   /**
-   * Get the argument by name from the current action.
-   *
-   * @param {string} argName Name of the argument.
-   * @return {Object} Argument value matching argName
-         or null if no matching argument.
-   * @private
-   * @actionssdk
-   */
-  getArgument_ (argName) {
-    debug('getArgument_: argName=%s', argName);
-    if (!argName) {
-      this.handleError_('Invalid argument name');
-      return null;
-    }
-    const input = this.getTopInput_();
-    if (!input) {
-      this.handleError_('Missing action');
-      return null;
-    }
-    if (!input.arguments) {
-      debug('No arguments included in request');
-      return null;
-    }
-    for (let i = 0; i < input.arguments.length; i++) {
-      if (input.arguments[i].name === argName) {
-        return input.arguments[i];
-      }
-    }
-    debug('Failed to find argument: %s', argName);
-    return null;
-  }
-
-  /**
    * Extract session data from the incoming JSON request.
    *
    * @private
@@ -1318,6 +997,6 @@ const ActionsSdkApp = class extends AssistantApp {
     };
     return expectedIntent;
   }
-};
+}
 
 module.exports = ActionsSdkApp;
