@@ -173,7 +173,8 @@ const ActionsSdkApp = class extends AssistantApp {
       } : null,
       profile: this.body_.user.profile,
       accessToken: this.body_.user.accessToken,
-      access_token: this.body_.user.accessToken
+      access_token: this.body_.user.accessToken,
+      locale: this.body_.user.locale
     };
     return user;
   }

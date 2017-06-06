@@ -167,7 +167,8 @@ function apiAiAppRequestBodyNewSession () {
           }
         ],
         'user': {
-          'user_id': fakeUserId
+          'user_id': fakeUserId,
+          'locale': 'en-US'
         },
         'conversation': {
           'conversation_id': fakeConversationId,
@@ -904,6 +905,35 @@ describe('ApiAiApp#getUserName', function () {
     mockRequest = new MockRequest(headerV1, body);
     app = new ApiAiApp({request: mockRequest, response: mockResponse});
     expect(app.getUserName()).to.equal(null);
+  });
+});
+
+/**
+ * Describes the behavior for ApiAiApp getUserLocale method.
+ */
+describe('ApiAiApp#getUserLocale', function () {
+  let mockResponse, body;
+
+  beforeEach(function () {
+    mockResponse = new MockResponse();
+    body = createLiveSessionApiAppBody();
+  });
+
+  // Success case test, when the API returns a valid 200 response with the response object
+  it('Should validate assistant request user with locale.', function () {
+    let mockRequest, app;
+    mockRequest = new MockRequest(headerV1, body);
+    app = new ApiAiApp({request: mockRequest, response: mockResponse});
+    expect(app.getUserLocale()).to.equal('en-US');
+  });
+
+  // Failure case
+  it('Should return null for missing locale.', function () {
+    let mockRequest, app;
+    body.originalRequest.data.user.locale = undefined;
+    mockRequest = new MockRequest(headerV1, body);
+    app = new ApiAiApp({request: mockRequest, response: mockResponse});
+    expect(app.getUserLocale()).to.equal(null);
   });
 });
 
@@ -3966,6 +3996,35 @@ describe('ActionsSdkApp#getUserName', function () {
     body.user.profile = undefined;
     initMockApp();
     expect(app.getUserName()).to.equal(null);
+  });
+});
+
+/**
+ * Describes the behavior for ActionsSdkApp getUserLocale method.
+ */
+describe('ActionsSdkApp#getUserLocale', function () {
+  let mockRequest, mockResponse, app, body;
+  function initMockApp () {
+    mockRequest = new MockRequest(headerV1, body);
+    mockResponse = new MockResponse();
+    app = new ActionsSdkApp({
+      request: mockRequest,
+      response: mockResponse
+    });
+  }
+  it('Should validate assistant request user with locale.', function () {
+    body = createLiveSessionActionsSdkAppBody();
+    body.user.locale = 'en-US';
+    initMockApp();
+    expect(app.getUserLocale()).to.equal('en-US');
+  });
+
+  it('Should return null for missing locale.', function () {
+    body = createLiveSessionActionsSdkAppBody();
+    // Test the false case
+    body.user.locale = undefined;
+    initMockApp();
+    expect(app.getUserLocale()).to.equal(null);
   });
 });
 
