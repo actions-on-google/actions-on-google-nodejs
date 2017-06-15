@@ -9,7 +9,7 @@
     "test": "test"
   },
   "scripts": {
-    "lint": "semistandard --fix \"**/*.js\"",
+    "lint": "eslint --fix \"**/*.js\"",
     "test": "npm run lint && ./node_modules/.bin/mocha --reporter spec ./test/*.js"
   },
   "repository": {
@@ -44,8 +44,16 @@
   "devDependencies": {
     "chai": "^3.5.0",
     "chai-spies": "^0.7.1",
+    "eslint": "^3.19.0",
+    "eslint-config-semistandard": "^11.0.0",
+    "eslint-config-standard": "^10.2.1",
+    "eslint-plugin-chai-expect": "^1.1.1",
+    "eslint-plugin-chai-friendly": "^0.3.6",
+    "eslint-plugin-import": "^2.3.0",
+    "eslint-plugin-node": "^5.0.0",
+    "eslint-plugin-promise": "^3.5.0",
+    "eslint-plugin-standard": "^3.0.1",
     "mocha": "^3.0.2",
-    "winston": "2.2.0",
-    "semistandard": "^9.1.0"
+    "winston": "2.2.0"
   }
 }
