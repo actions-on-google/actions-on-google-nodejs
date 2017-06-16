@@ -28,6 +28,7 @@ const transformToCamelCase = require('./utils/transform').transformToCamelCase;
 const CONVERSATION_API_AGENT_VERSION_HEADER = 'Agent-Version-Label';
 const RESPONSE_CODE_OK = 200;
 const INPUTS_MAX = 3;
+const CONVERSATION_API_SIGNATURE_HEADER = 'authorization';
 
 // Configure logging for hosting platforms that only support console.log and console.error
 debug.log = console.log.bind(console);
@@ -75,6 +76,50 @@ class ActionsSdkApp extends AssistantApp {
     } else if (this.sessionStarted_ && typeof this.sessionStarted_ !== 'function') {
       this.handleError_('options.sessionStarted must be a Function');
     }
+  }
+
+  /*
+   * Validates whether request is from Assistant through signature verification.
+   * Uses Google-Auth-Library to verify authorization token against given
+   * Google Cloud Project ID. Auth token is given in request header with key,
+   * "Authorization".
+   *
+   * @example
+   * const app = new ActionsSdkApp({request, response});
+   * app.isRequestFromAssistant('nodejs-cloud-test-project-1234')
+   *   .then(() => {
+   *     app.ask('Hey there, thanks for stopping by!');
+   *   })
+   *   .catch(err => {
+   *     response.status(400).send();
+   *   });
+   *
+   * @param {string} projectId Google Cloud Project ID for the Assistant app.
+   * @param {Promise} Promise resolving with ID token if request is from
+   *     a valid source, otherwise rejects with the error reason for an invalid
+   *     token.
+   * @actionssdk
+   */
+  isRequestFromAssistant (projectId) {
+    debug('isRequestFromAssistant: projectId=%s', projectId);
+    const googleAuthClient = require('./utils/auth').googleAuthClient;
+    const jwtToken = this.request_.get(CONVERSATION_API_SIGNATURE_HEADER);
+
+    return new Promise((resolve, reject) => {
+      if (!jwtToken) {
+        const errorMsg = 'No incoming API Signature JWT token';
+        error(errorMsg);
+        reject(errorMsg);
+      }
+      googleAuthClient.verifyIdToken(jwtToken, projectId, (err, idToken) => {
+        if (err) {
+          error('ID token verification Failed: ' + err);
+          reject(err);
+        } else {
+          resolve(idToken);
+        }
+      });
+    });
   }
 
   /*
