@@ -180,7 +180,7 @@ const ActionsSdkApp = class extends AssistantApp {
 
   /**
    * If granted permission to device's location in previous intent, returns device's
-   * location (see {@link AssistantApp#askForPermissions|askForPermissoins}).
+   * location (see {@link AssistantApp#askForPermissions|askForPermissions}).
    * If device info is unavailable, returns null.
    *
    * @example
