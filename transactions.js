@@ -610,7 +610,7 @@ const Order = class {
       error('currencyCode cannot be empty');
       return this;
     }
-    if (!units) {
+    if (typeof units !== 'number' || Number.isNaN(units)) {
       error('Invalid units');
       return this;
     }
@@ -883,7 +883,7 @@ const LineItem = class {
       error('currencyCode cannot be empty');
       return this;
     }
-    if (!units) {
+    if (typeof units !== 'number' || Number.isNaN(units)) {
       error('Invalid units');
       return this;
     }
@@ -1124,7 +1124,7 @@ const OrderUpdate = class {
       error('currencyCode cannot be empty');
       return this;
     }
-    if (!units) {
+    if (typeof units !== 'number' || Number.isNaN(units)) {
       error('Invalid units');
       return this;
     }
@@ -1198,7 +1198,7 @@ const OrderUpdate = class {
       error('currencyCode cannot be empty');
       return this;
     }
-    if (!units) {
+    if (typeof units !== 'number' || Number.isNaN(units)) {
       error('Invalid units');
       return this;
     }
