@@ -1492,7 +1492,10 @@ describe('ApiAiApp#askForTransactionDecision', function () {
         'VISA',
         'MASTERCARD'
       ],
-      prepaidCardDisallowed: false
+      prepaidCardDisallowed: false,
+      customerInfoOptions: [
+        'EMAIL'
+      ]
     };
 
     app.askForTransactionDecision({ fakeOrderId: 'order_id' }, transactionConfig);
@@ -1510,7 +1513,10 @@ describe('ApiAiApp#askForTransactionDecision', function () {
               '@type': 'type.googleapis.com/google.actions.v2.TransactionDecisionValueSpec',
               'proposedOrder': { 'fakeOrderId': 'order_id' },
               'orderOptions': {
-                'requestDeliveryAddress': true
+                'requestDeliveryAddress': true,
+                'customerInfoOptions': [
+                  'EMAIL'
+                ]
               },
               'paymentOptions': {
                 'googleProvidedOptions': {
@@ -1548,7 +1554,10 @@ describe('ApiAiApp#askForTransactionDecision', function () {
     let transactionConfig = {
       deliveryAddressRequired: true,
       type: 'BANK',
-      displayName: 'Checking-4773'
+      displayName: 'Checking-4773',
+      customerInfoOptions: [
+        'EMAIL'
+      ]
     };
 
     app.askForTransactionDecision({ fakeOrderId: 'order_id' }, transactionConfig);
@@ -1566,7 +1575,10 @@ describe('ApiAiApp#askForTransactionDecision', function () {
               '@type': 'type.googleapis.com/google.actions.v2.TransactionDecisionValueSpec',
               'proposedOrder': { 'fakeOrderId': 'order_id' },
               'orderOptions': {
-                'requestDeliveryAddress': true
+                'requestDeliveryAddress': true,
+                'customerInfoOptions': [
+                  'EMAIL'
+                ]
               },
               'paymentOptions': {
                 'actionProvidedOptions': {

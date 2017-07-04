@@ -85,6 +85,7 @@ const error = Debug('actions-on-google:error');
  * @property {boolean} type - One of Transactions.PaymentType.
  * @property {string} displayName - The name of the instrument displayed on
  *     receipt. For example, for card payment, could be "VISA-1234".
+ * @property {CustomerInfoOptions=} customerInfoOptions
  */
 
 /**
@@ -99,6 +100,14 @@ const error = Debug('actions-on-google:error');
  *     Must be any number of Transactions.CardNetwork.
  * @property {boolean} prepaidCardDisallowed - True if prepaid cards are not
  *     allowed for transaction.
+ * @property {CustomerInfoOptions=} customerInfoOptions
+ */
+
+ /**
+ * Customer information requested as part of the transaction
+ * @typedef {Object} CustomerInfoOptions
+ * @property {Array<string>} customerInfoProperties - one of
+ *    Transactions.CustomerInfoProperties
  */
 
 /**
@@ -266,6 +275,14 @@ const TransactionValues = {
      * Gift card.
      */
     GIFT_CARD: 'GIFT_CARD'
+  },
+  /**
+   * List of customer information properties that can be requested.
+   * @readonly
+   * @enum {string}
+   */
+  CustomerInfoProperties: {
+    EMAIL: 'EMAIL'
   },
   /**
    * List of possible order confirmation user decisions

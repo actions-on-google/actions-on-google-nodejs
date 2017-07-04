@@ -738,6 +738,13 @@ const AssistantApp = class {
       transactionDecisionValueSpec.paymentOptions =
         this.buildPaymentOptions_(transactionConfig);
     }
+    if (transactionConfig && transactionConfig.customerInfoOptions) {
+      if (!transactionDecisionValueSpec.orderOptions) {
+        transactionDecisionValueSpec.orderOptions = {};
+      }
+      transactionDecisionValueSpec.orderOptions.customerInfoOptions =
+        transactionConfig.customerInfoOptions;
+    }
     return this.fulfillTransactionDecision_(transactionDecisionValueSpec,
       dialogState);
   }
