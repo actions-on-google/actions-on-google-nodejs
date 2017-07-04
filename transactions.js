@@ -298,10 +298,6 @@ const TransactionValues = {
    */
   OrderState: {
     /**
-     * Order was confirmed by user.
-     */
-    CREATED: 'CREATED',
-    /**
      * Order was rejected.
      */
     REJECTED: 'REJECTED',
