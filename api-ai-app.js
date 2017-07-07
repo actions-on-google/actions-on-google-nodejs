@@ -128,7 +128,8 @@ const ApiAiApp = class extends AssistantApp {
       } : null,
       profile: this.body_.originalRequest.data.user.profile,
       accessToken: this.body_.originalRequest.data.user.accessToken,
-      access_token: this.body_.originalRequest.data.user.accessToken
+      access_token: this.body_.originalRequest.data.user.accessToken,
+      locale: this.body_.originalRequest.data.user.locale
     };
     return user;
   }

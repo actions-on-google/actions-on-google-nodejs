@@ -1017,7 +1017,27 @@ const AssistantApp = class {
    */
   getUserName () {
     debug('getUserName');
-    return this.getUser().userName;
+    return this.getUser() && this.getUser().userName
+      ? this.getUser().userName : null;
+  }
+
+  /**
+   * Gets the user locale. Returned string represents the regional language
+   * information of the user set in their Assistant settings.
+   * For example, 'en-US' represents US English.
+   *
+   * @example
+   * const app = new ApiAiApp({request, response});
+   * const locale = app.getUserLocale();
+   *
+   * @return {string} User's locale, e.g. 'en-US'. Null if no locale given.
+   * @actionssdk
+   * @apiai
+   */
+  getUserLocale () {
+    debug('getUserLocale');
+    return this.getUser() && this.getUser().locale
+      ? this.getUser().locale : null;
   }
 
   /**
