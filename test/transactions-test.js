@@ -174,7 +174,7 @@ describe('Order', () => {
       order = new Order('test_id');
     });
 
-    it('should set the image', () => {
+    it('should set the TOS', () => {
       order.setTermsOfService('http://example.com');
       expect(JSON.parse(JSON.stringify(order))).to.deep.equal({
         id: 'test_id',
@@ -183,8 +183,8 @@ describe('Order', () => {
       });
     });
 
-    it('should overwrite previously set image', () => {
-      order.setTermsOfService('http://example.com/2');
+    it('should overwrite previously set TOS', () => {
+      order.setTermsOfService('http://example.com');
       order.setTermsOfService('http://example.com/2');
       expect(JSON.parse(JSON.stringify(order))).to.deep.equal({
         id: 'test_id',
