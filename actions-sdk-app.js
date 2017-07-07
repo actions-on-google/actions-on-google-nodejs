@@ -301,7 +301,7 @@ const ActionsSdkApp = class extends AssistantApp {
   /**
    * Gets order delivery address. Only use after calling askForDeliveryAddress.
    *
-   * @return {DeliveryAddress} Delivery address information. Null if user
+   * @return {Location} Delivery address information. Null if user
    *     denies permission, or no address given.
    * @actionssdk
    */

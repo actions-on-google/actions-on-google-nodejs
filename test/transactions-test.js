@@ -130,107 +130,214 @@ describe('Order', () => {
           }]
       });
     });
+  });
 
-    describe('#setImage', () => {
-      let order;
+  describe('#setImage', () => {
+    let order;
 
-      beforeEach(() => {
-        order = new Order('test_id');
-      });
+    beforeEach(() => {
+      order = new Order('test_id');
+    });
 
-      it('should set the image', () => {
-        order.setImage('http://image.com', 'ALT_TEXT', 100, 150);
-        expect(JSON.parse(JSON.stringify(order))).to.deep.equal({
-          id: 'test_id',
-          otherItems: [],
-          image: {
-            url: 'http://image.com',
-            accessibilityText: 'ALT_TEXT',
-            width: 100,
-            height: 150
-          }
-        });
-      });
-
-      it('should overwrite previously set image', () => {
-        order.setImage('http://image.com', 'ALT_TEXT', 100, 150);
-        order.setImage('http://image.com/2', 'ALT_TEXT_2');
-        expect(JSON.parse(JSON.stringify(order))).to.deep.equal({
-          id: 'test_id',
-          otherItems: [],
-          image: {
-            url: 'http://image.com/2',
-            accessibilityText: 'ALT_TEXT_2'
-          }
-        });
+    it('should set the image', () => {
+      order.setImage('http://image.com', 'ALT_TEXT', 100, 150);
+      expect(JSON.parse(JSON.stringify(order))).to.deep.equal({
+        id: 'test_id',
+        otherItems: [],
+        image: {
+          url: 'http://image.com',
+          accessibilityText: 'ALT_TEXT',
+          width: 100,
+          height: 150
+        }
       });
     });
 
-    describe('#setTOS', () => {
-      let order;
-
-      beforeEach(() => {
-        order = new Order('test_id');
+    it('should overwrite previously set image', () => {
+      order.setImage('http://image.com', 'ALT_TEXT', 100, 150);
+      order.setImage('http://image.com/2', 'ALT_TEXT_2');
+      expect(JSON.parse(JSON.stringify(order))).to.deep.equal({
+        id: 'test_id',
+        otherItems: [],
+        image: {
+          url: 'http://image.com/2',
+          accessibilityText: 'ALT_TEXT_2'
+        }
       });
+    });
+  });
 
-      it('should set the image', () => {
-        order.setTermsOfService('http://example.com');
-        expect(JSON.parse(JSON.stringify(order))).to.deep.equal({
-          id: 'test_id',
-          otherItems: [],
-          termsOfServiceUrl: 'http://example.com'
-        });
-      });
+  describe('#setTOS', () => {
+    let order;
 
-      it('should overwrite previously set image', () => {
-        order.setTermsOfService('http://example.com/2');
-        order.setTermsOfService('http://example.com/2');
-        expect(JSON.parse(JSON.stringify(order))).to.deep.equal({
-          id: 'test_id',
-          otherItems: [],
-          termsOfServiceUrl: 'http://example.com/2'
-        });
+    beforeEach(() => {
+      order = new Order('test_id');
+    });
+
+    it('should set the image', () => {
+      order.setTermsOfService('http://example.com');
+      expect(JSON.parse(JSON.stringify(order))).to.deep.equal({
+        id: 'test_id',
+        otherItems: [],
+        termsOfServiceUrl: 'http://example.com'
       });
     });
 
-    describe('#setTotalPrice', () => {
-      let order;
-
-      beforeEach(() => {
-        order = new Order('test_id');
+    it('should overwrite previously set image', () => {
+      order.setTermsOfService('http://example.com/2');
+      order.setTermsOfService('http://example.com/2');
+      expect(JSON.parse(JSON.stringify(order))).to.deep.equal({
+        id: 'test_id',
+        otherItems: [],
+        termsOfServiceUrl: 'http://example.com/2'
       });
+    });
+  });
 
-      it('should set the price', () => {
-        order.setTotalPrice('ACTUAL', 'USD', 30, 40);
-        expect(JSON.parse(JSON.stringify(order))).to.deep.equal({
-          id: 'test_id',
-          otherItems: [],
-          totalPrice: {
-            type: 'ACTUAL',
-            amount: {
-              currencyCode: 'USD',
-              units: 30,
-              nanos: 40
-            }
+  describe('#setTotalPrice', () => {
+    let order;
+
+    beforeEach(() => {
+      order = new Order('test_id');
+    });
+
+    it('should set the price', () => {
+      order.setTotalPrice('ACTUAL', 'USD', 30, 40);
+      expect(JSON.parse(JSON.stringify(order))).to.deep.equal({
+        id: 'test_id',
+        otherItems: [],
+        totalPrice: {
+          type: 'ACTUAL',
+          amount: {
+            currencyCode: 'USD',
+            units: 30,
+            nanos: 40
           }
-        });
+        }
       });
+    });
 
-      it('should overwrite previously set price', () => {
-        order.setTotalPrice('ACTUAL', 'USD', 30, 40);
-        order.setTotalPrice('ESTIMATE', 'GBP', 60);
-        expect(JSON.parse(JSON.stringify(order))).to.deep.equal({
-          id: 'test_id',
-          otherItems: [],
-          totalPrice: {
-            type: 'ESTIMATE',
-            amount: {
-              currencyCode: 'GBP',
-              units: 60,
-              nanos: 0
-            }
+    it('should overwrite previously set price', () => {
+      order.setTotalPrice('ACTUAL', 'USD', 30, 40);
+      order.setTotalPrice('ESTIMATE', 'GBP', 60);
+      expect(JSON.parse(JSON.stringify(order))).to.deep.equal({
+        id: 'test_id',
+        otherItems: [],
+        totalPrice: {
+          type: 'ESTIMATE',
+          amount: {
+            currencyCode: 'GBP',
+            units: 60,
+            nanos: 0
           }
-        });
+        }
+      });
+    });
+  });
+
+  describe('#setTime', () => {
+    let order;
+
+    beforeEach(() => {
+      order = new Order('test_id');
+    });
+
+    it('should set the time', () => {
+      order.setTime('TIME_TYPE', 'SAMPLE_TIME');
+      expect(JSON.parse(JSON.stringify(order))).to.deep.equal({
+        id: 'test_id',
+        otherItems: [],
+        extension: {
+          '@type': 'type.googleapis.com/google.actions.v2.orders.GenericExtension',
+          time: {
+            type: 'TIME_TYPE',
+            time_iso8601: 'SAMPLE_TIME'
+          }
+        }
+      });
+    });
+
+    it('should overwrite the previously set time', () => {
+      order.setTime('TIME_TYPE', 'SAMPLE_TIME');
+      order.setTime('TIME_TYPE_2', 'SAMPLE_TIME_2');
+      expect(JSON.parse(JSON.stringify(order))).to.deep.equal({
+        id: 'test_id',
+        otherItems: [],
+        extension: {
+          '@type': 'type.googleapis.com/google.actions.v2.orders.GenericExtension',
+          time: {
+            type: 'TIME_TYPE_2',
+            time_iso8601: 'SAMPLE_TIME_2'
+          }
+        }
+      });
+    });
+  });
+
+  describe('#addLocation', () => {
+    let order;
+
+    const locationOne = {
+      type: 'LOCATION_TYPE',
+      location: {
+        postalAddress: 'SAMPLE_ADDRESS'
+      }
+    };
+
+    const locationTwo = {
+      type: 'LOCATION_TYPE_2',
+      location: {
+        postalAddress: 'SAMPLE_ADDRESS_2'
+      }
+    };
+
+    const locationThree = {
+      type: 'LOCATION_TYPE_3',
+      location: {
+        postalAddress: 'SAMPLE_ADDRESS_3'
+      }
+    };
+
+    beforeEach(() => {
+      order = new Order('test_id');
+    });
+
+    it('should add one location', () => {
+      order.addLocation(locationOne.type, locationOne.location);
+      expect(JSON.parse(JSON.stringify(order))).to.deep.equal({
+        id: 'test_id',
+        otherItems: [],
+        extension: {
+          '@type': 'type.googleapis.com/google.actions.v2.orders.GenericExtension',
+          locations: [locationOne]
+        }
+      });
+    });
+
+    it('should add a second location', () => {
+      order.addLocation(locationOne.type, locationOne.location);
+      order.addLocation(locationTwo.type, locationTwo.location);
+      expect(JSON.parse(JSON.stringify(order))).to.deep.equal({
+        id: 'test_id',
+        otherItems: [],
+        extension: {
+          '@type': 'type.googleapis.com/google.actions.v2.orders.GenericExtension',
+          locations: [locationOne, locationTwo]
+        }
+      });
+    });
+
+    it('should not add a third location', () => {
+      order.addLocation(locationOne.type, locationOne.location);
+      order.addLocation(locationTwo.type, locationTwo.location);
+      order.addLocation(locationThree.type, locationThree.location);
+      expect(JSON.parse(JSON.stringify(order))).to.deep.equal({
+        id: 'test_id',
+        otherItems: [],
+        extension: {
+          '@type': 'type.googleapis.com/google.actions.v2.orders.GenericExtension',
+          locations: [locationOne, locationTwo]
+        }
       });
     });
   });
