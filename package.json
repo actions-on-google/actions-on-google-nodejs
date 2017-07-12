@@ -9,8 +9,9 @@
     "test": "test"
   },
   "scripts": {
-    "lint": "eslint --fix \"**/*.js\"",
-    "test": "npm run lint && ./node_modules/.bin/mocha --reporter spec ./test/*.js"
+    "lint": "eslint --fix \"*.js\" \"test/*.js\" \"utils/*.js\"",
+    "test": "npm run lint && ./node_modules/.bin/mocha --reporter spec ./test/*.js",
+    "coverage": "nyc --reporter=lcov --reporter=html npm test && nyc report"
   },
   "repository": {
     "type": "git",
@@ -54,6 +55,7 @@
     "eslint-plugin-promise": "^3.5.0",
     "eslint-plugin-standard": "^3.0.1",
     "mocha": "^3.0.2",
+    "nyc": "^11.0.3",
     "winston": "2.2.0"
   }
 }
