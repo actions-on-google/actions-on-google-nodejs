@@ -122,7 +122,7 @@ const GENERIC_EXTENSION_TYPE = 'type.googleapis.com/google.actions.v2.orders.Gen
  * @property {string} postalAddress.postalCode
  * @property {string} postalAddress.administrativeArea
  * @property {string} postalAddress.locality
- * @property {string} postalAddress.addressLines
+ * @property {Array<string>} postalAddress.addressLines
  * @property {string} postalAddress.recipients
  * @property {string} phoneNumber
  * @property {string} notes
