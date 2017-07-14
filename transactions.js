@@ -529,6 +529,17 @@ const TransactionValues = {
 };
 
 /**
+ * Valid keys for the TransactionValues.OrderStateInfo enum.
+ * @readonly
+ * @enum {string}
+ */
+const reverseOrderStateInfo = Object.keys(TransactionValues.OrderStateInfo)
+  .reduce((reverseValues, infoType) => {
+    reverseValues[TransactionValues.OrderStateInfo[infoType]] = infoType;
+    return reverseValues;
+  }, {});
+
+/**
  * Class for initializing and constructing Order with chainable interface.
  */
 const Order = class {
@@ -1403,7 +1414,7 @@ const OrderUpdate = class {
    * @return {OrderUpdate} Returns current constructed OrderUpdate.
    */
   setInfo (type, data) {
-    if (!type || !TransactionValues.OrderStateInfo[type]) {
+    if (!type || !reverseOrderStateInfo[type]) {
       error('Invalid info type');
       return this;
     }
@@ -1417,7 +1428,7 @@ const OrderUpdate = class {
       delete this[TransactionValues.OrderStateInfo[infoType]];
     }
 
-    this[TransactionValues.OrderStateInfo[type]] = data;
+    this[type] = data;
     return this;
   }
 };

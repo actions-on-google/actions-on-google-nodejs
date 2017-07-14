@@ -25,10 +25,13 @@ process.env.DEBUG = 'actions-on-google:*';
 const winston = require('winston');
 const chai = require('chai');
 const expect = chai.expect;
-const Order = require('.././transactions').Order;
-const Cart = require('.././transactions').Cart;
-const LineItem = require('.././transactions').LineItem;
-const OrderUpdate = require('.././transactions').OrderUpdate;
+const {
+  TransactionValues,
+  Order,
+  Cart,
+  LineItem,
+  OrderUpdate
+} = require('.././transactions');
 
 // Default logger
 winston.loggers.add('DEFAULT_LOGGER', {
@@ -965,7 +968,8 @@ describe('OrderUpdate', () => {
     });
 
     it('should set the order update info', () => {
-      orderUpdate.setInfo('RECEIPT', { receipt_info: 'value' });
+      orderUpdate.setInfo(TransactionValues.OrderStateInfo.RECEIPT,
+        { receipt_info: 'value' });
       expect(JSON.parse(JSON.stringify(orderUpdate))).to.deep.equal({
         googleOrderId: 'order_id',
         lineItemUpdates: {},
@@ -977,8 +981,10 @@ describe('OrderUpdate', () => {
     });
 
     it('should override previously set order update info', () => {
-      orderUpdate.setInfo('RECEIPT', { receipt_info: 'value' });
-      orderUpdate.setInfo('REJECTION', { reason: 'value' });
+      orderUpdate.setInfo(TransactionValues.OrderStateInfo.RECEIPT,
+        { receipt_info: 'value' });
+      orderUpdate.setInfo(TransactionValues.OrderStateInfo.REJECTION,
+        { reason: 'value' });
       expect(JSON.parse(JSON.stringify(orderUpdate))).to.deep.equal({
         googleOrderId: 'order_id',
         lineItemUpdates: {},
