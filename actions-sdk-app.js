@@ -278,6 +278,7 @@ class ActionsSdkApp extends AssistantApp {
   /**
    * Asks to collect user's input; all user's queries need to be sent to
    * the app.
+   * {@link https://developers.google.com/actions/policies/general-policies#user_experience|The guidelines when prompting the user for a response must be followed at all times}.
    *
    * @example
    * const app = new ActionsSdkApp({request: request, response: response});

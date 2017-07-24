@@ -474,6 +474,7 @@ class ApiAiApp extends AssistantApp {
 
   /**
    * Asks to collect the user's input.
+   * {@link https://developers.google.com/actions/policies/general-policies#user_experience|The guidelines when prompting the user for a response must be followed at all times}.
    *
    * NOTE: Due to a bug, if you specify the no-input prompts,
    * the mic is closed after the 3rd prompt, so you should use the 3rd prompt
