@@ -113,11 +113,11 @@ class ApiAiApp extends AssistantApp {
   isRequestFromApiAi (key, value) {
     debug('isRequestFromApiAi: key=%s, value=%s', key, value);
     if (!key || key === '') {
-      this.handleError_('key must be specified.');
+      error('Key must be specified');
       return false;
     }
     if (!value || value === '') {
-      this.handleError_('value must be specified.');
+      error('Value must be specified');
       return false;
     }
     return this.request_.get(key) === value;
@@ -154,7 +154,7 @@ class ApiAiApp extends AssistantApp {
     debug('getIntent');
     const intent = this.getIntent_();
     if (!intent) {
-      this.handleError_('Missing intent from request body');
+      error('Missing intent from request body');
       return null;
     }
     return intent;
@@ -195,7 +195,7 @@ class ApiAiApp extends AssistantApp {
   getArgument (argName) {
     debug('getArgument: argName=%s', argName);
     if (!argName) {
-      this.handleError_('Invalid argument name');
+      error('Invalid argument name');
       return null;
     }
     const { parameters } = this.body_.result;
@@ -246,16 +246,16 @@ class ApiAiApp extends AssistantApp {
   getContextArgument (contextName, argName) {
     debug('getContextArgument: contextName=%s, argName=%s', contextName, argName);
     if (!contextName) {
-      this.handleError_('Invalid context name');
+      error('Invalid context name');
       return null;
     }
     if (!argName) {
-      this.handleError_('Invalid argument name');
+      error('Invalid argument name');
       return null;
     }
     if (!this.body_.result ||
       !this.body_.result.contexts) {
-      this.handleError_('No contexts included in request');
+      error('No contexts included in request');
       return null;
     }
     for (let context of this.body_.result.contexts) {
@@ -514,7 +514,7 @@ class ApiAiApp extends AssistantApp {
     }
     const response = this.buildResponse_(inputPrompt, true, noInputs);
     if (!response) {
-      error('Error in building response');
+      this.handleError_('Error in building response');
       return null;
     }
     return this.doResponse_(response, RESPONSE_CODE_OK);
@@ -798,7 +798,7 @@ class ApiAiApp extends AssistantApp {
     debug('setContext: context=%s, lifespan=%d, parameters=%s', name, lifespan,
       JSON.stringify(parameters));
     if (!name) {
-      this.handleError_('Invalid context name');
+      error('Empty context name');
       return null;
     }
     const newContext = {
@@ -862,7 +862,7 @@ class ApiAiApp extends AssistantApp {
     debug('getContexts');
     if (!this.body_.result ||
         !this.body_.result.contexts) {
-      this.handleError_('No contexts included in request');
+      error('No contexts included in request');
       return null;
     }
     return this.body_.result.contexts.filter((context) => {
@@ -911,7 +911,7 @@ class ApiAiApp extends AssistantApp {
     debug('getContext: name=%s', name);
     if (!this.body_.result ||
         !this.body_.result.contexts) {
-      this.handleError_('No contexts included in request');
+      error('No contexts included in request');
       return null;
     }
     for (let context of this.body_.result.contexts) {
@@ -937,7 +937,7 @@ class ApiAiApp extends AssistantApp {
     debug('getRawInput');
     if (!this.body_.result ||
         !this.body_.result.resolvedQuery) {
-      this.handleError_('No raw input');
+      error('No raw input');
       return null;
     }
     return this.body_.result.resolvedQuery;
@@ -959,7 +959,7 @@ class ApiAiApp extends AssistantApp {
     if (this.body_.result) {
       return this.body_.result.action;
     } else {
-      this.handleError_('Missing result from request body');
+      error('Missing result from request body');
       return null;
     }
   }
@@ -979,7 +979,7 @@ class ApiAiApp extends AssistantApp {
     debug('buildResponse_: textToSpeech=%s, expectUserResponse=%s, noInputs=%s',
         textToSpeech, expectUserResponse, noInputs);
     if (!textToSpeech === undefined || !textToSpeech) {
-      this.handleError_('Invalid text to speech');
+      error('Empty text to speech');
       return null;
     }
     let isStringResponse = typeof textToSpeech === 'string';
@@ -990,7 +990,7 @@ class ApiAiApp extends AssistantApp {
       } else if (!(textToSpeech.items &&
         textToSpeech.items[0] &&
         textToSpeech.items[0].simpleResponse)) {
-        this.handleError_('Invalid RichResponse. First item must be SimpleResponse');
+        error('Invalid RichResponse. First item must be SimpleResponse');
         return null;
       }
     }
@@ -1000,7 +1000,7 @@ class ApiAiApp extends AssistantApp {
     };
     if (noInputs) {
       if (noInputs.length > INPUTS_MAX) {
-        this.handleError_('Invalid number of no inputs');
+        error('Invalid number of no inputs');
         return null;
       }
       if (this.isSsml_(textToSpeech)) {

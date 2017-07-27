@@ -176,7 +176,7 @@ class ActionsSdkApp extends AssistantApp {
   getConversationId () {
     debug('getConversationId');
     if (!this.body_.conversation || !this.body_.conversation.conversationId) {
-      this.handleError_('No conversation ID');
+      error('No conversation ID');
       return null;
     }
     return this.body_.conversation.conversationId;
@@ -213,7 +213,7 @@ class ActionsSdkApp extends AssistantApp {
     debug('getIntent');
     const input = this.getTopInput_();
     if (!input) {
-      this.handleError_('Missing intent from request body');
+      error('Missing intent from request body');
       return null;
     }
     return input.intent;
@@ -625,7 +625,7 @@ class ActionsSdkApp extends AssistantApp {
 
     if (noInputs) {
       if (noInputs.length > INPUTS_MAX) {
-        this.handleError_('Invalid number of no inputs');
+        error('Invalid number of no inputs');
         return null;
       }
     } else {
@@ -660,7 +660,7 @@ class ActionsSdkApp extends AssistantApp {
   getTopInput_ () {
     debug('getTopInput_');
     if (!this.body_.inputs || this.body_.inputs.length === 0) {
-      this.handleError_('Missing inputs from request body');
+      error('Missing inputs from request body');
       return null;
     }
     return this.body_.inputs[0];
@@ -705,7 +705,7 @@ class ActionsSdkApp extends AssistantApp {
   maybeAddItemToArray_ (item, array) {
     debug('maybeAddItemToArray_: item=%s, array=%s', item, array);
     if (!array) {
-      this.handleError_('Invalid array');
+      error('Invalid array');
       return;
     }
     if (!item) {
@@ -939,7 +939,7 @@ class ActionsSdkApp extends AssistantApp {
     debug('buildAskHelper_: inputPrompt=%s, possibleIntents=%s,  dialogState=%s',
       inputPrompt, possibleIntents, JSON.stringify(dialogState));
     if (!inputPrompt) {
-      this.handleError_('Invalid input prompt');
+      error('Invalid input prompt');
       return null;
     }
     if (typeof inputPrompt === 'string') {
@@ -958,7 +958,7 @@ class ActionsSdkApp extends AssistantApp {
         'data': this.data
       };
     } else if (Array.isArray(dialogState)) {
-      this.handleError_('Invalid dialog state');
+      error('Invalid dialog state');
       return null;
     }
     const expectedInputs = [{
@@ -990,7 +990,7 @@ class ActionsSdkApp extends AssistantApp {
   buildExpectedIntent_ (intent) {
     debug('buildExpectedIntent_: intent=%s', intent);
     if (!intent || intent === '') {
-      this.handleError_('Invalid intent');
+      error('Invalid intent');
       return null;
     }
     const expectedIntent = {

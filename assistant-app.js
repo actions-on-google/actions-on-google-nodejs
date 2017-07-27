@@ -1051,7 +1051,7 @@ class AssistantApp {
     const data = this.requestData();
 
     if (!data || !data.user) {
-      this.app.handleError_('No user object');
+      error('No user object');
       return null;
     }
 
@@ -1220,7 +1220,7 @@ class AssistantApp {
   getArgumentCommon (argName) {
     debug('getArgument: argName=%s', argName);
     if (!argName) {
-      this.handleError_('Invalid argument name');
+      error('Invalid argument name');
       return null;
     }
     const argument = this.findArgument_(argName);
@@ -1654,7 +1654,7 @@ class AssistantApp {
   isSsml_ (text) {
     debug('isSsml_: text=%s', text);
     if (!text) {
-      this.handleError_('text can NOT be empty.');
+      error('Text can NOT be empty');
       return false;
     }
     return isSsml(text);
