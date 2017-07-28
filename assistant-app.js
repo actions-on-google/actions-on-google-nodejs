@@ -422,6 +422,9 @@ class AssistantApp {
     this.Transactions = TransactionValues;
 
     this.requestData = requestData;
+
+    // Extracts the data from the request
+    this.extractData_();
   }
 
   // ---------------------------------------------------------------------------
@@ -489,7 +492,6 @@ class AssistantApp {
       this.handleError_('request handler can NOT be empty.');
       return;
     }
-    this.extractData_();
     if (typeof handler === 'function') {
       debug('handleRequest: function');
       // simple function handler

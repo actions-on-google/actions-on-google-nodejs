@@ -106,16 +106,16 @@ class ActionsSdkApp extends AssistantApp {
     debug('getRawInput');
     const input = this.getTopInput_();
     if (!input) {
-      this.handleError_('Failed to get top Input.');
+      error('Failed to get top Input.');
       return null;
     }
     if (!input.rawInputs || input.rawInputs.length === 0) {
-      this.handleError_('Missing user raw input');
+      error('Missing user raw input');
       return null;
     }
     const rawInput = input.rawInputs[0];
     if (!rawInput.query) {
-      this.handleError_('Missing query for user raw input');
+      error('Missing query for user raw input');
       return null;
     }
     return rawInput.query;
