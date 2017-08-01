@@ -127,6 +127,7 @@ class ApiAiApp extends AssistantApp {
    * Get the current intent. Alternatively, using a handler Map with
    * {@link AssistantApp#handleRequest|handleRequest},
    * the client library will automatically handle the incoming intents.
+   * 'Intent' in the API.ai context translates into the current action.
    *
    * @example
    * const app = new ApiAiApp({request: request, response: response});
@@ -147,14 +148,14 @@ class ApiAiApp extends AssistantApp {
    *
    * app.handleRequest(responseHandler);
    *
-   * @return {string} Intent id or null if no value.
+   * @return {string} Intent id or null if no value (action name).
    * @apiai
    */
   getIntent () {
     debug('getIntent');
     const intent = this.getIntent_();
     if (!intent) {
-      error('Missing intent from request body');
+      error('The current action name could not be found in request body');
       return null;
     }
     return intent;
