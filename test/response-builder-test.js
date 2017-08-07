@@ -240,6 +240,26 @@ describe('RichResponse', () => {
           }]
       });
     });
+
+    it('should not add a suggestion longer than 25 characters', () => {
+      richResponse.addSuggestions(['suggestion one that is very long', 'suggestion two']);
+      expect(JSON.parse(JSON.stringify(richResponse))).to.deep.equal({
+        items: [],
+        suggestions: [
+          {
+            title: 'suggestion two'
+          }]
+      });
+
+      richResponse.addSuggestions('suggestion one that is very long');
+      expect(JSON.parse(JSON.stringify(richResponse))).to.deep.equal({
+        items: [],
+        suggestions: [
+          {
+            title: 'suggestion two'
+          }]
+      });
+    });
   });
 
   describe('#addSuggestionLink', () => {

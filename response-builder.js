@@ -22,6 +22,7 @@
 
 const Debug = require('debug');
 const debug = Debug('actions-on-google:debug');
+const warn = Debug('actions-on-google:warn');
 const error = Debug('actions-on-google:error');
 
 const LIST_ITEM_LIMIT = 30;
@@ -204,12 +205,30 @@ const RichResponse = class {
     }
     if (Array.isArray(suggestions)) {
       for (let suggestion of suggestions) {
-        this.suggestions.push({title: suggestion});
+        if (this.isValidSuggestionText(suggestion)) {
+          this.suggestions.push({title: suggestion});
+        } else {
+          warn('Suggestion text can\'t be longer than 25 characters: ' + suggestion +
+            '. This suggestion won\'t be added to the list.');
+        }
       }
     } else {
-      this.suggestions.push({title: suggestions});
+      if (this.isValidSuggestionText(suggestions)) {
+        this.suggestions.push({title: suggestions});
+      } else {
+        warn('Suggestion text can\'t be longer than 25 characters: ' + suggestions +
+            '. This suggestion won\'t be added to the list.');
+      }
     }
     return this;
+  }
+
+  /**
+   * Returns true if the given suggestion text is valid to be added to the suggestion list. A valid
+   * text string is not longer than 25 characters.
+   */
+  isValidSuggestionText (suggestionText) {
+    return suggestionText && suggestionText.length && suggestionText.length <= 25;
   }
 
   /**
