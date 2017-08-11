@@ -1197,7 +1197,9 @@ class ApiAiApp extends AssistantApp {
     response.data.google.systemIntent = {
       intent: this.StandardIntents.SIGN_IN
     };
-    response.data.google.systemIntent.data = {};
+    response.data.google.systemIntent.data = {
+      [this.ANY_TYPE_PROPERTY_]: this.InputValueDataTypes_.SIGN_IN
+    };
     return this.doResponse_(response, RESPONSE_CODE_OK);
   }
 }
