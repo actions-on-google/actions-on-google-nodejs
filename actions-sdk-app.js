@@ -911,7 +911,9 @@ class ActionsSdkApp extends AssistantApp {
     const expectedIntent = {
       intent: this.StandardIntents.SIGN_IN
     };
-    expectedIntent.inputValueData = {};
+    expectedIntent.inputValueData = {
+      '@type': 'type.googleapis.com/google.actions.v2.SignInValueSpec'
+    };
     // Send an Ask request to Assistant.
     const inputPrompt = this.buildInputPrompt(false, 'PLACEHOLDER_FOR_SIGN_IN');
     if (!dialogState) {
