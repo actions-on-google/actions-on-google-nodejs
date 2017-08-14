@@ -455,7 +455,7 @@ const TransactionValues = {
     /**
      * Transactions are not supported for current region/country.
      */
-    REGION_NOT_SUPPORTED: 'ASSISTANT_SURFACE_NOT_SUPPORTED'
+    REGION_NOT_SUPPORTED: 'REGION_NOT_SUPPORTED'
   },
   /**
    * List of possible user decisions to give delivery address.
