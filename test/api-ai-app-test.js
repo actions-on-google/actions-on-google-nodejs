@@ -1574,7 +1574,9 @@ describe('ApiAiApp', function () {
             'noInputPrompts': [],
             'systemIntent': {
               'intent': 'actions.intent.SIGN_IN',
-              'data': {}
+              'data': {
+                '@type': 'type.googleapis.com/google.actions.v2.SignInValueSpec'
+              }
             }
           }
         },
