@@ -317,6 +317,31 @@ class AssistantApp {
     };
 
     /**
+     * List of built-in value type names.
+     * @private
+     * @readonly
+     * @enum {string}
+     * @actionssdk
+     * @apiai
+     */
+    this.InputValueDataTypes_ = {
+      /** Permission Value Spec. */
+      PERMISSION: 'type.googleapis.com/google.actions.v2.PermissionValueSpec',
+      /** Option Value Spec. */
+      OPTION: 'type.googleapis.com/google.actions.v2.OptionValueSpec',
+      /** Transaction Requirements Check Value Spec. */
+      TRANSACTION_REQ_CHECK: 'type.googleapis.com/google.actions.v2.TransactionRequirementsCheckSpec',
+      /** Delivery Address Value Spec. */
+      DELIVERY_ADDRESS: 'type.googleapis.com/google.actions.v2.DeliveryAddressValueSpec',
+      /** Transaction Decision Value Spec. */
+      TRANSACTION_DECISION: 'type.googleapis.com/google.actions.v2.TransactionDecisionValueSpec',
+      /** Confirmation Value Spec. */
+      CONFIRMATION: 'type.googleapis.com/google.actions.v2.ConfirmationValueSpec',
+      /** DateTime Value Spec. */
+      DATETIME: 'type.googleapis.com/google.actions.v2.DateTimeValueSpec'
+    };
+
+    /**
      * List of possible conversation stages, as defined in the
      * {@link https://developers.google.com/actions/reference/conversation#Conversation|Conversation object}.
      * @readonly
@@ -674,8 +699,9 @@ class AssistantApp {
       transactionRequirementsCheckSpec.paymentOptions =
         this.buildPaymentOptions_(transactionConfig);
     }
-    return this.fulfillTransactionRequirementsCheck_(transactionRequirementsCheckSpec,
-      dialogState);
+    return this.fulfillSystemIntent_(this.StandardIntents.TRANSACTION_REQUIREMENTS_CHECK,
+      this.InputValueDataTypes_.TRANSACTION_REQ_CHECK, transactionRequirementsCheckSpec,
+      'PLACEHOLDER_FOR_TXN_REQUIREMENTS', dialogState);
   }
 
   /**
@@ -750,8 +776,9 @@ class AssistantApp {
       transactionDecisionValueSpec.orderOptions.customerInfoOptions =
         transactionConfig.customerInfoOptions;
     }
-    return this.fulfillTransactionDecision_(transactionDecisionValueSpec,
-      dialogState);
+    return this.fulfillSystemIntent_(this.StandardIntents.TRANSACTION_DECISION,
+      this.InputValueDataTypes_.TRANSACTION_DECISION, transactionDecisionValueSpec,
+      'PLACEHOLDER_FOR_TXN_DECISION', dialogState);
   }
 
   /**
@@ -843,6 +870,79 @@ class AssistantApp {
   }
 
   /**
+   * Asks user for delivery address.
+   *
+   * @example
+   * // For ApiAiApp:
+   * const app = new ApiAiApp({request, response});
+   * const WELCOME_INTENT = 'input.welcome';
+   * const DELIVERY_INTENT = 'delivery.address';
+   *
+   * function welcomeIntent (app) {
+   *   app.askForDeliveryAddress('To make sure I can deliver to you');
+   * }
+   *
+   * function addressIntent (app) {
+   *   const postalCode = app.getDeliveryAddress().postalAddress.postalCode;
+   *   if (isInDeliveryZone(postalCode)) {
+   *     app.tell('Great looks like you\'re in our delivery area!');
+   *   } else {
+   *     app.tell('I\'m sorry it looks like we can\'t deliver to you.');
+   *   }
+   * }
+   *
+   * const actionMap = new Map();
+   * actionMap.set(WELCOME_INTENT, welcomeIntent);
+   * actionMap.set(DELIVERY_INTENT, addressIntent);
+   * app.handleRequest(actionMap);
+   *
+   * // For ActionsSdkApp:
+   * const app = new ActionsSdkApp({request, response});
+   * const WELCOME_INTENT = app.StandardIntents.MAIN;
+   * const DELIVERY_INTENT = app.StandardIntents.DELIVERY_ADDRESS;
+   *
+   * function welcomeIntent (app) {
+   *   app.askForDeliveryAddress('To make sure I can deliver to you');
+   * }
+   *
+   * function addressIntent (app) {
+   *   const postalCode = app.getDeliveryAddress().postalAddress.postalCode;
+   *   if (isInDeliveryZone(postalCode)) {
+   *     app.tell('Great looks like you\'re in our delivery area!');
+   *   } else {
+   *     app.tell('I\'m sorry it looks like we can\'t deliver to you.');
+   *   }
+   * }
+   *
+   * const actionMap = new Map();
+   * actionMap.set(WELCOME_INTENT, welcomeIntent);
+   * actionMap.set(DELIVERY_INTENT, addressIntent);
+   * app.handleRequest(actionMap);
+   *
+   * @param {string} reason Reason given to user for asking delivery address.
+   * @param {Object=} dialogState JSON object the app uses to hold dialog state that
+   *     will be circulated back by Assistant.
+   * @return {Object} HTTP response.
+   * @actionssdk
+   * @apiai
+   */
+  askForDeliveryAddress (reason, dialogState) {
+    debug('askForDeliveryAddress: reason=%s, dialogState=%s', reason, dialogState);
+    if (!reason) {
+      this.handleError_('reason cannot be empty');
+      return null;
+    }
+    const deliveryValueSpec = {
+      addressOptions: {
+        reason: reason
+      }
+    };
+    return this.fulfillSystemIntent_(this.StandardIntents.DELIVERY_ADDRESS,
+      this.InputValueDataTypes_.DELIVERY_ADDRESS, deliveryValueSpec,
+      'PLACEHOLDER_FOR_DELIVERY_ADDRESS', dialogState);
+  }
+
+  /**
    * Asks user for a confirmation.
    *
    * @example
@@ -884,7 +984,9 @@ class AssistantApp {
         requestConfirmationText: prompt
       };
     }
-    return this.fulfillConfirmationRequest_(confirmationValueSpec, dialogState);
+    return this.fulfillSystemIntent_(this.StandardIntents.CONFIRMATION,
+      this.InputValueDataTypes_.CONFIRMATION, confirmationValueSpec,
+      'PLACEHOLDER_FOR_CONFIRMATION', dialogState);
   }
 
   /**
@@ -933,15 +1035,17 @@ class AssistantApp {
     debug('askForConfirmation: initialPrompt=%s, datePrompt=%s, ' +
       'timePrompt=%s, dialogState=%s', initialPrompt, datePrompt, timePrompt,
       JSON.stringify(dialogState));
-    let confirmationValueSpec = {};
+    let dateTimeValueSpec = {};
     if (initialPrompt || datePrompt || timePrompt) {
-      confirmationValueSpec.dialogSpec = {
+      dateTimeValueSpec.dialogSpec = {
         requestDatetimeText: initialPrompt || undefined,
         requestDateText: datePrompt || undefined,
         requestTimeText: timePrompt || undefined
       };
     }
-    return this.fulfillDateTimeRequest_(confirmationValueSpec, dialogState);
+    return this.fulfillSystemIntent_(this.StandardIntents.DATETIME,
+      this.InputValueDataTypes_.DATETIME, dateTimeValueSpec,
+      'PLACEHOLDER_FOR_DATETIME', dialogState);
   }
 
   /**
@@ -985,7 +1089,9 @@ class AssistantApp {
    */
   askForSignIn (dialogState) {
     debug('askForSignIn: dialogState=%s', JSON.stringify(dialogState));
-    return this.fulfillSignInRequest_(dialogState);
+    return this.fulfillSystemIntent_(this.StandardIntents.SIGN_IN,
+      this.InputValueDataTypes_.SIGN_IN, null,
+      'PLACEHOLDER_FOR_SIGN_IN', dialogState);
   }
 
   /**

@@ -399,61 +399,6 @@ class ActionsSdkApp extends AssistantApp {
   }
 
   /**
-   * Asks user for delivery address.
-   *
-   * @example
-   * const app = new ActionsSdkApp({request, response});
-   * const WELCOME_INTENT = app.StandardIntents.MAIN;
-   * const DELIVERY_INTENT = app.StandardIntents.DELIVERY_ADDRESS;
-   *
-   * function welcomeIntent (app) {
-   *   app.askForDeliveryAddress('To make sure I can deliver to you');
-   * }
-   *
-   * function addressIntent (app) {
-   *   const postalCode = app.getDeliveryAddress().postalAddress.postalCode;
-   *   if (isInDeliveryZone(postalCode)) {
-   *     app.tell('Great looks like you\'re in our delivery area!');
-   *   } else {
-   *     app.tell('I\'m sorry it looks like we can\'t deliver to you.');
-   *   }
-   * }
-   *
-   * const actionMap = new Map();
-   * actionMap.set(WELCOME_INTENT, welcomeIntent);
-   * actionMap.set(DELIVERY_INTENT, addressIntent);
-   * app.handleRequest(actionMap);
-   *
-   * @param {string} reason Reason given to user for asking delivery address.
-   * @param {Object=} dialogState JSON object the app uses to hold dialog state that
-   *     will be circulated back by Assistant.
-   * @return {Object} HTTP response.
-   * @apiai
-   */
-  askForDeliveryAddress (reason, dialogState) {
-    debug('askForDeliveryAddress: reason=%s', reason);
-    if (!reason) {
-      this.handleError_('reason cannot be empty');
-      return null;
-    }
-    const expectedIntent = this.buildExpectedIntent_(this.StandardIntents.DELIVERY_ADDRESS, []);
-    if (!expectedIntent) {
-      error('Error in building expected intent');
-      return null;
-    }
-    expectedIntent.inputValueData = Object.assign({
-      [this.ANY_TYPE_PROPERTY_]: this.InputValueDataTypes_.DELIVERY_ADDRESS
-    }, {
-      addressOptions: {
-        reason: reason
-      }
-    });
-    const inputPrompt = this.buildInputPrompt(false,
-      'PLACEHOLDER_FOR_DELIVERY_ADDRESS');
-    return this.buildAskHelper_(inputPrompt, [expectedIntent], dialogState);
-  }
-
-  /**
    * Asks to collect user's input with a carousel.
    *
    * @example
@@ -748,179 +693,61 @@ class ActionsSdkApp extends AssistantApp {
   fulfillPermissionsRequest_ (permissionsSpec, dialogState) {
     debug('fulfillPermissionsRequest_: permissionsSpec=%s, dialogState=%s',
       JSON.stringify(permissionsSpec), JSON.stringify(dialogState));
-    // Build an Expected Intent object.
-    const expectedIntent = {
-      intent: this.StandardIntents.PERMISSION
-    };
     if (this.isNotApiVersionOne_()) {
-      expectedIntent.inputValueData = Object.assign({
-        [this.ANY_TYPE_PROPERTY_]: this.InputValueDataTypes_.PERMISSION
-      }, permissionsSpec);
+      return this.fulfillSystemIntent_(this.StandardIntents.PERMISSION,
+        this.InputValueDataTypes_.PERMISSION, permissionsSpec,
+        'PLACEHOLDER_FOR_PERMISSION', dialogState);
     } else {
+      // Build an Expected Intent object.
+      const expectedIntent = {
+        intent: this.StandardIntents.PERMISSION
+      };
       expectedIntent.inputValueSpec = {
         permissionValueSpec: permissionsSpec
       };
+      const inputPrompt = this.buildInputPrompt(false,
+        'PLACEHOLDER_FOR_PERMISSION');
+      return this.buildAskHelper_(inputPrompt, [expectedIntent], dialogState);
     }
-    const inputPrompt = this.buildInputPrompt(false, 'PLACEHOLDER_FOR_PERMISSION');
-    if (!dialogState) {
-      dialogState = {
-        'state': (this.state instanceof State ? this.state.getName() : this.state),
-        'data': this.data
-      };
-    }
-    return this.buildAskHelper_(inputPrompt, [expectedIntent], dialogState);
   }
 
   /**
-   * Uses TransactionRequirementsCheckValueSpec to construct and send a
-   * transaction requirements request to Google.
+   * Uses a given intent spec to construct and send a non-TEXT intent response
+   * to Google.
    *
-   * @param {Object} transactionRequirementsSpec TransactionRequirementsSpec
-   *     object.
-   * @param {Object} dialogState JSON object the app uses to hold dialog state that
+   * @param {String} intent Name of the intent to fulfill. One of
+   *     {@link AssistantApp#StandardIntents|StandardIntents}.
+   * @param {String} specType Type of the related intent spec. One of
+   *     {@link AssistantApp#InputValueDataTypes_|InputValueDataTypes_}.
+   * @param {Object} intentSpec Intent Spec object. Pass null to leave empty.
+   * @param {String=} promptPlaceholder Some placeholder text for the response
+   *     prompt.
+   * @param {Object=} dialogState JSON object the app uses to hold dialog state that
    *     will be circulated back by Assistant.
    * @return {Object} HTTP response.
    * @private
    * @actionssdk
    */
-  fulfillTransactionRequirementsCheck_ (transactionRequirementsSpec, dialogState) {
-    debug('fulfillTransactionRequirementsCheck_: transactionRequirementsSpec=%s,' +
-      ' dialogState=%s',
-      JSON.stringify(transactionRequirementsSpec), JSON.stringify(dialogState));
+  fulfillSystemIntent_ (intent, specType, intentSpec, promptPlaceholder,
+    dialogState) {
+    debug('fulfillSystemIntent_: intent=%s, specType=%s, intentSpec=%s, ' +
+      'promptPlaceholder=%s dialogState=%s', intent, specType,
+      JSON.stringify(intentSpec), promptPlaceholder, JSON.stringify(dialogState));
     // Build an Expected Intent object.
-    const expectedIntent = {
-      intent: this.StandardIntents.TRANSACTION_REQUIREMENTS_CHECK
-    };
-    expectedIntent.inputValueData = Object.assign({
-      [this.ANY_TYPE_PROPERTY_]: this.InputValueDataTypes_.TRANSACTION_REQ_CHECK
-    }, transactionRequirementsSpec);
-    const inputPrompt = this.buildInputPrompt(false, 'PLACEHOLDER_FOR_TXN_REQUIREMENTS');
-    if (!dialogState) {
-      dialogState = {
-        'state': (this.state instanceof State ? this.state.getName() : this.state),
-        'data': this.data
-      };
+    const expectedIntent = this.buildExpectedIntent_(intent);
+    if (!expectedIntent) {
+      error('Error in building expected intent');
+      return null;
     }
-    return this.buildAskHelper_(inputPrompt, [expectedIntent], dialogState);
-  }
-
-  /**
-   * Uses TransactionDecisionValueSpec to construct and send a transaction
-   * requirements request to Google.
-   *
-   * @param {Object} transactionDecisionValueSpec TransactionDecisionValueSpec
-   *     object.
-   * @param {Object} dialogState JSON object the app uses to hold dialog state that
-   *     will be circulated back by Assistant.
-   * @return {Object} HTTP response.
-   * @private
-   * @actionssdk
-   */
-  fulfillTransactionDecision_ (transactionDecisionValueSpec, dialogState) {
-    debug('fulfillTransactionDecision_: transactionDecisionValueSpec=%s,' +
-        ' dialogState=%s',
-      JSON.stringify(transactionDecisionValueSpec), JSON.stringify(dialogState));
-    // Build an Expected Intent object.
-    const expectedIntent = {
-      intent: this.StandardIntents.TRANSACTION_DECISION
-    };
-    expectedIntent.inputValueData = Object.assign({
-      [this.ANY_TYPE_PROPERTY_]: this.InputValueDataTypes_.TRANSACTION_DECISION
-    }, transactionDecisionValueSpec);
-    // Send an Ask request to Assistant.
-    const inputPrompt = this.buildInputPrompt(false, 'PLACEHOLDER_FOR_TXN_DECISION');
-    if (!dialogState) {
-      dialogState = {
-        'state': (this.state instanceof State ? this.state.getName() : this.state),
-        'data': this.data
-      };
-    }
-    return this.buildAskHelper_(inputPrompt, [expectedIntent], dialogState);
-  }
-
-  /**
-   * Uses ConfirmationValueSpec to construct and send a confirmation request to
-   * Google.
-   *
-   * @param {Object} confirmationValueSpec ConfirmationValueSpec object.
-   * @return {Object} HTTP response.
-   * @private
-   * @actionssdk
-   */
-  fulfillConfirmationRequest_ (confirmationValueSpec, dialogState) {
-    debug('fulfillConfirmationRequest_: confirmationValueSpec=%s,' +
-      ' dialogState=%s', JSON.stringify(confirmationValueSpec),
-      JSON.stringify(dialogState));
-    // Build an Expected Intent object.
-    const expectedIntent = {
-      intent: this.StandardIntents.CONFIRMATION
-    };
-    expectedIntent.inputValueData = Object.assign({
-      [this.ANY_TYPE_PROPERTY_]: this.InputValueDataTypes_.CONFIRMATION
-    }, confirmationValueSpec);
-    // Send an Ask request to Assistant.
-    const inputPrompt = this.buildInputPrompt(false, 'PLACEHOLDER_FOR_CONFIRMATION');
-    if (!dialogState) {
-      dialogState = {
-        'state': (this.state instanceof State ? this.state.getName() : this.state),
-        'data': this.data
-      };
-    }
-    return this.buildAskHelper_(inputPrompt, [expectedIntent], dialogState);
-  }
-
-  /**
-   * Uses DateTimeValueSpec to construct and send a datetime request to Google.
-   *
-   * @param {Object} dateTimeValueSpec DateTimeValueSpec object.
-   * @return {Object} HTTP response.
-   * @private
-   * @actionssdk
-   */
-  fulfillDateTimeRequest_ (dateTimeValueSpec, dialogState) {
-    debug('fulfillDateTimeRequest_: dateTimeValueSpec=%s,' +
-      ' dialogState=%s', JSON.stringify(dateTimeValueSpec),
-      JSON.stringify(dialogState));
-    // Build an Expected Intent object.
-    const expectedIntent = {
-      intent: this.StandardIntents.DATETIME
-    };
-    expectedIntent.inputValueData = Object.assign({
-      [this.ANY_TYPE_PROPERTY_]: this.InputValueDataTypes_.DATETIME
-    }, dateTimeValueSpec);
-    // Send an Ask request to Assistant.
-    const inputPrompt = this.buildInputPrompt(false, 'PLACEHOLDER_FOR_DATETIME');
-    if (!dialogState) {
-      dialogState = {
-        'state': (this.state instanceof State ? this.state.getName() : this.state),
-        'data': this.data
-      };
-    }
-    return this.buildAskHelper_(inputPrompt, [expectedIntent], dialogState);
-  }
-
-  /**
-   * Construct and send a sign in request to Google.
-   *
-   * @return {Object} HTTP response.
-   * @private
-   * @actionssdk
-   */
-  fulfillSignInRequest_ (dialogState) {
-    debug('fulfillSignInRequest_: dialogState=%s', JSON.stringify(dialogState));
-    // Build an Expected Intent object.
-    const expectedIntent = {
-      intent: this.StandardIntents.SIGN_IN
-    };
     expectedIntent.inputValueData = {};
-    // Send an Ask request to Assistant.
-    const inputPrompt = this.buildInputPrompt(false, 'PLACEHOLDER_FOR_SIGN_IN');
-    if (!dialogState) {
-      dialogState = {
-        'state': (this.state instanceof State ? this.state.getName() : this.state),
-        'data': this.data
-      };
+    if (intentSpec) {
+      expectedIntent.inputValueData = Object.assign({
+        [this.ANY_TYPE_PROPERTY_]: specType
+      }, intentSpec);
     }
+    // Send an Ask request to Assistant.
+    const inputPrompt = this.buildInputPrompt(false, promptPlaceholder ||
+      'PLACEHOLDER_FOR_INTENT');
     return this.buildAskHelper_(inputPrompt, [expectedIntent], dialogState);
   }
 
@@ -993,9 +820,7 @@ class ActionsSdkApp extends AssistantApp {
       error('Invalid intent');
       return null;
     }
-    const expectedIntent = {
-      intent: intent
-    };
+    const expectedIntent = { intent };
     return expectedIntent;
   }
 }

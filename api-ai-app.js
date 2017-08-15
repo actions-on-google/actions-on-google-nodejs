@@ -681,56 +681,6 @@ class ApiAiApp extends AssistantApp {
   }
 
   /**
-   * Asks user for delivery address.
-   *
-   * @example
-   * const app = new ApiAiApp({request: request, response: response});
-   * const WELCOME_INTENT = 'input.welcome';
-   * const DELIVERY_INTENT = 'delivery.address';
-   *
-   * function welcomeIntent (app) {
-   *   app.askForDeliveryAddress('To make sure I can deliver to you');
-   * }
-   *
-   * function addressIntent (app) {
-   *   const postalCode = app.getDeliveryAddress().postalAddress.postalCode;
-   *   if (isInDeliveryZone(postalCode)) {
-   *     app.tell('Great looks like you\'re in our delivery area!');
-   *   } else {
-   *     app.tell('I\'m sorry it looks like we can\'t deliver to you.');
-   *   }
-   * }
-   *
-   * const actionMap = new Map();
-   * actionMap.set(WELCOME_INTENT, welcomeIntent);
-   * actionMap.set(DELIVERY_INTENT, addressIntent);
-   * app.handleRequest(actionMap);
-   *
-   * @param {string} reason Reason given to user for asking delivery address.
-   * @return {Object} HTTP response.
-   * @apiai
-   */
-  askForDeliveryAddress (reason) {
-    debug('askForDeliveryAddress: reason=%s', reason);
-    if (!reason) {
-      this.handleError_('reason cannot be empty');
-      return null;
-    }
-    const response = this.buildResponse_('PLACEHOLDER_FOR_DELIVERY_ADDRESS', true);
-    response.data.google.systemIntent = {
-      intent: this.StandardIntents.DELIVERY_ADDRESS
-    };
-    response.data.google.systemIntent.data = Object.assign({
-      [this.ANY_TYPE_PROPERTY_]: this.InputValueDataTypes_.DELIVERY_ADDRESS
-    }, {
-      addressOptions: {
-        reason: reason
-      }
-    });
-    return this.doResponse_(response, RESPONSE_CODE_OK);
-  }
-
-  /**
    * Tells the Assistant to render the speech response and close the mic.
    *
    * @example
@@ -1081,125 +1031,53 @@ class ApiAiApp extends AssistantApp {
     debug('fulfillPermissionsRequest_: permissionsSpec=%s',
       JSON.stringify(permissionsSpec));
     const inputPrompt = 'PLACEHOLDER_FOR_PERMISSION';
-    const response = this.buildResponse_(inputPrompt, true);
-    response.data.google.systemIntent = {
-      intent: this.StandardIntents.PERMISSION
-    };
     if (this.isNotApiVersionOne_()) {
-      response.data.google.systemIntent.data = Object.assign({
-        [this.ANY_TYPE_PROPERTY_]: this.InputValueDataTypes_.PERMISSION
-      }, permissionsSpec);
+      return this.fulfillSystemIntent_(this.StandardIntents.PERMISSION,
+        this.InputValueDataTypes_.PERMISSION, permissionsSpec,
+        inputPrompt);
     } else {
+      const response = this.buildResponse_(inputPrompt, true);
+      response.data.google.systemIntent = {
+        intent: this.StandardIntents.PERMISSION
+      };
       response.data.google.systemIntent.spec = {
         permissionValueSpec: permissionsSpec
       };
+      return this.doResponse_(response, RESPONSE_CODE_OK);
     }
-    return this.doResponse_(response, RESPONSE_CODE_OK);
   }
 
   /**
-   * Uses TransactionRequirementsCheckValueSpec to construct and send a
-   * transaction requirements request to Google.
+   * Uses a given intent spec to construct and send a non-TEXT intent response
+   * to Google.
    *
-   * @param {Object} transactionRequirementsSpec TransactionRequirementsSpec
-   *     object.
+   * @param {String} intent Name of the intent to fulfill. One of
+   *     {@link AssistantApp#StandardIntents|StandardIntents}.
+   * @param {String} specType Type of the related intent spec. One of
+   *     {@link AssistantApp#InputValueDataTypes_|InputValueDataTypes_}.
+   * @param {Object} intentSpec Intent Spec object. Pass {} to leave empty.
+   * @param {String=} promptPlaceholder Some placeholder text for the response
+   *     prompt. Default is 'PLACEHOLDER_FOR_INTENT'.
+   * @param {Object=} dialogState JSON object the app uses to hold dialog state that
+   *     will be circulated back by Assistant.
    * @return {Object} HTTP response.
    * @private
    * @apiai
    */
-  fulfillTransactionRequirementsCheck_ (transactionRequirementsSpec) {
-    debug('fulfillTransactionRequirementsCheck_: transactionRequirementsSpec=%s',
-      JSON.stringify(transactionRequirementsSpec));
-    const response = this.buildResponse_('PLACEHOLDER_FOR_TXN_REQUIREMENTS', true);
-    response.data.google.systemIntent = {
-      intent: this.StandardIntents.TRANSACTION_REQUIREMENTS_CHECK
-    };
-    response.data.google.systemIntent.data = Object.assign({
-      [this.ANY_TYPE_PROPERTY_]: this.InputValueDataTypes_.TRANSACTION_REQ_CHECK
-    }, transactionRequirementsSpec);
-    return this.doResponse_(response, RESPONSE_CODE_OK);
-  }
-
-  /**
-   * Uses TransactionDecisionValueSpec to construct and send a transaction
-   * requirements request to Google.
-   *
-   * @param {Object} transactionDecisionValueSpec TransactionDecisionValueSpec
-   *     object.
-   * @return {Object} HTTP response.
-   * @private
-   * @apiai
-   */
-  fulfillTransactionDecision_ (transactionDecisionValueSpec) {
-    debug('fulfillTransactionDecision_: transactionDecisionValueSpec=%s',
-      JSON.stringify(transactionDecisionValueSpec));
-    const response = this.buildResponse_('PLACEHOLDER_FOR_TXN_DECISION', true);
-    response.data.google.systemIntent = {
-      intent: this.StandardIntents.TRANSACTION_DECISION
-    };
-    response.data.google.systemIntent.data = Object.assign({
-      [this.ANY_TYPE_PROPERTY_]: this.InputValueDataTypes_.TRANSACTION_DECISION
-    }, transactionDecisionValueSpec);
-    return this.doResponse_(response, RESPONSE_CODE_OK);
-  }
-
-  /**
-   * Uses ConfirmationValueSpec to construct and send a confirmation request to
-   * Google.
-   *
-   * @param {Object} confirmationValueSpec ConfirmationValueSpec object.
-   * @return {Object} HTTP response.
-   * @private
-   * @apiai
-   */
-  fulfillConfirmationRequest_ (confirmationValueSpec) {
-    debug('fulfillConfirmationRequest_: confirmationValueSpec=%s',
-      JSON.stringify(confirmationValueSpec));
-    const response = this.buildResponse_('PLACEHOLDER_FOR_CONFIRMATION', true);
-    response.data.google.systemIntent = {
-      intent: this.StandardIntents.CONFIRMATION
-    };
-    response.data.google.systemIntent.data = Object.assign({
-      [this.ANY_TYPE_PROPERTY_]: this.InputValueDataTypes_.CONFIRMATION
-    }, confirmationValueSpec);
-    return this.doResponse_(response, RESPONSE_CODE_OK);
-  }
-
-  /**
-   * Uses DateTimeValueSpec to construct and send a datetime request to Google.
-   *
-   * @param {Object} dateTimeValueSpec DateTimeValueSpec object.
-   * @return {Object} HTTP response.
-   * @private
-   * @apiai
-   */
-  fulfillDateTimeRequest_ (dateTimeValueSpec) {
-    debug('fulfillDateTimeRequest_: dateTimeValueSpec=%s',
-      JSON.stringify(dateTimeValueSpec));
-    const response = this.buildResponse_('PLACEHOLDER_FOR_DATETIME', true);
-    response.data.google.systemIntent = {
-      intent: this.StandardIntents.DATETIME
-    };
-    response.data.google.systemIntent.data = Object.assign({
-      [this.ANY_TYPE_PROPERTY_]: this.InputValueDataTypes_.DATETIME
-    }, dateTimeValueSpec);
-    return this.doResponse_(response, RESPONSE_CODE_OK);
-  }
-
-  /**
-   * Constructs and sends a sign in request to Google.
-   *
-   * @return {Object} HTTP response.
-   * @private
-   * @apiai
-   */
-  fulfillSignInRequest_ () {
-    debug('fulfillSignInRequest_');
-    const response = this.buildResponse_('PLACEHOLDER_FOR_SIGN_IN', true);
-    response.data.google.systemIntent = {
-      intent: this.StandardIntents.SIGN_IN
-    };
+  fulfillSystemIntent_ (intent, specType, intentSpec, promptPlaceholder,
+    dialogState) {
+    debug('fulfillSystemIntent_: intent=%s, specType=%s, intentSpec=%s, ' +
+      'promptPlaceholder=%s dialogState=%s', intent, specType,
+      JSON.stringify(intentSpec), promptPlaceholder, JSON.stringify(dialogState));
+    const response = this.buildResponse_(promptPlaceholder ||
+      'PLACEHOLDER_FOR_INTENT', true);
+    response.data.google.systemIntent = { intent };
     response.data.google.systemIntent.data = {};
+    if (intentSpec) {
+      response.data.google.systemIntent.data = Object.assign({
+        [this.ANY_TYPE_PROPERTY_]: specType
+      }, intentSpec);
+    }
     return this.doResponse_(response, RESPONSE_CODE_OK);
   }
 }
