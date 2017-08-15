@@ -313,7 +313,9 @@ class AssistantApp {
       /** Confirmation Value Spec. */
       CONFIRMATION: 'type.googleapis.com/google.actions.v2.ConfirmationValueSpec',
       /** DateTime Value Spec. */
-      DATETIME: 'type.googleapis.com/google.actions.v2.DateTimeValueSpec'
+      DATETIME: 'type.googleapis.com/google.actions.v2.DateTimeValueSpec',
+      /** Sign in Value Spec */
+      SIGN_IN: 'type.googleapis.com/google.actions.v2.SignInValueSpec'
     };
 
     /**

@@ -1281,7 +1281,9 @@ describe('ActionsSdkApp', function () {
             'possibleIntents': [
               {
                 'intent': 'actions.intent.SIGN_IN',
-                'inputValueData': {}
+                'inputValueData': {
+                  '@type': 'type.googleapis.com/google.actions.v2.SignInValueSpec'
+                }
               }
             ]
           }
