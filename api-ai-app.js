@@ -448,7 +448,7 @@ class ApiAiApp extends AssistantApp {
    * }
    *
    * function optionPicked (app) {
-   *   assistant.ask('You picked ' + app.getSelectedOption());
+   *   app.ask('You picked ' + app.getSelectedOption());
    * }
    *
    * const actionMap = new Map();
