@@ -11,7 +11,8 @@
   "scripts": {
     "lint": "eslint --fix \"*.js\" \"test/*.js\" \"utils/*.js\"",
     "test": "npm run lint && ./node_modules/.bin/mocha --reporter spec ./test/*.js",
-    "coverage": "nyc --reporter=lcov --reporter=html npm test && nyc report"
+    "coverage": "nyc --reporter=lcov --reporter=html npm test && nyc report",
+    "docs": "jsdoc ./ -t node_modules/jsdoc-baseline -d docs"
   },
   "repository": {
     "type": "git",
@@ -55,6 +56,8 @@
     "eslint-plugin-node": "^5.0.0",
     "eslint-plugin-promise": "^3.5.0",
     "eslint-plugin-standard": "^3.0.1",
+    "jsdoc": "^3.5.5",
+    "jsdoc-baseline": "https://github.com/hegemonic/baseline/tarball/master",
     "mocha": "^3.0.2",
     "nyc": "^11.0.3",
     "winston": "2.2.0"
