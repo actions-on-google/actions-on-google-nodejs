@@ -78,7 +78,7 @@ class ActionsSdkApp extends AssistantApp {
     }
   }
 
-  /*
+  /**
    * Validates whether request is from Assistant through signature verification.
    * Uses Google-Auth-Library to verify authorization token against given
    * Google Cloud Project ID. Auth token is given in request header with key,
@@ -122,7 +122,7 @@ class ActionsSdkApp extends AssistantApp {
     });
   }
 
-  /*
+  /**
    * Gets the request Conversation API version.
    *
    * @example
