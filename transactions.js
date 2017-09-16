@@ -918,7 +918,7 @@ const LineItem = class {
      * Sublines for current item. Only valid if item type is REGULAR.
      * @type {Array<string|LineItem>}
      */
-    this.sublines = undefined;
+    this.subLines = undefined;
 
     /**
      * Image of the item.
@@ -963,16 +963,13 @@ const LineItem = class {
       error('items cannot be null');
       return this;
     }
-    if (!this.sublines) {
-      this.sublines = [];
+    if (!this.subLines) {
+      this.subLines = [];
     }
-    if (Array.isArray(items)) {
-      for (let item of items) {
-        this.sublines.push(item);
-      }
-    } else {
-      this.sublines.push(items);
-    }
+    const list = (Array.isArray(items) ? items : [items]).map(item =>
+      typeof item === 'string' ? { note: item } : { lineItem: item }
+    );
+    this.subLines.push(...list);
     return this;
   }
 

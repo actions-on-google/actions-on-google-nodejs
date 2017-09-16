@@ -538,9 +538,13 @@ describe('LineItem', () => {
       expect(JSON.parse(JSON.stringify(lineItem))).to.deep.equal({
         id: 'test_item_id',
         name: 'test_item',
-        sublines: [{
-          new_item: 'new_item'
-        }]
+        subLines: [
+          {
+            lineItem: {
+              new_item: 'new_item'
+            }
+          }
+        ]
       });
     });
 
@@ -555,12 +559,71 @@ describe('LineItem', () => {
       expect(JSON.parse(JSON.stringify(lineItem))).to.deep.equal({
         id: 'test_item_id',
         name: 'test_item',
-        sublines: [
+        subLines: [
           {
-            new_item: 'new_item'
+            lineItem: {
+              new_item: 'new_item'
+            }
           },
           {
-            new_item: 'new_item_2'
+            lineItem: {
+              new_item: 'new_item_2'
+            }
+          }
+        ]
+      });
+    });
+
+    it('should add a single string subline', () => {
+      lineItem.addSublines('new_item');
+      expect(JSON.parse(JSON.stringify(lineItem))).to.deep.equal({
+        id: 'test_item_id',
+        name: 'test_item',
+        subLines: [
+          {
+            note: 'new_item'
+          }
+        ]
+      });
+    });
+
+    it('should add multiple string sublines', () => {
+      lineItem.addSublines([
+        'new_item',
+        'new_item_2'
+      ]);
+      expect(JSON.parse(JSON.stringify(lineItem))).to.deep.equal({
+        id: 'test_item_id',
+        name: 'test_item',
+        subLines: [
+          {
+            note: 'new_item'
+          },
+          {
+            note: 'new_item_2'
+          }
+        ]
+      });
+    });
+
+    it('should add multiple string and object sublines', () => {
+      lineItem.addSublines([
+        {
+          new_item: 'new_item'
+        },
+        'new_item_2'
+      ]);
+      expect(JSON.parse(JSON.stringify(lineItem))).to.deep.equal({
+        id: 'test_item_id',
+        name: 'test_item',
+        subLines: [
+          {
+            lineItem: {
+              new_item: 'new_item'
+            }
+          },
+          {
+            note: 'new_item_2'
           }
         ]
       });
