@@ -515,7 +515,7 @@ class AssistantApp {
     debug('handleRequest: handler=%s', handler);
     if (!handler) {
       this.handleError_('request handler can NOT be empty.');
-      return;
+      return false;
     }
     if (typeof handler === 'function') {
       debug('handleRequest: function');
@@ -523,7 +523,7 @@ class AssistantApp {
       this.handler_ = handler;
       const promise = handler(this);
       if (promise instanceof Promise) {
-        promise.then(
+        return promise.then(
           (result) => {
             debug(result);
           })
@@ -534,9 +534,9 @@ class AssistantApp {
           });
       } else {
         // Handle functions
-        return;
+        return true;
       }
-      return;
+      return false;
     } else if (handler instanceof Map) {
       debug('handleRequest: map');
       const intent = this.getIntent();
@@ -544,7 +544,7 @@ class AssistantApp {
       if (!result) {
         this.tell(!this.lastErrorMessage_ ? ERROR_MESSAGE : this.lastErrorMessage_);
       }
-      return;
+      return result;
     }
     // Could not handle intent
     this.handleError_('invalid intent handler type: ' + (typeof handler));
@@ -1707,7 +1707,7 @@ class AssistantApp {
         debug('map of intents');
         const promise = value(this);
         if (promise instanceof Promise) {
-          promise.then(
+          return promise.then(
             (result) => {
               // No-op
             })
