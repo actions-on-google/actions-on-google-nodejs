@@ -976,7 +976,8 @@ class ApiAiApp extends AssistantApp {
     } : {
       google: {
         expectUserResponse: expectUserResponse,
-        richResponse: textToSpeech
+        richResponse: textToSpeech,
+        noInputPrompts: noInputs
       }
     };
     if (expectUserResponse) {

@@ -179,6 +179,7 @@ describe('ApiAiApp', function () {
           'data': {
             'google': {
               'expect_user_response': false,
+              'no_input_prompts': [],
               'rich_response': {
                 'items': [
                   {
@@ -210,6 +211,7 @@ describe('ApiAiApp', function () {
           'data': {
             'google': {
               'expect_user_response': false,
+              'no_input_prompts': [],
               'rich_response': {
                 'items': [
                   {
@@ -289,6 +291,7 @@ describe('ApiAiApp', function () {
           'data': {
             'google': {
               'expect_user_response': true,
+              'no_input_prompts': [],
               'rich_response': {
                 'items': [
                   {
@@ -327,6 +330,98 @@ describe('ApiAiApp', function () {
           'data': {
             'google': {
               'expect_user_response': true,
+              'no_input_prompts': [],
+              'rich_response': {
+                'items': [
+                  {
+                    'simple_response': {
+                      'text_to_speech': 'hello',
+                      'display_text': 'hi'
+                    }
+                  }
+                ],
+                'suggestions': [
+                  {
+                    'title': 'Say this'
+                  },
+                  {
+                    'title': 'or this'
+                  }
+                ]
+              }
+            }
+          },
+          'contextOut': [
+            {
+              'name': '_actions_on_google_',
+              'lifespan': 100,
+              'parameters': {}
+            }
+          ]
+        };
+        expect(JSON.parse(JSON.stringify(mockResponse.body)))
+          .to.deep.equal(expectedResponse);
+      });
+
+    // Success case test, when the API returns a valid 200 response with the response object
+    it('Should return no input prompts with a simple response',
+      function () {
+        app.ask('hello', ['no', 'input', 'prompts']);
+        // Validating the response object
+        let expectedResponse = {
+          'speech': 'hello',
+          'data': {
+            'google': {
+              'expect_user_response': true,
+              'is_ssml': false,
+              'no_input_prompts': [
+                {
+                  'text_to_speech': 'no'
+                },
+                {
+                  'text_to_speech': 'input'
+                },
+                {
+                  'text_to_speech': 'prompts'
+                }
+              ]
+            }
+          },
+          'contextOut': [
+            {
+              'name': '_actions_on_google_',
+              'lifespan': 100,
+              'parameters': {}
+            }
+          ]
+        };
+        expect(mockResponse.body).to.deep.equal(expectedResponse);
+      });
+
+    // Success case test, when the API returns a valid 200 response with the response object
+    it('Should return no input prompts with a rich response',
+      function () {
+        app.ask(app.buildRichResponse()
+          .addSimpleResponse({speech: 'hello', displayText: 'hi'})
+          .addSuggestions(['Say this', 'or this']), ['no', 'input', 'prompts']);
+
+        // Validating the response object
+        let expectedResponse = {
+          'speech': 'hello',
+          'data': {
+            'google': {
+              'expect_user_response': true,
+              'no_input_prompts': [
+                {
+                  'text_to_speech': 'no'
+                },
+                {
+                  'text_to_speech': 'input'
+                },
+                {
+                  'text_to_speech': 'prompts'
+                }
+              ],
               'rich_response': {
                 'items': [
                   {
@@ -362,6 +457,12 @@ describe('ApiAiApp', function () {
     // Failure test, when the API returns a 400 response with the response object
     it('Should send failure response for rich response without simple response', function () {
       app.ask(app.buildRichResponse());
+      expect(mockResponse.statusCode).to.equal(400);
+    });
+
+    // Failure test, when the API returns a 400 response with the response object
+    it('Should send failure response for no input prompts with more than 3 items', function () {
+      app.ask('hello', ['too', 'many', 'no input', 'prompts']);
       expect(mockResponse.statusCode).to.equal(400);
     });
   });
