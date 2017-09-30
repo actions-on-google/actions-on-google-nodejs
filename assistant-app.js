@@ -228,7 +228,11 @@ class AssistantApp {
       /** App fires DATETIME intent when requesting date/time from user. */
       DATETIME: 'actions.intent.DATETIME',
       /** App fires SIGN_IN intent when requesting sign-in from user. */
-      SIGN_IN: 'actions.intent.SIGN_IN'
+      SIGN_IN: 'actions.intent.SIGN_IN',
+      /** App fires NO_INPUT intent when user doesn't provide input. */
+      NO_INPUT: 'actions.intent.NO_INPUT',
+      /** App fires CANCEL intent when user exits app mid-dialog. */
+      CANCEL: 'actions.intent.CANCEL'
     };
 
     /**
@@ -279,7 +283,11 @@ class AssistantApp {
       /** DateTime argument. */
       DATETIME: 'DATETIME',
       /** Sign in status argument. */
-      SIGN_IN: 'SIGN_IN'
+      SIGN_IN: 'SIGN_IN',
+      /** Reprompt count for consecutive NO_INPUT intents. */
+      REPROMPT_COUNT: 'REPROMPT_COUNT',
+      /** Flag representing finality of NO_INPUT intent. */
+      IS_FINAL_REPROMPT: 'IS_FINAL_REPROMPT'
     };
 
     /**
@@ -490,7 +498,7 @@ class AssistantApp {
    * app.handleRequest(actionMap);
    *
    * // API.AI
-   * const app = new ApiAIApp({request: req, response: res});
+   * const app = new ApiAiApp({request: req, response: res});
    * const NAME_ACTION = 'make_name';
    * const COLOR_ARGUMENT = 'color';
    * const NUMBER_ARGUMENT = 'number';
@@ -1539,8 +1547,87 @@ class AssistantApp {
    * @actionssdk
    */
   isInSandbox () {
+    debug('isInSandbox');
     const data = this.requestData();
     return data && data.isInSandbox;
+  }
+
+  /**
+   * Returns the number of subsequent reprompts related to silent input from the
+   * user. This should be used along with the NO_INPUT intent to reprompt the
+   * user for input in cases where the Google Assistant could not pick up any
+   * speech.
+   *
+   * @example
+   * const app = new ActionsSdkApp({request, response});
+   *
+   * function welcome (app) {
+   *   app.ask('Welcome to your app!');
+   * }
+   *
+   * function noInput (app) {
+   *   if (app.getRepromptCount() === 0) {
+   *     app.ask(`What was that?`);
+   *   } else if (app.getRepromptCount() === 1) {
+   *     app.ask(`Sorry I didn't catch that. Could you repeat yourself?`);
+   *   } else if (app.isFinalReprompt()) {
+   *     app.tell(`Okay let's try this again later.`);
+   *   }
+   * }
+   *
+   * const actionMap = new Map();
+   * actionMap.set(app.StandardIntents.MAIN, welcome);
+   * actionMap.set(app.StandardIntents.NO_INPUT, noInput);
+   * app.handleRequest(actionMap);
+   *
+   * @return {number} The current reprompt count. Null if no reprompt count
+   *     available (e.g. not in the NO_INPUT intent).
+   * @apiai
+   * @actionssdk
+   */
+  getRepromptCount () {
+    debug('getRepromptCount');
+    const repromptCount = this.getArgumentCommon(this.BuiltInArgNames.REPROMPT_COUNT);
+    return repromptCount !== null ? parseInt(repromptCount, 10) : null;
+  }
+
+  /**
+   * Returns true if it is the final reprompt related to silent input from the
+   * user. This should be used along with the NO_INPUT intent to give the final
+   * response to the user after multiple silences and should be an app.tell
+   * which ends the conversation.
+   *
+   * @example
+   * const app = new ActionsSdkApp({request, response});
+   *
+   * function welcome (app) {
+   *   app.ask('Welcome to your app!');
+   * }
+   *
+   * function noInput (app) {
+   *   if (app.getRepromptCount() === 0) {
+   *     app.ask(`What was that?`);
+   *   } else if (app.getRepromptCount() === 1) {
+   *     app.ask(`Sorry I didn't catch that. Could you repeat yourself?`);
+   *   } else if (app.isFinalReprompt()) {
+   *     app.tell(`Okay let's try this again later.`);
+   *   }
+   * }
+   *
+   * const actionMap = new Map();
+   * actionMap.set(app.StandardIntents.MAIN, welcome);
+   * actionMap.set(app.StandardIntents.NO_INPUT, noInput);
+   * app.handleRequest(actionMap);
+   *
+   * @return {boolean} True if in a NO_INPUT intent and this is the final turn
+   *     of dialog.
+   * @apiai
+   * @actionssdk
+   */
+  isFinalReprompt () {
+    debug('isFinalReprompt');
+    const finalReprompt = this.getArgumentCommon(this.BuiltInArgNames.IS_FINAL_REPROMPT);
+    return finalReprompt === '1';
   }
 
   // ---------------------------------------------------------------------------

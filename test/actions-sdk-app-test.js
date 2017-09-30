@@ -1801,6 +1801,102 @@ describe('ActionsSdkApp', function () {
   });
 
   /**
+   * Describes the behavior for ActionsSdkApp getRepromptCount method.
+   */
+  describe('#getRepromptCount', function () {
+    // Success case test, when the API requests with a valid reprompt count.
+    it('Should return the proper reprompt count.', function () {
+      actionsSdkAppRequestBodyLive.inputs = [{
+        'intent': 'actions.intent.NO_INPUT',
+        'arguments': [
+          {
+            'name': 'REPROMPT_COUNT',
+            'textValue': '1'
+          },
+          {
+            'name': 'IS_FINAL_REPROMPT',
+            'textValue': '0'
+          }
+        ]
+      }];
+      let mockRequest = new MockRequest(headerV2, actionsSdkAppRequestBodyLive);
+      let app = new ActionsSdkApp({
+        request: mockRequest,
+        response: mockResponse
+      });
+      expect(app.getRepromptCount()).to.equal(1);
+    });
+    // Test case checking it handles API requests without reprompt count correctly.
+    it('Should return null when no reprompt count available.', function () {
+      let mockRequest = new MockRequest(headerV2, actionsSdkAppRequestBodyLive);
+      let app = new ActionsSdkApp({
+        request: mockRequest,
+        response: mockResponse
+      });
+      expect(app.getRepromptCount()).to.be.null;
+    });
+  });
+
+  /**
+   * Describes the behavior for ActionsSdkApp isFinalReprompt method.
+   */
+  describe('#isFinalReprompt', function () {
+    // Success case test, when the API requests with a valid reprompt count.
+    it('Should return true for final reprompt', function () {
+      actionsSdkAppRequestBodyLive.inputs = [{
+        'intent': 'actions.intent.NO_INPUT',
+        'arguments': [
+          {
+            'name': 'REPROMPT_COUNT',
+            'textValue': '2'
+          },
+          {
+            'name': 'IS_FINAL_REPROMPT',
+            'textValue': '1'
+          }
+        ]
+      }];
+      let mockRequest = new MockRequest(headerV2, actionsSdkAppRequestBodyLive);
+      let app = new ActionsSdkApp({
+        request: mockRequest,
+        response: mockResponse
+      });
+      expect(app.isFinalReprompt()).to.be.true;
+    });
+    // Success case test, when the API requests with a valid reprompt count.
+    it('Should return false for non-final reprompt', function () {
+      actionsSdkAppRequestBodyLive.inputs = [{
+        'intent': 'actions.intent.NO_INPUT',
+        'arguments': [
+          {
+            'name': 'REPROMPT_COUNT',
+            'textValue': '0'
+          },
+          {
+            'name': 'IS_FINAL_REPROMPT',
+            'textValue': '0'
+          }
+        ]
+      }];
+      let mockRequest = new MockRequest(headerV2, actionsSdkAppRequestBodyLive);
+      let app = new ActionsSdkApp({
+        request: mockRequest,
+        response: mockResponse
+      });
+      expect(app.isFinalReprompt()).to.be.false;
+    });
+    // Failure case test, when the API requests without reprompt count.
+    it('Should return false when no reprompt count available.', function () {
+      let mockRequest = new MockRequest(headerV2, actionsSdkAppRequestBodyLive);
+      let app = new ActionsSdkApp({
+        request: mockRequest,
+        response: mockResponse
+      });
+      expect(app.isFinalReprompt()).to.be.false;
+    });
+  });
+
+  /**
    * Describes the behavior for ActionsSdkApp hasSurfaceCapability method.
    */
   describe('#hasSurfaceCapability', function () {
