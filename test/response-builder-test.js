@@ -32,6 +32,8 @@ const Carousel = require('.././response-builder').Carousel;
 const OptionItem = require('.././response-builder').OptionItem;
 const OrderUpdate = require('.././transactions').OrderUpdate;
 
+const { ImageDisplays } = require('.././response-builder');
+
 // Default logger
 winston.loggers.add('DEFAULT_LOGGER', {
   console: {
@@ -418,6 +420,37 @@ describe('BasicCard', () => {
           url: 'new.url',
           accessibilityText: 'new_accessibilityText'
         }
+      });
+    });
+  });
+
+  describe('#setImageDisplay', () => {
+    let basicCard;
+
+    beforeEach(() => {
+      basicCard = new BasicCard();
+    });
+
+    it('constructor should have undefined image options', () => {
+      expect(basicCard.imageDisplayOptions).to.equal(undefined);
+    });
+
+    it('should set image display options', () => {
+      basicCard.setImageDisplay(ImageDisplays.WHITE);
+      expect(JSON.parse(JSON.stringify(basicCard))).to.deep.equal({
+        formattedText: '',
+        buttons: [],
+        imageDisplayOptions: ImageDisplays.WHITE
+      });
+    });
+
+    it('should overwrite previously set image display', () => {
+      basicCard.setImageDisplay(ImageDisplays.WHITE);
+      basicCard.setImageDisplay(ImageDisplays.CROPPED);
+      expect(JSON.parse(JSON.stringify(basicCard))).to.deep.equal({
+        formattedText: '',
+        buttons: [],
+        imageDisplayOptions: ImageDisplays.CROPPED
       });
     });
   });
