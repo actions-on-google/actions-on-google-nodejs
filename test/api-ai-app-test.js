@@ -1149,6 +1149,141 @@ describe('ApiAiApp', function () {
   });
 
   /**
+   * Describes the behavior for ApiAiApp getAvailableSurfaces method.
+   */
+  describe('#getAvailableSurfaces', function () {
+    // Success case test, when the API returns a valid 200 response with the response object
+    it('Should return assistant available surfaces', function () {
+      const availableSurfaces = [
+        {
+          'capabilities': [
+            {
+              'name': 'cap_one'
+            },
+            {
+              'name': 'cap_two'
+            }
+          ]
+        },
+        {
+          'capabilities': [
+            {
+              'name': 'cap_three'
+            },
+            {
+              'name': 'cap_four'
+            }
+          ]
+        }
+      ];
+      apiAiAppRequestBodyLiveSession.originalRequest.data.availableSurfaces = availableSurfaces;
+      let mockRequest = new MockRequest(headerV1, apiAiAppRequestBodyLiveSession);
+      let app = new ApiAiApp({
+        request: mockRequest,
+        response: mockResponse
+      });
+
+      expect(app.getAvailableSurfaces()).to.deep.equal(availableSurfaces);
+    });
+
+    // Failure case test
+    it('Should return empty assistant available surfaces', function () {
+      let mockRequest = new MockRequest(headerV2, apiAiAppRequestBodyLiveSession);
+      let app = new ApiAiApp({
+        request: mockRequest,
+        response: mockResponse
+      });
+      expect(app.getAvailableSurfaces()).to.deep.equal([]);
+    });
+  });
+
+  /**
+   * Describes the behavior for ApiAiApp hasAvailableSurfaceCapabilities method.
+   */
+  describe('#hasAvailableSurfaceCapabilities', function () {
+    beforeEach(function () {
+      const availableSurfaces = [
+        {
+          'capabilities': [
+            {
+              'name': 'cap_one'
+            },
+            {
+              'name': 'cap_two'
+            }
+          ]
+        },
+        {
+          'capabilities': [
+            {
+              'name': 'cap_three'
+            },
+            {
+              'name': 'cap_four'
+            }
+          ]
+        }
+      ];
+      apiAiAppRequestBodyLiveSession.originalRequest.data.availableSurfaces = availableSurfaces;
+    });
+
+    // Success case test, when the API returns a valid 200 response with the response object
+    it('Should return true for set of valid capabilities', function () {
+      let mockRequest = new MockRequest(headerV1, apiAiAppRequestBodyLiveSession);
+      let app = new ApiAiApp({
+        request: mockRequest,
+        response: mockResponse
+      });
+
+      expect(app.hasAvailableSurfaceCapabilities(['cap_one', 'cap_two'])).to.be.true;
+    });
+
+    // Success case test, when the API returns a valid 200 response with the response object
+    it('Should return true for one valid capability', function () {
+      let mockRequest = new MockRequest(headerV1, apiAiAppRequestBodyLiveSession);
+      let app = new ApiAiApp({
+        request: mockRequest,
+        response: mockResponse
+      });
+
+      expect(app.hasAvailableSurfaceCapabilities('cap_one')).to.be.true;
+    });
+
+    // Failure case test, when the API returns a valid 200 response with the response object
+    it('Should return false for set of invalid capabilities', function () {
+      let mockRequest = new MockRequest(headerV1, apiAiAppRequestBodyLiveSession);
+      let app = new ApiAiApp({
+        request: mockRequest,
+        response: mockResponse
+      });
+
+      expect(app.hasAvailableSurfaceCapabilities(['cap_one', 'cap_three'])).to.be.false;
+    });
+
+    // Failure case test, when the API returns a valid 200 response with the response object
+    it('Should return false for one invalid capability', function () {
+      let mockRequest = new MockRequest(headerV1, apiAiAppRequestBodyLiveSession);
+      let app = new ApiAiApp({
+        request: mockRequest,
+        response: mockResponse
+      });
+
+      expect(app.hasAvailableSurfaceCapabilities('cap_five')).to.be.false;
+    });
+
+    // Failure case test
+    it('Should return false for empty assistant available surfaces', function () {
+      apiAiAppRequestBodyLiveSession.availableSurfaces = undefined;
+      let mockRequest = new MockRequest(headerV2, apiAiAppRequestBodyLiveSession);
+      let app = new ApiAiApp({
+        request: mockRequest,
+        response: mockResponse
+      });
+      expect(app.hasAvailableSurfaceCapabilities()).to.be.false;
+    });
+  });
+
+  /**
    * Describes the behavior for ApiAiApp askForTransactionRequirements method.
    */
   describe('#askForTransactionRequirements', function () {
@@ -1689,6 +1824,101 @@ describe('ApiAiApp', function () {
       };
 
       expect(mockResponse.body).to.deep.equal(expectedResponse);
+    });
+  });
+
+  /**
+   * Describes the behavior for ApiAiApp askForNewSurface method.
+   */
+  describe('#askForNewSurface', function () {
+    let app, mockRequest;
+
+    beforeEach(function () {
+      mockRequest = new MockRequest(headerV2, apiAiAppRequestBodyLiveSession);
+      app = new ApiAiApp({
+        request: mockRequest,
+        response: mockResponse
+      });
+    });
+
+    // Success case test, when the API returns a valid 200 response with the response object
+    it('Should return valid JSON sign in request', function () {
+      app.askForNewSurface('test context', 'test title', ['cap_one', 'cap_two']);
+      let expectedResponse = {
+        'speech': 'PLACEHOLDER_FOR_NEW_SURFACE',
+        'data': {
+          'google': {
+            'expectUserResponse': true,
+            'isSsml': false,
+            'noInputPrompts': [],
+            'systemIntent': {
+              'intent': 'actions.intent.NEW_SURFACE',
+              'data': {
+                'context': 'test context',
+                'notificationTitle': 'test title',
+                'capabilities': ['cap_one', 'cap_two'],
+                '@type': 'type.googleapis.com/google.actions.v2.NewSurfaceValueSpec'
+              }
+            }
+          }
+        },
+        'contextOut': [
+          {
+            'name': '_actions_on_google_',
+            'lifespan': 100,
+            'parameters': {}
+          }
+        ]
+      };
+
+      expect(mockResponse.body).to.deep.equal(expectedResponse);
+    });
+  });
+
+  /**
+   * Describes the behavior for ApiAiApp isNewSurface method.
+   */
+  describe('#isNewSurface', function () {
+    // Success case test, when the API returns a valid 200 response with the response object
+    it('Should validate when new surface was accepted.', function () {
+      apiAiAppRequestBodyLiveSession.originalRequest.data.inputs[0].arguments = [
+        {
+          'name': 'NEW_SURFACE',
+          'extension': {
+            'status': 'OK'
+          }
+        }
+      ];
+
+      let mockRequest = new MockRequest(headerV1, apiAiAppRequestBodyLiveSession);
+
+      let app = new ApiAiApp({
+        request: mockRequest,
+        response: mockResponse
+      });
+
+      expect(app.isNewSurface()).to.be.true;
+    });
+
+    // Failure case test
+    it('Should validate when new surface was denied.', function () {
+      apiAiAppRequestBodyLiveSession.originalRequest.data.inputs[0].arguments = [
+        {
+          'name': 'NEW_SURFACE',
+          'extension': {
+            'status': 'DENIED'
+          }
+        }
+      ];
+
+      let mockRequest = new MockRequest(headerV1, apiAiAppRequestBodyLiveSession);
+
+      let app = new ApiAiApp({
+        request: mockRequest,
+        response: mockResponse
+      });
+
+      expect(app.isNewSurface()).to.be.false;
     });
   });
 

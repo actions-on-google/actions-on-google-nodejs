@@ -1292,6 +1292,49 @@ describe('ActionsSdkApp', function () {
   });
 
   /**
+   * Describes the behavior for ActionsSdkApp askForNewSurface method.
+   */
+  describe('#askForNewSurface', function () {
+    // Success case test, when the API returns a valid 200 response with the response object
+    it('Should return valid JSON sign in request', function () {
+      let mockRequest = new MockRequest(headerV2, actionsSdkAppRequestBodyLive);
+      let app = new ActionsSdkApp({
+        request: mockRequest,
+        response: mockResponse
+      });
+      app.askForNewSurface('test context', 'test title', ['cap_one', 'cap_two']);
+      let expectedResponse = {
+        'conversationToken': '{"state":null,"data":{}}',
+        'expectUserResponse': true,
+        'expectedInputs': [
+          {
+            'inputPrompt': {
+              'initialPrompts': [
+                {
+                  'textToSpeech': 'PLACEHOLDER_FOR_NEW_SURFACE'
+                }
+              ],
+              'noInputPrompts': []
+            },
+            'possibleIntents': [
+              {
+                'intent': 'actions.intent.NEW_SURFACE',
+                'inputValueData': {
+                  'context': 'test context',
+                  'notificationTitle': 'test title',
+                  'capabilities': ['cap_one', 'cap_two'],
+                  '@type': 'type.googleapis.com/google.actions.v2.NewSurfaceValueSpec'
+                }
+              }
+            ]
+          }
+        ]
+      };
+      expect(mockResponse.body).to.deep.equal(expectedResponse);
+    });
+  });
+
+  /**
    * Describes the behavior for ActionsSdkApp getUser method.
    */
   describe('#getUser', function () {
@@ -1730,6 +1773,188 @@ describe('ActionsSdkApp', function () {
       });
 
       expect(app.getDeviceLocation()).to.equal(null);
+    });
+  });
+
+  /**
+   * Describes the behavior for ActionsSdkApp getAvailableSurfaces method.
+   */
+  describe('#getAvailableSurfaces', function () {
+    // Success case test, when the API returns a valid 200 response with the response object
+    it('Should return assistant available surfaces', function () {
+      const availableSurfaces = [
+        {
+          'capabilities': [
+            {
+              'name': 'cap_one'
+            },
+            {
+              'name': 'cap_two'
+            }
+          ]
+        },
+        {
+          'capabilities': [
+            {
+              'name': 'cap_three'
+            },
+            {
+              'name': 'cap_four'
+            }
+          ]
+        }
+      ];
+      actionsSdkAppRequestBodyLive.availableSurfaces = availableSurfaces;
+      let mockRequest = new MockRequest(headerV1, actionsSdkAppRequestBodyLive);
+      let app = new ActionsSdkApp({
+        request: mockRequest,
+        response: mockResponse
+      });
+
+      expect(app.getAvailableSurfaces()).to.deep.equal(availableSurfaces);
+    });
+
+    // Failure case test
+    it('Should return empty assistant available surfaces', function () {
+      let mockRequest = new MockRequest(headerV2, actionsSdkAppRequestBodyLive);
+      let app = new ActionsSdkApp({
+        request: mockRequest,
+        response: mockResponse
+      });
+      expect(app.getAvailableSurfaces()).to.deep.equal([]);
+    });
+  });
+
+  /**
+   * Describes the behavior for ActionsSdkApp hasAvailableSurfaceCapabilities method.
+   */
+  describe('#hasAvailableSurfaceCapabilities', function () {
+    beforeEach(function () {
+      const availableSurfaces = [
+        {
+          'capabilities': [
+            {
+              'name': 'cap_one'
+            },
+            {
+              'name': 'cap_two'
+            }
+          ]
+        },
+        {
+          'capabilities': [
+            {
+              'name': 'cap_three'
+            },
+            {
+              'name': 'cap_four'
+            }
+          ]
+        }
+      ];
+      actionsSdkAppRequestBodyLive.availableSurfaces = availableSurfaces;
+    });
+
+    // Success case test, when the API returns a valid 200 response with the response object
+    it('Should return true for set of valid capabilities', function () {
+      let mockRequest = new MockRequest(headerV1, actionsSdkAppRequestBodyLive);
+      let app = new ActionsSdkApp({
+        request: mockRequest,
+        response: mockResponse
+      });
+
+      expect(app.hasAvailableSurfaceCapabilities(['cap_one', 'cap_two'])).to.be.true;
+    });
+
+    // Success case test, when the API returns a valid 200 response with the response object
+    it('Should return true for one valid capability', function () {
+      let mockRequest = new MockRequest(headerV1, actionsSdkAppRequestBodyLive);
+      let app = new ActionsSdkApp({
+        request: mockRequest,
+        response: mockResponse
+      });
+
+      expect(app.hasAvailableSurfaceCapabilities('cap_one')).to.be.true;
+    });
+
+    // Failure case test, when the API returns a valid 200 response with the response object
+    it('Should return true for set of invalid capabilities', function () {
+      let mockRequest = new MockRequest(headerV1, actionsSdkAppRequestBodyLive);
+      let app = new ActionsSdkApp({
+        request: mockRequest,
+        response: mockResponse
+      });
+
+      expect(app.hasAvailableSurfaceCapabilities(['cap_one', 'cap_three'])).to.be.false;
+    });
+
+    // Failure case test, when the API returns a valid 200 response with the response object
+    it('Should return true for one invalid capability', function () {
+      let mockRequest = new MockRequest(headerV1, actionsSdkAppRequestBodyLive);
+      let app = new ActionsSdkApp({
+        request: mockRequest,
+        response: mockResponse
+      });
+
+      expect(app.hasAvailableSurfaceCapabilities('cap_five')).to.be.false;
+    });
+
+    // Failure case test
+    it('Should return false for empty assistant available surfaces', function () {
+      actionsSdkAppRequestBodyLive.availableSurfaces = undefined;
+      let mockRequest = new MockRequest(headerV2, actionsSdkAppRequestBodyLive);
+      let app = new ActionsSdkApp({
+        request: mockRequest,
+        response: mockResponse
+      });
+      expect(app.hasAvailableSurfaceCapabilities()).to.be.false;
+    });
+  });
+
+  /**
+   * Describes the behavior for ActionsSdkApp isNewSurface method.
+   */
+  describe('#isNewSurface', function () {
+    // Success case test, when the API returns a valid 200 response with the response object
+    it('Should validate when new surface was accepted.', function () {
+      actionsSdkAppRequestBodyLive.inputs[0].arguments = [
+        {
+          'name': 'NEW_SURFACE',
+          'extension': {
+            'status': 'OK'
+          }
+        }
+      ];
+
+      let mockRequest = new MockRequest(headerV1, actionsSdkAppRequestBodyLive);
+
+      let app = new ActionsSdkApp({
+        request: mockRequest,
+        response: mockResponse
+      });
+
+      expect(app.isNewSurface()).to.be.true;
+    });
+
+    // Failure case test
+    it('Should validate when new surface was denied.', function () {
+      actionsSdkAppRequestBodyLive.inputs[0].arguments = [
+        {
+          'name': 'NEW_SURFACE',
+          'extension': {
+            'status': 'DENIED'
+          }
+        }
+      ];
+
+      let mockRequest = new MockRequest(headerV1, actionsSdkAppRequestBodyLive);
+
+      let app = new ActionsSdkApp({
+        request: mockRequest,
+        response: mockResponse
+      });
+
+      expect(app.isNewSurface()).to.be.false;
     });
   });
 

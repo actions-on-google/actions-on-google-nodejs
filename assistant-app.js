@@ -232,7 +232,9 @@ class AssistantApp {
       /** App fires NO_INPUT intent when user doesn't provide input. */
       NO_INPUT: 'actions.intent.NO_INPUT',
       /** App fires CANCEL intent when user exits app mid-dialog. */
-      CANCEL: 'actions.intent.CANCEL'
+      CANCEL: 'actions.intent.CANCEL',
+      /** App fires NEW_SURFACE intent when requesting handoff to a new surface from user. */
+      NEW_SURFACE: 'actions.intent.NEW_SURFACE'
     };
 
     /**
@@ -287,7 +289,9 @@ class AssistantApp {
       /** Reprompt count for consecutive NO_INPUT intents. */
       REPROMPT_COUNT: 'REPROMPT_COUNT',
       /** Flag representing finality of NO_INPUT intent. */
-      IS_FINAL_REPROMPT: 'IS_FINAL_REPROMPT'
+      IS_FINAL_REPROMPT: 'IS_FINAL_REPROMPT',
+      /** New surface value argument. */
+      NEW_SURFACE: 'NEW_SURFACE'
     };
 
     /**
@@ -321,32 +325,9 @@ class AssistantApp {
       /** Confirmation Value Spec. */
       CONFIRMATION: 'type.googleapis.com/google.actions.v2.ConfirmationValueSpec',
       /** DateTime Value Spec. */
-      DATETIME: 'type.googleapis.com/google.actions.v2.DateTimeValueSpec'
-    };
-
-    /**
-     * List of built-in value type names.
-     * @private
-     * @readonly
-     * @enum {string}
-     * @actionssdk
-     * @apiai
-     */
-    this.InputValueDataTypes_ = {
-      /** Permission Value Spec. */
-      PERMISSION: 'type.googleapis.com/google.actions.v2.PermissionValueSpec',
-      /** Option Value Spec. */
-      OPTION: 'type.googleapis.com/google.actions.v2.OptionValueSpec',
-      /** Transaction Requirements Check Value Spec. */
-      TRANSACTION_REQ_CHECK: 'type.googleapis.com/google.actions.v2.TransactionRequirementsCheckSpec',
-      /** Delivery Address Value Spec. */
-      DELIVERY_ADDRESS: 'type.googleapis.com/google.actions.v2.DeliveryAddressValueSpec',
-      /** Transaction Decision Value Spec. */
-      TRANSACTION_DECISION: 'type.googleapis.com/google.actions.v2.TransactionDecisionValueSpec',
-      /** Confirmation Value Spec. */
-      CONFIRMATION: 'type.googleapis.com/google.actions.v2.ConfirmationValueSpec',
-      /** DateTime Value Spec. */
-      DATETIME: 'type.googleapis.com/google.actions.v2.DateTimeValueSpec'
+      DATETIME: 'type.googleapis.com/google.actions.v2.DateTimeValueSpec',
+      /** New Surface Value Spec. */
+      NEW_SURFACE: 'type.googleapis.com/google.actions.v2.NewSurfaceValueSpec'
     };
 
     /**
@@ -1040,7 +1021,7 @@ class AssistantApp {
    * @apiai
    */
   askForDateTime (initialPrompt, datePrompt, timePrompt, dialogState) {
-    debug('askForConfirmation: initialPrompt=%s, datePrompt=%s, ' +
+    debug('askForDateTime: initialPrompt=%s, datePrompt=%s, ' +
       'timePrompt=%s, dialogState=%s', initialPrompt, datePrompt, timePrompt,
       JSON.stringify(dialogState));
     let dateTimeValueSpec = {};
@@ -1103,6 +1084,61 @@ class AssistantApp {
   }
 
   /**
+   * Requests the user to switch to another surface during the conversation.
+   *
+   * @example
+   * const app = new ApiAiApp({ request, response });
+   * const WELCOME_INTENT = 'input.welcome';
+   * const SHOW_IMAGE = 'show.image';
+   *
+   * function welcomeIntent (app) {
+   *   if (app.hasSurfaceCapability(app.SurfaceCapabilities.SCREEN_OUTPUT)) {
+   *     showPicture(app);
+   *   } else if (app.hasAvailableSurfaceCapabilities(app.SurfaceCapabilities.SCREEN_OUTPUT)) {
+   *     app.askForNewSurface('To show you an image',
+   *       'Check out this image',
+   *       [app.SurfaceCapabilities.SCREEN_OUTPUT]
+   *     );
+   *   } else {
+   *     app.tell('This part of the app only works on screen devices. Sorry about that');
+   *   }
+   * }
+   *
+   * function showImage (app) {
+   *   if (!app.isNewSurface()) {
+   *     app.tell('Ok, I understand. You don't want to see pictures. Bye');
+   *   } else {
+   *     showPicture(app, pictureType);
+   *   }
+   * }
+   *
+   * const actionMap = new Map();
+   * actionMap.set(WELCOME_INTENT, welcomeIntent);
+   * actionMap.set(SHOW_IMAGE, showImage);
+   * app.handleRequest(actionMap);
+   *
+   * @param {string} context Context why new surface is requested; it's the TTS
+   *     prompt prefix (action phrase) we ask the user.
+   * @param {string} notificationTitle Title of the notification appearing on
+   *     new surface device.
+   * @param {Array<string>} capabilities The list of capabilities required in
+   *     the surface.
+   * @param {Object=} dialogState JSON object the app uses to hold dialog state that
+   *     will be circulated back by Assistant. Used in {@link ActionsSdkAssistant}.
+   * @apiai
+   * @actionssdk
+   */
+  askForNewSurface (context, notificationTitle, capabilities, dialogState) {
+    debug('askForNewSurface: context=%s, notificationTitle=%s, ' +
+        'capabilities=%s, dialogState=%s', context, notificationTitle,
+        JSON.stringify(capabilities), dialogState);
+    let newSurfaceValueSpec = { context, notificationTitle, capabilities };
+    return this.fulfillSystemIntent_(this.StandardIntents.NEW_SURFACE,
+       this.InputValueDataTypes_.NEW_SURFACE, newSurfaceValueSpec,
+       'PLACEHOLDER_FOR_NEW_SURFACE', dialogState);
+  }
+
+  /**
    * User provided date/time info.
    * @typedef {Object} DateTime
    * @property {Object} date
@@ -1136,7 +1172,7 @@ class AssistantApp {
    *     SupportedPermissions.DEVICE_COARSE_LOCATION.
    */
 
-   /**
+  /**
    * User object.
    * @typedef {Object} User
    * @property {string} userId - Random string ID for Google user.
@@ -1144,6 +1180,18 @@ class AssistantApp {
    *     requested with {@link AssistantApp#askForPermission|askForPermission(SupportedPermissions.NAME)}.
    * @property {string} accessToken - Unique Oauth2 token. Only available with
    *     account linking.
+   */
+
+  /**
+   * Actions on Google Surface.
+   * @typedef {Object} Surface
+   * @property {Array<Capability>} capabilities - Capabilities of the surface.
+   */
+
+  /**
+   * Surface capability.
+   * @typedef {Object} Capability
+   * @property {string} name - Name of the capability.
    */
 
   /**
@@ -1535,6 +1583,63 @@ class AssistantApp {
       error('No surface capabilities in incoming request');
       return null;
     }
+  }
+
+  /**
+   * Returns the set of other available surfaces for the user.
+   *
+   * @return {Array<Surface>} Empty if no available surfaces.
+   * @actionssdk
+   * @apiai
+   */
+  getAvailableSurfaces () {
+    debug('getAvailableSurfaces');
+    return this.requestData().availableSurfaces || [];
+  }
+
+  /**
+   * Returns true if user has an available surface which includes all given
+   * capabilities. Available surfaces capabilities may exist on surfaces other
+   * than that used for an ongoing conversation.
+   *
+   * @param {string|Array<string>} capabilities Must be one of
+   *     {@link SurfaceCapabilities}.
+   * @return {boolean} True if user has a capability available on some surface.
+   *
+   * @apiai
+   * @actionssdk
+   */
+  hasAvailableSurfaceCapabilities (capabilities) {
+    debug('hasAvailableSurfaceCapabilities: capabilities=%s', capabilities);
+    const capabilitiesArray = Array.isArray(capabilities) ? capabilities
+      : [capabilities];
+    const availableSurfaces = this.requestData().availableSurfaces;
+    if (availableSurfaces) {
+      for (let surface of availableSurfaces) {
+        const availableCapabilities = surface.capabilities.map(capability => capability.name);
+        const unavailableCapabilities = capabilitiesArray
+          .filter(capability => !availableCapabilities.includes(capability));
+        if (!unavailableCapabilities.length) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
+ /**
+  * Returns the result of the AskForNewSurface helper.
+  *
+  * @return {boolean} True if user has triggered conversation on a new device
+  *     following the NEW_SURFACE intent.
+  * @actionssdk
+  * @apiai
+  */
+  isNewSurface () {
+    debug('isNewSurface');
+    const argument = this.findArgument_(this.BuiltInArgNames.NEW_SURFACE);
+    return argument && argument.extension && argument.extension.status &&
+      argument.extension.status === 'OK';
   }
 
   /**
