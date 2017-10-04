@@ -722,7 +722,7 @@ class AssistantApp {
    * // fill order cart
    *
    * function welcomeIntent (app) {
-   *   app.askForTransaction(order, transactionConfig);
+   *   app.askForTransactionDecision(order, transactionConfig);
    * }
    *
    * function txnComplete (app) {
