@@ -526,11 +526,13 @@ class AssistantApp {
         return promise.then(
           (result) => {
             debug(result);
+            return result;
           })
         .catch(
           (reason) => {
             this.handleError_('function failed: %s', reason.message);
             this.tell(!reason.message ? ERROR_MESSAGE : reason.message);
+            return reason;
           });
       } else {
         // Handle functions
@@ -1710,13 +1712,14 @@ class AssistantApp {
           return promise.then(
             (result) => {
               // No-op
+              return result;
             })
           .catch(
             (reason) => {
               error(reason.message);
               this.handleError_('intent handler failed: %s', reason.message);
               this.lastErrorMessage_ = reason.message;
-              return false;
+              return reason;
             });
         } else {
           // Handle functions
