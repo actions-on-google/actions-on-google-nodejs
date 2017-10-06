@@ -26,9 +26,11 @@ const winston = require('winston');
 const chai = require('chai');
 const expect = chai.expect;
 const spies = require('chai-spies');
-const { AssistantApp } = require('.././actions-on-google');
+const { AssistantApp, ApiAiApp } = require('.././actions-on-google');
 const {
+  apiAiAppRequestBodyNewSessionMock,
   headerV1,
+  headerV2,
   MockRequest,
   MockResponse
 } = require('./utils/mocking');
@@ -157,6 +159,74 @@ describe('AssistantApp', function () {
         .equal(true);
       expect(app.isSsml_('<speak><sub alias="World Wide Web Consortium">W3C</sub></speak>')).to
         .equal(true);
+    });
+  });
+
+  describe('#handleRequest', function () {
+    let mockRequest;
+    let app;
+
+    beforeEach(function () {
+      mockRequest = new MockRequest(headerV2, JSON.parse(JSON.stringify(apiAiAppRequestBodyNewSessionMock)));
+      app = new ApiAiApp({request: mockRequest, response: mockResponse});
+    });
+
+    it('Should resolve a promise when actionMap contains a handler that returns a promise', function (done) {
+      let handler = app => {
+        return Promise.resolve('success');
+      };
+
+      const actionMap = new Map();
+      actionMap.set(mockRequest.body.result.action, handler);
+
+      app.handleRequest(actionMap).then(
+        (result) => {
+          expect(result).to.equal('success');
+          done();
+        }
+      );
+    });
+
+    it('Should reject a promise when actionMap contains a handler that returns a promise error', function (done) {
+      let handler = app => {
+        return Promise.reject(new Error('error'));
+      };
+
+      const actionMap = new Map();
+      actionMap.set(mockRequest.body.result.action, handler);
+
+      app.handleRequest(actionMap).catch(
+        (reason) => {
+          expect(reason).to.be.a('Error');
+          done();
+        }
+      );
+    });
+
+    it('Should resolve a promise when handler function returns a promise', function (done) {
+      let handler = app => {
+        return Promise.resolve('success');
+      };
+
+      app.handleRequest(handler).then(
+        (result) => {
+          expect(result).to.equal('success');
+          done();
+        }
+      );
+    });
+
+    it('Should reject a promise when handler function returns a promise error', function (done) {
+      let handler = app => {
+        return Promise.reject(new Error('error'));
+      };
+
+      app.handleRequest(handler).catch(
+        (reason) => {
+          expect(reason).to.be.a('Error');
+          done();
+        }
+      );
     });
   });
 });
