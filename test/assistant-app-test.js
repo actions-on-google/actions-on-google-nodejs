@@ -228,5 +228,34 @@ describe('AssistantApp', function () {
         }
       );
     });
+
+    it('Should resolve a promise when handler function does not return a promise', function (done) {
+      let handler = app => {
+        return 'success';
+      };
+
+      app.handleRequest(handler).then(
+        (result) => {
+          expect(result).to.equal('success');
+          done();
+        }
+      );
+    });
+
+    it('Should resolve a promise when actionMap contains a handler that does not return a promise', function (done) {
+      let handler = app => {
+        return 'success';
+      };
+
+      const actionMap = new Map();
+      actionMap.set(mockRequest.body.result.action, handler);
+
+      app.handleRequest(actionMap).then(
+        (result) => {
+          expect(result).to.equal('success');
+          done();
+        }
+      );
+    });
   });
 });
