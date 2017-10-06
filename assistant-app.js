@@ -508,6 +508,7 @@ class AssistantApp {
    * app.handleRequest(actionMap);
    *
    * @param {(Function|Map)} handler The handler (or Map of handlers) for the request.
+   * @return {Promise} to resolve the result of the handler that was invoked.
    * @actionssdk
    * @apiai
    */
@@ -515,15 +516,15 @@ class AssistantApp {
     debug('handleRequest: handler=%s', handler);
     if (!handler) {
       this.handleError_('request handler can NOT be empty.');
-      return false;
+      return Promise.reject(new Error('request handler can NOT be empty.'));
     }
     if (typeof handler === 'function') {
       debug('handleRequest: function');
       // simple function handler
       this.handler_ = handler;
-      const promise = handler(this);
-      if (promise instanceof Promise) {
-        return promise.then(
+      const handlerResult = handler(this);
+      if (handlerResult instanceof Promise) {
+        return handlerResult.then(
           (result) => {
             debug(result);
             return result;
@@ -532,25 +533,32 @@ class AssistantApp {
           (reason) => {
             this.handleError_('function failed: %s', reason.message);
             this.tell(!reason.message ? ERROR_MESSAGE : reason.message);
-            return reason;
+            return Promise.reject(reason);
           });
       } else {
         // Handle functions
-        return true;
+        return Promise.resolve(handlerResult);
       }
-      return false;
     } else if (handler instanceof Map) {
       debug('handleRequest: map');
       const intent = this.getIntent();
-      const result = this.invokeIntentHandler_(handler, intent);
-      if (!result) {
-        this.tell(!this.lastErrorMessage_ ? ERROR_MESSAGE : this.lastErrorMessage_);
-      }
-      return result;
+      return this.invokeIntentHandler_(handler, intent)
+        .then(
+          (result) => {
+            debug(result);
+            return result;
+          })
+        .catch(
+          (reason) => {
+            this.tell(!this.lastErrorMessage_ ? ERROR_MESSAGE : this.lastErrorMessage_);
+            return Promise.reject(reason);
+          }
+        );
     }
     // Could not handle intent
     this.handleError_('invalid intent handler type: ' + (typeof handler));
     this.tell(ERROR_MESSAGE);
+    return Promise.reject(ERROR_MESSAGE);
   }
 
   /**
@@ -1670,7 +1678,7 @@ class AssistantApp {
    *
    * @param {Object} handler The handler for the request.
    * @param {string} intent The intent to handle.
-   * @return {boolean} true if the handler was invoked.
+   * @return {Promise} to resolve the result of the handler that was invoked.
    * @private
    */
   invokeIntentHandler_ (handler, intent) {
@@ -1707,9 +1715,9 @@ class AssistantApp {
       // else map of intents
       if (name === intent) {
         debug('map of intents');
-        const promise = value(this);
-        if (promise instanceof Promise) {
-          return promise.then(
+        const handlerResult = value(this);
+        if (handlerResult instanceof Promise) {
+          return handlerResult.then(
             (result) => {
               // No-op
               return result;
@@ -1719,17 +1727,16 @@ class AssistantApp {
               error(reason.message);
               this.handleError_('intent handler failed: %s', reason.message);
               this.lastErrorMessage_ = reason.message;
-              return reason;
+              return Promise.reject(reason);
             });
         } else {
           // Handle functions
-          return true;
+          return Promise.resolve(handlerResult);
         }
-        return true;
       }
     }
     this.handleError_('no matching intent handler for: ' + intent);
-    return false;
+    return Promise.reject(new Error('no matching intent handler for: ' + intent));
   }
 
   /**
