@@ -20,21 +20,21 @@
 process.env.DEBUG = 'actions-on-google:*';
 
 /**
- * Test suite for the ApiAiApp client library.
+ * Test suite for the Dialogflow client library.
  */
 const winston = require('winston');
 const chai = require('chai');
 const expect = chai.expect;
 const spies = require('chai-spies');
-const { ApiAiApp } = require('.././actions-on-google');
+const { DialogflowApp } = require('.././actions-on-google');
 const RichResponse = require('.././response-builder').RichResponse;
 const BasicCard = require('.././response-builder').BasicCard;
 const List = require('.././response-builder').List;
 const Carousel = require('.././response-builder').Carousel;
 const OptionItem = require('.././response-builder').OptionItem;
 const {
-  apiAiAppRequestBodyNewSessionMock,
-  apiAiAppRequestBodyLiveSessionMock,
+  dialogflowAppRequestBodyNewSessionMock,
+  dialogflowAppRequestBodyLiveSessionMock,
   headerV1,
   headerV2,
   MockResponse,
@@ -55,26 +55,26 @@ winston.loggers.add('DEFAULT_LOGGER', {
 });
 
 // ---------------------------------------------------------------------------
-//                   API.ai support
+//                   Dialogflow support
 // ---------------------------------------------------------------------------
-describe('ApiAiApp', function () {
-  let apiAiAppRequestBodyNewSession, apiAiAppRequestBodyLiveSession, mockResponse;
+describe('DialogflowApp', function () {
+  let dialogflowAppRequestBodyNewSession, dialogflowAppRequestBodyLiveSession, mockResponse;
 
   beforeEach(function () {
-    apiAiAppRequestBodyNewSession = JSON.parse(JSON.stringify(apiAiAppRequestBodyNewSessionMock));
-    apiAiAppRequestBodyLiveSession = JSON.parse(JSON.stringify(apiAiAppRequestBodyLiveSessionMock));
+    dialogflowAppRequestBodyNewSession = JSON.parse(JSON.stringify(dialogflowAppRequestBodyNewSessionMock));
+    dialogflowAppRequestBodyLiveSession = JSON.parse(JSON.stringify(dialogflowAppRequestBodyLiveSessionMock));
     mockResponse = new MockResponse();
   });
 
   /**
-   * Describes the behavior for ApiAiApp constructor method.
+   * Describes the behavior for DialogflowApp constructor method.
    */
   describe('#constructor', function () {
     // Calls sessionStarted when provided
     it('Calls sessionStarted when new session', function () {
-      const mockRequest = new MockRequest(headerV1, apiAiAppRequestBodyNewSession);
+      const mockRequest = new MockRequest(headerV1, dialogflowAppRequestBodyNewSession);
       const sessionStartedSpy = chai.spy();
-      const app = new ApiAiApp({
+      const app = new DialogflowApp({
         request: mockRequest,
         response: mockResponse,
         sessionStarted: sessionStartedSpy
@@ -85,9 +85,9 @@ describe('ApiAiApp', function () {
 
     // Does not call sessionStarted when not new sessoin
     it('Does not call sessionStarted when not new session ', function () {
-      const mockRequest = new MockRequest(headerV1, apiAiAppRequestBodyLiveSession);
+      const mockRequest = new MockRequest(headerV1, dialogflowAppRequestBodyLiveSession);
       const sessionStartedSpy = chai.spy();
-      const app = new ApiAiApp({
+      const app = new DialogflowApp({
         request: mockRequest,
         response: mockResponse,
         sessionStarted: sessionStartedSpy
@@ -98,7 +98,7 @@ describe('ApiAiApp', function () {
 
     // Test a change made for backwards compatibility with legacy sample code
     it('Does initialize StandardIntents without an options object', function () {
-      const app = new ApiAiApp();
+      const app = new DialogflowApp();
       expect(app.StandardIntents.MAIN).to.equal('assistant.intent.action.MAIN');
       expect(app.StandardIntents.TEXT).to.equal('assistant.intent.action.TEXT');
       expect(app.StandardIntents.PERMISSION).to
@@ -106,7 +106,7 @@ describe('ApiAiApp', function () {
     });
 
     it('Does not detect v2 and transform originalRequest when version not present', function () {
-      let bodyWithoutVersion = apiAiAppRequestBodyNewSession;
+      let bodyWithoutVersion = dialogflowAppRequestBodyNewSession;
       bodyWithoutVersion.originalRequest = {'foo_prop': 'bar_val'};
       bodyWithoutVersion.foo_field = 'bar_val';
       bodyWithoutVersion.result.parameters.foo_param = 'blue';
@@ -114,7 +114,7 @@ describe('ApiAiApp', function () {
       bodyWithoutVersion.originalRequest['foo_prop'] = 'bar_val';
 
       const mockRequest = new MockRequest(headerV1, bodyWithoutVersion);
-      const app = new ApiAiApp({request: mockRequest, response: mockResponse});
+      const app = new DialogflowApp({request: mockRequest, response: mockResponse});
 
       expect(app.isNotApiVersionOne_()).to.equal(false);
       expect(app.body_['foo_field']).to.equal('bar_val');
@@ -124,7 +124,7 @@ describe('ApiAiApp', function () {
     });
 
     it('Does detect v2 and not transform originalRequest when version is present', function () {
-      let bodyWithVersion = apiAiAppRequestBodyNewSession;
+      let bodyWithVersion = dialogflowAppRequestBodyNewSession;
       bodyWithVersion.originalRequest = {'foo_prop': 'bar_val', 'version': '2'};
       bodyWithVersion.foo_field = 'bar_val';
       bodyWithVersion.result.parameters.foo_param = 'blue';
@@ -132,7 +132,7 @@ describe('ApiAiApp', function () {
       bodyWithVersion.originalRequest['foo_prop'] = 'bar_val';
 
       const mockRequest = new MockRequest(headerV1, bodyWithVersion);
-      const app = new ApiAiApp({request: mockRequest, response: mockResponse});
+      const app = new DialogflowApp({request: mockRequest, response: mockResponse});
 
       expect(app.isNotApiVersionOne_()).to.equal(true);
       expect(app.body_['foo_field']).to.equal('bar_val');
@@ -143,14 +143,14 @@ describe('ApiAiApp', function () {
   });
 
   /**
-   * Describes the behavior for ApiAiApp tell method.
+   * Describes the behavior for DialogflowApp tell method.
    */
   describe('#tell', function () {
     let mockRequest, app;
 
     beforeEach(function () {
-      mockRequest = new MockRequest(headerV1, apiAiAppRequestBodyLiveSession);
-      app = new ApiAiApp({request: mockRequest, response: mockResponse});
+      mockRequest = new MockRequest(headerV1, dialogflowAppRequestBodyLiveSession);
+      app = new DialogflowApp({request: mockRequest, response: mockResponse});
     });
 
     // Success case test, when the API returns a valid 200 response with the response object
@@ -246,14 +246,14 @@ describe('ApiAiApp', function () {
   });
 
   /**
-   * Describes the behavior for ApiAiApp ask method.
+   * Describes the behavior for DialogflowApp ask method.
    */
   describe('#ask', function () {
     let mockRequest, app;
 
     beforeEach(function () {
-      mockRequest = new MockRequest(headerV1, apiAiAppRequestBodyLiveSession);
-      app = new ApiAiApp({request: mockRequest, response: mockResponse});
+      mockRequest = new MockRequest(headerV1, dialogflowAppRequestBodyLiveSession);
+      app = new DialogflowApp({request: mockRequest, response: mockResponse});
     });
 
     // Success case test, when the API returns a valid 200 response with the response object
@@ -468,15 +468,15 @@ describe('ApiAiApp', function () {
   });
 
   /**
-   * Describes the behavior for ApiAiApp askWithList method.
+   * Describes the behavior for DialogflowApp askWithList method.
    */
   describe('#askWithList', function () {
     let mockRequest, app;
 
     beforeEach(function () {
-      apiAiAppRequestBodyLiveSession.originalRequest.version = 2;
-      mockRequest = new MockRequest(headerV1, apiAiAppRequestBodyLiveSession);
-      app = new ApiAiApp({request: mockRequest, response: mockResponse});
+      dialogflowAppRequestBodyLiveSession.originalRequest.version = 2;
+      mockRequest = new MockRequest(headerV1, dialogflowAppRequestBodyLiveSession);
+      app = new DialogflowApp({request: mockRequest, response: mockResponse});
     });
 
     // Success case test, when the API returns a valid 200 response with the response object
@@ -544,15 +544,15 @@ describe('ApiAiApp', function () {
   });
 
   /**
-   * Describes the behavior for ApiAiApp askWithCarousel method.
+   * Describes the behavior for DialogflowApp askWithCarousel method.
    */
   describe('#askWithCarousel', function () {
     let mockRequest, app;
 
     beforeEach(function () {
-      apiAiAppRequestBodyLiveSession.originalRequest.version = 2;
-      mockRequest = new MockRequest(headerV1, apiAiAppRequestBodyLiveSession);
-      app = new ApiAiApp({request: mockRequest, response: mockResponse});
+      dialogflowAppRequestBodyLiveSession.originalRequest.version = 2;
+      mockRequest = new MockRequest(headerV1, dialogflowAppRequestBodyLiveSession);
+      app = new DialogflowApp({request: mockRequest, response: mockResponse});
     });
 
     // Success case test, when the API returns a valid 200 response with the response object
@@ -624,14 +624,14 @@ describe('ApiAiApp', function () {
   });
 
   /**
-   * Describes the behavior for ApiAiApp askForPermissions method in v1.
+   * Describes the behavior for DialogflowApp askForPermissions method in v1.
    */
   describe('#askForPermissions', function () {
     let mockRequest, app;
 
     beforeEach(function () {
-      mockRequest = new MockRequest(headerV1, apiAiAppRequestBodyLiveSession);
-      app = new ApiAiApp({request: mockRequest, response: mockResponse});
+      mockRequest = new MockRequest(headerV1, dialogflowAppRequestBodyLiveSession);
+      app = new DialogflowApp({request: mockRequest, response: mockResponse});
     });
 
     // Success case test, when the API returns a valid 200 response with the response object
@@ -669,15 +669,15 @@ describe('ApiAiApp', function () {
   });
 
   /**
-   * Describes the behavior for ApiAiApp askForPermissions method in v2.
+   * Describes the behavior for DialogflowApp askForPermissions method in v2.
    */
   describe('#askForPermissions', function () {
     let mockRequest, app;
 
     beforeEach(function () {
-      apiAiAppRequestBodyLiveSession.originalRequest.version = 2;
-      mockRequest = new MockRequest(headerV1, apiAiAppRequestBodyLiveSession);
-      app = new ApiAiApp({request: mockRequest, response: mockResponse});
+      dialogflowAppRequestBodyLiveSession.originalRequest.version = 2;
+      mockRequest = new MockRequest(headerV1, dialogflowAppRequestBodyLiveSession);
+      app = new DialogflowApp({request: mockRequest, response: mockResponse});
     });
 
     // Success case test, when the API returns a valid 200 response with the response object
@@ -714,15 +714,15 @@ describe('ApiAiApp', function () {
   });
 
   /**
-   * Describes the behavior for ApiAiApp getUser method.
+   * Describes the behavior for DialogflowApp getUser method.
    */
   describe('#getUser', function () {
     let mockRequest, app;
 
     beforeEach(function () {
-      apiAiAppRequestBodyLiveSession.originalRequest.data.user.user_id = '11112226094657824893';
-      mockRequest = new MockRequest(headerV1, apiAiAppRequestBodyLiveSession);
-      app = new ApiAiApp({request: mockRequest, response: mockResponse});
+      dialogflowAppRequestBodyLiveSession.originalRequest.data.user.user_id = '11112226094657824893';
+      mockRequest = new MockRequest(headerV1, dialogflowAppRequestBodyLiveSession);
+      app = new DialogflowApp({request: mockRequest, response: mockResponse});
     });
 
     // Success case test, when the API returns a valid 200 response with the response object
@@ -734,13 +734,13 @@ describe('ApiAiApp', function () {
   });
 
   /**
-   * Describes the behavior for ApiAiApp getUserName method.
+   * Describes the behavior for DialogflowApp getUserName method.
    */
   describe('#getUserName', function () {
     // Success case test, when the API returns a valid 200 response with the response object
     it('Should validate assistant request user.', function () {
       let mockRequest, app;
-      apiAiAppRequestBodyLiveSession.originalRequest.data.user = {
+      dialogflowAppRequestBodyLiveSession.originalRequest.data.user = {
         'user_id': '11112226094657824893',
         'profile': {
           'display_name': 'John Smith',
@@ -748,50 +748,50 @@ describe('ApiAiApp', function () {
           'family_name': 'Smith'
         }
       };
-      mockRequest = new MockRequest(headerV1, apiAiAppRequestBodyLiveSession);
-      app = new ApiAiApp({request: mockRequest, response: mockResponse});
+      mockRequest = new MockRequest(headerV1, dialogflowAppRequestBodyLiveSession);
+      app = new DialogflowApp({request: mockRequest, response: mockResponse});
       expect(app.getUserName().displayName).to.equal('John Smith');
       expect(app.getUserName().givenName).to.equal('John');
       expect(app.getUserName().familyName).to.equal('Smith');
 
       // Test the false case
-      apiAiAppRequestBodyLiveSession.originalRequest.data.user.profile = undefined;
-      mockRequest = new MockRequest(headerV1, apiAiAppRequestBodyLiveSession);
-      app = new ApiAiApp({request: mockRequest, response: mockResponse});
+      dialogflowAppRequestBodyLiveSession.originalRequest.data.user.profile = undefined;
+      mockRequest = new MockRequest(headerV1, dialogflowAppRequestBodyLiveSession);
+      app = new DialogflowApp({request: mockRequest, response: mockResponse});
       expect(app.getUserName()).to.equal(null);
     });
   });
 
   /**
-   * Describes the behavior for ApiAiApp getUserLocale method.
+   * Describes the behavior for DialogflowApp getUserLocale method.
    */
   describe('#getUserLocale', function () {
     // Success case test, when the API returns a valid 200 response with the response object
     it('Should validate assistant request user with locale.', function () {
       let mockRequest, app;
-      mockRequest = new MockRequest(headerV1, apiAiAppRequestBodyLiveSession);
-      app = new ApiAiApp({request: mockRequest, response: mockResponse});
+      mockRequest = new MockRequest(headerV1, dialogflowAppRequestBodyLiveSession);
+      app = new DialogflowApp({request: mockRequest, response: mockResponse});
       expect(app.getUserLocale()).to.equal('en-US');
     });
 
     // Failure case
     it('Should return null for missing locale.', function () {
       let mockRequest, app;
-      apiAiAppRequestBodyLiveSession.originalRequest.data.user.locale = undefined;
-      mockRequest = new MockRequest(headerV1, apiAiAppRequestBodyLiveSession);
-      app = new ApiAiApp({request: mockRequest, response: mockResponse});
+      dialogflowAppRequestBodyLiveSession.originalRequest.data.user.locale = undefined;
+      mockRequest = new MockRequest(headerV1, dialogflowAppRequestBodyLiveSession);
+      app = new DialogflowApp({request: mockRequest, response: mockResponse});
       expect(app.getUserLocale()).to.equal(null);
     });
   });
 
   /**
-   * Describes the behavior for ApiAiApp getDeviceLocation method.
+   * Describes the behavior for DialogflowApp getDeviceLocation method.
    */
   describe('#getDeviceLocation', function () {
     let mockRequest, app;
 
     beforeEach(function () {
-      apiAiAppRequestBodyLiveSession.originalRequest.data.device = {
+      dialogflowAppRequestBodyLiveSession.originalRequest.data.device = {
         'location': {
           'coordinates': {
             'latitude': 37.3861,
@@ -805,8 +805,8 @@ describe('ApiAiApp', function () {
     });
 
     function initMockApp () {
-      mockRequest = new MockRequest(headerV1, apiAiAppRequestBodyLiveSession);
-      app = new ApiAiApp({request: mockRequest, response: mockResponse});
+      mockRequest = new MockRequest(headerV1, dialogflowAppRequestBodyLiveSession);
+      app = new DialogflowApp({request: mockRequest, response: mockResponse});
     }
 
     // Success case test, when the API returns a valid 200 response with the response object
@@ -824,18 +824,18 @@ describe('ApiAiApp', function () {
 
     it('Should validate faulty assistant request user.', function () {
       // Test the false case
-      apiAiAppRequestBodyLiveSession.originalRequest.data.device = undefined;
+      dialogflowAppRequestBodyLiveSession.originalRequest.data.device = undefined;
       initMockApp();
       expect(app.getDeviceLocation()).to.equal(null);
     });
   });
 
   /**
-   * Describes the behavior for ApiAiApp getTransactionRequirementsResult method.
+   * Describes the behavior for DialogflowApp getTransactionRequirementsResult method.
    */
   describe('#getTransactionRequirementsResult', function () {
     beforeEach(function () {
-      apiAiAppRequestBodyLiveSession.originalRequest.data.inputs[0].arguments = [
+      dialogflowAppRequestBodyLiveSession.originalRequest.data.inputs[0].arguments = [
         {
           'extension': {
             'canTransact': true,
@@ -849,8 +849,8 @@ describe('ApiAiApp', function () {
 
     // Success case test, when the API returns a valid 200 response with the response object
     it('Should validate assistant request transaction result.', function () {
-      let mockRequest = new MockRequest(headerV1, apiAiAppRequestBodyLiveSession);
-      let app = new ApiAiApp({
+      let mockRequest = new MockRequest(headerV1, dialogflowAppRequestBodyLiveSession);
+      let app = new DialogflowApp({
         request: mockRequest,
         response: mockResponse
       });
@@ -859,11 +859,11 @@ describe('ApiAiApp', function () {
   });
 
   /**
-   * Describes the behavior for ApiAiApp getDeliveryAddress method.
+   * Describes the behavior for DialogflowApp getDeliveryAddress method.
    */
   describe('#getDeliveryAddress', function () {
     beforeEach(function () {
-      apiAiAppRequestBodyLiveSession.originalRequest.data.inputs[0].arguments = [
+      dialogflowAppRequestBodyLiveSession.originalRequest.data.inputs[0].arguments = [
         {
           'extension': {
             'userDecision': 'ACCEPTED',
@@ -893,8 +893,8 @@ describe('ApiAiApp', function () {
 
     // Success case test, when the API returns a valid 200 response with the response object
     it('Should validate assistant request delivery address', function () {
-      let mockRequest = new MockRequest(headerV1, apiAiAppRequestBodyLiveSession);
-      let app = new ApiAiApp({
+      let mockRequest = new MockRequest(headerV1, dialogflowAppRequestBodyLiveSession);
+      let app = new DialogflowApp({
         request: mockRequest,
         response: mockResponse
       });
@@ -919,9 +919,9 @@ describe('ApiAiApp', function () {
 
     // Success case test, when the API returns a valid 200 response with the response object
     it('Should validate assistant request delivery address for txn decision', function () {
-      apiAiAppRequestBodyLiveSession.originalRequest.data.inputs[0].arguments[0].name = 'TRANSACTION_DECISION_VALUE';
-      let mockRequest = new MockRequest(headerV1, apiAiAppRequestBodyLiveSession);
-      let app = new ApiAiApp({
+      dialogflowAppRequestBodyLiveSession.originalRequest.data.inputs[0].arguments[0].name = 'TRANSACTION_DECISION_VALUE';
+      let mockRequest = new MockRequest(headerV1, dialogflowAppRequestBodyLiveSession);
+      let app = new DialogflowApp({
         request: mockRequest,
         response: mockResponse
       });
@@ -947,10 +947,10 @@ describe('ApiAiApp', function () {
 
     // Success case test, when the API returns a valid 200 response with the response object
     it('Should return null when user rejects', function () {
-      apiAiAppRequestBodyLiveSession.originalRequest.data.inputs[0].arguments[0].extension.userDecision =
+      dialogflowAppRequestBodyLiveSession.originalRequest.data.inputs[0].arguments[0].extension.userDecision =
         'REJECTED';
-      let mockRequest = new MockRequest(headerV1, apiAiAppRequestBodyLiveSession);
-      let app = new ApiAiApp({
+      let mockRequest = new MockRequest(headerV1, dialogflowAppRequestBodyLiveSession);
+      let app = new DialogflowApp({
         request: mockRequest,
         response: mockResponse
       });
@@ -959,12 +959,12 @@ describe('ApiAiApp', function () {
   });
 
   /**
-   * Describes the behavior for ApiAiApp getTransactionDecision method.
+   * Describes the behavior for DialogflowApp getTransactionDecision method.
    */
   describe('#getTransactionDecision', function () {
     // Success case test, when the API returns a valid 200 response with the response object
     it('Should validate assistant request delivery address', function () {
-      apiAiAppRequestBodyLiveSession.originalRequest.data.inputs[0].arguments = [
+      dialogflowAppRequestBodyLiveSession.originalRequest.data.inputs[0].arguments = [
         {
           'extension': {
             'userDecision': 'ORDER_ACCEPTED',
@@ -988,10 +988,10 @@ describe('ApiAiApp', function () {
           'name': 'TRANSACTION_DECISION_VALUE'
         }
       ];
-      let mockRequest = new MockRequest(headerV1, apiAiAppRequestBodyLiveSession);
+      let mockRequest = new MockRequest(headerV1, dialogflowAppRequestBodyLiveSession);
       let mockResponse = new MockResponse();
 
-      let app = new ApiAiApp({
+      let app = new DialogflowApp({
         request: mockRequest,
         response: mockResponse
       });
@@ -1019,19 +1019,19 @@ describe('ApiAiApp', function () {
   });
 
   /**
-   * Describes the behavior for ApiAiApp getUserConfirmation method.
+   * Describes the behavior for DialogflowApp getUserConfirmation method.
    */
   describe('#getUserConfirmation', function () {
     // Success case test, when the API returns a valid 200 response with the response object
     it('Should validate assistant request positive user confirmation', function () {
-      apiAiAppRequestBodyLiveSession.originalRequest.data.inputs[0].arguments = [
+      dialogflowAppRequestBodyLiveSession.originalRequest.data.inputs[0].arguments = [
         {
           'name': 'CONFIRMATION',
           'boolValue': true
         }
       ];
-      let mockRequest = new MockRequest(headerV1, apiAiAppRequestBodyLiveSession);
-      let app = new ApiAiApp({
+      let mockRequest = new MockRequest(headerV1, dialogflowAppRequestBodyLiveSession);
+      let app = new DialogflowApp({
         request: mockRequest,
         response: mockResponse
       });
@@ -1040,14 +1040,14 @@ describe('ApiAiApp', function () {
 
     // Success case test, when the API returns a valid 200 response with the response object
     it('Should validate assistant request negative user confirmation', function () {
-      apiAiAppRequestBodyLiveSession.originalRequest.data.inputs[0].arguments = [
+      dialogflowAppRequestBodyLiveSession.originalRequest.data.inputs[0].arguments = [
         {
           'name': 'CONFIRMATION',
           'boolValue': false
         }
       ];
-      let mockRequest = new MockRequest(headerV1, apiAiAppRequestBodyLiveSession);
-      let app = new ApiAiApp({
+      let mockRequest = new MockRequest(headerV1, dialogflowAppRequestBodyLiveSession);
+      let app = new DialogflowApp({
         request: mockRequest,
         response: mockResponse
       });
@@ -1056,12 +1056,12 @@ describe('ApiAiApp', function () {
   });
 
   /**
-   * Describes the behavior for ApiAiApp getDateTime method.
+   * Describes the behavior for DialogflowApp getDateTime method.
    */
   describe('#getDateTime', function () {
     // Success case test, when the API returns a valid 200 response with the response object
     it('Should validate assistant datetime information', function () {
-      apiAiAppRequestBodyLiveSession.originalRequest.data.inputs[0].arguments = [
+      dialogflowAppRequestBodyLiveSession.originalRequest.data.inputs[0].arguments = [
         {
           'datetimeValue': {
             'date': {
@@ -1076,9 +1076,9 @@ describe('ApiAiApp', function () {
           'name': 'DATETIME'
         }
       ];
-      let mockRequest = new MockRequest(headerV1, apiAiAppRequestBodyLiveSession);
+      let mockRequest = new MockRequest(headerV1, dialogflowAppRequestBodyLiveSession);
 
-      let app = new ApiAiApp({
+      let app = new DialogflowApp({
         request: mockRequest,
         response: mockResponse
       });
@@ -1097,10 +1097,10 @@ describe('ApiAiApp', function () {
 
     // Success case test, when the API returns a valid 200 response with the response object
     it('Should validate assistant request missing date/time information', function () {
-      apiAiAppRequestBodyLiveSession.originalRequest.data.inputs[0].arguments = [];
-      let mockRequest = new MockRequest(headerV1, apiAiAppRequestBodyLiveSession);
+      dialogflowAppRequestBodyLiveSession.originalRequest.data.inputs[0].arguments = [];
+      let mockRequest = new MockRequest(headerV1, dialogflowAppRequestBodyLiveSession);
 
-      let app = new ApiAiApp({
+      let app = new DialogflowApp({
         request: mockRequest,
         response: mockResponse
       });
@@ -1109,12 +1109,12 @@ describe('ApiAiApp', function () {
   });
 
   /**
-   * Describes the behavior for ApiAiApp getSignInStatus method.
+   * Describes the behavior for DialogflowApp getSignInStatus method.
    */
   describe('#getSignInStatus', function () {
     // Success case test, when the API returns a valid 200 response with the response object
     it('Should validate assistant sign in status', function () {
-      apiAiAppRequestBodyLiveSession.originalRequest.data.inputs[0].arguments = [
+      dialogflowAppRequestBodyLiveSession.originalRequest.data.inputs[0].arguments = [
         {
           'name': 'SIGN_IN',
           'extension': {
@@ -1123,9 +1123,9 @@ describe('ApiAiApp', function () {
           }
         }
       ];
-      let mockRequest = new MockRequest(headerV1, apiAiAppRequestBodyLiveSession);
+      let mockRequest = new MockRequest(headerV1, dialogflowAppRequestBodyLiveSession);
 
-      let app = new ApiAiApp({
+      let app = new DialogflowApp({
         request: mockRequest,
         response: mockResponse
       });
@@ -1135,11 +1135,11 @@ describe('ApiAiApp', function () {
 
     // Success case test, when the API returns a valid 200 response with the response object
     it('Should validate assistant request missing sign in status', function () {
-      apiAiAppRequestBodyLiveSession.originalRequest.data.inputs[0].arguments = [];
-      let mockRequest = new MockRequest(headerV1, apiAiAppRequestBodyLiveSession);
+      dialogflowAppRequestBodyLiveSession.originalRequest.data.inputs[0].arguments = [];
+      let mockRequest = new MockRequest(headerV1, dialogflowAppRequestBodyLiveSession);
       let mockResponse = new MockResponse();
 
-      let app = new ApiAiApp({
+      let app = new DialogflowApp({
         request: mockRequest,
         response: mockResponse
       });
@@ -1149,7 +1149,7 @@ describe('ApiAiApp', function () {
   });
 
   /**
-   * Describes the behavior for ApiAiApp getAvailableSurfaces method.
+   * Describes the behavior for DialogflowApp getAvailableSurfaces method.
    */
   describe('#getAvailableSurfaces', function () {
     // Success case test, when the API returns a valid 200 response with the response object
@@ -1176,9 +1176,9 @@ describe('ApiAiApp', function () {
           ]
         }
       ];
-      apiAiAppRequestBodyLiveSession.originalRequest.data.availableSurfaces = availableSurfaces;
-      let mockRequest = new MockRequest(headerV1, apiAiAppRequestBodyLiveSession);
-      let app = new ApiAiApp({
+      dialogflowAppRequestBodyLiveSession.originalRequest.data.availableSurfaces = availableSurfaces;
+      let mockRequest = new MockRequest(headerV1, dialogflowAppRequestBodyLiveSession);
+      let app = new DialogflowApp({
         request: mockRequest,
         response: mockResponse
       });
@@ -1188,8 +1188,8 @@ describe('ApiAiApp', function () {
 
     // Failure case test
     it('Should return empty assistant available surfaces', function () {
-      let mockRequest = new MockRequest(headerV2, apiAiAppRequestBodyLiveSession);
-      let app = new ApiAiApp({
+      let mockRequest = new MockRequest(headerV2, dialogflowAppRequestBodyLiveSession);
+      let app = new DialogflowApp({
         request: mockRequest,
         response: mockResponse
       });
@@ -1198,7 +1198,7 @@ describe('ApiAiApp', function () {
   });
 
   /**
-   * Describes the behavior for ApiAiApp hasAvailableSurfaceCapabilities method.
+   * Describes the behavior for DialogflowApp hasAvailableSurfaceCapabilities method.
    */
   describe('#hasAvailableSurfaceCapabilities', function () {
     beforeEach(function () {
@@ -1224,13 +1224,13 @@ describe('ApiAiApp', function () {
           ]
         }
       ];
-      apiAiAppRequestBodyLiveSession.originalRequest.data.availableSurfaces = availableSurfaces;
+      dialogflowAppRequestBodyLiveSession.originalRequest.data.availableSurfaces = availableSurfaces;
     });
 
     // Success case test, when the API returns a valid 200 response with the response object
     it('Should return true for set of valid capabilities', function () {
-      let mockRequest = new MockRequest(headerV1, apiAiAppRequestBodyLiveSession);
-      let app = new ApiAiApp({
+      let mockRequest = new MockRequest(headerV1, dialogflowAppRequestBodyLiveSession);
+      let app = new DialogflowApp({
         request: mockRequest,
         response: mockResponse
       });
@@ -1240,8 +1240,8 @@ describe('ApiAiApp', function () {
 
     // Success case test, when the API returns a valid 200 response with the response object
     it('Should return true for one valid capability', function () {
-      let mockRequest = new MockRequest(headerV1, apiAiAppRequestBodyLiveSession);
-      let app = new ApiAiApp({
+      let mockRequest = new MockRequest(headerV1, dialogflowAppRequestBodyLiveSession);
+      let app = new DialogflowApp({
         request: mockRequest,
         response: mockResponse
       });
@@ -1251,8 +1251,8 @@ describe('ApiAiApp', function () {
 
     // Failure case test, when the API returns a valid 200 response with the response object
     it('Should return false for set of invalid capabilities', function () {
-      let mockRequest = new MockRequest(headerV1, apiAiAppRequestBodyLiveSession);
-      let app = new ApiAiApp({
+      let mockRequest = new MockRequest(headerV1, dialogflowAppRequestBodyLiveSession);
+      let app = new DialogflowApp({
         request: mockRequest,
         response: mockResponse
       });
@@ -1262,8 +1262,8 @@ describe('ApiAiApp', function () {
 
     // Failure case test, when the API returns a valid 200 response with the response object
     it('Should return false for one invalid capability', function () {
-      let mockRequest = new MockRequest(headerV1, apiAiAppRequestBodyLiveSession);
-      let app = new ApiAiApp({
+      let mockRequest = new MockRequest(headerV1, dialogflowAppRequestBodyLiveSession);
+      let app = new DialogflowApp({
         request: mockRequest,
         response: mockResponse
       });
@@ -1273,9 +1273,9 @@ describe('ApiAiApp', function () {
 
     // Failure case test
     it('Should return false for empty assistant available surfaces', function () {
-      apiAiAppRequestBodyLiveSession.availableSurfaces = undefined;
-      let mockRequest = new MockRequest(headerV2, apiAiAppRequestBodyLiveSession);
-      let app = new ApiAiApp({
+      dialogflowAppRequestBodyLiveSession.availableSurfaces = undefined;
+      let mockRequest = new MockRequest(headerV2, dialogflowAppRequestBodyLiveSession);
+      let app = new DialogflowApp({
         request: mockRequest,
         response: mockResponse
       });
@@ -1284,14 +1284,14 @@ describe('ApiAiApp', function () {
   });
 
   /**
-   * Describes the behavior for ApiAiApp askForTransactionRequirements method.
+   * Describes the behavior for DialogflowApp askForTransactionRequirements method.
    */
   describe('#askForTransactionRequirements', function () {
     let mockRequest, app;
 
     beforeEach(function () {
-      mockRequest = new MockRequest(headerV2, apiAiAppRequestBodyLiveSession);
-      app = new ApiAiApp({
+      mockRequest = new MockRequest(headerV2, dialogflowAppRequestBodyLiveSession);
+      app = new DialogflowApp({
         request: mockRequest,
         response: mockResponse
       });
@@ -1408,14 +1408,14 @@ describe('ApiAiApp', function () {
   });
 
   /**
-   * Describes the behavior for ApiAiApp askForDeliveryAddress method.
+   * Describes the behavior for DialogflowApp askForDeliveryAddress method.
    */
   describe('#askForDeliveryAddress', function () {
     // Success case test, when the API returns a valid 200 response with the response object
     it('Should return valid JSON delivery address', function () {
-      let mockRequest = new MockRequest(headerV2, apiAiAppRequestBodyLiveSession);
+      let mockRequest = new MockRequest(headerV2, dialogflowAppRequestBodyLiveSession);
 
-      let app = new ApiAiApp({
+      let app = new DialogflowApp({
         request: mockRequest,
         response: mockResponse
       });
@@ -1454,14 +1454,14 @@ describe('ApiAiApp', function () {
   });
 
   /**
-   * Describes the behavior for ApiAiApp askForTransactionDecision method.
+   * Describes the behavior for DialogflowApp askForTransactionDecision method.
    */
   describe('#askForTransactionDecision', function () {
     let app, mockRequest;
 
     beforeEach(function () {
-      mockRequest = new MockRequest(headerV2, apiAiAppRequestBodyLiveSession);
-      app = new ApiAiApp({
+      mockRequest = new MockRequest(headerV2, dialogflowAppRequestBodyLiveSession);
+      app = new DialogflowApp({
         request: mockRequest,
         response: mockResponse
       });
@@ -1589,14 +1589,14 @@ describe('ApiAiApp', function () {
   });
 
   /**
-   * Describes the behavior for ApiAiApp askForConfirmation method.
+   * Describes the behavior for DialogflowApp askForConfirmation method.
    */
   describe('#askForConfirmation', function () {
     let app, mockRequest;
 
     beforeEach(function () {
-      mockRequest = new MockRequest(headerV2, apiAiAppRequestBodyLiveSession);
-      app = new ApiAiApp({
+      mockRequest = new MockRequest(headerV2, dialogflowAppRequestBodyLiveSession);
+      app = new DialogflowApp({
         request: mockRequest,
         response: mockResponse
       });
@@ -1668,14 +1668,14 @@ describe('ApiAiApp', function () {
   });
 
   /**
-   * Describes the behavior for ApiAiApp askForDateTime method.
+   * Describes the behavior for DialogflowApp askForDateTime method.
    */
   describe('#askForDateTime', function () {
     let app, mockRequest;
 
     beforeEach(function () {
-      mockRequest = new MockRequest(headerV2, apiAiAppRequestBodyLiveSession);
-      app = new ApiAiApp({
+      mockRequest = new MockRequest(headerV2, dialogflowAppRequestBodyLiveSession);
+      app = new DialogflowApp({
         request: mockRequest,
         response: mockResponse
       });
@@ -1785,14 +1785,14 @@ describe('ApiAiApp', function () {
   });
 
   /**
-   * Describes the behavior for ApiAiApp askForSignIn method.
+   * Describes the behavior for DialogflowApp askForSignIn method.
    */
   describe('#askForSignIn', function () {
     let app, mockRequest;
 
     beforeEach(function () {
-      mockRequest = new MockRequest(headerV2, apiAiAppRequestBodyLiveSession);
-      app = new ApiAiApp({
+      mockRequest = new MockRequest(headerV2, dialogflowAppRequestBodyLiveSession);
+      app = new DialogflowApp({
         request: mockRequest,
         response: mockResponse
       });
@@ -1828,14 +1828,14 @@ describe('ApiAiApp', function () {
   });
 
   /**
-   * Describes the behavior for ApiAiApp askForNewSurface method.
+   * Describes the behavior for DialogflowApp askForNewSurface method.
    */
   describe('#askForNewSurface', function () {
     let app, mockRequest;
 
     beforeEach(function () {
-      mockRequest = new MockRequest(headerV2, apiAiAppRequestBodyLiveSession);
-      app = new ApiAiApp({
+      mockRequest = new MockRequest(headerV2, dialogflowAppRequestBodyLiveSession);
+      app = new DialogflowApp({
         request: mockRequest,
         response: mockResponse
       });
@@ -1876,12 +1876,12 @@ describe('ApiAiApp', function () {
   });
 
   /**
-   * Describes the behavior for ApiAiApp isNewSurface method.
+   * Describes the behavior for DialogflowApp isNewSurface method.
    */
   describe('#isNewSurface', function () {
     // Success case test, when the API returns a valid 200 response with the response object
     it('Should validate when new surface was accepted.', function () {
-      apiAiAppRequestBodyLiveSession.originalRequest.data.inputs[0].arguments = [
+      dialogflowAppRequestBodyLiveSession.originalRequest.data.inputs[0].arguments = [
         {
           'name': 'NEW_SURFACE',
           'extension': {
@@ -1890,9 +1890,9 @@ describe('ApiAiApp', function () {
         }
       ];
 
-      let mockRequest = new MockRequest(headerV1, apiAiAppRequestBodyLiveSession);
+      let mockRequest = new MockRequest(headerV1, dialogflowAppRequestBodyLiveSession);
 
-      let app = new ApiAiApp({
+      let app = new DialogflowApp({
         request: mockRequest,
         response: mockResponse
       });
@@ -1902,7 +1902,7 @@ describe('ApiAiApp', function () {
 
     // Failure case test
     it('Should validate when new surface was denied.', function () {
-      apiAiAppRequestBodyLiveSession.originalRequest.data.inputs[0].arguments = [
+      dialogflowAppRequestBodyLiveSession.originalRequest.data.inputs[0].arguments = [
         {
           'name': 'NEW_SURFACE',
           'extension': {
@@ -1911,9 +1911,9 @@ describe('ApiAiApp', function () {
         }
       ];
 
-      let mockRequest = new MockRequest(headerV1, apiAiAppRequestBodyLiveSession);
+      let mockRequest = new MockRequest(headerV1, dialogflowAppRequestBodyLiveSession);
 
-      let app = new ApiAiApp({
+      let app = new DialogflowApp({
         request: mockRequest,
         response: mockResponse
       });
@@ -1923,14 +1923,14 @@ describe('ApiAiApp', function () {
   });
 
   /**
-   * Describes the behavior for ApiAiApp isPermissionGranted method.
+   * Describes the behavior for DialogflowApp isPermissionGranted method.
    */
   describe('#isPermissionGranted', function () {
     let app, mockRequest;
 
     function initMockApp () {
-      mockRequest = new MockRequest(headerV1, apiAiAppRequestBodyLiveSession);
-      app = new ApiAiApp({
+      mockRequest = new MockRequest(headerV1, dialogflowAppRequestBodyLiveSession);
+      app = new DialogflowApp({
         request: mockRequest,
         response: mockResponse
       });
@@ -1938,7 +1938,7 @@ describe('ApiAiApp', function () {
 
     // Success case test, when the API returns a valid 200 response with the response object
     it('Should validate assistant request user.', function () {
-      apiAiAppRequestBodyLiveSession.originalRequest.data.inputs[0].arguments = [{
+      dialogflowAppRequestBodyLiveSession.originalRequest.data.inputs[0].arguments = [{
         'name': 'permission_granted',
         'text_value': 'true'
       }];
@@ -1946,21 +1946,21 @@ describe('ApiAiApp', function () {
       expect(app.isPermissionGranted()).to.equal(true);
 
       // Test the false case
-      apiAiAppRequestBodyLiveSession.originalRequest.data.inputs[0].arguments[0].text_value = false;
+      dialogflowAppRequestBodyLiveSession.originalRequest.data.inputs[0].arguments[0].text_value = false;
       initMockApp();
       expect(app.isPermissionGranted()).to.equal(false);
     });
   });
 
   /**
-   * Describes the behavior for ApiAiApp isInSandbox method.
+   * Describes the behavior for DialogflowApp isInSandbox method.
    */
   describe('#isInSandbox', function () {
     let app, mockRequest;
 
     function initMockApp () {
-      mockRequest = new MockRequest(headerV1, apiAiAppRequestBodyLiveSession);
-      app = new ApiAiApp({
+      mockRequest = new MockRequest(headerV1, dialogflowAppRequestBodyLiveSession);
+      app = new DialogflowApp({
         request: mockRequest,
         response: mockResponse
       });
@@ -1968,24 +1968,24 @@ describe('ApiAiApp', function () {
 
     // Success case test, when the API returns a valid 200 response with the response object
     it('Should validate assistant request user.', function () {
-      apiAiAppRequestBodyLiveSession.originalRequest.data.isInSandbox = true;
+      dialogflowAppRequestBodyLiveSession.originalRequest.data.isInSandbox = true;
       initMockApp();
       expect(app.isInSandbox()).to.be.true;
 
       // Test the false case
-      apiAiAppRequestBodyLiveSession.originalRequest.data.isInSandbox = false;
+      dialogflowAppRequestBodyLiveSession.originalRequest.data.isInSandbox = false;
       initMockApp();
       expect(app.isInSandbox()).to.be.false;
     });
   });
 
   /**
-   * Describes the behavior for ApiAiApp getRepromptCount method.
+   * Describes the behavior for DialogflowApp getRepromptCount method.
    */
   describe('#getRepromptCount', function () {
     // Success case test, when the API requests with a valid reprompt count.
     it('Should return the proper reprompt count.', function () {
-      apiAiAppRequestBodyLiveSession.originalRequest.data.inputs = [{
+      dialogflowAppRequestBodyLiveSession.originalRequest.data.inputs = [{
         'intent': 'actions.intent.NO_INPUT',
         'arguments': [
           {
@@ -1998,8 +1998,8 @@ describe('ApiAiApp', function () {
           }
         ]
       }];
-      let mockRequest = new MockRequest(headerV2, apiAiAppRequestBodyLiveSession);
-      let app = new ApiAiApp({
+      let mockRequest = new MockRequest(headerV2, dialogflowAppRequestBodyLiveSession);
+      let app = new DialogflowApp({
         request: mockRequest,
         response: mockResponse
       });
@@ -2007,8 +2007,8 @@ describe('ApiAiApp', function () {
     });
     // Test case checking it handles API requests without reprompt count correctly.
     it('Should return null when no reprompt count available.', function () {
-      let mockRequest = new MockRequest(headerV2, apiAiAppRequestBodyLiveSession);
-      let app = new ApiAiApp({
+      let mockRequest = new MockRequest(headerV2, dialogflowAppRequestBodyLiveSession);
+      let app = new DialogflowApp({
         request: mockRequest,
         response: mockResponse
       });
@@ -2017,12 +2017,12 @@ describe('ApiAiApp', function () {
   });
 
   /**
-   * Describes the behavior for ApiAiApp isFinalReprompt method.
+   * Describes the behavior for DialogflowApp isFinalReprompt method.
    */
   describe('#isFinalReprompt', function () {
     // Success case test, when the API requests with a valid reprompt count.
     it('Should return true for final reprompt', function () {
-      apiAiAppRequestBodyLiveSession.originalRequest.data.inputs = [{
+      dialogflowAppRequestBodyLiveSession.originalRequest.data.inputs = [{
         'intent': 'actions.intent.NO_INPUT',
         'arguments': [
           {
@@ -2035,8 +2035,8 @@ describe('ApiAiApp', function () {
           }
         ]
       }];
-      let mockRequest = new MockRequest(headerV2, apiAiAppRequestBodyLiveSession);
-      let app = new ApiAiApp({
+      let mockRequest = new MockRequest(headerV2, dialogflowAppRequestBodyLiveSession);
+      let app = new DialogflowApp({
         request: mockRequest,
         response: mockResponse
       });
@@ -2044,7 +2044,7 @@ describe('ApiAiApp', function () {
     });
     // Success case test, when the API requests with a valid reprompt count.
     it('Should return false for non-final reprompt', function () {
-      apiAiAppRequestBodyLiveSession.originalRequest.data.inputs = [{
+      dialogflowAppRequestBodyLiveSession.originalRequest.data.inputs = [{
         'intent': 'actions.intent.NO_INPUT',
         'arguments': [
           {
@@ -2057,8 +2057,8 @@ describe('ApiAiApp', function () {
           }
         ]
       }];
-      let mockRequest = new MockRequest(headerV2, apiAiAppRequestBodyLiveSession);
-      let app = new ApiAiApp({
+      let mockRequest = new MockRequest(headerV2, dialogflowAppRequestBodyLiveSession);
+      let app = new DialogflowApp({
         request: mockRequest,
         response: mockResponse
       });
@@ -2066,8 +2066,8 @@ describe('ApiAiApp', function () {
     });
     // Failure case test, when the API requests without reprompt count.
     it('Should return false when no reprompt count available.', function () {
-      let mockRequest = new MockRequest(headerV2, apiAiAppRequestBodyLiveSession);
-      let app = new ApiAiApp({
+      let mockRequest = new MockRequest(headerV2, dialogflowAppRequestBodyLiveSession);
+      let app = new DialogflowApp({
         request: mockRequest,
         response: mockResponse
       });
@@ -2076,15 +2076,15 @@ describe('ApiAiApp', function () {
   });
 
   /**
-   * Describes the behavior for ApiAiApp getIntent method.
+   * Describes the behavior for DialogflowApp getIntent method.
    */
   describe('#getIntent', function () {
     // Success case test, when the API returns a valid 200 response with the response object
     it('Should get the intent value for the success case.', function () {
-      apiAiAppRequestBodyLiveSession.result.action = 'check_guess';
-      const mockRequest = new MockRequest(headerV1, apiAiAppRequestBodyLiveSession);
+      dialogflowAppRequestBodyLiveSession.result.action = 'check_guess';
+      const mockRequest = new MockRequest(headerV1, dialogflowAppRequestBodyLiveSession);
 
-      const app = new ApiAiApp({
+      const app = new DialogflowApp({
         request: mockRequest,
         response: mockResponse
       });
@@ -2094,13 +2094,13 @@ describe('ApiAiApp', function () {
   });
 
   /**
-   * Describes the behavior for ApiAiApp getArgument method.
+   * Describes the behavior for DialogflowApp getArgument method.
    */
   describe('#getArgument', function () {
     // Success case test, when the API returns a valid 200 response with the response object
     it('Should get the argument value for the success case.', function () {
-      apiAiAppRequestBodyLiveSession.result.parameters.guess = '50';
-      apiAiAppRequestBodyLiveSession.originalRequest.data.inputs[0].arguments = [
+      dialogflowAppRequestBodyLiveSession.result.parameters.guess = '50';
+      dialogflowAppRequestBodyLiveSession.originalRequest.data.inputs[0].arguments = [
         {
           'raw_text': 'raw text one',
           'text_value': 'text value one',
@@ -2114,9 +2114,9 @@ describe('ApiAiApp', function () {
           }
         }
       ];
-      const mockRequest = new MockRequest(headerV1, apiAiAppRequestBodyLiveSession);
+      const mockRequest = new MockRequest(headerV1, dialogflowAppRequestBodyLiveSession);
 
-      const app = new ApiAiApp({
+      const app = new DialogflowApp({
         request: mockRequest,
         response: mockResponse
       });
@@ -2134,12 +2134,12 @@ describe('ApiAiApp', function () {
   });
 
   /**
-   * Describes the behavior for ApiAiApp getContextArgument method.
+   * Describes the behavior for DialogflowApp getContextArgument method.
    */
   describe('#getContextArgument', function () {
     // Success case test, when the API returns a valid 200 response with the response object
     it('Should get the context argument value for the success case.', function () {
-      apiAiAppRequestBodyLiveSession.result.contexts = [
+      dialogflowAppRequestBodyLiveSession.result.contexts = [
         {
           'name': 'game',
           'parameters': {
@@ -2158,9 +2158,9 @@ describe('ApiAiApp', function () {
           'lifespan': 99
         }
       ];
-      const mockRequest = new MockRequest(headerV1, apiAiAppRequestBodyLiveSession);
+      const mockRequest = new MockRequest(headerV1, dialogflowAppRequestBodyLiveSession);
 
-      const app = new ApiAiApp({
+      const app = new DialogflowApp({
         request: mockRequest,
         response: mockResponse
       });
@@ -2171,12 +2171,12 @@ describe('ApiAiApp', function () {
   });
 
   /**
-   * Describes the behavior for ApiAiApp getIncomingRichResponse method.
+   * Describes the behavior for DialogflowApp getIncomingRichResponse method.
    */
   describe('#getIncomingRichResponse', function () {
     // Success case test, when the API returns a valid 200 response with the response object
     it('Should get the incoming rich response for the success case.', function () {
-      apiAiAppRequestBodyLiveSession.result.fulfillment.messages = [
+      dialogflowAppRequestBodyLiveSession.result.fulfillment.messages = [
         {
           'type': 'simple_response',
           'platform': 'google',
@@ -2209,9 +2209,9 @@ describe('ApiAiApp', function () {
         }
       ];
 
-      const mockRequest = new MockRequest(headerV1, apiAiAppRequestBodyLiveSession);
+      const mockRequest = new MockRequest(headerV1, dialogflowAppRequestBodyLiveSession);
 
-      const app = new ApiAiApp({
+      const app = new DialogflowApp({
         request: mockRequest,
         response: mockResponse
       });
@@ -2229,12 +2229,12 @@ describe('ApiAiApp', function () {
   });
 
   /**
-   * Describes the behavior for ApiAiApp getIncomingList method.
+   * Describes the behavior for DialogflowApp getIncomingList method.
    */
   describe('#getIncomingList', function () {
     // Success case test, when the API returns a valid 200 response with the response object
     it('Should get the incoming list for the success case.', function () {
-      apiAiAppRequestBodyLiveSession.result.fulfillment.messages.push({
+      dialogflowAppRequestBodyLiveSession.result.fulfillment.messages.push({
         'type': 'list_card',
         'platform': 'google',
         'title': 'list_title',
@@ -2255,9 +2255,9 @@ describe('ApiAiApp', function () {
           }
         ]
       });
-      const mockRequest = new MockRequest(headerV1, apiAiAppRequestBodyLiveSession);
+      const mockRequest = new MockRequest(headerV1, dialogflowAppRequestBodyLiveSession);
 
-      const app = new ApiAiApp({
+      const app = new DialogflowApp({
         request: mockRequest,
         response: mockResponse
       });
@@ -2275,12 +2275,12 @@ describe('ApiAiApp', function () {
   });
 
   /**
-   * Describes the behavior for ApiAiApp getIncomingCarousel method.
+   * Describes the behavior for DialogflowApp getIncomingCarousel method.
    */
   describe('#getIncomingCarousel', function () {
     // Success case test, when the API returns a valid 200 response with the response object
     it('Should get the incoming list for the success case.', function () {
-      apiAiAppRequestBodyLiveSession.result.fulfillment.messages.push({
+      dialogflowAppRequestBodyLiveSession.result.fulfillment.messages.push({
         'type': 'carousel_card',
         'platform': 'google',
         'items': [
@@ -2303,9 +2303,9 @@ describe('ApiAiApp', function () {
         ]
       });
 
-      const mockRequest = new MockRequest(headerV1, apiAiAppRequestBodyLiveSession);
+      const mockRequest = new MockRequest(headerV1, dialogflowAppRequestBodyLiveSession);
 
-      const app = new ApiAiApp({
+      const app = new DialogflowApp({
         request: mockRequest,
         response: mockResponse
       });
@@ -2323,7 +2323,7 @@ describe('ApiAiApp', function () {
   });
 
   /**
-   * Describes the behavior for ApiAiApp getSelectedOption method.
+   * Describes the behavior for DialogflowApp getSelectedOption method.
    */
   describe('#getSelectedOption', function () {
     let mockRequest, app;
@@ -2332,8 +2332,8 @@ describe('ApiAiApp', function () {
     });
 
     // Success case test, when the API returns a valid 200 response with the response object
-    it('Should get the selected option when given in APIAI context.', function () {
-      apiAiAppRequestBodyLiveSession.originalRequest.data.inputs[0] = {
+    it('Should get the selected option when given in Dialogflow context.', function () {
+      dialogflowAppRequestBodyLiveSession.originalRequest.data.inputs[0] = {
         'arguments': [
           {
             'text_value': 'first_item',
@@ -2349,7 +2349,7 @@ describe('ApiAiApp', function () {
           }
         ]
       };
-      apiAiAppRequestBodyLiveSession.result.contexts = [
+      dialogflowAppRequestBodyLiveSession.result.contexts = [
         {
           'name': 'actions_intent_option',
           'parameters': {
@@ -2358,8 +2358,8 @@ describe('ApiAiApp', function () {
           'lifespan': 0
         }
       ];
-      mockRequest.body = apiAiAppRequestBodyLiveSession;
-      app = new ApiAiApp({
+      mockRequest.body = dialogflowAppRequestBodyLiveSession;
+      app = new DialogflowApp({
         request: mockRequest,
         response: mockResponse
       });
@@ -2367,8 +2367,8 @@ describe('ApiAiApp', function () {
     });
 
     // Success case test, when the API returns a valid 200 response with the response object
-    it('Should get the selected option when not given in APIAI context.', function () {
-      apiAiAppRequestBodyLiveSession.originalRequest.data.inputs[0] = {
+    it('Should get the selected option when not given in Dialogflow context.', function () {
+      dialogflowAppRequestBodyLiveSession.originalRequest.data.inputs[0] = {
         'arguments': [
           {
             'text_value': 'first_item',
@@ -2384,8 +2384,8 @@ describe('ApiAiApp', function () {
           }
         ]
       };
-      mockRequest.body = apiAiAppRequestBodyLiveSession;
-      app = new ApiAiApp({
+      mockRequest.body = dialogflowAppRequestBodyLiveSession;
+      app = new DialogflowApp({
         request: mockRequest,
         response: mockResponse
       });
@@ -2394,16 +2394,16 @@ describe('ApiAiApp', function () {
   });
 
   /**
-   * Describes the behavior for ApiAiApp isRequestFromApiAi method.
+   * Describes the behavior for DialogflowApp isRequestFromDialogflow method.
    */
-  describe('#isRequestFromApiAi', function () {
+  describe('#isRequestFromDialogflow', function () {
     // Success case test, when the API returns a valid 200 response with the response object
-    it('Should confirm request is from API.ai.', function () {
+    it('Should confirm request is from Dialogflow.', function () {
       let header = JSON.parse(JSON.stringify(headerV1));
       header['Google-Assistant-Signature'] = 'YOUR_PRIVATE_KEY';
-      const mockRequest = new MockRequest(header, apiAiAppRequestBodyLiveSession);
+      const mockRequest = new MockRequest(header, dialogflowAppRequestBodyLiveSession);
 
-      const app = new ApiAiApp({
+      const app = new DialogflowApp({
         request: mockRequest,
         response: mockResponse
       });
@@ -2411,14 +2411,14 @@ describe('ApiAiApp', function () {
       const HEADER_KEY = 'Google-Assistant-Signature';
       const HEADER_VALUE = 'YOUR_PRIVATE_KEY';
 
-      expect(app.isRequestFromApiAi(HEADER_KEY, HEADER_VALUE)).to.equal(true);
+      expect(app.isRequestFromDialogflow(HEADER_KEY, HEADER_VALUE)).to.equal(true);
     });
 
-    it('Should confirm request is NOT from API.ai.', function () {
+    it('Should confirm request is NOT from Dialogflow.', function () {
       let header = JSON.parse(JSON.stringify(headerV1));
-      const mockRequest = new MockRequest(header, apiAiAppRequestBodyLiveSession);
+      const mockRequest = new MockRequest(header, dialogflowAppRequestBodyLiveSession);
 
-      const app = new ApiAiApp({
+      const app = new DialogflowApp({
         request: mockRequest,
         response: mockResponse
       });
@@ -2426,18 +2426,18 @@ describe('ApiAiApp', function () {
       const HEADER_KEY = 'Google-Assistant-Signature';
       const HEADER_VALUE = 'YOUR_PRIVATE_KEY';
 
-      expect(app.isRequestFromApiAi(HEADER_KEY, HEADER_VALUE)).to.equal(false);
+      expect(app.isRequestFromDialogflow(HEADER_KEY, HEADER_VALUE)).to.equal(false);
     });
   });
 
   /**
-   * Describes the behavior for ApiAiApp hasSurfaceCapability method.
+   * Describes the behavior for DialogflowApp hasSurfaceCapability method.
    */
   describe('#hasSurfaceCapability', function () {
     // Success case test, when the API returns a valid 200 response with the response object
     it('Should return true for a valid capability from incoming JSON for the success case.',
       function () {
-        apiAiAppRequestBodyLiveSession.originalRequest.data.surface = {
+        dialogflowAppRequestBodyLiveSession.originalRequest.data.surface = {
           'capabilities': [
             {
               'name': 'actions.capability.AUDIO_OUTPUT'
@@ -2448,9 +2448,9 @@ describe('ApiAiApp', function () {
           ]
         };
 
-        let mockRequest = new MockRequest(headerV1, apiAiAppRequestBodyLiveSession);
+        let mockRequest = new MockRequest(headerV1, dialogflowAppRequestBodyLiveSession);
 
-        let app = new ApiAiApp({
+        let app = new DialogflowApp({
           request: mockRequest,
           response: mockResponse
         });
@@ -2465,13 +2465,13 @@ describe('ApiAiApp', function () {
   });
 
   /**
-   * Describes the behavior for ApiAiApp getSurfaceCapabilities method.
+   * Describes the behavior for DialogflowApp getSurfaceCapabilities method.
    */
   describe('#getSurfaceCapabilities', function () {
     // Success case test, when the API returns a valid 200 response with the response object
     it('Should return valid list of capabilities from incoming JSON for the success case.',
       function () {
-        apiAiAppRequestBodyLiveSession.originalRequest.data.surface = {
+        dialogflowAppRequestBodyLiveSession.originalRequest.data.surface = {
           'capabilities': [
             {
               'name': 'actions.capability.AUDIO_OUTPUT'
@@ -2482,9 +2482,9 @@ describe('ApiAiApp', function () {
           ]
         };
 
-        let mockRequest = new MockRequest(headerV1, apiAiAppRequestBodyLiveSession);
+        let mockRequest = new MockRequest(headerV1, dialogflowAppRequestBodyLiveSession);
 
-        let app = new ApiAiApp({
+        let app = new DialogflowApp({
           request: mockRequest,
           response: mockResponse
         });
@@ -2498,13 +2498,13 @@ describe('ApiAiApp', function () {
   });
 
   /**
-   * Describes the behavior for ApiAiApp getInputType method.
+   * Describes the behavior for DialogflowApp getInputType method.
    */
   describe('#getInputType', function () {
     // Success case test, when the API returns a valid 200 response with the response object
     it('Should return valid input type from incoming JSON for the success case.', function () {
       const KEYBOARD = 3;
-      apiAiAppRequestBodyLiveSession.originalRequest.data.inputs = [
+      dialogflowAppRequestBodyLiveSession.originalRequest.data.inputs = [
         {
           'raw_inputs': [
             {
@@ -2513,8 +2513,8 @@ describe('ApiAiApp', function () {
           ]
         }
       ];
-      let mockRequest = new MockRequest(headerV1, apiAiAppRequestBodyLiveSession);
-      let app = new ApiAiApp({
+      let mockRequest = new MockRequest(headerV1, dialogflowAppRequestBodyLiveSession);
+      let app = new DialogflowApp({
         request: mockRequest,
         response: mockResponse
       });
@@ -2525,16 +2525,16 @@ describe('ApiAiApp', function () {
   });
 
   /**
-   * Describes the behavior for ApiAiApp getRawInput method.
+   * Describes the behavior for DialogflowApp getRawInput method.
    */
   describe('#getRawInput', function () {
     // Success case test, when the API returns a valid 200 response with the response object
-    it('Should raw input from API.ai.', function () {
-      apiAiAppRequestBodyLiveSession.result.resolvedQuery = 'is it 667';
+    it('Should raw input from Dialogflow.', function () {
+      dialogflowAppRequestBodyLiveSession.result.resolvedQuery = 'is it 667';
 
-      const mockRequest = new MockRequest(headerV1, apiAiAppRequestBodyLiveSession);
+      const mockRequest = new MockRequest(headerV1, dialogflowAppRequestBodyLiveSession);
 
-      const app = new ApiAiApp({
+      const app = new DialogflowApp({
         request: mockRequest,
         response: mockResponse
       });
@@ -2544,13 +2544,13 @@ describe('ApiAiApp', function () {
   });
 
   /**
-   * Describes the behavior for ApiAiApp setContext method.
+   * Describes the behavior for DialogflowApp setContext method.
    */
   describe('#setContext', function () {
     // Success case test, when the API returns a valid 200 response with the response object
     it('Should return the valid JSON in the response object for the success case.', function () {
-      const mockRequest = new MockRequest(headerV1, apiAiAppRequestBodyLiveSession);
-      const app = new ApiAiApp({
+      const mockRequest = new MockRequest(headerV1, dialogflowAppRequestBodyLiveSession);
+      const app = new DialogflowApp({
         request: mockRequest,
         response: mockResponse
       });
@@ -2586,17 +2586,17 @@ describe('ApiAiApp', function () {
   });
 
   /**
-   * Describes the behavior for ApiAiApp getContexts method.
+   * Describes the behavior for DialogflowApp getContexts method.
    */
   describe('#getContexts', function () {
     let app, mockRequest;
 
     beforeEach(function () {
-      mockRequest = new MockRequest(headerV1, apiAiAppRequestBodyLiveSession);
+      mockRequest = new MockRequest(headerV1, dialogflowAppRequestBodyLiveSession);
     });
 
     function initMockApp () {
-      app = new ApiAiApp({
+      app = new DialogflowApp({
         request: mockRequest,
         response: mockResponse
       });
@@ -2604,8 +2604,7 @@ describe('ApiAiApp', function () {
 
     // Success case test, when the API returns a valid 200 response with the response object
     it('Should return the active contexts from incoming JSON for the success case.', function () {
-      // let body = apiAiAppRequestBodyLiveSession;
-      apiAiAppRequestBodyLiveSession.result.contexts = [
+      dialogflowAppRequestBodyLiveSession.result.contexts = [
         {
           'name': '_actions_on_google_'
         },
@@ -2626,7 +2625,7 @@ describe('ApiAiApp', function () {
           }
         }
       ];
-      mockRequest.body = apiAiAppRequestBodyLiveSession;
+      mockRequest.body = dialogflowAppRequestBodyLiveSession;
       initMockApp();
       let mockContexts = app.getContexts();
       let expectedContexts = [
@@ -2651,8 +2650,8 @@ describe('ApiAiApp', function () {
     });
     it('Should return the active contexts from incoming JSON when only app.data incoming',
       function () {
-        apiAiAppRequestBodyLiveSession.result.contexts = [{'name': '_actions_on_google_'}];
-        mockRequest.body = apiAiAppRequestBodyLiveSession;
+        dialogflowAppRequestBodyLiveSession.result.contexts = [{'name': '_actions_on_google_'}];
+        mockRequest.body = dialogflowAppRequestBodyLiveSession;
         initMockApp();
         let mockContexts = app.getContexts();
         let expectedContexts = [];
@@ -2661,8 +2660,8 @@ describe('ApiAiApp', function () {
     it('Should return the active contexts from incoming JSON when no contexts provided.',
       function () {
         // Check the empty case
-        apiAiAppRequestBodyLiveSession.result.contexts = [];
-        mockRequest.body = apiAiAppRequestBodyLiveSession;
+        dialogflowAppRequestBodyLiveSession.result.contexts = [];
+        mockRequest.body = dialogflowAppRequestBodyLiveSession;
         initMockApp();
         let mockContexts = app.getContexts();
         let expectedContexts = [];
@@ -2671,17 +2670,17 @@ describe('ApiAiApp', function () {
   });
 
   /**
-   * Describes the behavior for ApiAiApp getContext method.
+   * Describes the behavior for DialogflowApp getContext method.
    */
   describe('#getContext', function () {
     let app, mockRequest;
 
     beforeEach(function () {
-      mockRequest = new MockRequest(headerV1, apiAiAppRequestBodyLiveSession);
+      mockRequest = new MockRequest(headerV1, dialogflowAppRequestBodyLiveSession);
     });
 
     function initMockApp () {
-      app = new ApiAiApp({
+      app = new DialogflowApp({
         request: mockRequest,
         response: mockResponse
       });
@@ -2689,7 +2688,7 @@ describe('ApiAiApp', function () {
 
     // Success case test, when the API returns a valid 200 response with the response object
     it('Should return the context by name from incoming JSON for the success case.', function () {
-      apiAiAppRequestBodyLiveSession.result.contexts = [{
+      dialogflowAppRequestBodyLiveSession.result.contexts = [{
         'name': 'number',
         'lifespan': 5,
         'parameters': {
@@ -2697,7 +2696,7 @@ describe('ApiAiApp', function () {
           'parameterTwo': '24'
         }
       }];
-      mockRequest.body = apiAiAppRequestBodyLiveSession;
+      mockRequest.body = dialogflowAppRequestBodyLiveSession;
       initMockApp();
 
       let mockContext = app.getContext('number');
@@ -2715,8 +2714,8 @@ describe('ApiAiApp', function () {
     it('Should return the context by name from incoming JSON when no context provided.',
       function () {
         //  Check the empty case
-        apiAiAppRequestBodyLiveSession.result.contexts = [];
-        mockRequest.body = apiAiAppRequestBodyLiveSession;
+        dialogflowAppRequestBodyLiveSession.result.contexts = [];
+        mockRequest.body = dialogflowAppRequestBodyLiveSession;
         initMockApp();
         let mockContext = app.getContext('name');
         let expectedContext = null;
@@ -2725,13 +2724,13 @@ describe('ApiAiApp', function () {
   });
 
   /**
-   * Describes the behavior for ApiAiApp ask with no inputs method.
+   * Describes the behavior for DialogflowApp ask with no inputs method.
    */
   describe('#ask', function () {
     // Success case test, when the API returns a valid 200 response with the response object
     it('Should return the valid JSON in the response object for the success case.', function () {
-      const mockRequest = new MockRequest(headerV1, apiAiAppRequestBodyLiveSession);
-      const app = new ApiAiApp({
+      const mockRequest = new MockRequest(headerV1, dialogflowAppRequestBodyLiveSession);
+      const app = new DialogflowApp({
         request: mockRequest,
         response: mockResponse
       });

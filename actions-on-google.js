@@ -27,11 +27,12 @@ module.exports = {
   AssistantApp: AssistantApp.AssistantApp,
   State: AssistantApp.State,
   ActionsSdkApp: require('./actions-sdk-app'),
-  ApiAiApp: require('./api-ai-app'),
+  DialogflowApp: require('./dialogflow-app'),
   Transactions: require('./transactions'),
   Responses: require('./response-builder'),
   // Backwards compatibility
   Assistant: AssistantApp.AssistantApp,
   ActionsSdkAssistant: require('./actions-sdk-app'),
-  ApiAiAssistant: require('./api-ai-app')
+  ApiAiAssistant: require('./dialogflow-app'),
+  ApiAiApp: require('./dialogflow-app')
 };

@@ -65,7 +65,7 @@ describe('ActionsSdkApp', function () {
   });
 
   /**
-   * Describes the behavior for ApiAiApp constructor method.
+   * Describes the behavior for ActionsSdkApp constructor method.
    */
   describe('#constructor', function () {
     // Calls sessionStarted when provided
@@ -2329,7 +2329,7 @@ describe('ActionsSdkApp', function () {
    */
   describe('#getSelectedOption', function () {
     // Success case test, when the API returns a valid 200 response with the response object
-    it('Should get the selected option when given in APIAI context.', function () {
+    it('Should get the selected option when given in arguments', function () {
       actionsSdkAppRequestBodyLive.inputs[0].arguments = [
         {
           'name': 'OPTION',
