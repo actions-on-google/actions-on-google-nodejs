@@ -95,7 +95,7 @@ class ActionsSdkApp extends AssistantApp {
    *   });
    *
    * @param {string} projectId Google Cloud Project ID for the Assistant app.
-   * @param {Promise} Promise resolving with ID token if request is from
+   * @return {Promise<string>} Promise resolving with ID token if request is from
    *     a valid source, otherwise rejects with the error reason for an invalid
    *     token.
    * @actionssdk
@@ -111,12 +111,12 @@ class ActionsSdkApp extends AssistantApp {
         error(errorMsg);
         reject(errorMsg);
       }
-      googleAuthClient.verifyIdToken(jwtToken, projectId, (err, idToken) => {
+      googleAuthClient.verifyIdToken(jwtToken, projectId, (err, login) => {
         if (err) {
           error('ID token verification Failed: ' + err);
           reject(err);
         } else {
-          resolve(idToken);
+          resolve(jwtToken);
         }
       });
     });

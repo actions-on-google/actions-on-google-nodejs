@@ -140,11 +140,19 @@ const GENERIC_EXTENSION_TYPE = 'type.googleapis.com/google.actions.v2.orders.Gen
  * @property {string} order.googleOrderId - Order ID assigned by Google.
  * @property {string} order.actionOrderId - User visible order ID set in proposed
  *     order.
- * @property {Object} order.orderDate
+ * @property {Object} order.orderDate - The date and time the order was created.
  * @property {string} order.orderDate.seconds
  * @property {number} order.orderDate.nanos
- * @property {Object} order.paymentInfo
- * @property {Object} order.customerInfo
+ * @property {Object} order.paymentInfo - The details regarding the payment method
+       that must be used to charge the user.
+ * @property {string} order.paymentInfo.paymentType - One of Transactions.PaymentType.
+ * @property {string} order.paymentInfo.paymentType.googleProvidedPaymentInstrument.instrumentToken -
+       Contains a Base64-encoded payment token provided by a third-party payment
+       processor. Returned for Google-provided payment methods only.
+ * @property {string} order.paymentInfo.displayName - Name of the instrument displayed
+       on the receipt. Returned for payment methods provided by your app only.
+ * @property {Object} order.customerInfo - Any customer information (e.g. email address)
+       requested.
  * @property {string} order.customerInfo.email - Customer email.
  * @property {DeliveryAddress} deliveryAddress - The delivery address if user
  *     requested. Will appear if userDecision is

@@ -711,7 +711,7 @@ class AssistantApp {
    * // fill order cart
    *
    * function welcomeIntent (app) {
-   *   app.askForTransaction(order, transactionConfig);
+   *   app.askForTransactionDecision(order, transactionConfig);
    * }
    *
    * function txnComplete (app) {
@@ -1831,12 +1831,12 @@ class AssistantApp {
   /**
    * Constructs LineItem with chainable property setters.
    *
-   * @param {string} name Name of the line item.
    * @param {string} id Unique identifier for the item.
+   * @param {string} name Name of the line item.
    * @return {LineItem} Constructed LineItem.
    */
-  buildLineItem (name, id) {
-    return new LineItem(name, id);
+  buildLineItem (id, name) {
+    return new LineItem(id, name);
   }
 
   /**
