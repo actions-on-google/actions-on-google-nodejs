@@ -72,11 +72,14 @@ class DialogflowApp extends AssistantApp {
   constructor (options) {
     debug('DialogflowApp constructor');
     super(options, () => {
-      const { originalRequest } = this.body_;
-      if (!(originalRequest && originalRequest.data)) {
+      if (!this.body_) {
         return null;
       }
-      return originalRequest.data;
+      const { originalRequest } = this.body_;
+      if (!originalRequest) {
+        return null;
+      }
+      return originalRequest.data || null;
     });
 
     // If request contains originalRequest, convert to Proto3.
@@ -96,6 +99,8 @@ class DialogflowApp extends AssistantApp {
         this.handleError_('options.sessionStarted must be a Function');
       }
     }
+
+    this.extractUserStorage_();
   }
 
   /**
@@ -983,18 +988,17 @@ class DialogflowApp extends AssistantApp {
         : textToSpeech.items[0].simpleResponse.textToSpeech,
       contextOut: []
     };
-    response.data = isStringResponse ? {
-      google: {
-        expectUserResponse: expectUserResponse,
-        isSsml: this.isSsml_(textToSpeech),
-        noInputPrompts: noInputs
-      }
+    const google = Object.assign({
+      expectUserResponse,
+      noInputPrompts: noInputs
+    }, isStringResponse ? {
+      isSsml: this.isSsml_(textToSpeech)
     } : {
-      google: {
-        expectUserResponse: expectUserResponse,
-        richResponse: textToSpeech,
-        noInputPrompts: noInputs
-      }
+      richResponse: textToSpeech
+    });
+    this.addUserStorageToResponse_(google);
+    response.data = {
+      google
     };
     if (expectUserResponse) {
       response.contextOut.push({

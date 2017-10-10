@@ -74,6 +74,8 @@ class ActionsSdkApp extends AssistantApp {
     } else if (this.sessionStarted_ && typeof this.sessionStarted_ !== 'function') {
       this.handleError_('options.sessionStarted must be a Function');
     }
+
+    this.extractUserStorage_();
   }
 
   /**
@@ -674,6 +676,7 @@ class ActionsSdkApp extends AssistantApp {
     if (conversationToken) {
       response.conversationToken = conversationToken;
     }
+    this.addUserStorageToResponse_(response);
     response.expectUserResponse = expectUserResponse;
     if (expectedInput) {
       response.expectedInputs = expectedInput;

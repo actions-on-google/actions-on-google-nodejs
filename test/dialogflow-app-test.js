@@ -162,6 +162,7 @@ describe('DialogflowApp', function () {
         'speech': 'hello',
         'data': {
           'google': {
+            'user_storage': '{"data":{}}',
             'expect_user_response': false,
             'is_ssml': false,
             'no_input_prompts': []
@@ -180,6 +181,7 @@ describe('DialogflowApp', function () {
           'speech': 'hello',
           'data': {
             'google': {
+              'user_storage': '{"data":{}}',
               'expect_user_response': false,
               'no_input_prompts': [],
               'rich_response': {
@@ -212,6 +214,7 @@ describe('DialogflowApp', function () {
           'speech': 'hello',
           'data': {
             'google': {
+              'user_storage': '{"data":{}}',
               'expect_user_response': false,
               'no_input_prompts': [],
               'rich_response': {
@@ -267,6 +270,7 @@ describe('DialogflowApp', function () {
           'speech': 'hello',
           'data': {
             'google': {
+              'user_storage': '{"data":{}}',
               'expect_user_response': true,
               'is_ssml': false,
               'no_input_prompts': []
@@ -292,6 +296,7 @@ describe('DialogflowApp', function () {
           'speech': 'hello',
           'data': {
             'google': {
+              'user_storage': '{"data":{}}',
               'expect_user_response': true,
               'no_input_prompts': [],
               'rich_response': {
@@ -331,6 +336,7 @@ describe('DialogflowApp', function () {
           'speech': 'hello',
           'data': {
             'google': {
+              'user_storage': '{"data":{}}',
               'expect_user_response': true,
               'no_input_prompts': [],
               'rich_response': {
@@ -374,6 +380,7 @@ describe('DialogflowApp', function () {
           'speech': 'hello',
           'data': {
             'google': {
+              'user_storage': '{"data":{}}',
               'expect_user_response': true,
               'is_ssml': false,
               'no_input_prompts': [
@@ -412,6 +419,7 @@ describe('DialogflowApp', function () {
           'speech': 'hello',
           'data': {
             'google': {
+              'user_storage': '{"data":{}}',
               'expect_user_response': true,
               'no_input_prompts': [
                 {
@@ -495,6 +503,7 @@ describe('DialogflowApp', function () {
           'speech': 'Here is a list',
           'data': {
             'google': {
+              'userStorage': '{"data":{}}',
               'expectUserResponse': true,
               'isSsml': false,
               'noInputPrompts': [],
@@ -572,6 +581,7 @@ describe('DialogflowApp', function () {
           'speech': 'Here is a carousel',
           'data': {
             'google': {
+              'userStorage': '{"data":{}}',
               'expectUserResponse': true,
               'isSsml': false,
               'noInputPrompts': [],
@@ -644,6 +654,7 @@ describe('DialogflowApp', function () {
         'speech': 'PLACEHOLDER_FOR_PERMISSION',
         'data': {
           'google': {
+            'user_storage': '{"data":{}}',
             'expect_user_response': true,
             'is_ssml': false,
             'no_input_prompts': [],
@@ -690,6 +701,7 @@ describe('DialogflowApp', function () {
         'speech': 'PLACEHOLDER_FOR_PERMISSION',
         'data': {
           'google': {
+            'userStorage': '{"data":{}}',
             'expectUserResponse': true,
             'isSsml': false,
             'noInputPrompts': [],
@@ -1320,6 +1332,7 @@ describe('DialogflowApp', function () {
           'speech': 'PLACEHOLDER_FOR_TXN_REQUIREMENTS',
           'data': {
             'google': {
+              'userStorage': '{"data":{}}',
               'expectUserResponse': true,
               'isSsml': false,
               'noInputPrompts': [],
@@ -1376,6 +1389,7 @@ describe('DialogflowApp', function () {
           'speech': 'PLACEHOLDER_FOR_TXN_REQUIREMENTS',
           'data': {
             'google': {
+              'userStorage': '{"data":{}}',
               'expectUserResponse': true,
               'isSsml': false,
               'noInputPrompts': [],
@@ -1428,6 +1442,7 @@ describe('DialogflowApp', function () {
         'speech': 'PLACEHOLDER_FOR_DELIVERY_ADDRESS',
         'data': {
           'google': {
+            'userStorage': '{"data":{}}',
             'expectUserResponse': true,
             'isSsml': false,
             'noInputPrompts': [],
@@ -1491,6 +1506,7 @@ describe('DialogflowApp', function () {
         'speech': 'PLACEHOLDER_FOR_TXN_DECISION',
         'data': {
           'google': {
+            'userStorage': '{"data":{}}',
             'expectUserResponse': true,
             'isSsml': false,
             'noInputPrompts': [],
@@ -1553,6 +1569,7 @@ describe('DialogflowApp', function () {
         'speech': 'PLACEHOLDER_FOR_TXN_DECISION',
         'data': {
           'google': {
+            'userStorage': '{"data":{}}',
             'expectUserResponse': true,
             'isSsml': false,
             'noInputPrompts': [],
@@ -1611,6 +1628,7 @@ describe('DialogflowApp', function () {
         'speech': 'PLACEHOLDER_FOR_CONFIRMATION',
         'data': {
           'google': {
+            'userStorage': '{"data":{}}',
             'expectUserResponse': true,
             'isSsml': false,
             'noInputPrompts': [],
@@ -1645,6 +1663,7 @@ describe('DialogflowApp', function () {
         'speech': 'PLACEHOLDER_FOR_CONFIRMATION',
         'data': {
           'google': {
+            'userStorage': '{"data":{}}',
             'expectUserResponse': true,
             'isSsml': false,
             'noInputPrompts': [],
@@ -1693,6 +1712,7 @@ describe('DialogflowApp', function () {
         'speech': 'PLACEHOLDER_FOR_DATETIME',
         'data': {
           'google': {
+            'userStorage': '{"data":{}}',
             'expectUserResponse': true,
             'isSsml': false,
             'noInputPrompts': [],
@@ -1728,6 +1748,7 @@ describe('DialogflowApp', function () {
         'speech': 'PLACEHOLDER_FOR_DATETIME',
         'data': {
           'google': {
+            'userStorage': '{"data":{}}',
             'expectUserResponse': true,
             'isSsml': false,
             'noInputPrompts': [],
@@ -1762,6 +1783,7 @@ describe('DialogflowApp', function () {
         'speech': 'PLACEHOLDER_FOR_DATETIME',
         'data': {
           'google': {
+            'userStorage': '{"data":{}}',
             'expectUserResponse': true,
             'isSsml': false,
             'noInputPrompts': [],
@@ -1807,6 +1829,7 @@ describe('DialogflowApp', function () {
         'speech': 'PLACEHOLDER_FOR_SIGN_IN',
         'data': {
           'google': {
+            'userStorage': '{"data":{}}',
             'expectUserResponse': true,
             'isSsml': false,
             'noInputPrompts': [],
@@ -1850,6 +1873,7 @@ describe('DialogflowApp', function () {
         'speech': 'PLACEHOLDER_FOR_NEW_SURFACE',
         'data': {
           'google': {
+            'userStorage': '{"data":{}}',
             'expectUserResponse': true,
             'isSsml': false,
             'noInputPrompts': [],
@@ -2566,6 +2590,7 @@ describe('DialogflowApp', function () {
         'speech': 'Welcome to action snippets! Say a number.',
         'data': {
           'google': {
+            'user_storage': '{"data":{}}',
             'expect_user_response': true,
             'is_ssml': false,
             'no_input_prompts': []
@@ -2744,6 +2769,7 @@ describe('DialogflowApp', function () {
         'speech': 'Welcome to action snippets! Say a number.',
         'data': {
           'google': {
+            'user_storage': '{"data":{}}',
             'expect_user_response': true,
             'is_ssml': false,
             'no_input_prompts': [
@@ -2768,6 +2794,182 @@ describe('DialogflowApp', function () {
         ]
       };
       expect(mockResponse.body).to.deep.equal(expectedResponse);
+    });
+  });
+
+  // Note: The current way these tests are written are not ideal.
+  // They are duplicated and should be fixed when the library is refactored.
+  describe('#userStorage', function () {
+    it('Should parse undefined userStorage as an empty object for new session', function () {
+      const mockRequest = new MockRequest(headerV2, dialogflowAppRequestBodyNewSession);
+      const app = new DialogflowApp({
+        request: mockRequest,
+        response: mockResponse
+      });
+      expect(app.userStorage).to.deep.equal({});
+    });
+    it('Should parse undefined userStorage as an empty object for live session', function () {
+      const mockRequest = new MockRequest(headerV2, dialogflowAppRequestBodyLiveSession);
+      const app = new DialogflowApp({
+        request: mockRequest,
+        response: mockResponse
+      });
+      expect(app.userStorage).to.deep.equal({});
+    });
+    it('Should send userStorage in response body', function () {
+      const mockRequest = new MockRequest(headerV2, dialogflowAppRequestBodyLiveSession);
+      const app = new DialogflowApp({
+        request: mockRequest,
+        response: mockResponse
+      });
+      const testUserStorage = {
+        someProperty: 'someValue'
+      };
+      app.userStorage = testUserStorage;
+      expect(app.userStorage).to.deep.equal(testUserStorage);
+      app.tell('hi');
+      expect(mockResponse.body.data.google.userStorage).to.equal(JSON.stringify({
+        data: testUserStorage
+      }));
+    });
+    it('Should parse userStorage from request body user data for new session', function () {
+      const testUserStorage = {
+        someProperty: 'someValue'
+      };
+      dialogflowAppRequestBodyNewSession.originalRequest.data.user.userStorage = JSON.stringify({
+        data: testUserStorage
+      });
+      const mockRequest = new MockRequest(headerV2, dialogflowAppRequestBodyNewSession);
+      const app = new DialogflowApp({
+        request: mockRequest,
+        response: mockResponse
+      });
+      expect(app.userStorage).to.deep.equal(testUserStorage);
+    });
+    it('Should parse userStorage from request body user data for live session', function () {
+      const testUserStorage = {
+        someProperty: 'someValue'
+      };
+      dialogflowAppRequestBodyLiveSession.originalRequest.data.user.userStorage = JSON.stringify({
+        data: testUserStorage
+      });
+      const mockRequest = new MockRequest(headerV2, dialogflowAppRequestBodyLiveSession);
+      const app = new DialogflowApp({
+        request: mockRequest,
+        response: mockResponse
+      });
+      expect(app.userStorage).to.deep.equal(testUserStorage);
+    });
+    it('Should send userStorage if it was changed', function () {
+      const testUserStorage = {
+        someProperty: 'someValue',
+        someOtherProperty: 'someOtherValue'
+      };
+      dialogflowAppRequestBodyLiveSession.originalRequest.data.user.userStorage = JSON.stringify({
+        data: testUserStorage
+      });
+      const mockRequest = new MockRequest(headerV2, dialogflowAppRequestBodyLiveSession);
+      const app = new DialogflowApp({
+        request: mockRequest,
+        response: mockResponse
+      });
+      expect(app.userStorage).to.deep.equal(testUserStorage);
+      const modifiedUserStorage = {
+        someProperty: 'test',
+        someOtherProperty: 'someOtherValue'
+      };
+      app.userStorage.someProperty = modifiedUserStorage.someProperty;
+      expect(app.userStorage).to.deep.equal(modifiedUserStorage);
+      app.tell('hi');
+      expect(mockResponse.body.data.google.userStorage).to.equal(JSON.stringify({
+        data: modifiedUserStorage
+      }));
+    });
+    it('Should not send userStorage if it was not changed', function () {
+      const testUserStorage = {
+        someProperty: 'someValue',
+        someOtherProperty: 'someOtherValue'
+      };
+      dialogflowAppRequestBodyLiveSession.originalRequest.data.user.userStorage = JSON.stringify({
+        data: testUserStorage
+      });
+      const mockRequest = new MockRequest(headerV2, dialogflowAppRequestBodyLiveSession);
+      const app = new DialogflowApp({
+        request: mockRequest,
+        response: mockResponse
+      });
+      expect(app.userStorage).to.deep.equal(testUserStorage);
+      app.tell('hi');
+      expect(mockResponse.body.data.google.userStorage).to.undefined;
+    });
+    it('Should send userStorage if its properties were reordered', function () {
+      const testUserStorage = {
+        someProperty: 'someValue',
+        someOtherProperty: 'someOtherValue'
+      };
+      dialogflowAppRequestBodyLiveSession.originalRequest.data.user.userStorage = JSON.stringify({
+        data: testUserStorage
+      });
+      const mockRequest = new MockRequest(headerV2, dialogflowAppRequestBodyLiveSession);
+      const app = new DialogflowApp({
+        request: mockRequest,
+        response: mockResponse
+      });
+      expect(app.userStorage).to.deep.equal(testUserStorage);
+      // Generate new object with keys in reverse order
+      const modifiedUserStorage = Object.keys(testUserStorage).reduceRight((o, k) => {
+        o[k] = testUserStorage[k];
+        return o;
+      }, {});
+      app.userStorage = modifiedUserStorage;
+      expect(app.userStorage).to.deep.equal(modifiedUserStorage);
+      app.tell('hi');
+      expect(mockResponse.body.data.google.userStorage).to.equal(JSON.stringify({
+        data: modifiedUserStorage
+      }));
+    });
+  });
+
+  describe('#getLastSeen', function () {
+    it('Should return null for empty lastSeen v2 proto3 Timestamp for new session', function () {
+      const mockRequest = new MockRequest(headerV2, dialogflowAppRequestBodyNewSession);
+      const app = new DialogflowApp({
+        request: mockRequest,
+        response: mockResponse
+      });
+      expect(app.getLastSeen()).to.be.null;
+    });
+    it('Should return null for empty lastSeen v2 proto3 Timestamp for live session', function () {
+      const mockRequest = new MockRequest(headerV2, dialogflowAppRequestBodyLiveSession);
+      const app = new DialogflowApp({
+        request: mockRequest,
+        response: mockResponse
+      });
+      expect(app.getLastSeen()).to.be.null;
+    });
+    it('Should return a Date for lastSeen v2 proto3 Timestamp for new session', function () {
+      const timestamp = '2017-10-26T23:40:59.742Z';
+      dialogflowAppRequestBodyNewSession.originalRequest.data.user.lastSeen = timestamp;
+      const mockRequest = new MockRequest(headerV2, dialogflowAppRequestBodyNewSession);
+      const app = new DialogflowApp({
+        request: mockRequest,
+        response: mockResponse
+      });
+      const lastSeen = app.getLastSeen();
+      expect(lastSeen).to.be.a('Date');
+      expect(lastSeen.toISOString()).to.equal(timestamp);
+    });
+    it('Should return a Date for lastSeen v2 proto3 Timestamp for live session', function () {
+      const timestamp = '2017-10-26T23:40:59.742Z';
+      dialogflowAppRequestBodyLiveSession.originalRequest.data.user.lastSeen = timestamp;
+      const mockRequest = new MockRequest(headerV2, dialogflowAppRequestBodyLiveSession);
+      const app = new DialogflowApp({
+        request: mockRequest,
+        response: mockResponse
+      });
+      const lastSeen = app.getLastSeen();
+      expect(lastSeen).to.be.a('Date');
+      expect(lastSeen.toISOString()).to.equal(timestamp);
     });
   });
 });

@@ -79,6 +79,8 @@ class AssistantApp {
   constructor (options, requestData) {
     debug('AssistantApp constructor');
 
+    this.requestData = requestData;
+
     if (!options) {
       // ignore for JavaScript inheritance to work
 
@@ -183,6 +185,23 @@ class AssistantApp {
      * @type {Object}
      */
     this.data = {};
+
+    /**
+     * The data persistent across sessions in JSON format.
+     * It exists in the same context as getUser().userId
+     *
+     * @example
+     * // Actions SDK
+     * const app = new ActionsSdkApp({request: request, response: response});
+     * app.userStorage.someProperty = 'someValue';
+     * // Dialogflow
+     * const app = new DialogflowApp({request: request, response: response});
+     * app.userStorage.someProperty = 'someValue';
+     *
+     * @public
+     * @type {Object}
+     */
+    this.userStorage = {};
 
     /**
      * The Dialogflow context.
@@ -438,8 +457,6 @@ class AssistantApp {
      * @type {object}
      */
     this.Transactions = TransactionValues;
-
-    this.requestData = requestData;
 
     // Extracts the data from the request
     this.extractData_();
@@ -1277,6 +1294,11 @@ class AssistantApp {
    *     requested with {@link AssistantApp#askForPermission|askForPermission(SupportedPermissions.NAME)}.
    * @property {string} accessToken - Unique Oauth2 token. Only available with
    *     account linking.
+   * @property {Timestamp} lastSeen - Timestamp for the last access from the user.
+   *     Retrieve using app.getLastSeen() to get a Date object or null if never seen.
+   * @property {string} userStorage - A string persistent across sessions.
+   *    Retrieved and set using app.userStorage which allows you to store it like an JSON object
+   *    which is abstracted for convenience by the client library.
    */
 
   /**
@@ -1385,6 +1407,30 @@ class AssistantApp {
     debug('getUserLocale');
     return this.getUser() && this.getUser().locale
       ? this.getUser().locale : null;
+  }
+
+  /**
+   * Get the user's last seen time as a Date object.
+   * Not supported in V1.
+   *
+   * @example
+   * const app = new ApiAiApp({request, response});
+   * const lastSeen = app.getLastSeen();
+   *
+   * @return {Date | null} User's last seen date or null if never seen
+   */
+  getLastSeen () {
+    debug('getLastSeen');
+    const user = this.getUser();
+    if (!user) {
+      return null;
+    }
+    /** @type {string} */
+    const { lastSeen } = user;
+    if (!lastSeen) {
+      return null;
+    }
+    return new Date(lastSeen);
   }
 
   /**
@@ -2146,6 +2192,54 @@ class AssistantApp {
   extractData_ () {
     debug('extractData_');
     this.data = {};
+  }
+
+  /**
+   * Extract data persistent across sessions from the incoming JSON request.
+   *
+   * Used in subclasses for Actions SDK and Dialogflow.
+   * @return {undefined}
+   * @private
+   */
+  extractUserStorage_ () {
+    debug('extractUserStorage_');
+    const user = this.getUser();
+    if (!user) {
+      this.userStorage = {};
+      return;
+    }
+    const { userStorage } = user;
+    if (!userStorage) {
+      this.userStorage = {};
+      return;
+    }
+    this.userStorage = JSON.parse(userStorage).data || {};
+  }
+
+  /**
+   * Add userStorage to response object if needed.
+   *
+   * Used in subclasses for Actions SDK and Dialogflow.
+   * @param {Object} response The response object to send back to Google
+   * @return {undefined}
+   * @private
+   */
+  addUserStorageToResponse_ (response) {
+    if (this.userStorage) {
+      const user = this.getUser();
+      if (user) {
+        const { userStorage } = user;
+        const json = JSON.stringify({
+          data: this.userStorage // store as a sub property in case we want to add new features
+        });
+        if (userStorage !== json) {
+          // Only send if the JSON string is different.
+          // Will also send if the JSON keys have been reordered.
+          // This was a design choice for computational and network saving tradeoff.
+          response.userStorage = json;
+        }
+      }
+    }
   }
 
   /**

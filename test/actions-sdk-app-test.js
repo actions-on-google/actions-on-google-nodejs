@@ -30,6 +30,8 @@ const { ActionsSdkApp } = require('.././actions-on-google');
 const {
   actionsSdkAppRequestBodyNewSessionMock,
   actionsSdkAppRequestBodyLiveSessionMock,
+  actionsSdkAppRequestBodyNewSessionMockV2,
+  actionsSdkAppRequestBodyLiveSessionMockV2,
   headerV1,
   headerV2,
   MockResponse,
@@ -51,16 +53,25 @@ winston.loggers.add('DEFAULT_LOGGER', {
   }
 });
 
+/** @param {Object} obj */
+const clone = obj => JSON.parse(JSON.stringify(obj));
+
 // ---------------------------------------------------------------------------
 //                   Actions SDK support
 // ---------------------------------------------------------------------------
 
 describe('ActionsSdkApp', function () {
-  let actionsSdkAppRequestBodyNew, actionsSdkAppRequestBodyLive, mockResponse;
+  let actionsSdkAppRequestBodyNew;
+  let actionsSdkAppRequestBodyLive;
+  let mockResponse;
+  let actionsSdkAppRequestBodyNewV2;
+  let actionsSdkAppRequestBodyLiveV2;
 
   beforeEach(function () {
-    actionsSdkAppRequestBodyNew = JSON.parse(JSON.stringify(actionsSdkAppRequestBodyNewSessionMock));
-    actionsSdkAppRequestBodyLive = JSON.parse(JSON.stringify(actionsSdkAppRequestBodyLiveSessionMock));
+    actionsSdkAppRequestBodyNew = clone(actionsSdkAppRequestBodyNewSessionMock);
+    actionsSdkAppRequestBodyLive = clone(actionsSdkAppRequestBodyLiveSessionMock);
+    actionsSdkAppRequestBodyNewV2 = clone(actionsSdkAppRequestBodyNewSessionMockV2);
+    actionsSdkAppRequestBodyLiveV2 = clone(actionsSdkAppRequestBodyLiveSessionMockV2);
     mockResponse = new MockResponse();
   });
 
@@ -180,6 +191,7 @@ describe('ActionsSdkApp', function () {
           // Validating the response object
       let expectedResponse = {
         'conversation_token': '{"state":null,"data":{}}',
+        'user_storage': '{"data":{}}',
         'expect_user_response': true,
         'expected_inputs': [
           {
@@ -216,6 +228,7 @@ describe('ActionsSdkApp', function () {
       app.ask('What can I help you with?');
       let expectedResponse = {
         'conversation_token': '{"state":null,"data":{}}',
+        'user_storage': '{"data":{}}',
         'expect_user_response': true,
         'expected_inputs': [
           {
@@ -245,6 +258,7 @@ describe('ActionsSdkApp', function () {
       // Validating the response object
       let expectedResponse = {
         'conversation_token': '{"state":null,"data":{}}',
+        'user_storage': '{"data":{}}',
         'expect_user_response': true,
         'expected_inputs': [
           {
@@ -276,6 +290,7 @@ describe('ActionsSdkApp', function () {
       // Validating the response object
       let expectedResponse = {
         'conversation_token': '{"state":null,"data":{}}',
+        'user_storage': '{"data":{}}',
         'expect_user_response': true,
         'expected_inputs': [
           {
@@ -313,6 +328,7 @@ describe('ActionsSdkApp', function () {
       // Validating the response object
       let expectedResponse = {
         'conversation_token': '{"state":null,"data":{}}',
+        'user_storage': '{"data":{}}',
         'expect_user_response': true,
         'expected_inputs': [
           {
@@ -351,6 +367,7 @@ describe('ActionsSdkApp', function () {
       let expectedResponse = {
         'conversation_token': '{"state":null,"data":{}}',
         'expect_user_response': true,
+        'user_storage': '{"data":{}}',
         'expected_inputs': [
           {
             'input_prompt': {
@@ -404,6 +421,7 @@ describe('ActionsSdkApp', function () {
     it('Should return the valid JSON in the response object for the success case.', function () {
       app.tell('Goodbye!');
       let expectedResponse = {
+        'user_storage': '{"data":{}}',
         'expect_user_response': false,
         'final_response': {
           'speech_response': {
@@ -420,6 +438,7 @@ describe('ActionsSdkApp', function () {
 
       // Validating the response object
       let expectedResponse = {
+        'user_storage': '{"data":{}}',
         'expect_user_response': false,
         'final_response': {
           'rich_response': {
@@ -447,6 +466,7 @@ describe('ActionsSdkApp', function () {
 
       // Validating the response object
       let expectedResponse = {
+        'user_storage': '{"data":{}}',
         'expect_user_response': false,
         'final_response': {
           'rich_response': {
@@ -536,6 +556,7 @@ describe('ActionsSdkApp', function () {
       // Validating the response object
       let expectedResponse = {
         'conversationToken': '{"optionType":"list"}',
+        'userStorage': '{"data":{}}',
         'expectUserResponse': true,
         'expectedInputs': [
           {
@@ -618,6 +639,7 @@ describe('ActionsSdkApp', function () {
       // Validating the response object
       let expectedResponse = {
         'conversationToken': '{"optionType":"carousel"}',
+        'userStorage': '{"data":{}}',
         'expectUserResponse': true,
         'expectedInputs': [
           {
@@ -698,6 +720,7 @@ describe('ActionsSdkApp', function () {
       // Validating the response object
       let expectedResponse = {
         'conversation_token': '{"carType":"big"}',
+        'user_storage': '{"data":{}}',
         'expect_user_response': true,
         'expected_inputs': [
           {
@@ -743,6 +766,7 @@ describe('ActionsSdkApp', function () {
       // Validating the response object
       let expectedResponse = {
         'conversationToken': '{"carType":"big"}',
+        'userStorage': '{"data":{}}',
         'expectUserResponse': true,
         'expectedInputs': [
           {
@@ -801,6 +825,7 @@ describe('ActionsSdkApp', function () {
       app.askForTransactionRequirements(transactionConfig, { cartSize: 2 });
       let expectedResponse = {
         'conversationToken': '{"cartSize":2}',
+        'userStorage': '{"data":{}}',
         'expectUserResponse': true,
         'expectedInputs': [
           {
@@ -855,6 +880,7 @@ describe('ActionsSdkApp', function () {
       app.askForTransactionRequirements(transactionConfig, { cartSize: 2 });
       let expectedResponse = {
         'conversationToken': '{"cartSize":2}',
+        'userStorage': '{"data":{}}',
         'expectUserResponse': true,
         'expectedInputs': [
           {
@@ -905,6 +931,7 @@ describe('ActionsSdkApp', function () {
       app.askForDeliveryAddress('Just because', { cartSize: 2 });
       let expectedResponse = {
         'conversationToken': '{"cartSize":2}',
+        'userStorage': '{"data":{}}',
         'expectUserResponse': true,
         'expectedInputs': [
           {
@@ -964,6 +991,7 @@ describe('ActionsSdkApp', function () {
         {cartSize: 2});
       let expectedResponse = {
         'conversationToken': '{"cartSize":2}',
+        'userStorage': '{"data":{}}',
         'expectUserResponse': true,
         'expectedInputs': [
           {
@@ -1019,6 +1047,7 @@ describe('ActionsSdkApp', function () {
         {cartSize: 2});
       let expectedResponse = {
         'conversationToken': '{"cartSize":2}',
+        'userStorage': '{"data":{}}',
         'expectUserResponse': true,
         'expectedInputs': [
           {
@@ -1072,6 +1101,7 @@ describe('ActionsSdkApp', function () {
       app.askForConfirmation('You want to do that?', {cartSize: 2});
       let expectedResponse = {
         'conversationToken': '{"cartSize":2}',
+        'userStorage': '{"data":{}}',
         'expectUserResponse': true,
         'expectedInputs': [
           {
@@ -1105,6 +1135,7 @@ describe('ActionsSdkApp', function () {
       app.askForConfirmation();
       let expectedResponse = {
         'conversationToken': '{"state":null,"data":{}}',
+        'userStorage': '{"data":{}}',
         'expectUserResponse': true,
         'expectedInputs': [
           {
@@ -1152,6 +1183,7 @@ describe('ActionsSdkApp', function () {
 
       let expectedResponse = {
         'conversationToken': '{"cartSize":2}',
+        'userStorage': '{"data":{}}',
         'expectUserResponse': true,
         'expectedInputs': [
           {
@@ -1190,6 +1222,7 @@ describe('ActionsSdkApp', function () {
         null);
       let expectedResponse = {
         'conversationToken': '{"state":null,"data":{}}',
+        'userStorage': '{"data":{}}',
         'expectUserResponse': true,
         'expectedInputs': [
           {
@@ -1225,6 +1258,7 @@ describe('ActionsSdkApp', function () {
       app.askForDateTime();
       let expectedResponse = {
         'conversationToken': '{"state":null,"data":{}}',
+        'userStorage': '{"data":{}}',
         'expectUserResponse': true,
         'expectedInputs': [
           {
@@ -1267,6 +1301,7 @@ describe('ActionsSdkApp', function () {
       app.askForSignIn({cartSize: 2});
       let expectedResponse = {
         'conversationToken': '{"cartSize":2}',
+        'userStorage': '{"data":{}}',
         'expectUserResponse': true,
         'expectedInputs': [
           {
@@ -1305,6 +1340,7 @@ describe('ActionsSdkApp', function () {
       app.askForNewSurface('test context', 'test title', ['cap_one', 'cap_two']);
       let expectedResponse = {
         'conversationToken': '{"state":null,"data":{}}',
+        'userStorage': '{"data":{}}',
         'expectUserResponse': true,
         'expectedInputs': [
           {
@@ -2313,6 +2349,7 @@ describe('ActionsSdkApp', function () {
       });
       app.tell('You said ' + app.getArgument('number'));
       let expectedResponse = {
+        'user_storage': '{"data":{}}',
         'expect_user_response': false,
         'final_response': {
           'speech_response': {
@@ -2365,6 +2402,7 @@ describe('ActionsSdkApp', function () {
       });
       app.tell('<speak>You said <break time="2"/>' + app.getRawInput() + '</speak>');
       let expectedResponse = {
+        'user_storage': '{"data":{}}',
         'expect_user_response': false,
         'final_response': {
           'speech_response': {
@@ -2373,6 +2411,182 @@ describe('ActionsSdkApp', function () {
         }
       };
       expect(JSON.stringify(mockResponse.body)).to.equal(JSON.stringify(expectedResponse));
+    });
+  });
+
+  // Note: The current way these tests are written is not ideal.
+  // They are duplicated and should be fixed when the library is refactored.
+  describe('#userStorage', function () {
+    it('Should parse undefined userStorage as an empty object for new session', function () {
+      const mockRequest = new MockRequest(headerV2, actionsSdkAppRequestBodyNewV2);
+      const app = new ActionsSdkApp({
+        request: mockRequest,
+        response: mockResponse
+      });
+      expect(app.userStorage).to.deep.equal({});
+    });
+    it('Should parse undefined userStorage as an empty object for live session', function () {
+      const mockRequest = new MockRequest(headerV2, actionsSdkAppRequestBodyLiveV2);
+      const app = new ActionsSdkApp({
+        request: mockRequest,
+        response: mockResponse
+      });
+      expect(app.userStorage).to.deep.equal({});
+    });
+    it('Should send userStorage in response body', function () {
+      const mockRequest = new MockRequest(headerV2, actionsSdkAppRequestBodyLiveV2);
+      const app = new ActionsSdkApp({
+        request: mockRequest,
+        response: mockResponse
+      });
+      const testUserStorage = {
+        someProperty: 'someValue'
+      };
+      app.userStorage = testUserStorage;
+      expect(app.userStorage).to.deep.equal(testUserStorage);
+      app.tell('hi');
+      expect(mockResponse.body.userStorage).to.equal(JSON.stringify({
+        data: testUserStorage
+      }));
+    });
+    it('Should parse userStorage from request body user data for new session', function () {
+      const testUserStorage = {
+        someProperty: 'someValue'
+      };
+      actionsSdkAppRequestBodyNewV2.user.userStorage = JSON.stringify({
+        data: testUserStorage
+      });
+      const mockRequest = new MockRequest(headerV2, actionsSdkAppRequestBodyNewV2);
+      const app = new ActionsSdkApp({
+        request: mockRequest,
+        response: mockResponse
+      });
+      expect(app.userStorage).to.deep.equal(testUserStorage);
+    });
+    it('Should parse userStorage from request body user data for live session', function () {
+      const testUserStorage = {
+        someProperty: 'someValue'
+      };
+      actionsSdkAppRequestBodyLiveV2.user.userStorage = JSON.stringify({
+        data: testUserStorage
+      });
+      const mockRequest = new MockRequest(headerV2, actionsSdkAppRequestBodyLiveV2);
+      const app = new ActionsSdkApp({
+        request: mockRequest,
+        response: mockResponse
+      });
+      expect(app.userStorage).to.deep.equal(testUserStorage);
+    });
+    it('Should send userStorage if it was changed', function () {
+      const testUserStorage = {
+        someProperty: 'someValue',
+        someOtherProperty: 'someOtherValue'
+      };
+      actionsSdkAppRequestBodyLiveV2.user.userStorage = JSON.stringify({
+        data: testUserStorage
+      });
+      const mockRequest = new MockRequest(headerV2, actionsSdkAppRequestBodyLiveV2);
+      const app = new ActionsSdkApp({
+        request: mockRequest,
+        response: mockResponse
+      });
+      expect(app.userStorage).to.deep.equal(testUserStorage);
+      const modifiedUserStorage = {
+        someProperty: 'test',
+        someOtherProperty: 'someOtherValue'
+      };
+      app.userStorage.someProperty = modifiedUserStorage.someProperty;
+      expect(app.userStorage).to.deep.equal(modifiedUserStorage);
+      app.tell('hi');
+      expect(mockResponse.body.userStorage).to.equal(JSON.stringify({
+        data: modifiedUserStorage
+      }));
+    });
+    it('Should not send userStorage if it was not changed', function () {
+      const testUserStorage = {
+        someProperty: 'someValue',
+        someOtherProperty: 'someOtherValue'
+      };
+      actionsSdkAppRequestBodyLiveV2.user.userStorage = JSON.stringify({
+        data: testUserStorage
+      });
+      const mockRequest = new MockRequest(headerV2, actionsSdkAppRequestBodyLiveV2);
+      const app = new ActionsSdkApp({
+        request: mockRequest,
+        response: mockResponse
+      });
+      expect(app.userStorage).to.deep.equal(testUserStorage);
+      app.tell('hi');
+      expect(mockResponse.body.userStorage).to.undefined;
+    });
+    it('Should send userStorage if its properties were reordered', function () {
+      const testUserStorage = {
+        someProperty: 'someValue',
+        someOtherProperty: 'someOtherValue'
+      };
+      actionsSdkAppRequestBodyLiveV2.user.userStorage = JSON.stringify({
+        data: testUserStorage
+      });
+      const mockRequest = new MockRequest(headerV2, actionsSdkAppRequestBodyLiveV2);
+      const app = new ActionsSdkApp({
+        request: mockRequest,
+        response: mockResponse
+      });
+      expect(app.userStorage).to.deep.equal(testUserStorage);
+      // Generate new object with keys in reverse order
+      const modifiedUserStorage = Object.keys(testUserStorage).reduceRight((o, k) => {
+        o[k] = testUserStorage[k];
+        return o;
+      }, {});
+      app.userStorage = modifiedUserStorage;
+      expect(app.userStorage).to.deep.equal(modifiedUserStorage);
+      app.tell('hi');
+      expect(mockResponse.body.userStorage).to.equal(JSON.stringify({
+        data: modifiedUserStorage
+      }));
+    });
+  });
+
+  describe('#getLastSeen', function () {
+    it('Should return null for empty lastSeen v2 proto3 Timestamp for new session', function () {
+      const mockRequest = new MockRequest(headerV2, actionsSdkAppRequestBodyNewV2);
+      const app = new ActionsSdkApp({
+        request: mockRequest,
+        response: mockResponse
+      });
+      expect(app.getLastSeen()).to.be.null;
+    });
+    it('Should return null for empty lastSeen v2 proto3 Timestamp for live session', function () {
+      const mockRequest = new MockRequest(headerV2, actionsSdkAppRequestBodyLiveV2);
+      const app = new ActionsSdkApp({
+        request: mockRequest,
+        response: mockResponse
+      });
+      expect(app.getLastSeen()).to.be.null;
+    });
+    it('Should return a Date for lastSeen v2 proto3 Timestamp for new session', function () {
+      const timestamp = '2017-10-26T23:40:59.742Z';
+      actionsSdkAppRequestBodyNewV2.user.lastSeen = timestamp;
+      const mockRequest = new MockRequest(headerV2, actionsSdkAppRequestBodyNewV2);
+      const app = new ActionsSdkApp({
+        request: mockRequest,
+        response: mockResponse
+      });
+      const lastSeen = app.getLastSeen();
+      expect(lastSeen).to.be.a('Date');
+      expect(lastSeen.toISOString()).to.equal(timestamp);
+    });
+    it('Should return a Date for lastSeen v2 proto3 Timestamp for live session', function () {
+      const timestamp = '2017-10-26T23:40:59.742Z';
+      actionsSdkAppRequestBodyLiveV2.user.lastSeen = timestamp;
+      const mockRequest = new MockRequest(headerV2, actionsSdkAppRequestBodyLiveV2);
+      const app = new ActionsSdkApp({
+        request: mockRequest,
+        response: mockResponse
+      });
+      const lastSeen = app.getLastSeen();
+      expect(lastSeen).to.be.a('Date');
+      expect(lastSeen.toISOString()).to.equal(timestamp);
     });
   });
 });

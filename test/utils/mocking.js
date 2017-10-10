@@ -16,6 +16,8 @@
 
 'use strict';
 
+const { transformToCamelCase } = require('../../utils/transform');
+
 const MockRequest = class {
   constructor (headers, body) {
     if (headers) {
@@ -269,6 +271,9 @@ const actionsSdkAppRequestBodyLiveSessionMock = {
   ]
 };
 
+const actionsSdkAppRequestBodyNewSessionMockV2 = transformToCamelCase(actionsSdkAppRequestBodyNewSessionMock);
+const actionsSdkAppRequestBodyLiveSessionMockV2 = transformToCamelCase(actionsSdkAppRequestBodyLiveSessionMock);
+
 module.exports = {
   dialogflowAppRequestBodyLiveSessionMock,
   dialogflowAppRequestBodyNewSessionMock,
@@ -278,6 +283,8 @@ module.exports = {
   headerV1,
   actionsSdkAppRequestBodyNewSessionMock,
   actionsSdkAppRequestBodyLiveSessionMock,
+  actionsSdkAppRequestBodyNewSessionMockV2,
+  actionsSdkAppRequestBodyLiveSessionMockV2,
   fakeConversationId,
   fakeUserId
 };
