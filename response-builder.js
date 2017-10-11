@@ -554,7 +554,7 @@ const List = class {
     }
     if (this.items.length > LIST_ITEM_LIMIT) {
       this.items = this.items.slice(0, LIST_ITEM_LIMIT);
-      error('Carousel can have no more than ' + LIST_ITEM_LIMIT +
+      error('List can have no more than ' + LIST_ITEM_LIMIT +
         ' items');
     }
     return this;
