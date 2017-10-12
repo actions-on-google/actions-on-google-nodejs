@@ -26,7 +26,7 @@ const winston = require('winston');
 const chai = require('chai');
 const expect = chai.expect;
 const spies = require('chai-spies');
-const { AssistantApp, ApiAiApp } = require('.././actions-on-google');
+const { AssistantApp } = require('.././actions-on-google');
 const {
   apiAiAppRequestBodyNewSessionMock,
   headerV1,
@@ -168,7 +168,12 @@ describe('AssistantApp', function () {
 
     beforeEach(function () {
       mockRequest = new MockRequest(headerV2, JSON.parse(JSON.stringify(apiAiAppRequestBodyNewSessionMock)));
-      app = new ApiAiApp({request: mockRequest, response: mockResponse});
+      app = new AssistantApp({request: mockRequest, response: mockResponse});
+
+      // mock getIntent
+      app.getIntent = () => {
+        return mockRequest.body.result.action;
+      };
     });
 
     it('Should resolve a promise when actionMap contains a handler that returns a promise', function (done) {
