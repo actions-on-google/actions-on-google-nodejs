@@ -9,8 +9,29 @@
     "mocha": true
   },
   "rules": {
-    "no-unused-expressions": 0,
-    "chai-friendly/no-unused-expressions": 2
+    "no-unused-expressions": "off",
+    "chai-friendly/no-unused-expressions": "error",
+    "require-jsdoc": ["error", {
+      "require": {
+          "FunctionDeclaration": true,
+          "MethodDefinition": true,
+          "ClassDeclaration": true,
+          "ArrowFunctionExpression": true
+      }
+    }],
+    "valid-jsdoc": ["error", {
+      "prefer": {
+        "returns": "return",
+        "arg": "param",
+        "argument": "param"
+      },
+      "preferType": {
+        "Boolean": "boolean",
+        "Number": "number",
+        "object": "Object",
+        "String": "string"
+      }
+    }]
   },
   "plugins": [
     "chai-friendly",

@@ -497,6 +497,7 @@ class AssistantApp {
    * app.handleRequest(actionMap);
    *
    * @param {(Function|Map)} handler The handler (or Map of handlers) for the request.
+   * @return {undefined}
    * @actionssdk
    * @dialogflow
    */
@@ -589,7 +590,7 @@ class AssistantApp {
    *     which comes from AssistantApp.SupportedPermissions.
    * @param {Object=} dialogState JSON object the app uses to hold dialog state that
    *     will be circulated back by Assistant. Used in {@link ActionsSdkAssistant}.
-   * @return A response is sent to Assistant to ask for the user's permission; for any
+   * @return {(Object|null)} A response is sent to Assistant to ask for the user's permission; for any
    *     invalid input, we return null.
    * @actionssdk
    * @dialogflow
@@ -663,7 +664,7 @@ class AssistantApp {
    *     delivery.
    * @param {Object=} dialogState JSON object the app uses to hold dialog state that
    *     will be circulated back by Assistant. Used in {@link ActionsSdkAssistant}.
-   * @return {Object} HTTP response.
+   * @return {(Object|null)} HTTP response.
    * @actionssdk
    * @dialogflow
    */
@@ -729,6 +730,7 @@ class AssistantApp {
    *     options and order options.
    * @param {Object=} dialogState JSON object the app uses to hold dialog state that
    *     will be circulated back by Assistant. Used in {@link ActionsSdkAssistant}.
+   * @return {(Object|null)} HTTP response
    * @dialogflow
    */
   askForTransactionDecision (order, transactionConfig, dialogState) {
@@ -819,7 +821,7 @@ class AssistantApp {
    *     which comes from AssistantApp.SupportedPermissions.
    * @param {Object=} dialogState JSON object the app uses to hold dialog state that
    *     will be circulated back by Assistant.
-   * @return A response is sent to the Assistant to ask for the user's permission;
+   * @return {(Object|null)} A response is sent to the Assistant to ask for the user's permission;
    *     for any invalid input, we return null.
    * @actionssdk
    * @dialogflow
@@ -961,6 +963,7 @@ class AssistantApp {
    *     Google will use a generic yes/no prompt.
    * @param {Object=} dialogState JSON object the app uses to hold dialog state that
    *     will be circulated back by Assistant. Used in {@link ActionsSdkAssistant}.
+   * @return {(Object|null)} HTTP response.
    * @actionssdk
    * @dialogflow
    */
@@ -1017,6 +1020,7 @@ class AssistantApp {
    *     generic prompt.
    * @param {Object=} dialogState JSON object the app uses to hold dialog state that
    *     will be circulated back by Assistant. Used in {@link ActionsSdkAssistant}.
+   * @return {(Object|null)} HTTP response.
    * @actionssdk
    * @dialogflow
    */
@@ -1073,6 +1077,7 @@ class AssistantApp {
    *
    * @param {Object=} dialogState JSON object the app uses to hold dialog state that
    *     will be circulated back by Assistant. Used in {@link ActionsSdkAssistant}.
+   * @return {(Object|null)} HTTP response.
    * @actionssdk
    * @dialogflow
    */
@@ -1125,6 +1130,7 @@ class AssistantApp {
    *     the surface.
    * @param {Object=} dialogState JSON object the app uses to hold dialog state that
    *     will be circulated back by Assistant. Used in {@link ActionsSdkAssistant}.
+   * @return {(Object|null)} HTTP response.
    * @dialogflow
    * @actionssdk
    */
@@ -1475,7 +1481,7 @@ class AssistantApp {
   /**
    * Gets confirmation decision. Use after askForConfirmation.
    *
-   *     False if user replied with negative response. Null if no user
+   * @return {(boolean|null)} False if user replied with negative response. Null if no user
    *     confirmation decision given.
    * @dialogflow
    * @actionssdk
@@ -1530,7 +1536,7 @@ class AssistantApp {
   /**
    * Returns true if user device has a given surface capability.
    *
-   * @param {string} capability Must be one of {@link SurfaceCapabilities}.
+   * @param {string} requestedCapability Must be one of {@link SurfaceCapabilities}.
    * @return {boolean} True if user device has the given capability.
    *
    * @example
@@ -1978,6 +1984,7 @@ class AssistantApp {
    * Utility function to handle error messages.
    *
    * @param {string} text The error message.
+   * @return {undefined}
    * @private
    */
   handleError_ (text) {
@@ -2003,8 +2010,8 @@ class AssistantApp {
    * Utility method to send an HTTP response.
    *
    * @param {string} response The JSON response.
-   * @param {string} respnseCode The HTTP response code.
-   * @return {Object} HTTP response.
+   * @param {string} responseCode The HTTP response code.
+   * @return {(Object|null)} HTTP response.
    * @private
    */
   doResponse_ (response, responseCode) {
@@ -2042,6 +2049,7 @@ class AssistantApp {
    * Extract session data from the incoming JSON request.
    *
    * Used in subclasses for Actions SDK and Dialogflow.
+   * @return {undefined}
    * @private
    */
   extractData_ () {
@@ -2170,7 +2178,7 @@ class AssistantApp {
    * @param {ActionPaymentTransactionConfig|GooglePaymentTransactionConfig}
    *     transactionConfig Configuration for the transaction. Includes payment
    *     options and order options.
-   * @return {object} paymentOptions
+   * @return {Object} paymentOptions
    * @private
    */
   buildPaymentOptions_ (transactionConfig) {
@@ -2204,10 +2212,20 @@ class AssistantApp {
  * @private
  */
 const Intent = class {
+    /**
+   * Constructor for Intent object.
+   *
+   * @param {string} name The name of the intent.
+   */
   constructor (name) {
     this.name_ = name;
   }
 
+  /**
+   * Getter for the Intent name.
+   *
+   * @return {string} The name of the intent.
+   */
   getName () {
     return this.name_;
   }
@@ -2219,10 +2237,20 @@ const Intent = class {
  * @private
  */
 const State = class {
+  /**
+   * Constructor for State object.
+   *
+   * @param {string} name The name of the state.
+   */
   constructor (name) {
     this.name_ = name;
   }
 
+  /**
+   * Getter for the State name.
+   *
+   * @return {string} The name of the state.
+   */
   getName () {
     return this.name_;
   }

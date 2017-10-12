@@ -95,7 +95,8 @@ function transformToSnakeCase (object) {
  * Note that classes will get converted to objects.
  *
  * @param {Object} object Object to transform.
- * @param {Function} keyTransformation
+ * @param {Function} keyTransformation Function that applies the desired transformation.
+ * @return {Object} The transformed object.
  */
 function transform (object, keyTransformation) {
   let newObject = object;

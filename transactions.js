@@ -661,7 +661,7 @@ const Order = class {
   /**
    * Set the TOS for this order.
    *
-   * @param {string} tos String URL of the TOS.
+   * @param {string} url String URL of the TOS.
    * @return {Order} Returns current constructed Order.
    */
   setTermsOfService (url) {

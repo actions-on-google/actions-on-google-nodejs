@@ -719,9 +719,9 @@ class DialogflowApp extends AssistantApp {
    * actionMap.set(NUMBER_INTENT, numberIntent);
    * app.handleRequest(actionMap);
    *
-   * @param {string|SimpleResponse|RichResponse} textToSpeech Final response.
+   * @param {string|SimpleResponse|RichResponse} speechResponse Final response.
    *     Spoken response can be SSML.
-   * @return The response that is sent back to Assistant.
+   * @return {(Object|null)} The response that is sent back to Assistant.
    * @dialogflow
    */
   tell (speechResponse) {
@@ -760,6 +760,7 @@ class DialogflowApp extends AssistantApp {
    * @param {string} name Name of the context. Dialogflow converts to lowercase.
    * @param {int} [lifespan=1] Context lifespan.
    * @param {Object=} parameters Context JSON parameters.
+   * @return {null|undefined} Null if the context name is not defined.
    * @dialogflow
    */
   setContext (name, lifespan, parameters) {
@@ -870,11 +871,11 @@ class DialogflowApp extends AssistantApp {
    * actionMap.set(NUMBER_INTENT, numberIntent);
    * app.handleRequest(actionMap);
    *
+   * @param {string} name The name of the Context to retrieve.
    * @return {Object} Context value matching name
    *     or null if no matching context.
    * @dialogflow
    */
-
   getContext (name) {
     debug('getContext: name=%s', name);
     if (!this.body_.result ||
@@ -1013,6 +1014,7 @@ class DialogflowApp extends AssistantApp {
   /**
    * Extract the session data from the incoming JSON request.
    *
+   * @return {undefined}
    * @private
    * @dialogflow
    */
@@ -1069,12 +1071,12 @@ class DialogflowApp extends AssistantApp {
    * Uses a given intent spec to construct and send a non-TEXT intent response
    * to Google.
    *
-   * @param {String} intent Name of the intent to fulfill. One of
+   * @param {string} intent Name of the intent to fulfill. One of
    *     {@link AssistantApp#StandardIntents|StandardIntents}.
-   * @param {String} specType Type of the related intent spec. One of
+   * @param {string} specType Type of the related intent spec. One of
    *     {@link AssistantApp#InputValueDataTypes_|InputValueDataTypes_}.
    * @param {Object} intentSpec Intent Spec object. Pass {} to leave empty.
-   * @param {String=} promptPlaceholder Some placeholder text for the response
+   * @param {string=} promptPlaceholder Some placeholder text for the response
    *     prompt. Default is 'PLACEHOLDER_FOR_INTENT'.
    * @param {Object=} dialogState JSON object the app uses to hold dialog state that
    *     will be circulated back by Assistant.
