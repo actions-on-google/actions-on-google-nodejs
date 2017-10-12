@@ -1830,13 +1830,15 @@ class AssistantApp {
 
   /**
    * Constructs LineItem with chainable property setters.
+   * Because of a previous bug, the parameters are swapped compared to
+   * the LineItem constructor to prevent a breaking change.
    *
    * @param {string} name Name of the line item.
    * @param {string} id Unique identifier for the item.
    * @return {LineItem} Constructed LineItem.
    */
   buildLineItem (name, id) {
-    return new LineItem(name, id);
+    return new LineItem(id, name);
   }
 
   /**
