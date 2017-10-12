@@ -162,7 +162,7 @@ describe('AssistantApp', function () {
     });
   });
 
-  describe('#handleRequest', function () {
+  describe('#handleRequestAsync', function () {
     let mockRequest;
     let app;
 
@@ -184,7 +184,7 @@ describe('AssistantApp', function () {
       const actionMap = new Map();
       actionMap.set(mockRequest.body.result.action, handler);
 
-      app.handleRequest(actionMap).then(
+      app.handleRequestAsync(actionMap).then(
         (result) => {
           expect(result).to.equal('success');
           done();
@@ -200,7 +200,7 @@ describe('AssistantApp', function () {
       const actionMap = new Map();
       actionMap.set(mockRequest.body.result.action, handler);
 
-      app.handleRequest(actionMap).catch(
+      app.handleRequestAsync(actionMap).catch(
         (reason) => {
           expect(reason).to.be.a('Error');
           done();
@@ -213,7 +213,7 @@ describe('AssistantApp', function () {
         return Promise.resolve('success');
       };
 
-      app.handleRequest(handler).then(
+      app.handleRequestAsync(handler).then(
         (result) => {
           expect(result).to.equal('success');
           done();
@@ -226,7 +226,7 @@ describe('AssistantApp', function () {
         return Promise.reject(new Error('error'));
       };
 
-      app.handleRequest(handler).catch(
+      app.handleRequestAsync(handler).catch(
         (reason) => {
           expect(reason).to.be.a('Error');
           done();
@@ -239,7 +239,7 @@ describe('AssistantApp', function () {
         return 'success';
       };
 
-      app.handleRequest(handler).then(
+      app.handleRequestAsync(handler).then(
         (result) => {
           expect(result).to.equal('success');
           done();
@@ -255,7 +255,7 @@ describe('AssistantApp', function () {
       const actionMap = new Map();
       actionMap.set(mockRequest.body.result.action, handler);
 
-      app.handleRequest(actionMap).then(
+      app.handleRequestAsync(actionMap).then(
         (result) => {
           expect(result).to.equal('success');
           done();

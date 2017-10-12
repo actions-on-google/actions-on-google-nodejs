@@ -508,18 +508,96 @@ class AssistantApp {
    * app.handleRequest(actionMap);
    *
    * @param {(Function|Map)} handler The handler (or Map of handlers) for the request.
-   * @return {Promise} to resolve the result of the handler that was invoked.
+   * @return {undefined}
    * @actionssdk
    * @apiai
    */
   handleRequest (handler) {
     debug('handleRequest: handler=%s', handler);
+    this.handleRequestAsync(handler);
+  }
+
+  /**
+   * Asynchronously handles the incoming Assistant request using a handler or Map of handlers.
+   * Each handler can be a function callback or Promise.
+   *
+   * @example
+   * // Actions SDK
+   * const app = new ActionsSdkApp({request: request, response: response});
+   *
+   * function mainIntent (app) {
+   *   const inputPrompt = app.buildInputPrompt(true, '<speak>Hi! <break time="1"/> ' +
+   *         'I can read out an ordinal like ' +
+   *         '<say-as interpret-as="ordinal">123</say-as>. Say a number.</speak>',
+   *         ['I didn\'t hear a number', 'If you\'re still there, what\'s the number?', 'What is the number?']);
+   *   app.ask(inputPrompt);
+   * }
+   *
+   * function rawInput (app) {
+   *   if (app.getRawInput() === 'bye') {
+   *     app.tell('Goodbye!');
+   *   } else {
+   *     const inputPrompt = app.buildInputPrompt(true, '<speak>You said, <say-as interpret-as="ordinal">' +
+   *       app.getRawInput() + '</say-as></speak>',
+   *         ['I didn\'t hear a number', 'If you\'re still there, what\'s the number?', 'What is the number?']);
+   *     app.ask(inputPrompt);
+   *   }
+   * }
+   *
+   * const actionMap = new Map();
+   * actionMap.set(app.StandardIntents.MAIN, mainIntent);
+   * actionMap.set(app.StandardIntents.TEXT, rawInput);
+   *
+   * app.handleRequest(actionMap)
+   * .then(
+   *   (result) => {
+   *     // handle the result
+   *   })
+   * .catch(
+   *   (reason) => {
+   *     // handle an error
+   *   });
+   *
+   * // API.AI
+   * const app = new ApiAIApp({request: req, response: res});
+   * const NAME_ACTION = 'make_name';
+   * const COLOR_ARGUMENT = 'color';
+   * const NUMBER_ARGUMENT = 'number';
+   *
+   * function makeName (app) {
+   *   const number = app.getArgument(NUMBER_ARGUMENT);
+   *   const color = app.getArgument(COLOR_ARGUMENT);
+   *   app.tell('Alright, your silly name is ' +
+   *     color + ' ' + number +
+   *     '! I hope you like it. See you next time.');
+   * }
+   *
+   * const actionMap = new Map();
+   * actionMap.set(NAME_ACTION, makeName);
+   *
+   * app.handleRequest(actionMap)
+   * .then(
+   *   (result) => {
+   *     // handle the result
+   *   })
+   * .catch(
+   *   (reason) => {
+   *     // handle an error
+   *   });
+   *
+   * @param {(Function|Map)} handler The handler (or Map of handlers) for the request.
+   * @return {Promise} to resolve the result of the handler that was invoked.
+   * @actionssdk
+   * @apiai
+   */
+  handleRequestAsync (handler) {
+    debug('handleRequestAsync: handler=%s', handler);
     if (!handler) {
       this.handleError_('request handler can NOT be empty.');
       return Promise.reject(new Error('request handler can NOT be empty.'));
     }
     if (typeof handler === 'function') {
-      debug('handleRequest: function');
+      debug('handleRequestAsync: function');
       // simple function handler
       this.handler_ = handler;
       const handlerResult = handler(this);
