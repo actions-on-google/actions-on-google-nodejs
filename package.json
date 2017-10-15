@@ -5,6 +5,9 @@
   "version": "1.5.1",
   "license": "Apache-2.0",
   "author": "Google Inc.",
+  "engines": {
+    "node": ">=6.2.2"
+  },
   "directories": {
     "test": "test"
   },
