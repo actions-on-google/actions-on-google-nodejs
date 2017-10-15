@@ -26,13 +26,13 @@ const transformToCamelCase = require('./utils/transform').transformToCamelCase;
 
 // Constants
 const RESPONSE_CODE_OK = 200;
-const ACTIONS_API_AI_CONTEXT = '_actions_on_google_';
+const ACTIONS_DIALOGFLOW_CONTEXT = '_actions_on_google_';
 const MAX_LIFESPAN = 100;
 const INPUTS_MAX = 3;
 const ORIGINAL_SUFFIX = '.original';
 const SELECT_EVENT = 'actions_intent_option';
 
-// API.AI Rich Response item types
+// Dialogflow Rich Response item types
 const SIMPLE_RESPONSE = 'simple_response';
 const BASIC_CARD = 'basic_card';
 const LIST = 'list_card';
@@ -47,20 +47,20 @@ debug.log = console.log.bind(console);
 error.log = console.error.bind(console);
 
 // ---------------------------------------------------------------------------
-//                   API.AI support
+//                   Dialogflow support
 // ---------------------------------------------------------------------------
 
 /**
- * This is the class that handles the communication with API.AI's fulfillment API.
+ * This is the class that handles the communication with Dialogflow's fulfillment API.
  */
-class ApiAiApp extends AssistantApp {
+class DialogflowApp extends AssistantApp {
   /**
-   * Constructor for ApiAiApp object.
-   * To be used in the API.AI fulfillment webhook logic.
+   * Constructor for DialogflowApp object.
+   * To be used in the Dialogflow fulfillment webhook logic.
    *
    * @example
-   * const ApiAiApp = require('actions-on-google').ApiAiApp;
-   * const app = new ApiAiApp({request: request, response: response,
+   * const DialogflowApp = require('actions-on-google').DialogflowApp;
+   * const app = new DialogflowApp({request: request, response: response,
    *   sessionStarted:sessionStarted});
    *
    * @param {Object} options JSON configuration.
@@ -68,11 +68,11 @@ class ApiAiApp extends AssistantApp {
    * @param {Object} options.response Express HTTP response object.
    * @param {Function=} options.sessionStarted Function callback when session starts.
    *     Only called if webhook is enabled for welcome/triggering intents, and
-   *     called from Web Simulator or Google Home device (i.e., not API.AI simulator).
-   * @apiai
+   *     called from Web Simulator or Google Home device (i.e., not Dialogflow simulator).
+   * @dialogflow
    */
   constructor (options) {
-    debug('ApiAiApp constructor');
+    debug('DialogflowApp constructor');
     super(options, () => {
       const originalRequest = this.body_.originalRequest;
       if (!(originalRequest && originalRequest.data)) {
@@ -101,17 +101,34 @@ class ApiAiApp extends AssistantApp {
   }
 
   /**
-   * Verifies whether the request comes from API.AI.
+   * @deprecated
+   * Verifies whether the request comes from Dialogflow.
    *
    * @param {string} key The header key specified by the developer in the
-   *     API.AI Fulfillment settings of the app.
+   *     Dialogflow Fulfillment settings of the app.
    * @param {string} value The private value specified by the developer inside the
    *     fulfillment header.
-   * @return {boolean} True if the request comes from API.AI.
-   * @apiai
+   * @return {boolean} True if the request comes from Dialogflow.
+   * @dialogflow
    */
   isRequestFromApiAi (key, value) {
     debug('isRequestFromApiAi: key=%s, value=%s', key, value);
+    console.log('isRequestFromApiAi is *DEPRECATED*, use isRequestFromDialogflow');
+    return this.isRequestFromDialogflow(key, value);
+  }
+
+  /**
+   * Verifies whether the request comes from Dialogflow.
+   *
+   * @param {string} key The header key specified by the developer in the
+   *     Dialogflow Fulfillment settings of the app.
+   * @param {string} value The private value specified by the developer inside the
+   *     fulfillment header.
+   * @return {boolean} True if the request comes from Dialogflow.
+   * @dialogflow
+   */
+  isRequestFromDialogflow (key, value) {
+    debug('isRequestFromDialogflow: key=%s, value=%s', key, value);
     if (!key || key === '') {
       error('Key must be specified');
       return false;
@@ -127,10 +144,10 @@ class ApiAiApp extends AssistantApp {
    * Get the current intent. Alternatively, using a handler Map with
    * {@link AssistantApp#handleRequest|handleRequest},
    * the client library will automatically handle the incoming intents.
-   * 'Intent' in the API.ai context translates into the current action.
+   * 'Intent' in the Dialogflow context translates into the current action.
    *
    * @example
-   * const app = new ApiAiApp({request: request, response: response});
+   * const app = new DialogflowApp({request: request, response: response});
    *
    * function responseHandler (app) {
    *   const intent = app.getIntent();
@@ -149,7 +166,7 @@ class ApiAiApp extends AssistantApp {
    * app.handleRequest(responseHandler);
    *
    * @return {string} Intent id or null if no value (action name).
-   * @apiai
+   * @dialogflow
    */
   getIntent () {
     debug('getIntent');
@@ -170,7 +187,7 @@ class ApiAiApp extends AssistantApp {
    * the argument object will be in Proto2 format (snake_case, etc).
    *
    * @example
-   * const app = new ApiAiApp({request: request, response: response});
+   * const app = new DialogflowApp({request: request, response: response});
    * const WELCOME_INTENT = 'input.welcome';
    * const NUMBER_INTENT = 'input.number';
    *
@@ -191,7 +208,7 @@ class ApiAiApp extends AssistantApp {
    * @param {string} argName Name of the argument.
    * @return {Object} Argument value matching argName
    *     or null if no matching argument.
-   * @apiai
+   * @dialogflow
    */
   getArgument (argName) {
     debug('getArgument: argName=%s', argName);
@@ -214,7 +231,7 @@ class ApiAiApp extends AssistantApp {
    * as part of the return object.
    *
    * @example
-   * const app = new ApiAiApp({request: request, response: response});
+   * const app = new DialogflowApp({request: request, response: response});
    * const WELCOME_INTENT = 'input.welcome';
    * const NUMBER_INTENT = 'input.number';
    * const OUT_CONTEXT = 'output_context';
@@ -242,7 +259,7 @@ class ApiAiApp extends AssistantApp {
    * @param {string} argName Name of the argument.
    * @return {Object} Object containing value property and optional original
    *     property matching context argument. Null if no matching argument.
-   * @apiai
+   * @dialogflow
    */
   getContextArgument (contextName, argName) {
     debug('getContextArgument: contextName=%s, argName=%s', contextName, argName);
@@ -273,7 +290,7 @@ class ApiAiApp extends AssistantApp {
   }
 
   /**
-   * Returns the RichResponse constructed in API.AI response builder.
+   * Returns the RichResponse constructed in Dialogflow response builder.
    *
    * @example
    * const app = new App({request: req, response: res});
@@ -296,9 +313,9 @@ class ApiAiApp extends AssistantApp {
    *
    * app.handleRequest(actionMap);
    *
-   * @return {RichResponse} RichResponse created in API.AI. If no RichResponse was
+   * @return {RichResponse} RichResponse created in Dialogflow. If no RichResponse was
    *     created, an empty RichResponse is returned.
-   * @apiai
+   * @dialogflow
    */
   getIncomingRichResponse () {
     debug('getIncomingRichResponse');
@@ -339,7 +356,7 @@ class ApiAiApp extends AssistantApp {
   }
 
   /**
-   * Returns the List constructed in API.AI response builder.
+   * Returns the List constructed in Dialogflow response builder.
    *
    * @example
    * const app = new App({request: req, response: res});
@@ -360,9 +377,9 @@ class ApiAiApp extends AssistantApp {
    *
    * app.handleRequest(actionMap);
    *
-   * @return {List} List created in API.AI. If no List was created, an empty
+   * @return {List} List created in Dialogflow. If no List was created, an empty
    *     List is returned.
-   * @apiai
+   * @dialogflow
    */
   getIncomingList () {
     debug('getIncomingList');
@@ -385,7 +402,7 @@ class ApiAiApp extends AssistantApp {
   }
 
   /**
-   * Returns the Carousel constructed in API.AI response builder.
+   * Returns the Carousel constructed in Dialogflow response builder.
    *
    * @example
    * const app = new App({request: req, response: res});
@@ -406,9 +423,9 @@ class ApiAiApp extends AssistantApp {
    *
    * app.handleRequest(actionMap);
    *
-   * @return {Carousel} Carousel created in API.AI. If no Carousel was created,
+   * @return {Carousel} Carousel created in Dialogflow. If no Carousel was created,
    *     an empty Carousel is returned.
-   * @apiai
+   * @dialogflow
    */
   getIncomingCarousel () {
     debug('getIncomingCarousel');
@@ -459,7 +476,7 @@ class ApiAiApp extends AssistantApp {
    *
    * @return {string} Option key of selected item. Null if no option selected or
    *     if current intent is not OPTION intent.
-   * @apiai
+   * @dialogflow
    */
   getSelectedOption () {
     debug('getSelectedOption');
@@ -482,7 +499,7 @@ class ApiAiApp extends AssistantApp {
    * for a bye message until the bug is fixed.
    *
    * @example
-   * const app = new ApiAiApp({request: request, response: response});
+   * const app = new DialogflowApp({request: request, response: response});
    * const WELCOME_INTENT = 'input.welcome';
    * const NUMBER_INTENT = 'input.number';
    *
@@ -505,7 +522,7 @@ class ApiAiApp extends AssistantApp {
    *     response.
    * @param {Array<string>=} noInputs Array of re-prompts when the user does not respond (max 3).
    * @return {Object} HTTP response.
-   * @apiai
+   * @dialogflow
    */
   ask (inputPrompt, noInputs) {
     debug('ask: inputPrompt=%s, noInputs=%s', inputPrompt, noInputs);
@@ -525,7 +542,7 @@ class ApiAiApp extends AssistantApp {
    * Asks to collect the user's input with a list.
    *
    * @example
-   * const app = new ApiAiApp({request, response});
+   * const app = new DialogflowApp({request, response});
    * const WELCOME_INTENT = 'input.welcome';
    * const OPTION_INTENT = 'option.select';
    *
@@ -559,7 +576,7 @@ class ApiAiApp extends AssistantApp {
    *     response.
    * @param {List} list List built with {@link AssistantApp#buildList|buildList}.
    * @return {Object} HTTP response.
-   * @apiai
+   * @dialogflow
    */
   askWithList (inputPrompt, list) {
     debug('askWithList: inputPrompt=%s, list=%s',
@@ -604,7 +621,7 @@ class ApiAiApp extends AssistantApp {
    * Asks to collect the user's input with a carousel.
    *
    * @example
-   * const app = new ApiAiApp({request, response});
+   * const app = new DialogflowApp({request, response});
    * const WELCOME_INTENT = 'input.welcome';
    * const OPTION_INTENT = 'option.select';
    *
@@ -639,7 +656,7 @@ class ApiAiApp extends AssistantApp {
    * @param {Carousel} carousel Carousel built with
    *     {@link AssistantApp#buildCarousel|buildCarousel}.
    * @return {Object} HTTP response.
-   * @apiai
+   * @dialogflow
    */
   askWithCarousel (inputPrompt, carousel) {
     debug('askWithCarousel: inputPrompt=%s, carousel=%s',
@@ -684,7 +701,7 @@ class ApiAiApp extends AssistantApp {
    * Tells the Assistant to render the speech response and close the mic.
    *
    * @example
-   * const app = new ApiAiApp({request: request, response: response});
+   * const app = new DialogflowApp({request: request, response: response});
    * const WELCOME_INTENT = 'input.welcome';
    * const NUMBER_INTENT = 'input.number';
    *
@@ -702,10 +719,10 @@ class ApiAiApp extends AssistantApp {
    * actionMap.set(NUMBER_INTENT, numberIntent);
    * app.handleRequest(actionMap);
    *
-   * @param {string|SimpleResponse|RichResponse} textToSpeech Final response.
+   * @param {string|SimpleResponse|RichResponse} speechResponse Final response.
    *     Spoken response can be SSML.
-   * @return The response that is sent back to Assistant.
-   * @apiai
+   * @return {(Object|null)} The response that is sent back to Assistant.
+   * @dialogflow
    */
   tell (speechResponse) {
     debug('tell: speechResponse=%s', speechResponse);
@@ -721,7 +738,7 @@ class ApiAiApp extends AssistantApp {
    * Set a new context for the current intent.
    *
    * @example
-   * const app = new ApiAiApp({request: request, response: response});
+   * const app = new DialogflowApp({request: request, response: response});
    * const CONTEXT_NUMBER = 'number';
    * const NUMBER_ARGUMENT = 'myNumber';
    *
@@ -740,10 +757,11 @@ class ApiAiApp extends AssistantApp {
    * actionMap.set(NUMBER_INTENT, numberIntent);
    * app.handleRequest(actionMap);
    *
-   * @param {string} name Name of the context. API.AI converts to lowercase.
+   * @param {string} name Name of the context. Dialogflow converts to lowercase.
    * @param {int} [lifespan=1] Context lifespan.
    * @param {Object=} parameters Context JSON parameters.
-   * @apiai
+   * @return {null|undefined} Null if the context name is not defined.
+   * @dialogflow
    */
   setContext (name, lifespan, parameters) {
     debug('setContext: context=%s, lifespan=%d, parameters=%s', name, lifespan,
@@ -766,11 +784,11 @@ class ApiAiApp extends AssistantApp {
   }
 
   /**
-   * API.AI {@link https://docs.api.ai/docs/concept-contexts|Context}.
+   * Dialogflow {@link https://dialogflow.com/docs/concept-contexts|Context}.
    * @typedef {Object} Context
    * @property {string} name - Full name of the context.
    * @property {Object} parameters - Parameters carried within this context.
-                                     See {@link https://docs.api.ai/docs/concept-actions#section-extracting-values-from-contexts|here}.
+                                     See {@link https://dialogflow.com/docs/concept-actions#section-extracting-values-from-contexts|here}.
    * @property {number} lifespan - Remaining number of intents
    */
 
@@ -778,7 +796,7 @@ class ApiAiApp extends AssistantApp {
    * Returns the incoming contexts for this intent.
    *
    * @example
-   * const app = new ApiAiApp({request: request, response: response});
+   * const app = new DialogflowApp({request: request, response: response});
    * const CONTEXT_NUMBER = 'number';
    * const NUMBER_ARGUMENT = 'myNumber';
    *
@@ -807,7 +825,7 @@ class ApiAiApp extends AssistantApp {
    * app.handleRequest(actionMap);
    *
    * @return {Context[]} Empty if no active contexts.
-   * @apiai
+   * @dialogflow
    */
   getContexts () {
     debug('getContexts');
@@ -817,7 +835,7 @@ class ApiAiApp extends AssistantApp {
       return null;
     }
     return this.body_.result.contexts.filter((context) => {
-      return context.name !== ACTIONS_API_AI_CONTEXT;
+      return context.name !== ACTIONS_DIALOGFLOW_CONTEXT;
     });
   }
 
@@ -825,7 +843,7 @@ class ApiAiApp extends AssistantApp {
    * Returns the incoming context by name for this intent.
    *
    * @example
-   * const app = new ApiAiapp({request: request, response: response});
+   * const app = new DialogflowApp({request: request, response: response});
    * const CONTEXT_NUMBER = 'number';
    * const NUMBER_ARGUMENT = 'myNumber';
    *
@@ -853,11 +871,11 @@ class ApiAiApp extends AssistantApp {
    * actionMap.set(NUMBER_INTENT, numberIntent);
    * app.handleRequest(actionMap);
    *
+   * @param {string} name The name of the Context to retrieve.
    * @return {Object} Context value matching name
    *     or null if no matching context.
-   * @apiai
+   * @dialogflow
    */
-
   getContext (name) {
     debug('getContext: name=%s', name);
     if (!this.body_.result ||
@@ -878,11 +896,11 @@ class ApiAiApp extends AssistantApp {
    * Gets the user's raw input query.
    *
    * @example
-   * const app = new ApiAiApp({request: request, response: response});
+   * const app = new DialogflowApp({request: request, response: response});
    * app.tell('You said ' + app.getRawInput());
    *
    * @return {string} User's raw query or null if no value.
-   * @apiai
+   * @dialogflow
    */
   getRawInput () {
     debug('getRawInput');
@@ -903,7 +921,7 @@ class ApiAiApp extends AssistantApp {
    *
    * @return {string} The intent id.
    * @private
-   * @apiai
+   * @dialogflow
    */
   getIntent_ () {
     debug('getIntent_');
@@ -916,7 +934,7 @@ class ApiAiApp extends AssistantApp {
   }
 
   /**
-   * Builds a response for API.AI to send back to the Assistant.
+   * Builds a response for Dialogflow to send back to the Assistant.
    *
    * @param {string|RichResponse|SimpleResponse} textToSpeech TTS/response
    *     spoken/shown to end user.
@@ -924,7 +942,7 @@ class ApiAiApp extends AssistantApp {
    * @param {Array<string>=} noInputs Array of re-prompts when the user does not respond (max 3).
    * @return {Object} The final response returned to Assistant.
    * @private
-   * @apiai
+   * @dialogflow
    */
   buildResponse_ (textToSpeech, expectUserResponse, noInputs) {
     debug('buildResponse_: textToSpeech=%s, expectUserResponse=%s, noInputs=%s',
@@ -976,12 +994,13 @@ class ApiAiApp extends AssistantApp {
     } : {
       google: {
         expectUserResponse: expectUserResponse,
-        richResponse: textToSpeech
+        richResponse: textToSpeech,
+        noInputPrompts: noInputs
       }
     };
     if (expectUserResponse) {
       response.contextOut.push({
-        name: ACTIONS_API_AI_CONTEXT,
+        name: ACTIONS_DIALOGFLOW_CONTEXT,
         lifespan: MAX_LIFESPAN,
         parameters: dialogState.data
       });
@@ -995,14 +1014,15 @@ class ApiAiApp extends AssistantApp {
   /**
    * Extract the session data from the incoming JSON request.
    *
+   * @return {undefined}
    * @private
-   * @apiai
+   * @dialogflow
    */
   extractData_ () {
     debug('extractData_');
     if (this.body_.result && this.body_.result.contexts.length > 0) {
       for (let i = 0; i < this.body_.result.contexts.length; i++) {
-        if (this.body_.result.contexts[i].name === ACTIONS_API_AI_CONTEXT) {
+        if (this.body_.result.contexts[i].name === ACTIONS_DIALOGFLOW_CONTEXT) {
           const parameters = this.body_.result.contexts[i].parameters;
           if (parameters) {
             this.data = parameters;
@@ -1025,7 +1045,7 @@ class ApiAiApp extends AssistantApp {
    *     the permissions prefix and permissions requested.
    * @return {Object} The HTTP response.
    * @private
-   * @apiai
+   * @dialogflow
    */
   fulfillPermissionsRequest_ (permissionsSpec) {
     debug('fulfillPermissionsRequest_: permissionsSpec=%s',
@@ -1051,18 +1071,18 @@ class ApiAiApp extends AssistantApp {
    * Uses a given intent spec to construct and send a non-TEXT intent response
    * to Google.
    *
-   * @param {String} intent Name of the intent to fulfill. One of
+   * @param {string} intent Name of the intent to fulfill. One of
    *     {@link AssistantApp#StandardIntents|StandardIntents}.
-   * @param {String} specType Type of the related intent spec. One of
+   * @param {string} specType Type of the related intent spec. One of
    *     {@link AssistantApp#InputValueDataTypes_|InputValueDataTypes_}.
    * @param {Object} intentSpec Intent Spec object. Pass {} to leave empty.
-   * @param {String=} promptPlaceholder Some placeholder text for the response
+   * @param {string=} promptPlaceholder Some placeholder text for the response
    *     prompt. Default is 'PLACEHOLDER_FOR_INTENT'.
    * @param {Object=} dialogState JSON object the app uses to hold dialog state that
    *     will be circulated back by Assistant.
    * @return {Object} HTTP response.
    * @private
-   * @apiai
+   * @dialogflow
    */
   fulfillSystemIntent_ (intent, specType, intentSpec, promptPlaceholder,
     dialogState) {
@@ -1082,4 +1102,4 @@ class ApiAiApp extends AssistantApp {
   }
 }
 
-module.exports = ApiAiApp;
+module.exports = DialogflowApp;

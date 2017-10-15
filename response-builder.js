@@ -91,7 +91,7 @@ const RichResponse = class {
   /**
    * Constructor for RichResponse. Accepts optional RichResponse to clone.
    *
-   * @param {RichResponse} richResponse
+   * @param {RichResponse=} richResponse Optional RichResponse to clone.
    */
   constructor (richResponse) {
     /**
@@ -226,6 +226,9 @@ const RichResponse = class {
   /**
    * Returns true if the given suggestion text is valid to be added to the suggestion list. A valid
    * text string is not longer than 25 characters.
+   *
+   * @param {string} suggestionText Text to validate as suggestion.
+   * @return {boolean} True if the text is valid, false otherwise.s
    */
   isValidSuggestionText (suggestionText) {
     return suggestionText && suggestionText.length && suggestionText.length <= 25;
@@ -258,7 +261,7 @@ const RichResponse = class {
    * Adds an order update to this response. Use after a successful transaction
    * decision to confirm the order.
    *
-   * @param {OrderUpdate} orderUpdate
+   * @param {OrderUpdate} orderUpdate OrderUpdate object to add.
    * @return {RichResponse} Returns current constructed RichResponse.
    */
   addOrderUpdate (orderUpdate) {
@@ -322,7 +325,7 @@ const BasicCard = class {
   /**
    * Constructor for BasicCard. Accepts optional BasicCard to clone.
    *
-   * @param {BasicCard} basicCard
+   * @param {BasicCard=} basicCard Optional BasicCard to clone.
    */
   constructor (basicCard) {
     /**
@@ -482,7 +485,7 @@ const List = class {
    * Constructor for List. Accepts optional List to clone, string title, or
    * list of items to copy.
    *
-   * @param {List|string|Array<OptionItem>} list Either a list to clone, a title
+   * @param {(List|string|Array<OptionItem>)=} list Either a list to clone, a title
    *     to set for a new List, or an array of OptionItem to initialize a new
    *     list.
    */
@@ -554,7 +557,7 @@ const List = class {
     }
     if (this.items.length > LIST_ITEM_LIMIT) {
       this.items = this.items.slice(0, LIST_ITEM_LIMIT);
-      error('Carousel can have no more than ' + LIST_ITEM_LIMIT +
+      error('List can have no more than ' + LIST_ITEM_LIMIT +
         ' items');
     }
     return this;
@@ -569,7 +572,7 @@ const Carousel = class {
    * Constructor for Carousel. Accepts optional Carousel to clone or list of
    * items to copy.
    *
-   * @param {Carousel|Array<OptionItem>} carousel Either a carousel to clone, a
+   * @param {(Carousel|Array<OptionItem>)=} carousel Either a carousel to clone
    *     or an array of OptionItem to initialize a new carousel
    */
   constructor (carousel) {
@@ -628,7 +631,7 @@ const OptionItem = class {
   /**
    * Constructor for OptionItem. Accepts optional OptionItem to clone.
    *
-   * @param {OptionItem} optionItem
+   * @param {OptionItem=} optionItem Optional OptionItem to clone.
    */
   constructor (optionItem) {
     /**
@@ -777,6 +780,12 @@ const OptionItem = class {
   }
 };
 
+/**
+ * Check if given text contains SSML.
+ *
+ * @param {string} text Text to check.
+ * @return {boolean} True if text contains SSML, false otherwise.
+ */
 function isSsml (text) {
   return /^<speak\b[^>]*>([^]*?)<\/speak>$/gi.test(text);
 }

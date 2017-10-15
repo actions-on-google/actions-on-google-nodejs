@@ -76,7 +76,7 @@ describe('AssistantApp', function () {
       expect(app.isNotApiVersionOne_()).to.equal(false);
     });
 
-    it('Should detect v2 when version is present in APIAI req', function () {
+    it('Should detect v2 when version is present in DialogflowApp req', function () {
       const mockRequest = new MockRequest(headerV1, {
         'originalRequest': {
           'version': 1
@@ -94,7 +94,7 @@ describe('AssistantApp', function () {
       expect(app.isNotApiVersionOne_()).to.equal(true);
     });
 
-    it('Should detect v2 when version is present in APIAI req', function () {
+    it('Should detect v2 when version is present in DialogflowApp req', function () {
       const mockRequest = new MockRequest(headerV1, {
         'originalRequest': {
           'version': 2

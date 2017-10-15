@@ -95,9 +95,9 @@ class ActionsSdkApp extends AssistantApp {
    *   });
    *
    * @param {string} projectId Google Cloud Project ID for the Assistant app.
-   * @param {Promise} Promise resolving with ID token if request is from
-   *     a valid source, otherwise rejects with the error reason for an invalid
-   *     token.
+   * @return {Promise<LoginTicket>} Promise resolving with google-auth-library LoginTicket
+   *     if request is from a valid source, otherwise rejects with the error reason
+   *     for an invalid token.
    * @actionssdk
    */
   isRequestFromAssistant (projectId) {
@@ -111,12 +111,12 @@ class ActionsSdkApp extends AssistantApp {
         error(errorMsg);
         reject(errorMsg);
       }
-      googleAuthClient.verifyIdToken(jwtToken, projectId, (err, idToken) => {
+      googleAuthClient.verifyIdToken(jwtToken, projectId, (err, login) => {
         if (err) {
           error('ID token verification Failed: ' + err);
           reject(err);
         } else {
-          resolve(idToken);
+          resolve(login);
         }
       });
     });
@@ -357,7 +357,7 @@ class ActionsSdkApp extends AssistantApp {
    *     no-input prompts.
    * @param {Object=} dialogState JSON object the app uses to hold dialog state that
    *     will be circulated back by App.
-   * @return The response that is sent to Assistant to ask user to provide input.
+   * @return {(Object|null)} The response that is sent to Assistant to ask user to provide input.
    * @actionssdk
    */
   ask (inputPrompt, dialogState) {
@@ -408,7 +408,7 @@ class ActionsSdkApp extends AssistantApp {
    * @param {List} list List built with {@link AssistantApp#buildList|buildList}.
    * @param {Object=} dialogState JSON object the app uses to hold dialog state that
    *     will be circulated back by Assistant.
-   * @return The response that is sent to Assistant to ask user to provide input.
+   * @return {(Object|null)} The response that is sent to Assistant to ask user to provide input.
    * @actionssdk
    */
   askWithList (inputPrompt, list, dialogState) {
@@ -481,7 +481,7 @@ class ActionsSdkApp extends AssistantApp {
    *      {@link AssistantApp#buildCarousel|buildCarousel}.
    * @param {Object=} dialogState JSON object the app uses to hold dialog state that
    *     will be circulated back by Assistant.
-   * @return The response that is sent to Assistant to ask user to provide input.
+   * @return {(Object|null)} The response that is sent to Assistant to ask user to provide input.
    * @actionssdk
    */
   askWithCarousel (inputPrompt, carousel, dialogState) {
@@ -549,7 +549,7 @@ class ActionsSdkApp extends AssistantApp {
    *
    * @param {string|SimpleResponse|RichResponse} textToSpeech Final response.
    *     Spoken response can be SSML.
-   * @return The HTTP response that is sent back to Assistant.
+   * @return {(Object|null)} The HTTP response that is sent back to Assistant.
    * @actionssdk
    */
   tell (textToSpeech) {
@@ -643,7 +643,7 @@ class ActionsSdkApp extends AssistantApp {
   /**
    * Get the top most Input object.
    *
-   * @return {object} Input object.
+   * @return {Object} Input object.
    * @private
    * @actionssdk
    */
@@ -689,6 +689,9 @@ class ActionsSdkApp extends AssistantApp {
   /**
    * Helper to add item to an array.
    *
+   * @param {*} item Item to add to the array.
+   * @param {Array} array Target array.
+   * @return {undefined}
    * @private
    * @actionssdk
    */
@@ -708,6 +711,7 @@ class ActionsSdkApp extends AssistantApp {
   /**
    * Extract session data from the incoming JSON request.
    *
+   * @return {undefined}
    * @private
    * @actionssdk
    */
@@ -760,12 +764,12 @@ class ActionsSdkApp extends AssistantApp {
    * Uses a given intent spec to construct and send a non-TEXT intent response
    * to Google.
    *
-   * @param {String} intent Name of the intent to fulfill. One of
+   * @param {string} intent Name of the intent to fulfill. One of
    *     {@link AssistantApp#StandardIntents|StandardIntents}.
-   * @param {String} specType Type of the related intent spec. One of
+   * @param {string} specType Type of the related intent spec. One of
    *     {@link AssistantApp#InputValueDataTypes_|InputValueDataTypes_}.
    * @param {Object} intentSpec Intent Spec object. Pass null to leave empty.
-   * @param {String=} promptPlaceholder Some placeholder text for the response
+   * @param {string=} promptPlaceholder Some placeholder text for the response
    *     prompt.
    * @param {Object=} dialogState JSON object the app uses to hold dialog state that
    *     will be circulated back by Assistant.
@@ -803,7 +807,7 @@ class ActionsSdkApp extends AssistantApp {
    * @param {Array} possibleIntents Array of ExpectedIntents.
    * @param {Object} dialogState JSON object the app uses to hold dialog state that
    *     will be circulated back by Assistant.
-   * @return The response that is sent to Assistant to ask user to provide input.
+   * @return {(Object|null)} The response that is sent to Assistant to ask user to provide input.
    * @private
    * @actionssdk
    */

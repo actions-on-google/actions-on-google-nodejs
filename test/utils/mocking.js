@@ -69,13 +69,13 @@ const headerV2 = {
 const fakeTimeStamp = '2017-01-01T12:00:00';
 const fakeSessionId = '0123456789101112';
 const fakeIntentId = '1a2b3c4d-5e6f-7g8h-9i10-11j12k13l14m15n16o';
-const fakeApiAiBodyRequestId = '1a2b3c4d-5e6f-7g8h-9i10-11j12k13l14m15n16o';
+const fakeDialogflowBodyRequestId = '1a2b3c4d-5e6f-7g8h-9i10-11j12k13l14m15n16o';
 const fakeUserId = 'user123';
 const fakeConversationId = '0123456789';
 
-// Body of the ApiAi request that starts a new session
+// Body of the Dialogflow request that starts a new session
 // new session is originalRequest.data.conversation.type == 1
-const apiAiAppRequestBodyNewSessionMock = {
+const dialogflowAppRequestBodyNewSessionMock = {
   'lang': 'en',
   'status': {
     'errorType': 'success',
@@ -111,7 +111,7 @@ const apiAiAppRequestBodyNewSessionMock = {
       'webhookUsed': 'true'
     }
   },
-  'id': fakeApiAiBodyRequestId,
+  'id': fakeDialogflowBodyRequestId,
   'originalRequest': {
     'source': 'google',
     'data': {
@@ -146,7 +146,7 @@ const apiAiAppRequestBodyNewSessionMock = {
   }
 };
 
-const apiAiAppRequestBodyLiveSessionMock = {
+const dialogflowAppRequestBodyLiveSessionMock = {
   'lang': 'en',
   'status': {
     'errorType': 'success',
@@ -182,7 +182,7 @@ const apiAiAppRequestBodyLiveSessionMock = {
       'webhookUsed': 'true'
     }
   },
-  'id': fakeApiAiBodyRequestId,
+  'id': fakeDialogflowBodyRequestId,
   'originalRequest': {
     'source': 'google',
     'data': {
@@ -270,8 +270,8 @@ const actionsSdkAppRequestBodyLiveSessionMock = {
 };
 
 module.exports = {
-  apiAiAppRequestBodyLiveSessionMock,
-  apiAiAppRequestBodyNewSessionMock,
+  dialogflowAppRequestBodyLiveSessionMock,
+  dialogflowAppRequestBodyNewSessionMock,
   MockRequest,
   MockResponse,
   headerV2,

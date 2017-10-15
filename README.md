@@ -2,7 +2,7 @@
 
 This Actions On Google client library makes it easy to create your apps for the Google Assistant.
 
-The client library supports both the Actions SDK webhook and API.ai fulfillment.
+The client library supports both the Actions SDK webhook and Dialogflow fulfillment.
 
 ## Setup Instructions
 
@@ -19,17 +19,17 @@ let ActionsSdkApp = require('actions-on-google').ActionsSdkApp;
 const app = new ActionsSdkApp({request: request, response: response});
 ```
 
-### API.ai
+### Dialogflow
  1. Import the appropriate class:
 
 ```javascript
-let ApiAiApp = require('actions-on-google').ApiAiApp;
+let DialogflowApp = require('actions-on-google').DialogflowApp;
 ```
 
  2. Create an instance:
 
 ```javascript
-const app = new ApiAiApp({request: request, response: response});
+const app = new DialogflowApp({request: request, response: response});
 ```
 
 ## References and How to report bugs
