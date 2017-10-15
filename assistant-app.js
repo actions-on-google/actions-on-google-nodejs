@@ -547,8 +547,8 @@ class AssistantApp {
    *     // handle an error
    *   });
    *
-   * // API.AI
-   * const app = new ApiAIApp({request: req, response: res});
+   * // Dialogflow
+   * const app = new DialogflowApp({request: req, response: res});
    * const NAME_ACTION = 'make_name';
    * const COLOR_ARGUMENT = 'color';
    * const NUMBER_ARGUMENT = 'number';
