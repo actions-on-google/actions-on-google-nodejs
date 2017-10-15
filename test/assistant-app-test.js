@@ -28,7 +28,7 @@ const expect = chai.expect;
 const spies = require('chai-spies');
 const { AssistantApp } = require('.././actions-on-google');
 const {
-  apiAiAppRequestBodyNewSessionMock,
+  dialogflowAppRequestBodyNewSessionMock,
   headerV1,
   headerV2,
   MockRequest,
@@ -167,7 +167,7 @@ describe('AssistantApp', function () {
     let app;
 
     beforeEach(function () {
-      mockRequest = new MockRequest(headerV2, JSON.parse(JSON.stringify(apiAiAppRequestBodyNewSessionMock)));
+      mockRequest = new MockRequest(headerV2, JSON.parse(JSON.stringify(dialogflowAppRequestBodyNewSessionMock)));
       app = new AssistantApp({request: mockRequest, response: mockResponse});
 
       // mock getIntent

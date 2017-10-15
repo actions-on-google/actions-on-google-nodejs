@@ -577,7 +577,7 @@ class AssistantApp {
    * @param {(Function|Map)} handler The handler (or Map of handlers) for the request.
    * @return {Promise} to resolve the result of the handler that was invoked.
    * @actionssdk
-   * @apiai
+   * @dialogflow
    */
   handleRequestAsync (handler) {
     debug('handleRequestAsync: handler=%s', handler);
