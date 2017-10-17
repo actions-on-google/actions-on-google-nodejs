@@ -503,42 +503,129 @@ class AssistantApp {
    */
   handleRequest (handler) {
     debug('handleRequest: handler=%s', handler);
+    this.handleRequestAsync(handler);
+  }
+
+  /**
+   * Asynchronously handles the incoming Assistant request using a handler or Map of handlers.
+   * Each handler can be a function callback or Promise.
+   *
+   * @example
+   * // Actions SDK
+   * const app = new ActionsSdkApp({request: request, response: response});
+   *
+   * function mainIntent (app) {
+   *   const inputPrompt = app.buildInputPrompt(true, '<speak>Hi! <break time="1"/> ' +
+   *         'I can read out an ordinal like ' +
+   *         '<say-as interpret-as="ordinal">123</say-as>. Say a number.</speak>',
+   *         ['I didn\'t hear a number', 'If you\'re still there, what\'s the number?', 'What is the number?']);
+   *   app.ask(inputPrompt);
+   * }
+   *
+   * function rawInput (app) {
+   *   if (app.getRawInput() === 'bye') {
+   *     app.tell('Goodbye!');
+   *   } else {
+   *     const inputPrompt = app.buildInputPrompt(true, '<speak>You said, <say-as interpret-as="ordinal">' +
+   *       app.getRawInput() + '</say-as></speak>',
+   *         ['I didn\'t hear a number', 'If you\'re still there, what\'s the number?', 'What is the number?']);
+   *     app.ask(inputPrompt);
+   *   }
+   * }
+   *
+   * const actionMap = new Map();
+   * actionMap.set(app.StandardIntents.MAIN, mainIntent);
+   * actionMap.set(app.StandardIntents.TEXT, rawInput);
+   *
+   * app.handleRequest(actionMap)
+   * .then(
+   *   (result) => {
+   *     // handle the result
+   *   })
+   * .catch(
+   *   (reason) => {
+   *     // handle an error
+   *   });
+   *
+   * // Dialogflow
+   * const app = new DialogflowApp({request: req, response: res});
+   * const NAME_ACTION = 'make_name';
+   * const COLOR_ARGUMENT = 'color';
+   * const NUMBER_ARGUMENT = 'number';
+   *
+   * function makeName (app) {
+   *   const number = app.getArgument(NUMBER_ARGUMENT);
+   *   const color = app.getArgument(COLOR_ARGUMENT);
+   *   app.tell('Alright, your silly name is ' +
+   *     color + ' ' + number +
+   *     '! I hope you like it. See you next time.');
+   * }
+   *
+   * const actionMap = new Map();
+   * actionMap.set(NAME_ACTION, makeName);
+   *
+   * app.handleRequest(actionMap)
+   * .then(
+   *   (result) => {
+   *     // handle the result
+   *   })
+   * .catch(
+   *   (reason) => {
+   *     // handle an error
+   *   });
+   *
+   * @param {(Function|Map)} handler The handler (or Map of handlers) for the request.
+   * @return {Promise} to resolve the result of the handler that was invoked.
+   * @actionssdk
+   * @dialogflow
+   */
+  handleRequestAsync (handler) {
+    debug('handleRequestAsync: handler=%s', handler);
     if (!handler) {
       this.handleError_('request handler can NOT be empty.');
-      return;
+      return Promise.reject(new Error('request handler can NOT be empty.'));
     }
     if (typeof handler === 'function') {
-      debug('handleRequest: function');
+      debug('handleRequestAsync: function');
       // simple function handler
       this.handler_ = handler;
-      const promise = handler(this);
-      if (promise instanceof Promise) {
-        promise.then(
+      const handlerResult = handler(this);
+      if (handlerResult instanceof Promise) {
+        return handlerResult.then(
           (result) => {
             debug(result);
+            return result;
           })
         .catch(
           (reason) => {
             this.handleError_('function failed: %s', reason.message);
             this.tell(!reason.message ? ERROR_MESSAGE : reason.message);
+            return Promise.reject(reason);
           });
       } else {
         // Handle functions
-        return;
+        return Promise.resolve(handlerResult);
       }
-      return;
     } else if (handler instanceof Map) {
       debug('handleRequest: map');
       const intent = this.getIntent();
-      const result = this.invokeIntentHandler_(handler, intent);
-      if (!result) {
-        this.tell(!this.lastErrorMessage_ ? ERROR_MESSAGE : this.lastErrorMessage_);
-      }
-      return;
+      return this.invokeIntentHandler_(handler, intent)
+        .then(
+          (result) => {
+            debug(result);
+            return result;
+          })
+        .catch(
+          (reason) => {
+            this.tell(!this.lastErrorMessage_ ? ERROR_MESSAGE : this.lastErrorMessage_);
+            return Promise.reject(reason);
+          }
+        );
     }
     // Could not handle intent
     this.handleError_('invalid intent handler type: ' + (typeof handler));
     this.tell(ERROR_MESSAGE);
+    return Promise.reject(ERROR_MESSAGE);
   }
 
   /**
@@ -1868,7 +1955,7 @@ class AssistantApp {
    *
    * @param {Object} handler The handler for the request.
    * @param {string} intent The intent to handle.
-   * @return {boolean} true if the handler was invoked.
+   * @return {Promise} to resolve the result of the handler that was invoked.
    * @private
    */
   invokeIntentHandler_ (handler, intent) {
@@ -1905,28 +1992,28 @@ class AssistantApp {
       // else map of intents
       if (name === intent) {
         debug('map of intents');
-        const promise = value(this);
-        if (promise instanceof Promise) {
-          promise.then(
+        const handlerResult = value(this);
+        if (handlerResult instanceof Promise) {
+          return handlerResult.then(
             (result) => {
               // No-op
+              return result;
             })
           .catch(
             (reason) => {
               error(reason.message);
               this.handleError_('intent handler failed: %s', reason.message);
               this.lastErrorMessage_ = reason.message;
-              return false;
+              return Promise.reject(reason);
             });
         } else {
           // Handle functions
-          return true;
+          return Promise.resolve(handlerResult);
         }
-        return true;
       }
     }
     this.handleError_('no matching intent handler for: ' + intent);
-    return false;
+    return Promise.reject(new Error('no matching intent handler for: ' + intent));
   }
 
   /**

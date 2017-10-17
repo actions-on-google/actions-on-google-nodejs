@@ -28,7 +28,9 @@ const expect = chai.expect;
 const spies = require('chai-spies');
 const { AssistantApp } = require('.././actions-on-google');
 const {
+  dialogflowAppRequestBodyNewSessionMock,
   headerV1,
+  headerV2,
   MockRequest,
   MockResponse
 } = require('./utils/mocking');
@@ -157,6 +159,108 @@ describe('AssistantApp', function () {
         .equal(true);
       expect(app.isSsml_('<speak><sub alias="World Wide Web Consortium">W3C</sub></speak>')).to
         .equal(true);
+    });
+  });
+
+  describe('#handleRequestAsync', function () {
+    let mockRequest;
+    let app;
+
+    beforeEach(function () {
+      mockRequest = new MockRequest(headerV2, JSON.parse(JSON.stringify(dialogflowAppRequestBodyNewSessionMock)));
+      app = new AssistantApp({request: mockRequest, response: mockResponse});
+
+      // mock getIntent
+      app.getIntent = () => {
+        return mockRequest.body.result.action;
+      };
+    });
+
+    it('Should resolve a promise when actionMap contains a handler that returns a promise', function (done) {
+      let handler = app => {
+        return Promise.resolve('success');
+      };
+
+      const actionMap = new Map();
+      actionMap.set(mockRequest.body.result.action, handler);
+
+      app.handleRequestAsync(actionMap).then(
+        (result) => {
+          expect(result).to.equal('success');
+          done();
+        }
+      );
+    });
+
+    it('Should reject a promise when actionMap contains a handler that returns a promise error', function (done) {
+      let handler = app => {
+        return Promise.reject(new Error('error'));
+      };
+
+      const actionMap = new Map();
+      actionMap.set(mockRequest.body.result.action, handler);
+
+      app.handleRequestAsync(actionMap).catch(
+        (reason) => {
+          expect(reason).to.be.a('Error');
+          done();
+        }
+      );
+    });
+
+    it('Should resolve a promise when handler function returns a promise', function (done) {
+      let handler = app => {
+        return Promise.resolve('success');
+      };
+
+      app.handleRequestAsync(handler).then(
+        (result) => {
+          expect(result).to.equal('success');
+          done();
+        }
+      );
+    });
+
+    it('Should reject a promise when handler function returns a promise error', function (done) {
+      let handler = app => {
+        return Promise.reject(new Error('error'));
+      };
+
+      app.handleRequestAsync(handler).catch(
+        (reason) => {
+          expect(reason).to.be.a('Error');
+          done();
+        }
+      );
+    });
+
+    it('Should resolve a promise when handler function does not return a promise', function (done) {
+      let handler = app => {
+        return 'success';
+      };
+
+      app.handleRequestAsync(handler).then(
+        (result) => {
+          expect(result).to.equal('success');
+          done();
+        }
+      );
+    });
+
+    it('Should resolve a promise when actionMap contains a handler that does not return a promise', function (done) {
+      let handler = app => {
+        return 'success';
+      };
+
+      const actionMap = new Map();
+      actionMap.set(mockRequest.body.result.action, handler);
+
+      app.handleRequestAsync(actionMap).then(
+        (result) => {
+          expect(result).to.equal('success');
+          done();
+        }
+      );
     });
   });
 });
