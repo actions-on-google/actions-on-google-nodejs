@@ -83,7 +83,7 @@ describe('DialogflowApp', function () {
       expect(sessionStartedSpy).to.have.been.called();
     });
 
-    // Does not call sessionStarted when not new sessoin
+    // Does not call sessionStarted when not new session
     it('Does not call sessionStarted when not new session ', function () {
       const mockRequest = new MockRequest(headerV1, dialogflowAppRequestBodyLiveSession);
       const sessionStartedSpy = chai.spy();
