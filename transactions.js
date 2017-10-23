@@ -381,7 +381,11 @@ const TransactionValues = {
     /**
      * Review.
      */
-    REVIEW: 'REVIEW'
+    REVIEW: 'REVIEW',
+    /**
+     * Customer Service.
+     */
+    CUSTOMER_SERVICE: 'CUSTOMER_SERVICE'
   },
   /**
    * List of possible types of order rejection.
