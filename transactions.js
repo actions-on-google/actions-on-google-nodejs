@@ -505,7 +505,11 @@ const TransactionValues = {
     /**
      * Destination of the order.
      */
-    DESTINATION: 'DESTINATION'
+    DESTINATION: 'DESTINATION',
+    /**
+     * Pick up location of the order.
+     */
+    PICK_UP: 'PICK_UP'
   },
   /**
    * List of possible order time types.
