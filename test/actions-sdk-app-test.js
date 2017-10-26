@@ -2589,4 +2589,69 @@ describe('ActionsSdkApp', function () {
       expect(lastSeen.toISOString()).to.equal(timestamp);
     });
   });
+
+  /**
+   * Describes the behavior for ActionsSdkApp isRequestFromGoogle method.
+   */
+  describe('#isRequestFromGoogle', function () {
+    const body = actionsSdkAppRequestBodyLive;
+    let headerWithAuth = Object.assign({}, headerV1);
+    const authToken = 'abc123';
+    const validProjectId = 'nodejs-cloud-test-project-1234';
+    const sampleToken = 'sampleIDToken';
+    const errorMsg = 'error';
+
+    let mockRequest;
+    let mockResponse;
+    let app;
+    const { googleAuthClient } = require('../utils/auth');
+
+    before(() => {
+      require('../utils/auth').googleAuthClient = {
+        verifyIdToken: (argOne, projectId, callback) => {
+          if (projectId === validProjectId) {
+            callback(null, sampleToken);
+          } else {
+            callback(errorMsg, null);
+          }
+        }
+      };
+    });
+
+    after(() => {
+      require('../utils/auth').googleAuthClient = googleAuthClient;
+    });
+
+    beforeEach(() => {
+      headerWithAuth['authorization'] = authToken;
+      mockRequest = new MockRequest(headerWithAuth, body);
+      mockResponse = new MockResponse();
+      app = new ActionsSdkApp({
+        request: mockRequest,
+        response: mockResponse
+      });
+    });
+
+    // Validates auth token header
+    it('Should validate the incoming auth token.', function () {
+      return app.isRequestFromGoogle(validProjectId).then(idToken => {
+        expect(idToken).to.equal(sampleToken);
+      });
+    });
+
+    // Invalidates auth token header
+    it('Should invalidate incorrect project ID.', function () {
+      return app.isRequestFromGoogle('invalidProject').catch(err => {
+        expect(err).to.equal(errorMsg);
+      });
+    });
+
+    // Fails without auth token
+    it('Should invalidate header without auth token.', function () {
+      headerWithAuth['authorization'] = null;
+      return app.isRequestFromGoogle(validProjectId).catch(err => {
+        expect(err).to.equal('No incoming API Signature JWT token');
+      });
+    });
+  });
 });
