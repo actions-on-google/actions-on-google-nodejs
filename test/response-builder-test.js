@@ -24,13 +24,16 @@ process.env.DEBUG = 'actions-on-google:*';
  */
 const winston = require('winston');
 const chai = require('chai');
-const expect = chai.expect;
-const RichResponse = require('.././response-builder').RichResponse;
-const BasicCard = require('.././response-builder').BasicCard;
-const List = require('.././response-builder').List;
-const Carousel = require('.././response-builder').Carousel;
-const OptionItem = require('.././response-builder').OptionItem;
-const OrderUpdate = require('.././transactions').OrderUpdate;
+const { expect } = chai;
+const {
+  RichResponse,
+  BasicCard,
+  List,
+  Carousel,
+  OptionItem
+} = require('.././response-builder');
+
+const { OrderUpdate } = require('.././transactions');
 
 // Default logger
 winston.loggers.add('DEFAULT_LOGGER', {

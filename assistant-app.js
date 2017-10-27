@@ -21,21 +21,25 @@ const debug = Debug('actions-on-google:debug');
 const error = Debug('actions-on-google:error');
 
 // Response Builder classes
-const RichResponse = require('./response-builder').RichResponse;
-const BasicCard = require('./response-builder').BasicCard;
-const List = require('./response-builder').List;
-const Carousel = require('./response-builder').Carousel;
-const OptionItem = require('./response-builder').OptionItem;
-const isSsml = require('./response-builder').isSsml;
+const {
+  RichResponse,
+  BasicCard,
+  List,
+  Carousel,
+  OptionItem,
+  isSsml
+} = require('./response-builder');
 
 // Transaction classes
-const TransactionValues = require('./transactions').TransactionValues;
-const Order = require('./transactions').Order;
-const Cart = require('./transactions').Cart;
-const LineItem = require('./transactions').LineItem;
-const OrderUpdate = require('./transactions').OrderUpdate;
+const {
+  TransactionValues,
+  Order,
+  Cart,
+  LineItem,
+  OrderUpdate
+} = require('./transactions');
 
-const transformToSnakeCase = require('./utils/transform').transformToSnakeCase;
+const { transformToSnakeCase } = require('./utils/transform');
 
 // Constants
 const ERROR_MESSAGE = 'Sorry, I am unable to process your request.';
@@ -1321,7 +1325,7 @@ class AssistantApp {
     user.user_id = user.userId;
     user.access_token = user.accessToken;
 
-    const profile = user.profile;
+    const { profile } = user;
     user.userName = profile ? Object.assign({}, profile) : null;
 
     return user;
@@ -1706,7 +1710,7 @@ class AssistantApp {
     debug('hasAvailableSurfaceCapabilities: capabilities=%s', capabilities);
     const capabilitiesArray = Array.isArray(capabilities) ? capabilities
       : [capabilities];
-    const availableSurfaces = this.requestData().availableSurfaces;
+    const { availableSurfaces } = this.requestData();
     if (availableSurfaces) {
       for (let surface of availableSurfaces) {
         const availableCapabilities = surface.capabilities.map(capability => capability.name);

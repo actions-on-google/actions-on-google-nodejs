@@ -12,7 +12,7 @@ The client library supports both the Actions SDK webhook and Dialogflow fulfillm
  1. Import the appropriate class:
 
 ```javascript
-let ActionsSdkApp = require('actions-on-google').ActionsSdkApp;
+const { ActionsSdkApp } = require('actions-on-google');
 ```
 
  2. Create an instance:
@@ -25,7 +25,7 @@ const app = new ActionsSdkApp({request: request, response: response});
  1. Import the appropriate class:
 
 ```javascript
-let DialogflowApp = require('actions-on-google').DialogflowApp;
+const { DialogflowApp } = require('actions-on-google');
 ```
 
  2. Create an instance:

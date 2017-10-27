@@ -1,6 +1,6 @@
 {
   "parserOptions": {
-    "ecmaVersion": 6,
+    "ecmaVersion": 7,
     "sourceType": "script"
   },
   "extends": ["semistandard"],
@@ -31,7 +31,8 @@
         "object": "Object",
         "String": "string"
       }
-    }]
+    }],
+    "prefer-destructuring": "error"
   },
   "plugins": [
     "chai-friendly",

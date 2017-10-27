@@ -19,10 +19,8 @@
 const Debug = require('debug');
 const debug = Debug('actions-on-google:debug');
 const error = Debug('actions-on-google:error');
-const app = require('./assistant-app');
-const AssistantApp = app.AssistantApp;
-const State = app.State;
-const transformToCamelCase = require('./utils/transform').transformToCamelCase;
+const { AssistantApp, State } = require('./assistant-app');
+const { transformToCamelCase } = require('./utils/transform');
 
 // Constants
 const CONVERSATION_API_AGENT_VERSION_HEADER = 'Agent-Version-Label';
@@ -48,7 +46,7 @@ class ActionsSdkApp extends AssistantApp {
    * To be used in the Actions SDK HTTP endpoint logic.
    *
    * @example
-   * const ActionsSdkApp = require('actions-on-google').ActionsSdkApp;
+   * const { ActionsSdkApp } = require('actions-on-google');
    * const app = new ActionsSdkApp({request: request, response: response,
    *   sessionStarted:sessionStarted});
    *
@@ -102,7 +100,7 @@ class ActionsSdkApp extends AssistantApp {
    */
   isRequestFromAssistant (projectId) {
     debug('isRequestFromAssistant: projectId=%s', projectId);
-    const googleAuthClient = require('./utils/auth').googleAuthClient;
+    const { googleAuthClient } = require('./utils/auth');
     const jwtToken = this.request_.get(CONVERSATION_API_SIGNATURE_HEADER);
 
     return new Promise((resolve, reject) => {
@@ -158,7 +156,7 @@ class ActionsSdkApp extends AssistantApp {
       error('Missing user raw input');
       return null;
     }
-    const rawInput = input.rawInputs[0];
+    const [rawInput] = input.rawInputs;
     if (!rawInput.query) {
       error('Missing query for user raw input');
       return null;

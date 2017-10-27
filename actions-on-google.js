@@ -21,18 +21,22 @@
 
 'use strict';
 
-const AssistantApp = require('./assistant-app');
+const { AssistantApp, State } = require('./assistant-app');
+const ActionsSdkApp = require('./actions-sdk-app');
+const DialogflowApp = require('./dialogflow-app');
+const Transactions = require('./transactions');
+const Responses = require('./response-builder');
 
 module.exports = {
-  AssistantApp: AssistantApp.AssistantApp,
-  State: AssistantApp.State,
-  ActionsSdkApp: require('./actions-sdk-app'),
-  DialogflowApp: require('./dialogflow-app'),
-  Transactions: require('./transactions'),
-  Responses: require('./response-builder'),
+  AssistantApp,
+  State,
+  ActionsSdkApp,
+  DialogflowApp,
+  Transactions,
+  Responses,
   // Backwards compatibility
-  Assistant: AssistantApp.AssistantApp,
-  ActionsSdkAssistant: require('./actions-sdk-app'),
-  ApiAiAssistant: require('./dialogflow-app'),
-  ApiAiApp: require('./dialogflow-app')
+  Assistant: AssistantApp,
+  ActionsSdkAssistant: ActionsSdkApp,
+  ApiAiAssistant: DialogflowApp,
+  ApiAiApp: DialogflowApp
 };

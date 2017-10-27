@@ -19,10 +19,8 @@
 const Debug = require('debug');
 const debug = Debug('actions-on-google:debug');
 const error = Debug('actions-on-google:error');
-const app = require('./assistant-app');
-const AssistantApp = app.AssistantApp;
-const State = app.State;
-const transformToCamelCase = require('./utils/transform').transformToCamelCase;
+const { AssistantApp, State } = require('./assistant-app');
+const { transformToCamelCase } = require('./utils/transform');
 
 // Constants
 const RESPONSE_CODE_OK = 200;
@@ -59,7 +57,7 @@ class DialogflowApp extends AssistantApp {
    * To be used in the Dialogflow fulfillment webhook logic.
    *
    * @example
-   * const DialogflowApp = require('actions-on-google').DialogflowApp;
+   * const { DialogflowApp } = require('actions-on-google');
    * const app = new DialogflowApp({request: request, response: response,
    *   sessionStarted:sessionStarted});
    *
@@ -74,7 +72,7 @@ class DialogflowApp extends AssistantApp {
   constructor (options) {
     debug('DialogflowApp constructor');
     super(options, () => {
-      const originalRequest = this.body_.originalRequest;
+      const { originalRequest } = this.body_;
       if (!(originalRequest && originalRequest.data)) {
         return null;
       }
@@ -1023,12 +1021,8 @@ class DialogflowApp extends AssistantApp {
     if (this.body_.result && this.body_.result.contexts.length > 0) {
       for (let i = 0; i < this.body_.result.contexts.length; i++) {
         if (this.body_.result.contexts[i].name === ACTIONS_DIALOGFLOW_CONTEXT) {
-          const parameters = this.body_.result.contexts[i].parameters;
-          if (parameters) {
-            this.data = parameters;
-          } else {
-            this.data = {};
-          }
+          const { parameters } = this.body_.result.contexts[i];
+          this.data = parameters || {};
           break;
         }
       }

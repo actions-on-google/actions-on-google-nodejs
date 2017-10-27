@@ -24,14 +24,16 @@ process.env.DEBUG = 'actions-on-google:*';
  */
 const winston = require('winston');
 const chai = require('chai');
-const expect = chai.expect;
+const { expect } = chai;
 const spies = require('chai-spies');
 const { DialogflowApp } = require('.././actions-on-google');
-const RichResponse = require('.././response-builder').RichResponse;
-const BasicCard = require('.././response-builder').BasicCard;
-const List = require('.././response-builder').List;
-const Carousel = require('.././response-builder').Carousel;
-const OptionItem = require('.././response-builder').OptionItem;
+const {
+  RichResponse,
+  BasicCard,
+  List,
+  Carousel,
+  OptionItem
+} = require('.././response-builder');
 const {
   dialogflowAppRequestBodyNewSessionMock,
   dialogflowAppRequestBodyLiveSessionMock,

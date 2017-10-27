@@ -24,7 +24,7 @@ process.env.DEBUG = 'actions-on-google:*';
  */
 const winston = require('winston');
 const chai = require('chai');
-const expect = chai.expect;
+const { expect } = chai;
 const spies = require('chai-spies');
 const { ActionsSdkApp } = require('.././actions-on-google');
 const {

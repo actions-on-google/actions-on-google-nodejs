@@ -24,9 +24,8 @@ process.env.DEBUG = 'actions-on-google:*';
  */
 const winston = require('winston');
 const chai = require('chai');
-const expect = chai.expect;
-const transformToSnakeCase = require('../utils/transform').transformToSnakeCase;
-const transformToCamelCase = require('../utils/transform').transformToCamelCase;
+const { expect } = chai;
+const { transformToSnakeCase, transformToCamelCase } = require('../utils/transform');
 
 // Default logger
 winston.loggers.add('DEFAULT_LOGGER', {
