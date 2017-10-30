@@ -35,8 +35,20 @@ module.exports = {
   Transactions,
   Responses,
   // Backwards compatibility
-  Assistant: AssistantApp,
-  ActionsSdkAssistant: ActionsSdkApp,
-  ApiAiAssistant: DialogflowApp,
-  ApiAiApp: DialogflowApp
+  get Assistant () {
+    console.log('Importing the class name Assistant is *DEPRECATED*, use AssistantApp');
+    return AssistantApp;
+  },
+  get ActionsSdkAssistant () {
+    console.log('Importing the class name ActionsSdkAssistant is *DEPRECATED*, use ActionsSdkApp');
+    return ActionsSdkApp;
+  },
+  get ApiAiAssistant () {
+    console.log('Importing the class name ApiAiAssistant is *DEPRECATED*, use DialogflowApp');
+    return DialogflowApp;
+  },
+  get ApiAiApp () {
+    console.log('Importing the class name ApiAiApp is *DEPRECATED*, use DialogflowApp');
+    return DialogflowApp;
+  }
 };
