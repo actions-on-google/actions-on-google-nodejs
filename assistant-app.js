@@ -360,8 +360,32 @@ class AssistantApp {
      * @enum {number}
      * @actionssdk
      * @dialogflow
+     * @deprecated Use {@link ConversationTypes} instead.
      */
     this.ConversationStages = {
+      /**
+       * Unspecified conversation state.
+       */
+      UNSPECIFIED: this.isNotApiVersionOne_() ? 'UNSPECIFIED' : 0,
+      /**
+       * A new conversation.
+       */
+      NEW: this.isNotApiVersionOne_() ? 'NEW' : 1,
+      /**
+       * An active (ongoing) conversation.
+       */
+      ACTIVE: this.isNotApiVersionOne_() ? 'ACTIVE' : 2
+    };
+
+    /**
+     * List of possible conversation types, as defined in the
+     * {@link https://developers.google.com/actions/reference/conversation#Conversation|Conversation object}.
+     * @readonly
+     * @enum {number}
+     * @actionssdk
+     * @dialogflow
+     */
+    this.ConversationTypes = {
       /**
        * Unspecified conversation state.
        */
@@ -2382,7 +2406,7 @@ class AssistantApp {
       };
       if (transactionConfig.tokenizationParameters) {
         paymentOptions.googleProvidedOptions.tokenizationParameters = {
-          tokenizationType: 'PAYMENT_GATEWAY',
+          tokenizationType: TransactionValues.PaymentMethodTokenizationType.PAYMENT_GATEWAY,
           parameters: transactionConfig.tokenizationParameters
         };
       }
