@@ -60,17 +60,13 @@ const GENERIC_EXTENSION_TYPE = 'type.googleapis.com/google.actions.v2.orders.Gen
 /**
  * Order transit info.
  * @typedef {Object} TransitInfo
- * @property {Object} updatedTime - UTC timestamp of the transit update.
- * @property {number} updatedTime.seconds - Seconds since Unix epoch.
- * @property {number=} updatedTime.nanos - Partial seconds since Unix epoch.
+ * @property {string} updatedTime - UTC timestamp of the transit update as an RFC 3339 string.
  */
 
 /**
  * Order fulfillment info.
  * @typedef {Object} FulfillmentInfo
- * @property {Object} deliveryTime - UTC timestamp of the fulfillment update.
- * @property {number} deliveryTime.seconds - Seconds since Unix epoch.
- * @property {number=} deliveryTime.nanos - Partial seconds since Unix epoch.
+ * @property {string} deliveryTime - UTC timestamp of the fulfillment update as an RFC 3339 string.
  */
 
 /**
@@ -1141,8 +1137,8 @@ const OrderUpdate = class {
     this.lineItemUpdates = {};
 
     /**
-     * UTC timestamp of the order update.
-     * @type {Object}
+     * UTC timestamp of the order update as an RFC 3339 string.
+     * @type {String}
      */
     this.updateTime = undefined;
 
@@ -1219,7 +1215,7 @@ const OrderUpdate = class {
    * Set the update time of the order.
    *
    * @param {number} seconds Seconds since Unix epoch.
-   * @param {number=} nanos Partial time units.
+   * @param {number=} nanos Partial time units. It is rounded to the nearest millisecond.
    * @return {OrderUpdate} Returns current constructed OrderUpdate.
    */
   setUpdateTime (seconds, nanos) {
@@ -1227,7 +1223,13 @@ const OrderUpdate = class {
       error('Invalid seconds');
       return this;
     }
-    this.updateTime = { seconds, nanos: nanos || 0 };
+    nanos = nanos || 0; // Default to 0 ns.
+    // Convert time to date object, then RFC 3339 format.
+    // Round nanoseconds to the nearest millisecond. 1M ns = 1ms.
+    const MILLISECONDS_IN_SECOND = 1000;
+    const NANOSECONDS_IN_MILLISECOND = 1000000;
+    let dateObj = new Date((seconds * MILLISECONDS_IN_SECOND) + (nanos / NANOSECONDS_IN_MILLISECOND));
+    this.updateTime = dateObj.toISOString();
     return this;
   }
 

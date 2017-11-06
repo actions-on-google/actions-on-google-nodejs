@@ -930,10 +930,7 @@ describe('OrderUpdate', () => {
         googleOrderId: 'order_id',
         lineItemUpdates: {},
         orderManagementActions: [],
-        updateTime: {
-          seconds: 200,
-          nanos: 300
-        }
+        updateTime: '1970-01-01T00:03:20.000Z'
       });
     });
 
@@ -944,10 +941,34 @@ describe('OrderUpdate', () => {
         googleOrderId: 'order_id',
         lineItemUpdates: {},
         orderManagementActions: [],
-        updateTime: {
-          seconds: 100,
-          nanos: 0
-        }
+        updateTime: '1970-01-01T00:01:40.000Z'
+      });
+    });
+
+    it('should round down the nanosecond field to the nearest millisecond', () => {
+      const expectedTimeString = '1970-01-01T00:03:20.000Z';
+      orderUpdate.setUpdateTime(200);
+      expect(JSON.parse(JSON.stringify(orderUpdate))).to.deep.equal({
+        googleOrderId: 'order_id',
+        lineItemUpdates: {},
+        orderManagementActions: [],
+        updateTime: expectedTimeString
+      });
+
+      orderUpdate.setUpdateTime(200, 100);
+      expect(JSON.parse(JSON.stringify(orderUpdate))).to.deep.equal({
+        googleOrderId: 'order_id',
+        lineItemUpdates: {},
+        orderManagementActions: [],
+        updateTime: expectedTimeString
+      });
+
+      orderUpdate.setUpdateTime(200, 1000000); // 1M ns = 1ms
+      expect(JSON.parse(JSON.stringify(orderUpdate))).to.deep.equal({
+        googleOrderId: 'order_id',
+        lineItemUpdates: {},
+        orderManagementActions: [],
+        updateTime: '1970-01-01T00:03:20.001Z'
       });
     });
   });
