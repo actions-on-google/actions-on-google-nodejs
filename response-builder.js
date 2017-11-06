@@ -28,6 +28,22 @@ const error = Debug('actions-on-google:error');
 const LIST_ITEM_LIMIT = 30;
 const CAROUSEL_ITEM_LIMIT = 10;
 
+const ImageDisplays = {
+  /**
+   * Pads the gaps between the image and image frame with a blurred copy of the
+   * same image.
+   */
+  DEFAULT: 'DEFAULT',
+  /**
+   * Fill the gap between the image and image container with white bars.
+   */
+  WHITE: 'WHITE',
+  /**
+   * Image is centered and resized so the image fits perfectly in the container.
+   */
+  CROPPED: 'CROPPED'
+};
+
 /**
  * Simple Response type.
  * @typedef {Object} SimpleResponse
@@ -374,6 +390,9 @@ const BasicCard = class {
       if (basicCard.image) {
         this.image = basicCard.image;
       }
+      if (basicCard.imageDisplayOptions) {
+        this.imageDisplayOptions = basicCard.imageDisplayOptions;
+      }
     }
   }
 
@@ -447,6 +466,27 @@ const BasicCard = class {
     }
     if (height) {
       this.image.height = height;
+    }
+    return this;
+  }
+
+  /**
+   * Sets the display options for the image in this Basic Card.
+   * Use one of the image display constants. If none is chosen,
+   * ImageDisplays.DEFAULT will be enforced.
+   *
+   * @param {string} option The option for displaying the image.
+   * @return {BasicCard} Returns current constructed BasicCard.
+   */
+  setImageDisplay (option) {
+    switch (option) {
+      case ImageDisplays.DEFAULT:
+      case ImageDisplays.WHITE:
+      case ImageDisplays.CROPPED:
+        this.imageDisplayOptions = option;
+        break;
+      default:
+        console.error(`Image display option ${option} is invalid`);
     }
     return this;
   }
@@ -796,5 +836,6 @@ module.exports = {
   List,
   Carousel,
   OptionItem,
-  isSsml
+  isSsml,
+  ImageDisplays
 };
