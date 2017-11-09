@@ -1603,7 +1603,7 @@ class AssistantApp {
     } = this.BuiltInArgNames;
     const argument = this.findArgument_(DELIVERY_ADDRESS_VALUE, TRANSACTION_DECISION_VALUE);
     if (argument && argument.extension) {
-      if (argument.extension.userDecision === this.Transactions.DeliveryAddressDecision.ACCEPTED) {
+      if (argument.extension.userDecision === this.Transactions.DeliveryAddressUserDecision.ACCEPTED) {
         const { location } = argument.extension;
         if (!location.postalAddress) {
           debug('User accepted, but may not have configured address in app');
@@ -1625,7 +1625,7 @@ class AssistantApp {
    *
    * @return {TransactionDecision} Transaction decision data. Returns object with
    *     userDecision only if user declines. userDecision will be one of
-   *     Transactions.ConfirmationDecision. Null if no decision given.
+   *     Transactions.TransactionUserDecision. Null if no decision given.
    * @dialogflow
    * @actionssdk
    */

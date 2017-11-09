@@ -40,7 +40,7 @@ const GENERIC_EXTENSION_TYPE = 'type.googleapis.com/google.actions.v2.orders.Gen
 /**
  * Order rejection info.
  * @typedef {Object} RejectionInfo
- * @property {string} type - One of Transaction.RejectionType.
+ * @property {string} type - One of Transaction.ReasonType.
  * @property {string} reason - Reason for the order rejection.
  */
 
@@ -131,7 +131,7 @@ const GENERIC_EXTENSION_TYPE = 'type.googleapis.com/google.actions.v2.orders.Gen
 /**
  * Decision and order information returned when calling getTransactionDecision().
  * @typedef {Object} TransactionDecision
- * @property {string} userDecision - One of Transactions.ConfirmationDecision.
+ * @property {string} userDecision - One of Transactions.TransactionUserDecision.
  * @property {Object} checkResult
  * @property {string} checkResult.resultType - One of Transactions.ResultType.
  * @property {Object} order
@@ -927,7 +927,7 @@ const Order = class {
   /**
    * Adds an associated location to the order. Up to 2 locations can be added.
    *
-   * @param {string} type One of TransactionValues.LocationType.
+   * @param {string} type One of TransactionValues.OrderLocationType.
    * @param {Location} location Location to add.
    * @return {Order} Returns current constructed Order.
    */
@@ -1145,7 +1145,7 @@ const LineItem = class {
     this.image = undefined;
 
     /**
-     * Type of the item. One of TransactionValues.ItemType.
+     * Type of the item. One of TransactionValues.LineItemType.
      * @type {string}
      */
     this.type = undefined;
@@ -1256,7 +1256,7 @@ const LineItem = class {
   /**
    * Set the type of the item.
    *
-   * @param {string} type Type of the item. One of TransactionValues.ItemType.
+   * @param {string} type Type of the item. One of TransactionValues.LineItemType.
    * @return {LineItem} Returns current constructed LineItem.
    */
   setType (type) {
@@ -1497,7 +1497,7 @@ const OrderUpdate = class {
   /**
    * Adds an actionable item for the user to manage the order.
    *
-   * @param {string} type One of TransactionValues.OrderActions.
+   * @param {string} type One of TransactionValues.ActionType.
    * @param {string} label Button label.
    * @param {string} url URL to open when button is clicked.
    * @return {OrderUpdate} Returns current constructed OrderUpdate.
