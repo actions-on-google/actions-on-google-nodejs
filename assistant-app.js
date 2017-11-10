@@ -1155,11 +1155,6 @@ class AssistantApp {
    * Retrieve the access token in subsequent intents using
    * app.getUser().accessToken.
    *
-   * Note: Currently this API requires enabling the app for Transactions APIs.
-   * To do this, fill out the App Info section of the Actions Console project
-   * and check the box indicating the use of Transactions under "Privacy and
-   * consent".
-   *
    * @example
    * const app = new DialogflowApp({ request, response });
    * const WELCOME_INTENT = 'input.welcome';
