@@ -257,7 +257,11 @@ class AssistantApp {
       /** App fires CANCEL intent when user exits app mid-dialog. */
       CANCEL: 'actions.intent.CANCEL',
       /** App fires NEW_SURFACE intent when requesting handoff to a new surface from user. */
-      NEW_SURFACE: 'actions.intent.NEW_SURFACE'
+      NEW_SURFACE: 'actions.intent.NEW_SURFACE',
+      /** App fires REGISTER_UPDATE intent when requesting the user to register for proactive updates. */
+      REGISTER_UPDATE: 'actions.intent.REGISTER_UPDATE',
+      /** App receives CONFIGURE_UPDATES intent to indicate a custom REGISTER_UPDATE intent should be sent. */
+      CONFIGURE_UPDATES: 'actions.intent.CONFIGURE_UPDATES'
     };
 
     /**
@@ -282,7 +286,11 @@ class AssistantApp {
        * City and zipcode corresponding to the location of the user's current device, as defined in the
        * {@link https://developers.google.com/actions/reference/conversation#Location|Location object}.
        */
-      DEVICE_COARSE_LOCATION: 'DEVICE_COARSE_LOCATION'
+      DEVICE_COARSE_LOCATION: 'DEVICE_COARSE_LOCATION',
+      /**
+       * Confirmation to receive proactive content at any time from the app.
+       */
+      UPDATE: 'UPDATE'
     };
 
     /**
@@ -314,7 +322,9 @@ class AssistantApp {
       /** Flag representing finality of NO_INPUT intent. */
       IS_FINAL_REPROMPT: 'IS_FINAL_REPROMPT',
       /** New surface value argument. */
-      NEW_SURFACE: 'NEW_SURFACE'
+      NEW_SURFACE: 'NEW_SURFACE',
+      /** Update registration value argument. */
+      REGISTER_UPDATE: 'REGISTER_UPDATE'
     };
 
     /**
@@ -350,7 +360,9 @@ class AssistantApp {
       /** DateTime Value Spec. */
       DATETIME: 'type.googleapis.com/google.actions.v2.DateTimeValueSpec',
       /** New Surface Value Spec. */
-      NEW_SURFACE: 'type.googleapis.com/google.actions.v2.NewSurfaceValueSpec'
+      NEW_SURFACE: 'type.googleapis.com/google.actions.v2.NewSurfaceValueSpec',
+      /** Register Update Value Spec. */
+      REGISTER_UPDATE: 'type.googleapis.com/google.actions.v2.RegisterUpdateValueSpec'
     };
 
     /**
@@ -481,6 +493,15 @@ class AssistantApp {
      * @type {object}
      */
     this.Transactions = TransactionValues;
+
+    /**
+     * Possible update trigger time context frequencies.
+     * @readonly
+     * @type {object}
+     */
+    this.TimeContextFrequency = {
+      DAILY: 'DAILY'
+    };
 
     // Extracts the data from the request
     this.extractData_();
@@ -721,7 +742,7 @@ class AssistantApp {
    * @param {Array<string>} permissions Array of permissions App supports, each of
    *     which comes from AssistantApp.SupportedPermissions.
    * @param {Object=} dialogState JSON object the app uses to hold dialog state that
-   *     will be circulated back by Assistant. Used in {@link ActionsSdkAssistant}.
+   *     will be circulated back by Assistant. Used in {@link ActionsSdkApp}.
    * @return {(Object|null)} A response is sent to Assistant to ask for the user's permission; for any
    *     invalid input, we return null.
    * @actionssdk
@@ -761,6 +782,75 @@ class AssistantApp {
   }
 
   /**
+   * Prompts the user for permission to send proactive updates at any time.
+   *
+   * @example
+   * const app = new DialogflowApp({request, response});
+   * const REQUEST_PERMISSION_ACTION = 'request.permission';
+   * const PERMISSION_REQUESTED = 'permission.requested';
+   * const SHOW_IMAGE = 'show.image';
+   *
+   * function requestPermission (app) {
+   *   app.askForUpdatePermission('show.image', [
+   *     {
+   *       name: 'image_to_show',
+   *       textValue: 'image_type_1'
+   *     }
+   *   ]);
+   * }
+   *
+   * function checkPermission (app) {
+   *   if (app.isPermissionGranted()) {
+   *     app.tell(`Great, I'll send an update whenever I notice a change`);
+   *   } else {
+   *     // Response shows that user did not grant permission
+   *     app.tell('Alright, just let me know whenever you need the weather!');
+   *   }
+   * }
+   *
+   * function showImage (app) {
+   *   showPicture(app.getArgument('image_to_show'));
+   * }
+   *
+   * const actionMap = new Map();
+   * actionMap.set(REQUEST_PERMISSION_ACTION, requestPermission);
+   * actionMap.set(PERMISSION_REQUESTED, checkPermission);
+   * actionMap.set(SHOW_IMAGE, showImage);
+   * app.handleRequest(actionMap);
+   *
+   * @param {string} intent If using Dialogflow, the action name of the intent
+   *     to be triggered when the update is received. If using Actions SDK, the
+   *     intent name to be triggered when the update is received.
+   * @param {Array<IntentArgument>} intentArguments The necessary arguments
+   *     to fulfill the intent triggered on update. These can be retrieved using
+   *     {@link AssistantApp#getArgument}.
+   * @param {Object=} dialogState JSON object the app uses to hold dialog state that
+   *     will be circulated back by Assistant. Used in {@link ActionsSdkApp}.
+   * @return {(Object|null)} A response is sent to Assistant to ask for the user's permission; for any
+   *     invalid input, we return null.
+   * @actionssdk
+   * @dialogflow
+   */
+  askForUpdatePermission (intent, intentArguments, dialogState) {
+    debug('askForUpdatePermission: intent=%s, intentArguments=%s, dialogState=%s',
+      intent, intentArguments, JSON.stringify(dialogState));
+    if (!intent) {
+      this.handleError_('Name of intent to trigger on update must be specified');
+      return null;
+    }
+    const updatePermissionValueSpec = {
+      intent
+    };
+    if (intentArguments) {
+      updatePermissionValueSpec.arguments = intentArguments;
+    }
+    return this.fulfillPermissionsRequest_({
+      permissions: [this.SupportedPermissions.UPDATE],
+      updatePermissionValueSpec
+    }, dialogState);
+  }
+
+  /**
    * Checks whether user is in transactable state.
    *
    * @example
@@ -795,7 +885,7 @@ class AssistantApp {
    *     options and order options. Optional if order has no payment or
    *     delivery.
    * @param {Object=} dialogState JSON object the app uses to hold dialog state that
-   *     will be circulated back by Assistant. Used in {@link ActionsSdkAssistant}.
+   *     will be circulated back by Assistant. Used in {@link ActionsSdkApp}.
    * @return {(Object|null)} HTTP response.
    * @actionssdk
    * @dialogflow
@@ -861,7 +951,7 @@ class AssistantApp {
    *     transactionConfig Configuration for the transaction. Includes payment
    *     options and order options.
    * @param {Object=} dialogState JSON object the app uses to hold dialog state that
-   *     will be circulated back by Assistant. Used in {@link ActionsSdkAssistant}.
+   *     will be circulated back by Assistant. Used in {@link ActionsSdkApp}.
    * @return {(Object|null)} HTTP response
    * @dialogflow
    */
@@ -1094,7 +1184,7 @@ class AssistantApp {
    *     query for an affirmative or negative response. If undefined or null,
    *     Google will use a generic yes/no prompt.
    * @param {Object=} dialogState JSON object the app uses to hold dialog state that
-   *     will be circulated back by Assistant. Used in {@link ActionsSdkAssistant}.
+   *     will be circulated back by Assistant. Used in {@link ActionsSdkApp}.
    * @return {(Object|null)} HTTP response.
    * @actionssdk
    * @dialogflow
@@ -1151,7 +1241,7 @@ class AssistantApp {
    *     time if not provided by user. If undefined or null, Google will use a
    *     generic prompt.
    * @param {Object=} dialogState JSON object the app uses to hold dialog state that
-   *     will be circulated back by Assistant. Used in {@link ActionsSdkAssistant}.
+   *     will be circulated back by Assistant. Used in {@link ActionsSdkApp}.
    * @return {(Object|null)} HTTP response.
    * @actionssdk
    * @dialogflow
@@ -1203,7 +1293,7 @@ class AssistantApp {
    * app.handleRequest(actionMap);
    *
    * @param {Object=} dialogState JSON object the app uses to hold dialog state that
-   *     will be circulated back by Assistant. Used in {@link ActionsSdkAssistant}.
+   *     will be circulated back by Assistant. Used in {@link ActionsSdkApp}.
    * @return {(Object|null)} HTTP response.
    * @actionssdk
    * @dialogflow
@@ -1256,7 +1346,7 @@ class AssistantApp {
    * @param {Array<string>} capabilities The list of capabilities required in
    *     the surface.
    * @param {Object=} dialogState JSON object the app uses to hold dialog state that
-   *     will be circulated back by Assistant. Used in {@link ActionsSdkAssistant}.
+   *     will be circulated back by Assistant. Used in {@link ActionsSdkApp}.
    * @return {(Object|null)} HTTP response.
    * @dialogflow
    * @actionssdk
@@ -1269,6 +1359,67 @@ class AssistantApp {
     return this.fulfillSystemIntent_(this.StandardIntents.NEW_SURFACE,
        this.InputValueDataTypes_.NEW_SURFACE, newSurfaceValueSpec,
        'PLACEHOLDER_FOR_NEW_SURFACE', dialogState);
+  }
+
+  /**
+   * Requests the user to register for daily updates.
+   *
+   * @example
+   * const app = new DialogflowApp({ request, response });
+   * const WELCOME_INTENT = 'input.welcome';
+   * const SHOW_IMAGE = 'show.image';
+   *
+   * function welcomeIntent (app) {
+   *   app.askToRegisterDailyUpdate('show.image', [
+   *     {
+   *       name: 'image_to_show',
+   *       textValue: 'image_type_1'
+   *     }
+   *   ]);
+   * }
+   *
+   * function showImage (app) {
+   *   showPicture(app.getArgument('image_to_show'));
+   * }
+   *
+   * const actionMap = new Map();
+   * actionMap.set(WELCOME_INTENT, welcomeIntent);
+   * actionMap.set(SHOW_IMAGE, showImage);
+   * app.handleRequest(actionMap);
+   *
+   * @param {string} intent If using Dialogflow, the action name of the intent
+   *     to be triggered when the update is received. If using Actions SDK, the
+   *     intent name to be triggered when the update is received.
+   * @param {Array<IntentArgument>} intentArguments The necessary arguments
+   *     to fulfill the intent triggered on update. These can be retrieved using
+   *     {@link AssistantApp#getArgument}.
+   * @param {Object=} dialogState JSON object the app uses to hold dialog state that
+   *     will be circulated back by Assistant. Used in {@link ActionsSdkApp}.
+   * @return {(Object|null)} HTTP response.
+   * @dialogflow
+   * @actionssdk
+   */
+  askToRegisterDailyUpdate (intent, intentArguments, dialogState) {
+    debug('askToRegisterDailyUpdate: intent=%s, intentArguments=%s, ' +
+        'dialogState=%s', intent, intentArguments, dialogState);
+    if (!intent) {
+      this.handleError_('Name of intent to trigger on update must be specified');
+      return null;
+    }
+    const registerUpdateValueSpec = {
+      intent,
+      triggerContext: {
+        timeContext: {
+          frequency: this.TimeContextFrequency.DAILY
+        }
+      }
+    };
+    if (intentArguments) {
+      registerUpdateValueSpec.arguments = intentArguments;
+    }
+    return this.fulfillSystemIntent_(this.StandardIntents.REGISTER_UPDATE,
+       this.InputValueDataTypes_.REGISTER_UPDATE, registerUpdateValueSpec,
+       'PLACEHOLDER_FOR_REGISTER_UPDATE', dialogState);
   }
 
   /**
@@ -1330,6 +1481,14 @@ class AssistantApp {
    * Surface capability.
    * @typedef {Object} Capability
    * @property {string} name - Name of the capability.
+   */
+
+   /**
+   * Intent Argument. For incoming intents, the argument value can be retrieved
+   * using {@link AssistantApp#getArgument}.
+   * @typedef {Object} IntentArgument
+   * @property {string} name - Name of the argument.
+   * @property {string} textValue - Text value of the argument.
    */
 
   /**
@@ -1895,6 +2054,20 @@ class AssistantApp {
     debug('isFinalReprompt');
     const finalReprompt = this.getArgumentCommon(this.BuiltInArgNames.IS_FINAL_REPROMPT);
     return finalReprompt === '1';
+  }
+
+  /**
+   * Returns true if user accepted update registration request. Used with
+   * {@link AssistantApp#askToRegisterDailyUpdate}
+   *
+   * @return {boolean} True if user accepted update registration request.
+   * @dialogflow
+   * @actionssdk
+   */
+  isUpdateRegistered () {
+    debug('isUpdateRegistered');
+    const argument = this.findArgument_(this.BuiltInArgNames.REGISTER_UPDATE);
+    return argument && argument.extension && argument.extension.status === 'OK';
   }
 
   // ---------------------------------------------------------------------------

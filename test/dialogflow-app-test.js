@@ -2972,4 +2972,253 @@ describe('DialogflowApp', function () {
       expect(lastSeen.toISOString()).to.equal(timestamp);
     });
   });
+
+  /**
+   * Describes the behavior for DialogflowApp askToRegisterDailyUpdate method.
+   */
+  describe('#askToRegisterDailyUpdate', function () {
+    let app, mockRequest;
+
+    beforeEach(function () {
+      mockRequest = new MockRequest(headerV2, dialogflowAppRequestBodyLiveSession);
+      app = new DialogflowApp({
+        request: mockRequest,
+        response: mockResponse
+      });
+    });
+
+    // Success case test, when the API returns a valid 200 response with the response object
+    it('Should return valid JSON update registration request', function () {
+      app.askToRegisterDailyUpdate('test_intent', [
+        {
+          name: 'intent_name',
+          textValue: 'intent_value'
+        }
+      ]);
+      let expectedResponse = {
+        'speech': 'PLACEHOLDER_FOR_REGISTER_UPDATE',
+        'data': {
+          'google': {
+            'userStorage': '{"data":{}}',
+            'expectUserResponse': true,
+            'isSsml': false,
+            'noInputPrompts': [],
+            'systemIntent': {
+              'intent': 'actions.intent.REGISTER_UPDATE',
+              'data': {
+                'intent': 'test_intent',
+                'arguments': [
+                  {
+                    'name': 'intent_name',
+                    'textValue': 'intent_value'
+                  }
+                ],
+                'triggerContext': {
+                  'timeContext': {
+                    'frequency': 'DAILY'
+                  }
+                },
+                '@type': 'type.googleapis.com/google.actions.v2.RegisterUpdateValueSpec'
+              }
+            }
+          }
+        },
+        'contextOut': [
+          {
+            'name': '_actions_on_google_',
+            'lifespan': 100,
+            'parameters': {}
+          }
+        ]
+      };
+
+      expect(mockResponse.body).to.deep.equal(expectedResponse);
+    });
+
+    // Success case test, when the API returns a valid 200 response with the response object without arguments
+    it('Should return valid JSON update registration request', function () {
+      app.askToRegisterDailyUpdate('test_intent');
+      let expectedResponse = {
+        'speech': 'PLACEHOLDER_FOR_REGISTER_UPDATE',
+        'data': {
+          'google': {
+            'userStorage': '{"data":{}}',
+            'expectUserResponse': true,
+            'isSsml': false,
+            'noInputPrompts': [],
+            'systemIntent': {
+              'intent': 'actions.intent.REGISTER_UPDATE',
+              'data': {
+                'intent': 'test_intent',
+                'triggerContext': {
+                  'timeContext': {
+                    'frequency': 'DAILY'
+                  }
+                },
+                '@type': 'type.googleapis.com/google.actions.v2.RegisterUpdateValueSpec'
+              }
+            }
+          }
+        },
+        'contextOut': [
+          {
+            'name': '_actions_on_google_',
+            'lifespan': 100,
+            'parameters': {}
+          }
+        ]
+      };
+
+      expect(mockResponse.body).to.deep.equal(expectedResponse);
+    });
+
+    // Failure case test, when an invalid intent name is given
+    it('Should return null', function () {
+      expect(app.askToRegisterDailyUpdate('', [
+        {
+          name: 'intent_name',
+          textValue: 'intent_value'
+        }
+      ])).to.be.null;
+      expect(mockResponse.statusCode).to.equal(400);
+    });
+  });
+
+  /**
+   * Describes the behavior for DialogflowApp isUpdateRegistered method.
+   */
+  describe('#isUpdateRegistered', function () {
+    let app, mockRequest;
+
+    function initMockApp () {
+      mockRequest = new MockRequest(headerV1, dialogflowAppRequestBodyLiveSession);
+      app = new DialogflowApp({
+        request: mockRequest,
+        response: mockResponse
+      });
+    }
+
+    // Success case test, when the API returns a valid 200 response with the response object
+    it('Should validate user registration status.', function () {
+      dialogflowAppRequestBodyLiveSession.originalRequest.data.inputs[0].arguments = [
+        {
+          'name': 'REGISTER_UPDATE',
+          'extension': {
+            '@type': 'type.googleapis.com/google.actions.v2.RegisterUpdateValue',
+            'status': 'OK'
+          }
+        }];
+      initMockApp();
+      expect(app.isUpdateRegistered()).to.equal(true);
+
+      // Test the false case
+      dialogflowAppRequestBodyLiveSession.originalRequest.data.inputs[0].arguments[0].extension.status = 'CANCELLED';
+      initMockApp();
+      expect(app.isPermissionGranted()).to.equal(false);
+    });
+  });
+
+  /**
+   * Describes the behavior for DialogflowApp askForUpdatePermission method in v1.
+   */
+  describe('#askForUpdatePermission', function () {
+    let mockRequest, app;
+
+    beforeEach(function () {
+      mockRequest = new MockRequest(headerV2, dialogflowAppRequestBodyLiveSession);
+      app = new DialogflowApp({request: mockRequest, response: mockResponse});
+    });
+
+    // Success case test, when the API returns a valid 200 response with the response object
+    it('Should return the valid JSON in the response object for the success case.', function () {
+      app.askForUpdatePermission('test_intent', [
+        {
+          name: 'intent_name',
+          textValue: 'intent_value'
+        }
+      ]);
+      // Validating the response object
+      let expectedResponse = {
+        'speech': 'PLACEHOLDER_FOR_PERMISSION',
+        'data': {
+          'google': {
+            'userStorage': '{"data":{}}',
+            'expectUserResponse': true,
+            'isSsml': false,
+            'noInputPrompts': [],
+            'systemIntent': {
+              'intent': 'actions.intent.PERMISSION',
+              'data': {
+                '@type': 'type.googleapis.com/google.actions.v2.PermissionValueSpec',
+                'permissions': ['UPDATE'],
+                'updatePermissionValueSpec': {
+                  'intent': 'test_intent',
+                  'arguments': [
+                    {
+                      'name': 'intent_name',
+                      'textValue': 'intent_value'
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        'contextOut': [
+          {
+            'name': '_actions_on_google_',
+            'lifespan': 100,
+            'parameters': {}
+          }
+        ]
+      };
+      expect(mockResponse.body).to.deep.equal(expectedResponse);
+    });
+
+    // Success case test, when the API returns a valid 200 response with the response object without arguments
+    it('Should return the valid JSON in the response object without arguments for the success case.', function () {
+      app.askForUpdatePermission('test_intent');
+      // Validating the response object
+      let expectedResponse = {
+        'speech': 'PLACEHOLDER_FOR_PERMISSION',
+        'data': {
+          'google': {
+            'userStorage': '{"data":{}}',
+            'expectUserResponse': true,
+            'isSsml': false,
+            'noInputPrompts': [],
+            'systemIntent': {
+              'intent': 'actions.intent.PERMISSION',
+              'data': {
+                '@type': 'type.googleapis.com/google.actions.v2.PermissionValueSpec',
+                'permissions': ['UPDATE'],
+                'updatePermissionValueSpec': {
+                  'intent': 'test_intent'
+                }
+              }
+            }
+          }
+        },
+        'contextOut': [
+          {
+            'name': '_actions_on_google_',
+            'lifespan': 100,
+            'parameters': {}
+          }
+        ]
+      };
+      expect(mockResponse.body).to.deep.equal(expectedResponse);
+    });
+
+    // Failure case test, when an invalid intent name is given
+    it('Should return null', function () {
+      expect(app.askForUpdatePermission('', [
+        {
+          name: 'intent_name',
+          textValue: 'intent_value'
+        }
+      ])).to.be.null;
+      expect(mockResponse.statusCode).to.equal(400);
+    });
+  });
 });

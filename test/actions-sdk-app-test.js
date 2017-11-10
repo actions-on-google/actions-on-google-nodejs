@@ -2654,4 +2654,259 @@ describe('ActionsSdkApp', function () {
       });
     });
   });
+
+  /*
+   * Describes the behavior for ActionsSdkApp askToRegisterDailyUpdate method.
+   */
+  describe('#askToRegisterDailyUpdate', function () {
+    let app, mockRequest;
+
+    beforeEach(function () {
+      mockRequest = new MockRequest(headerV2, actionsSdkAppRequestBodyLive);
+      app = new ActionsSdkApp({
+        request: mockRequest,
+        response: mockResponse
+      });
+    });
+
+    // Success case test, when the API returns a valid 200 response with the response object
+    it('Should return valid JSON update registration request', function () {
+      app.askToRegisterDailyUpdate('test_intent', [
+        {
+          name: 'intent_name',
+          textValue: 'intent_value'
+        }
+      ]);
+      let expectedResponse = {
+        'conversationToken': '{"state":null,"data":{}}',
+        'userStorage': '{"data":{}}',
+        'expectUserResponse': true,
+        'expectedInputs': [
+          {
+            'inputPrompt': {
+              'initialPrompts': [
+                {
+                  'textToSpeech': 'PLACEHOLDER_FOR_REGISTER_UPDATE'
+                }
+              ],
+              'noInputPrompts': []
+            },
+            'possibleIntents': [
+              {
+                'intent': 'actions.intent.REGISTER_UPDATE',
+                'inputValueData': {
+                  'intent': 'test_intent',
+                  'arguments': [
+                    {
+                      'name': 'intent_name',
+                      'textValue': 'intent_value'
+                    }
+                  ],
+                  'triggerContext': {
+                    'timeContext': {
+                      'frequency': 'DAILY'
+                    }
+                  },
+                  '@type': 'type.googleapis.com/google.actions.v2.RegisterUpdateValueSpec'
+                }
+              }
+            ]
+          }
+        ]
+      };
+
+      expect(mockResponse.body).to.deep.equal(expectedResponse);
+    });
+
+    // Success case test, when the API returns a valid 200 response with the response object without arguments
+    it('Should return valid JSON update registration request', function () {
+      app.askToRegisterDailyUpdate('test_intent');
+      let expectedResponse = {
+        'conversationToken': '{"state":null,"data":{}}',
+        'userStorage': '{"data":{}}',
+        'expectUserResponse': true,
+        'expectedInputs': [
+          {
+            'inputPrompt': {
+              'initialPrompts': [
+                {
+                  'textToSpeech': 'PLACEHOLDER_FOR_REGISTER_UPDATE'
+                }
+              ],
+              'noInputPrompts': []
+            },
+            'possibleIntents': [
+              {
+                'intent': 'actions.intent.REGISTER_UPDATE',
+                'inputValueData': {
+                  'intent': 'test_intent',
+                  'triggerContext': {
+                    'timeContext': {
+                      'frequency': 'DAILY'
+                    }
+                  },
+                  '@type': 'type.googleapis.com/google.actions.v2.RegisterUpdateValueSpec'
+                }
+              }
+            ]
+          }
+        ]
+      };
+
+      expect(mockResponse.body).to.deep.equal(expectedResponse);
+    });
+
+    // Failure case test, when an invalid intent name is given
+    it('Should return null', function () {
+      expect(app.askToRegisterDailyUpdate('', [
+        {
+          name: 'intent_name',
+          textValue: 'intent_value'
+        }
+      ])).to.be.null;
+      expect(mockResponse.statusCode).to.equal(400);
+    });
+  });
+
+  /**
+   * Describes the behavior for ActionsSdkApp isUpdateRegistered method.
+   */
+  describe('#isUpdateRegistered', function () {
+    let app, mockRequest;
+
+    function initMockApp () {
+      mockRequest = new MockRequest(headerV1, actionsSdkAppRequestBodyLive);
+      app = new ActionsSdkApp({
+        request: mockRequest,
+        response: mockResponse
+      });
+    }
+
+    // Success case test, when the API returns a valid 200 response with the response object
+    it('Should validate user registration status.', function () {
+      actionsSdkAppRequestBodyLive.inputs[0].arguments = [
+        {
+          'name': 'REGISTER_UPDATE',
+          'extension': {
+            '@type': 'type.googleapis.com/google.actions.v2.RegisterUpdateValue',
+            'status': 'OK'
+          }
+        }];
+      initMockApp();
+      expect(app.isUpdateRegistered()).to.equal(true);
+
+      // Test the false case
+      actionsSdkAppRequestBodyLive.inputs[0].arguments[0].extension.status = 'CANCELLED';
+      initMockApp();
+      expect(app.isPermissionGranted()).to.equal(false);
+    });
+  });
+
+  /**
+   * Describes the behavior for ActionsSdkApp askForUpdatePermission method in v1.
+   */
+  describe('#askForUpdatePermission', function () {
+    let mockRequest, app;
+
+    beforeEach(function () {
+      mockRequest = new MockRequest(headerV2, actionsSdkAppRequestBodyLive);
+      app = new ActionsSdkApp({request: mockRequest, response: mockResponse});
+    });
+
+    // Success case test, when the API returns a valid 200 response with the response object
+    it('Should return the valid JSON in the response object for the success case.', function () {
+      app.askForUpdatePermission('test_intent', [
+        {
+          name: 'intent_name',
+          textValue: 'intent_value'
+        }
+      ]);
+      // Validating the response object
+      let expectedResponse = {
+        'conversationToken': '{"state":null,"data":{}}',
+        'userStorage': '{"data":{}}',
+        'expectUserResponse': true,
+        'expectedInputs': [
+          {
+            'inputPrompt': {
+              'initialPrompts': [
+                {
+                  'textToSpeech': 'PLACEHOLDER_FOR_PERMISSION'
+                }
+              ],
+              'noInputPrompts': [
+              ]
+            },
+            'possibleIntents': [
+              {
+                'intent': 'actions.intent.PERMISSION',
+                'inputValueData': {
+                  '@type': 'type.googleapis.com/google.actions.v2.PermissionValueSpec',
+                  'permissions': ['UPDATE'],
+                  'updatePermissionValueSpec': {
+                    'intent': 'test_intent',
+                    'arguments': [
+                      {
+                        'name': 'intent_name',
+                        'textValue': 'intent_value'
+                      }
+                    ]
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      };
+      expect(mockResponse.body).to.deep.equal(expectedResponse);
+    });
+
+    // Success case test, when the API returns a valid 200 response with the response object without arguments
+    it('Should return the valid JSON in the response object without arguments for the success case.', function () {
+      app.askForUpdatePermission('test_intent');
+      // Validating the response object
+      let expectedResponse = {
+        'conversationToken': '{"state":null,"data":{}}',
+        'userStorage': '{"data":{}}',
+        'expectUserResponse': true,
+        'expectedInputs': [
+          {
+            'inputPrompt': {
+              'initialPrompts': [
+                {
+                  'textToSpeech': 'PLACEHOLDER_FOR_PERMISSION'
+                }
+              ],
+              'noInputPrompts': [
+              ]
+            },
+            'possibleIntents': [
+              {
+                'intent': 'actions.intent.PERMISSION',
+                'inputValueData': {
+                  '@type': 'type.googleapis.com/google.actions.v2.PermissionValueSpec',
+                  'permissions': ['UPDATE'],
+                  'updatePermissionValueSpec': {
+                    'intent': 'test_intent'
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      };
+      expect(mockResponse.body).to.deep.equal(expectedResponse);
+    });
+
+    // Failure case test, when an invalid intent name is given
+    it('Should return null', function () {
+      expect(app.askForUpdatePermission('', [
+        {
+          name: 'intent_name',
+          textValue: 'intent_value'
+        }
+      ])).to.be.null;
+      expect(mockResponse.statusCode).to.equal(400);
+    });
+  });
 });
