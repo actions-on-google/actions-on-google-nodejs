@@ -923,6 +923,8 @@ class ActionsSdkApp extends AssistantApp {
    * @param {Array} possibleIntents Array of ExpectedIntents.
    * @param {Object} dialogState JSON object the app uses to hold dialog state that
    *     will be circulated back by Assistant.
+   * @param {Array<string>=} speechBiasingHints Array of of phrases or words the app
+   *     wants Google to use for speech biasing (max 1000).
    * @return {(Object|null)} The response that is sent to Assistant to ask user to provide input.
    * @private
    * @actionssdk
@@ -957,7 +959,7 @@ class ActionsSdkApp extends AssistantApp {
       inputPrompt: inputPrompt,
       possibleIntents: possibleIntents
     }];
-    if (speechBiasingHints != undefined) {
+    if (speechBiasingHints !== undefined) {
       expectedInputs[0].speechBiasingHints = speechBiasingHints;
     }
     const response = this.buildResponseHelper_(
