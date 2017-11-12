@@ -367,6 +367,55 @@ class ActionsSdkApp extends AssistantApp {
   }
 
   /**
+   * Set speech biasing hints for the conversation lifetime.
+   *
+   * @example
+   * const app = new App({request: req, response: res});
+   * const SPEECH_BIASISNG_HINTS = ['word1', 'word2', 'word3'];
+   *
+   * function mainIntent (app) {
+   *   app.setSpeechBiasingHints(SPEECH_BIASISNG_HINTS);
+   *   app.ask('Welcome to action snippets! Say a word.');
+   * }
+   *
+   * function rawInput (app) {
+   *   if (app.getRawInput() === 'bye') {
+   *     app.tell('Goodbye!');
+   *   } else {
+   *     const inputPrompt = app.buildInputPrompt(true, '<speak>You said, ' +
+   *       app.getRawInput() + '</speak>',
+   *         ['I didn\'t hear a word', 'If you\'re still there, what\'s the word?', 'Goodbye!']);
+   *     app.ask(inputPrompt);
+   *   }
+   * }
+   *
+   * const actionMap = new Map();
+   * actionMap.set(app.StandardIntents.MAIN, mainIntent);
+   * actionMap.set(app.StandardIntents.TEXT, rawInput);
+   *
+   * app.handleRequest(actionMap);
+   *
+   * @param {Array<string>=} hints Array of of phrases or words the app wants Google to use for speech biasing (max 1000).
+   * @return {null|undefined} Null if the speech biasing hints is not defined or not an Array.
+   * @actionssdk
+   */
+  setSpeechBiasingHints (hints) {
+    debug('setSpeechBiasingHints:', hints);
+    if (!hints) {
+      error('No speech biasing hints provided');
+      this.handleError_('No parameter');
+      return null;
+    } else if (!Array.isArray(hints)) {
+      error('Hints must be an array of strings');
+      this.handleError_('Invalid parameter');
+      return null;
+    } else {
+      const newSpeechBiasingHints = hints;
+      this.newSpeechBiasingHints = newSpeechBiasingHints;
+    };
+  }
+
+  /**
    * Asks to collect user's input; all user's queries need to be sent to
    * the app.
    * {@link https://developers.google.com/actions/policies/general-policies#user_experience|The guidelines when prompting the user for a response must be followed at all times}.
