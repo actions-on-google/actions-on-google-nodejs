@@ -463,7 +463,11 @@ class ActionsSdkApp extends AssistantApp {
       error('Error in building expected intent');
       return null;
     }
-    return this.buildAskHelper_(inputPrompt, [expectedIntent], dialogState);
+    let speechBiasingHints = undefined;
+    if (this.newSpeechBiasingHints){
+      speechBiasingHints = this.newSpeechBiasingHints;
+    }
+    return this.buildAskHelper_(inputPrompt, [expectedIntent], dialogState, speechBiasingHints);
   }
 
   /**
@@ -522,6 +526,10 @@ class ActionsSdkApp extends AssistantApp {
       error('Error in building expected intent');
       return null;
     }
+    let speechBiasingHints = undefined;
+    if (this.newSpeechBiasingHints){
+      speechBiasingHints = this.newSpeechBiasingHints;
+    }
     if (this.isNotApiVersionOne_()) {
       expectedIntent.inputValueData = Object.assign({
         [this.ANY_TYPE_PROPERTY_]: this.InputValueDataTypes_.OPTION
@@ -535,7 +543,7 @@ class ActionsSdkApp extends AssistantApp {
         }
       };
     }
-    return this.buildAskHelper_(inputPrompt, [expectedIntent], dialogState);
+    return this.buildAskHelper_(inputPrompt, [expectedIntent], dialogState, speechBiasingHints);
   }
 
   /**
@@ -595,6 +603,10 @@ class ActionsSdkApp extends AssistantApp {
       error('Error in building expected intent');
       return null;
     }
+    let speechBiasingHints = undefined;
+    if (this.newSpeechBiasingHints){
+      speechBiasingHints = this.newSpeechBiasingHints;
+    }
     if (this.isNotApiVersionOne_()) {
       expectedIntent.inputValueData = Object.assign({
         [this.ANY_TYPE_PROPERTY_]: this.InputValueDataTypes_.OPTION
@@ -608,7 +620,7 @@ class ActionsSdkApp extends AssistantApp {
         }
       };
     }
-    return this.buildAskHelper_(inputPrompt, [expectedIntent], dialogState);
+    return this.buildAskHelper_(inputPrompt, [expectedIntent], dialogState, speechBiasingHints);
   }
 
   /**
@@ -852,7 +864,11 @@ class ActionsSdkApp extends AssistantApp {
       };
       const inputPrompt = this.buildInputPrompt(false,
         'PLACEHOLDER_FOR_PERMISSION');
-      return this.buildAskHelper_(inputPrompt, [expectedIntent], dialogState);
+      let speechBiasingHints = undefined;
+      if (this.newSpeechBiasingHints){
+        speechBiasingHints = this.newSpeechBiasingHints;
+      }
+      return this.buildAskHelper_(inputPrompt, [expectedIntent], dialogState, speechBiasingHints);
     }
   }
 
@@ -893,7 +909,11 @@ class ActionsSdkApp extends AssistantApp {
     // Send an Ask request to Assistant.
     const inputPrompt = this.buildInputPrompt(false, promptPlaceholder ||
       'PLACEHOLDER_FOR_INTENT');
-    return this.buildAskHelper_(inputPrompt, [expectedIntent], dialogState);
+    let speechBiasingHints = undefined;
+    if (this.newSpeechBiasingHints){
+      speechBiasingHints = this.newSpeechBiasingHints;
+    }
+    return this.buildAskHelper_(inputPrompt, [expectedIntent], dialogState, speechBiasingHints);
   }
 
   /**
@@ -907,9 +927,9 @@ class ActionsSdkApp extends AssistantApp {
    * @private
    * @actionssdk
    */
-  buildAskHelper_ (inputPrompt, possibleIntents, dialogState) {
-    debug('buildAskHelper_: inputPrompt=%s, possibleIntents=%s,  dialogState=%s',
-      inputPrompt, possibleIntents, JSON.stringify(dialogState));
+  buildAskHelper_ (inputPrompt, possibleIntents, dialogState, speechBiasingHints) {
+    debug('buildAskHelper_: inputPrompt=%s, possibleIntents=%s,  dialogState=%s, speechBiasingHints=%s',
+      inputPrompt, possibleIntents, JSON.stringify(dialogState), speechBiasingHints);
     if (!inputPrompt) {
       error('Invalid input prompt');
       return null;
@@ -937,6 +957,9 @@ class ActionsSdkApp extends AssistantApp {
       inputPrompt: inputPrompt,
       possibleIntents: possibleIntents
     }];
+    if (speechBiasingHints != undefined) {
+      expectedInputs[0].speechBiasingHints = speechBiasingHints;
+    }
     const response = this.buildResponseHelper_(
       JSON.stringify(dialogState),
       true, // expectedUserResponse
