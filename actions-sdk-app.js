@@ -371,10 +371,10 @@ class ActionsSdkApp extends AssistantApp {
    *
    * @example
    * const app = new App({request: req, response: res});
-   * const SPEECH_BIASISNG_HINTS = ['word1', 'word2', 'word3'];
+   * const SPEECH_BIASING_HINTS = ['word1', 'word2', 'word3'];
    *
    * function mainIntent (app) {
-   *   app.setSpeechBiasingHints(SPEECH_BIASISNG_HINTS);
+   *   app.setSpeechBiasingHints(SPEECH_BIASING_HINTS);
    *   app.ask('Welcome to action snippets! Say a word.');
    * }
    *
