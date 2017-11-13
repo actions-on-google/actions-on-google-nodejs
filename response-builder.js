@@ -101,6 +101,28 @@ const ImageDisplays = {
  */
 
 /**
+ * @typedef {Object} StructuredResponse
+ * @property {OrderUpdate} orderUpdate
+ */
+
+/**
+ * @typedef {Object} RichResponseItemBasicCard
+ * @property {BasicCard} basicCard
+ */
+
+/**
+ * @typedef {Object} RichResponseItemSimpleResponse
+ * @property {SimpleResponse} simpleResponse
+ */
+
+/**
+ * @typedef {Object} RichResponseItemStructuredResponse
+ * @property {StructuredResponse} structuredResponse
+ */
+
+/** @typedef {RichResponseItemBasicCard | RichResponseItemSimpleResponse | RichResponseItemStructuredResponse} RichResponseItem */
+
+/**
  * Class for initializing and constructing Rich Responses with chainable interface.
  */
 const RichResponse = class {
@@ -113,7 +135,7 @@ const RichResponse = class {
     /**
      * Ordered list of either SimpleResponse objects or BasicCard objects.
      * First item must be SimpleResponse. There can be at most one card.
-     * @type {Array<SimpleResponse|BasicCard>}
+     * @type {Array<RichResponseItem>}
      */
     this.items = [];
 
