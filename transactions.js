@@ -188,8 +188,48 @@ const TransactionValues = {
    * List of possible item types.
    * @readonly
    * @enum {string}
+   * @deprecated Use {@link TransactionValues.LineItemType} instead.
    */
   ItemType: {
+    /**
+     * Unspecified.
+     */
+    UNSPECIFIED: 'UNSPECIFIED',
+    /**
+     * Regular.
+     */
+    REGULAR: 'REGULAR',
+    /**
+     * Tax.
+     */
+    TAX: 'TAX',
+    /**
+     * Discount
+     */
+    DISCOUNT: 'DISCOUNT',
+    /**
+     * Gratuity
+     */
+    GRATUITY: 'GRATUITY',
+    /**
+     * Delivery
+     */
+    DELIVERY: 'DELIVERY',
+    /**
+     * Subtotal
+     */
+    SUBTOTAL: 'SUBTOTAL',
+    /**
+     * Fee. For everything else, there's fee.
+     */
+    FEE: 'FEE'
+  },
+  /**
+   * List of possible item types.
+   * @readonly
+   * @enum {string}
+   */
+  LineItemType: {
     /**
      * Unspecified.
      */
@@ -279,14 +319,44 @@ const TransactionValues = {
    * @enum {string}
    */
   CustomerInfoProperties: {
+    CUSTOMER_INFO_PROPERTY_UNSPECIFIED: 'CUSTOMER_INFO_PROPERTY_UNSPECIFIED',
     EMAIL: 'EMAIL'
   },
   /**
    * List of possible order confirmation user decisions
    * @readonly
    * @enum {string}
+   * @deprecated Use {@link TransactionValues.TransactionUserDecision} instead.
    */
   ConfirmationDecision: {
+    /**
+     * Order was approved by user.
+     */
+    ACCEPTED: 'ORDER_ACCEPTED',
+    /**
+     * Order was declined by user.
+     */
+    REJECTED: 'ORDER_REJECTED',
+    /**
+     * Order was not declined, but the delivery address was updated during
+     * confirmation.
+     */
+    DELIVERY_ADDRESS_UPDATED: 'DELIVERY_ADDRESS_UPDATED',
+    /**
+     * Order was not declined, but the cart was updated during confirmation.
+     */
+    CART_CHANGE_REQUESTED: 'CART_CHANGE_REQUESTED'
+  },
+  /**
+   * List of possible order confirmation user decisions
+   * @readonly
+   * @enum {string}
+   */
+  TransactionUserDecision: {
+    /**
+     * Unspecified user decision.
+     */
+    UNKNOWN_USER_DECISION: 'UNKNOWN_USER_DECISION',
     /**
      * Order was approved by user.
      */
@@ -311,6 +381,10 @@ const TransactionValues = {
    * @enum {string}
    */
   OrderState: {
+    /**
+     * Order was created at the integrator's system.
+     */
+    CREATED: 'CREATED',
     /**
      * Order was rejected.
      */
@@ -340,8 +414,60 @@ const TransactionValues = {
    * List of possible actions to take on the order.
    * @readonly
    * @enum {string}
+   * @deprecated Use {@link TransactionValues.ActionType} instead.
    */
   OrderAction: {
+    /**
+     * View details.
+     */
+    VIEW_DETAILS: 'VIEW_DETAILS',
+    /**
+     * Modify order.
+     */
+    MODIFY: 'MODIFY',
+    /**
+     * Cancel order.
+     */
+    CANCEL: 'CANCEL',
+    /**
+     * Return order.
+     */
+    RETURN: 'RETURN',
+    /**
+     * Exchange order.
+     */
+    EXCHANGE: 'EXCHANGE',
+    /**
+     * Email.
+     */
+    EMAIL: 'EMAIL',
+    /**
+     * Call.
+     */
+    CALL: 'CALL',
+    /**
+     * Reorder.
+     */
+    REORDER: 'REORDER',
+    /**
+     * Review.
+     */
+    REVIEW: 'REVIEW',
+    /**
+     * Customer Service.
+     */
+    CUSTOMER_SERVICE: 'CUSTOMER_SERVICE'
+  },
+  /**
+   * List of possible actions to take on the order.
+   * @readonly
+   * @enum {string}
+   */
+  ActionType: {
+    /**
+     * Unknown action.
+     */
+    UNKNOWN: 'UNKNOWN',
     /**
      * View details.
      */
@@ -387,8 +513,24 @@ const TransactionValues = {
    * List of possible types of order rejection.
    * @readonly
    * @enum {string}
+   * @deprecated Use {@link TransactionValues.ReasonType} instead.
    */
   RejectionType: {
+    /**
+     * Unknown
+     */
+    UNKNOWN: 'UNKNOWN',
+    /**
+     * Payment was declined.
+     */
+    PAYMENT_DECLINED: 'PAYMENT_DECLINED'
+  },
+  /**
+   * List of possible reasons for order rejection.
+   * @readonly
+   * @enum {string}
+   */
+  ReasonType: {
     /**
      * Unknown
      */
@@ -461,8 +603,28 @@ const TransactionValues = {
    * List of possible user decisions to give delivery address.
    * @readonly
    * @enum {string}
+   * @deprecated Use {@link TransactionValues.DeliveryAddressUserDecision} instead.
    */
   DeliveryAddressDecision: {
+    /**
+     * Unknown.
+     */
+    UNKNOWN: 'UNKNOWN_USER_DECISION',
+    /**
+     * User granted delivery address.
+     */
+    ACCEPTED: 'ACCEPTED',
+    /**
+     * User denied to give delivery address.
+     */
+    REJECTED: 'REJECTED'
+  },
+  /**
+   * List of possible user decisions to give delivery address.
+   * @readonly
+   * @enum {string}
+   */
+  DeliveryAddressUserDecision: {
     /**
      * Unknown.
      */
@@ -480,8 +642,40 @@ const TransactionValues = {
    * List of possible order location types.
    * @readonly
    * @enum {string}
+   * @deprecated Use {@link TransactionValues.OrderLocationType} instead.
    */
   LocationType: {
+    /**
+     * Unknown.
+     */
+    UNKNOWN: 'UNKNOWN',
+    /**
+     * Delivery location for an order.
+     */
+    DELIVERY: 'DELIVERY',
+    /**
+     * Business location of order provider.
+     */
+    BUSINESS: 'BUSINESS',
+    /**
+     * Origin of the order.
+     */
+    ORIGIN: 'ORIGIN',
+    /**
+     * Destination of the order.
+     */
+    DESTINATION: 'DESTINATION',
+    /**
+     * Pick up location of the order.
+     */
+    PICK_UP: 'PICK_UP'
+  },
+  /**
+   * List of possible order location types.
+   * @readonly
+   * @enum {string}
+   */
+  OrderLocationType: {
     /**
      * Unknown.
      */
@@ -529,7 +723,23 @@ const TransactionValues = {
      * Reservation time.
      */
     RESERVATION_SLOT: 'RESERVATION_SLOT'
+  },
+  /**
+   * List of possible tokenization types for the payment method
+   * @readonly
+   * @enum {string}
+   */
+  PaymentMethodTokenizationType: {
+    /**
+     * Unspecified tokenization type.
+     */
+    UNSPECIFIED_TOKENIZATION_TYPE: 'UNSPECIFIED_TOKENIZATION_TYPE',
+    /**
+     * Use external payment gateway tokenization API to tokenize selected payment method.
+     */
+    PAYMENT_GATEWAY: 'PAYMENT_GATEWAY'
   }
+
 };
 
 /**
