@@ -92,7 +92,7 @@ class DialogflowApp extends AssistantApp {
       this.body_.originalRequest.data &&
       this.body_.originalRequest.data.conversation) {
       if (this.body_.originalRequest.data.conversation.type ===
-        this.ConversationStages.NEW && this.sessionStarted_ &&
+        this.ConversationTypes.NEW && this.sessionStarted_ &&
         typeof this.sessionStarted_ === 'function') {
         this.sessionStarted_();
       } else if (this.sessionStarted_ && typeof this.sessionStarted_ !== 'function') {

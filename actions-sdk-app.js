@@ -68,7 +68,7 @@ class ActionsSdkApp extends AssistantApp {
     if (this.body_ &&
         this.body_.conversation &&
         this.body_.conversation.type &&
-        this.body_.conversation.type === this.ConversationStages.NEW &&
+        this.body_.conversation.type === this.ConversationTypes.NEW &&
         this.sessionStarted_ && typeof this.sessionStarted_ === 'function') {
       this.sessionStarted_();
     } else if (this.sessionStarted_ && typeof this.sessionStarted_ !== 'function') {
