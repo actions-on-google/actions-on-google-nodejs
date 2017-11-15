@@ -1592,7 +1592,7 @@ class AssistantApp {
    * Not supported in V1.
    *
    * @example
-   * const app = new ApiAiApp({request, response});
+   * const app = new DialogflowApp({request, response});
    * const lastSeen = app.getLastSeen();
    *
    * @return {Date | null} User's last seen date or null if never seen
