@@ -16,9 +16,6 @@
 
 'use strict';
 
-// Enable actions-on-google debug logging
-process.env.DEBUG = 'actions-on-google:*';
-
 // lodash helpers
 const camelCase = require('lodash.camelcase');
 const snakeCase = require('lodash.snakecase');
