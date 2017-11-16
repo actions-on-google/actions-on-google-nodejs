@@ -211,6 +211,13 @@ class AssistantApp {
     this.contexts_ = {};
 
     /**
+     * The Dialogflow followup event.
+     * @private
+     * @type {Object}
+     */
+    this.followupEvent_ = null;
+
+    /**
      * The last error message.
      * @private
      * @type {string}

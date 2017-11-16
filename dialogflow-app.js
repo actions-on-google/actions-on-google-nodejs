@@ -787,6 +787,39 @@ class DialogflowApp extends AssistantApp {
   }
 
   /**
+   * Set the followup event for the response. The triggered intent will call the webhook for a process update.
+   *
+   * @example
+   * const app = new DialogflowApp({request: request, response: response});
+   * const EVENT_RESULTS = 'results';
+   *
+   * app.setContext('results-processing');
+   *
+   * app.setFollowupEvent(EVENT_RESULTS, {
+   *     filters: filters
+   * });
+   *
+   * @param {string} name Name of the event. Dialogflow creates a context with the same name.
+   * @param {Object=} data Event JSON parameters.
+   * @return {null|undefined} Null if the event name is not defined.
+   * @dialogflow
+   */
+  setFollowupEvent (name, data) {
+    debug('setFollowupEvent: name=%s, data=%s', name, JSON.stringify(data));
+    if (!name) {
+      error('Empty event name');
+      return null;
+    }
+    const newEvent = {
+      name: name
+    };
+    if (data) {
+      newEvent.data = data;
+    }
+    this.followupEvent_ = newEvent;
+  }
+
+  /**
    * Dialogflow {@link https://dialogflow.com/docs/concept-contexts|Context}.
    * @typedef {Object} Context
    * @property {string} name - Full name of the context.
@@ -1009,6 +1042,9 @@ class DialogflowApp extends AssistantApp {
     }
     for (let context of Object.keys(this.contexts_)) {
       response.contextOut.push(this.contexts_[context]);
+    }
+    if (this.followupEvent_ !== null) {
+      response.followupEvent = this.followupEvent_;
     }
     return response;
   }
