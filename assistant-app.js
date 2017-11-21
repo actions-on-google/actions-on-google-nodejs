@@ -2574,7 +2574,8 @@ class AssistantApp {
       };
       if (transactionConfig.tokenizationParameters) {
         paymentOptions.googleProvidedOptions.tokenizationParameters = {
-          tokenizationType: TransactionValues.PaymentMethodTokenizationType.PAYMENT_GATEWAY,
+          tokenizationType: transactionConfig.tokenizationType ||
+            TransactionValues.PaymentMethodTokenizationType.PAYMENT_GATEWAY,
           parameters: transactionConfig.tokenizationParameters
         };
       }

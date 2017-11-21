@@ -871,6 +871,68 @@ describe('ActionsSdkApp', function () {
     });
 
     // Success case test, when the API returns a valid 200 response with the response object
+    it('Should return valid JSON transaction requirements with Google payment options and custom tokenization type', function () {
+      let transactionConfig = {
+        deliveryAddressRequired: true,
+        tokenizationParameters: {
+          myParam: 'myParam'
+        },
+        cardNetworks: [
+          'VISA',
+          'MASTERCARD'
+        ],
+        prepaidCardDisallowed: false,
+        tokenizationType: 'CUSTOM STRING'
+      };
+      app.askForTransactionRequirements(transactionConfig, { cartSize: 2 });
+      let expectedResponse = {
+        'conversationToken': '{"cartSize":2}',
+        'userStorage': '{"data":{}}',
+        'expectUserResponse': true,
+        'expectedInputs': [
+          {
+            'inputPrompt': {
+              'initialPrompts': [
+                {
+                  'textToSpeech': 'PLACEHOLDER_FOR_TXN_REQUIREMENTS'
+                }
+              ],
+              'noInputPrompts': [
+              ]
+            },
+            'possibleIntents': [
+              {
+                'intent': 'actions.intent.TRANSACTION_REQUIREMENTS_CHECK',
+                'inputValueData': {
+                  '@type': 'type.googleapis.com/google.actions.v2.TransactionRequirementsCheckSpec',
+                  'orderOptions': {
+                    'requestDeliveryAddress': true
+                  },
+                  'paymentOptions': {
+                    'googleProvidedOptions': {
+                      'tokenizationParameters': {
+                        'tokenizationType': 'CUSTOM STRING',
+                        'parameters': {
+                          'myParam': 'myParam'
+                        }
+                      },
+                      'supportedCardNetworks': [
+                        'VISA',
+                        'MASTERCARD'
+                      ],
+                      'prepaidCardDisallowed': false
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      };
+      expect(mockResponse.body).to.deep.equal(expectedResponse);
+    });
+
+    // Success case test, when the API returns a valid 200 response with the response object
     it('Should return valid JSON transaction requirements with Action payment options', function () {
       let transactionConfig = {
         deliveryAddressRequired: true,
