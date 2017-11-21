@@ -28,6 +28,10 @@ const error = Debug('actions-on-google:error');
 const LIST_ITEM_LIMIT = 30;
 const CAROUSEL_ITEM_LIMIT = 10;
 
+/**
+ * @readonly
+ * @enum {string}
+ */
 const ImageDisplays = {
   /**
    * Pads the gaps between the image and image frame with a blurred copy of the
