@@ -99,6 +99,8 @@ const GENERIC_EXTENSION_TYPE = 'type.googleapis.com/google.actions.v2.orders.Gen
  *     Must be any number of Transactions.CardNetwork.
  * @property {boolean} prepaidCardDisallowed - True if prepaid cards are not
  *     allowed for transaction.
+ * @property {string} tokenizationType - The type of tokenization. Default is
+ *     {@see TransactionValues.PaymentMethodTokenizationType.PAYMENT_GATEWAY}.
  * @property {CustomerInfoOptions=} customerInfoOptions
  */
 
