@@ -29,6 +29,9 @@ const LIST_ITEM_LIMIT = 30;
 const CAROUSEL_ITEM_LIMIT = 10;
 
 /**
+ * List of possible options to display the image in a BasicCard.
+ * When the aspect ratio of an image is not the same as the surface,
+ * this attribute changes how the image is displayed in the card.
  * @readonly
  * @enum {string}
  */
