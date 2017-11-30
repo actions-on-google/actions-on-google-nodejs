@@ -1279,7 +1279,7 @@ class AssistantApp {
    * }
    *
    * function signIn (app) {
-   *   if (app.getSignInStatus() === app.SignInstatus.OK) {
+   *   if (app.getSignInStatus() === app.SignInStatus.OK) {
    *     let accessToken = app.getUser().accessToken;
    *     app.ask('Great, thanks for signing in!');
    *   } else {
