@@ -739,7 +739,12 @@ const TransactionValues = {
     /**
      * Use external payment gateway tokenization API to tokenize selected payment method.
      */
-    PAYMENT_GATEWAY: 'PAYMENT_GATEWAY'
+    PAYMENT_GATEWAY: 'PAYMENT_GATEWAY',
+    /**
+     * Allows payment service to pass public key for payment info encryption and receive encrypted
+     * response.
+     */
+    DIRECT: 'DIRECT'
   }
 
 };
