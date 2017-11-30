@@ -424,7 +424,7 @@ class ActionsSdkApp extends AssistantApp {
    * const app = new ActionsSdkApp({request, response});
    *
    * function welcomeIntent (app) {
-   *   app.askWithlist('Which of these looks good?',
+   *   app.askWithList('Which of these looks good?',
    *     app.buildList('List title')
    *      .addItems([
    *        app.buildOptionItem(SELECTION_KEY_ONE,
