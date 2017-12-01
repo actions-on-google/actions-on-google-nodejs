@@ -930,6 +930,8 @@ class DialogflowApp extends AssistantApp {
     debug('getIntent_');
     if (this.body_.result) {
       return this.body_.result.action;
+    } else if (this.body_.action) {
+      return this.body_.action;
     } else {
       error('Missing result from request body');
       return null;
