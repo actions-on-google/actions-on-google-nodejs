@@ -361,8 +361,7 @@ describe('ActionsSdkApp', function () {
           }
         ]
       };
-      expect(JSON.parse(JSON.stringify(mockResponse.body)))
-        .to.deep.equal(expectedResponse);
+      expect(clone(mockResponse.body)).to.deep.equal(expectedResponse);
     });
 
       // Success case test, when the API returns a valid 200 response with the response object
@@ -407,8 +406,7 @@ describe('ActionsSdkApp', function () {
           }
         ]
       };
-      expect(JSON.parse(JSON.stringify(mockResponse.body)))
-        .to.deep.equal(expectedResponse);
+      expect(clone(mockResponse.body)).to.deep.equal(expectedResponse);
     });
   });
 
@@ -464,8 +462,7 @@ describe('ActionsSdkApp', function () {
           }
         }
       };
-      expect(JSON.parse(JSON.stringify(mockResponse.body)))
-        .to.deep.equal(expectedResponse);
+      expect(clone(mockResponse.body)).to.deep.equal(expectedResponse);
     });
 
     // Success case test, when the API returns a valid 200 response with the response object
@@ -500,8 +497,7 @@ describe('ActionsSdkApp', function () {
           }
         }
       };
-      expect(JSON.parse(JSON.stringify(mockResponse.body)))
-        .to.deep.equal(expectedResponse);
+      expect(clone(mockResponse.body)).to.deep.equal(expectedResponse);
     });
 
     // Failure test, when the API returns a 400 response with the response object
@@ -1164,6 +1160,71 @@ describe('ActionsSdkApp', function () {
   });
 
   /**
+   * Describes the behavior for ActionsSdkApp askForPlace method.
+   */
+  describe('#askForPlace', function () {
+    let mockRequest, app;
+    beforeEach(function () {
+      mockRequest = new MockRequest(headerV2, actionsSdkAppRequestBodyLive);
+      app = new ActionsSdkApp({
+        request: mockRequest,
+        response: mockResponse
+      });
+    });
+    // Success case test, when the API returns a valid 200 response with the response object
+    it('Should return valid JSON place request', function () {
+      const requestPrompt = 'Where do you want to get picked up?';
+      const permissionContext = 'To find a place to pick you up';
+      app.askForPlace(requestPrompt, permissionContext, { cartSize: 2 });
+      const expectedResponse = {
+        'conversationToken': '{"cartSize":2}',
+        'userStorage': '{"data":{}}',
+        'expectUserResponse': true,
+        'expectedInputs': [
+          {
+            'inputPrompt': {
+              'initialPrompts': [
+                {
+                  'textToSpeech': 'PLACEHOLDER_FOR_PLACE'
+                }
+              ],
+              'noInputPrompts': []
+            },
+            'possibleIntents': [
+              {
+                'intent': 'actions.intent.PLACE',
+                'inputValueData': {
+                  '@type': 'type.googleapis.com/google.actions.v2.PlaceValueSpec',
+                  'dialogSpec': {
+                    'extension': {
+                      '@type':
+                        'type.googleapis.com/google.actions.v2.PlaceValueSpec.PlaceDialogSpec',
+                      'requestPrompt': requestPrompt,
+                      'permissionContext': permissionContext
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      };
+      expect(mockResponse.body).to.deep.equal(expectedResponse);
+    });
+
+    it('Should return statusCode 400 when requestPrompt is not provided.', function () {
+      app.askForPlace();
+      expect(mockResponse.statusCode).to.equal(400);
+    });
+
+    it('Should return statusCode 400 when permissionContext is not provided.', function () {
+      const requestPrompt = 'Where do you want to get picked up?';
+      app.askForPlace(requestPrompt);
+      expect(mockResponse.statusCode).to.equal(400);
+    });
+  });
+
+  /**
    * Describes the behavior for ActionsSdkApp askForConfirmation method.
    */
   describe('#askForConfirmation', function () {
@@ -1329,7 +1390,7 @@ describe('ActionsSdkApp', function () {
         ]
       };
 
-      expect(JSON.parse(JSON.stringify(mockResponse.body))).to.deep.equal(expectedResponse);
+      expect(clone(mockResponse.body)).to.deep.equal(expectedResponse);
     });
 
     // Success case test, when the API returns a valid 200 response with the response object
@@ -1362,7 +1423,7 @@ describe('ActionsSdkApp', function () {
         ]
       };
 
-      expect(JSON.parse(JSON.stringify(mockResponse.body))).to.deep.equal(expectedResponse);
+      expect(clone(mockResponse.body)).to.deep.equal(expectedResponse);
     });
   });
 
@@ -1704,6 +1765,59 @@ describe('ActionsSdkApp', function () {
           }
         }
       });
+    });
+  });
+
+  /**
+   * Describes the behavior for ActionsSdkApp getPlace method.
+   */
+  describe('#getPlace', function () {
+    // Success case test, when the API returns a valid 200 response with the response object
+    it('Should retrieve assistant valid place information', function () {
+      const place = {
+        'coordinates': {
+          'latitude': 12.3456,
+          'longitude': -65.4321
+        },
+        'formattedAddress': 'Some building',
+        'placeId': 'abcdefg'
+      };
+      actionsSdkAppRequestBodyLive.inputs[0].arguments = [
+        {
+          'name': 'PLACE',
+          'placeValue': place
+        }
+      ];
+      const mockRequest = new MockRequest(headerV2, actionsSdkAppRequestBodyLive);
+      const app = new ActionsSdkApp({
+        request: mockRequest,
+        response: mockResponse
+      });
+      const actual = app.getPlace();
+      const expected = Object.assign({
+        address: place.formattedAddress
+      }, place);
+      expect(clone(actual)).to.deep.equal(clone(expected));
+    });
+
+    // Success case test, when the API returns a valid 200 response with the response object
+    it('Should return null for assistant place denial', function () {
+      const status = {
+        'code': 7,
+        'message': 'User denied location permission'
+      };
+      actionsSdkAppRequestBodyLive.inputs[0].arguments = [
+        {
+          'name': 'PLACE',
+          'status': status
+        }
+      ];
+      const mockRequest = new MockRequest(headerV2, actionsSdkAppRequestBodyLive);
+      const app = new ActionsSdkApp({
+        request: mockRequest,
+        response: mockResponse
+      });
+      expect(app.getPlace()).to.be.null;
     });
   });
 
@@ -2371,7 +2485,7 @@ describe('ActionsSdkApp', function () {
   describe('#getActionVersionLabel', function () {
     // Success case test, when the API returns a valid 200 response with the response object
     it('Should validate assistant action version label info.', function () {
-      const headers = JSON.parse(JSON.stringify(headerV1));
+      const headers = clone(headerV1);
       headers['Agent-Version-Label'] = '1.0.0';
       const mockRequest = new MockRequest(headers, actionsSdkAppRequestBodyLive);
       const app = new ActionsSdkApp({

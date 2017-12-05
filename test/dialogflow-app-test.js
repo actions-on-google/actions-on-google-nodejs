@@ -1095,6 +1095,59 @@ describe('DialogflowApp', function () {
   });
 
   /**
+   * Describes the behavior for DialogflowApp askForPlace method.
+   */
+  describe('#getPlace', function () {
+    // Success case test, when the API returns a valid 200 response with the response object
+    it('Should retrieve assistant valid place information', function () {
+      const place = {
+        'coordinates': {
+          'latitude': 12.3456,
+          'longitude': -65.4321
+        },
+        'formattedAddress': 'Some building',
+        'placeId': 'abcdefg'
+      };
+      dialogflowAppRequestBodyLiveSession.originalRequest.data.inputs[0].arguments = [
+        {
+          'name': 'PLACE',
+          'placeValue': place
+        }
+      ];
+      const mockRequest = new MockRequest(headerV1, dialogflowAppRequestBodyLiveSession);
+      const app = new DialogflowApp({
+        request: mockRequest,
+        response: mockResponse
+      });
+      const actual = app.getPlace();
+      const expected = Object.assign({
+        address: place.formattedAddress
+      }, place);
+      expect(clone(actual)).to.deep.equal(clone(expected));
+    });
+
+    // Success case test, when the API returns a valid 200 response with the response object
+    it('Should return null for assistant place denial', function () {
+      const status = {
+        'code': 7,
+        'message': 'User denied location permission'
+      };
+      dialogflowAppRequestBodyLiveSession.originalRequest.data.inputs[0].arguments = [
+        {
+          'name': 'PLACE',
+          'status': status
+        }
+      ];
+      const mockRequest = new MockRequest(headerV1, dialogflowAppRequestBodyLiveSession);
+      const app = new DialogflowApp({
+        request: mockRequest,
+        response: mockResponse
+      });
+      expect(app.getPlace()).to.be.null;
+    });
+  });
+
+  /**
    * Describes the behavior for DialogflowApp getUserConfirmation method.
    */
   describe('#getUserConfirmation', function () {
@@ -1668,6 +1721,72 @@ describe('DialogflowApp', function () {
       };
 
       expect(mockResponse.body).to.deep.equal(expectedResponse);
+    });
+  });
+
+  /**
+   * Describes the behavior for DialogflowApp askForPlace method.
+   */
+  describe('#askForPlace', function () {
+    let app, mockRequest;
+
+    beforeEach(function () {
+      mockRequest = new MockRequest(headerV2, dialogflowAppRequestBodyLiveSession);
+      app = new DialogflowApp({
+        request: mockRequest,
+        response: mockResponse
+      });
+    });
+
+    // Success case test, when the API returns a valid 200 response with the response object
+    it('Should return valid JSON place request', function () {
+      const requestPrompt = 'Where do you want to get picked up?';
+      const permissionContext = 'To find a place to pick you up';
+      app.askForPlace(requestPrompt, permissionContext);
+      const expectedResponse = {
+        'speech': 'PLACEHOLDER_FOR_PLACE',
+        'data': {
+          'google': {
+            'userStorage': '{"data":{}}',
+            'expectUserResponse': true,
+            'isSsml': false,
+            'noInputPrompts': [],
+            'systemIntent': {
+              'intent': 'actions.intent.PLACE',
+              'data': {
+                '@type': 'type.googleapis.com/google.actions.v2.PlaceValueSpec',
+                'dialogSpec': {
+                  'extension': {
+                    '@type': 'type.googleapis.com/google.actions.v2.PlaceValueSpec.PlaceDialogSpec',
+                    'requestPrompt': requestPrompt,
+                    'permissionContext': permissionContext
+                  }
+                }
+              }
+            }
+          }
+        },
+        'contextOut': [
+          {
+            'name': '_actions_on_google_',
+            'lifespan': 100,
+            'parameters': {}
+          }
+        ]
+      };
+
+      expect(mockResponse.body).to.deep.equal(expectedResponse);
+    });
+
+    it('Should return statusCode 400 when requestPrompt is not provided.', function () {
+      app.askForPlace();
+      expect(mockResponse.statusCode).to.equal(400);
+    });
+
+    it('Should return statusCode 400 when permissionContext is not provided.', function () {
+      const requestPrompt = 'Where do you want to get picked up?';
+      app.askForPlace(requestPrompt);
+      expect(mockResponse.statusCode).to.equal(400);
     });
   });
 

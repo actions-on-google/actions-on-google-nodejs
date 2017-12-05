@@ -240,16 +240,6 @@ class AssistantApp {
       });
     }
 
-    /**
-     * The property name used when specifying an input value data spec.
-     * @private
-     * @readonly
-     * @type {string}
-     * @actionssdk
-     * @dialogflow
-     */
-    this.ANY_TYPE_PROPERTY_ = '@type';
-
     /* eslint-disable no-magic-numbers */
     /**
      * List of possible conversation stages, as defined in the
@@ -1015,6 +1005,103 @@ class AssistantApp {
   }
 
   /**
+   * Asks user to provide a geo-located place, possibly using contextual information,
+   * like a store near the user's location or a contact's address.
+   *
+   * Developer provides custom text prompts to tailor the request handled by Google.
+   *
+   * @example
+   * // For DialogflowApp:
+   *
+   * // Dialogflow Actions
+   * const Actions = {
+   *   WELCOME: 'input.welcome',
+   *   PLACE: 'get.place' // Create Dialogflow Action with actions_intent_PLACE event
+   * };
+   *
+   * const app = new DialogflowApp({request, response});
+   *
+   * function handleWelcome (app) {
+   *   const requestPrompt = 'Where do you want to get picked up?';
+   *   const permissionContext = 'To find a place to pick you up';
+   *   app.askForPlace(requestPrompt, permissionContext);
+   * }
+   *
+   * function handlePlace (app) {
+   *   const place = app.getPlace();
+   *   if (place) {
+   *     app.tell(`Ah, I see. You want to get picked up at ${place.address}`);
+   *   } else {
+   *     app.tell(`Sorry, I couldn't find where you want to get picked up`);
+   *   }
+   * }
+   *
+   * const actionMap = new Map();
+   * actionMap.set(Actions.WELCOME, handleWelcome);
+   * actionMap.set(Actions.PLACE, handlePlace);
+   * app.handleRequest(actionMap);
+   *
+   * // For ActionsSdkApp:
+   * const app = new ActionsSdkApp({ request, response });
+   *
+   * function handleWelcome (app) {
+   *   const requestPrompt = 'Where do you want to get picked up?';
+   *   const permissionContext = 'To find a place to pick you up';
+   *   app.askForPlace(requestPrompt, permissionContext);
+   * }
+   *
+   * function handlePlace (app) {
+   *   const place = app.getPlace();
+   *   if (place) {
+   *     app.tell(`Ah, I see. You want to get picked up at ${place.address}`);
+   *   } else {
+   *     app.tell(`Sorry, I couldn't find where you want to get picked up`);
+   *   }
+   * }
+   *
+   * const actionsMap = new Map();
+   * actionsMap.set(app.StandardIntents.MAIN, handleWelcome);
+   * actionsMap.set(app.StandardIntents.PLACE, handlePlace);
+   * app.handleRequest(actionsMap);
+   *
+   * @param {string} requestPrompt This is the initial response by location sub-dialog.
+   *     For example: "Where do you want to get picked up?"
+   * @param {string} permissionContext This is the context for seeking permissions.
+   *     For example: "To find a place to pick you up"
+   *     Prompt to user: "*To find a place to pick you up*, I just need to check your location.
+   *       Can I get that from Google?".
+   * @param {Object=} dialogState JSON object the app uses to hold dialog state that
+   *     will be circulated back by Assistant.
+   * @return {Object} HTTP response.
+   * @actionssdk
+   * @dialogflow
+   */
+  askForPlace (requestPrompt, permissionContext, dialogState) {
+    debug('askForPlace: requestPrompt=%s, permissionContext=%s, dialogState=%s',
+      requestPrompt, permissionContext, dialogState);
+    if (!requestPrompt) {
+      this.handleError_('requestPrompt cannot be empty');
+      return null;
+    }
+    if (!permissionContext) {
+      this.handleError_('permissionContext cannot be empty');
+      return null;
+    }
+    const placeValueSpec = {
+      dialogSpec: {
+        extension: {
+          [this.ANY_TYPE_PROPERTY_]: this.DialogSpecTypes_.PLACE,
+          requestPrompt,
+          permissionContext
+        }
+      }
+    };
+    return this.fulfillSystemIntent_(this.StandardIntents.PLACE,
+      this.InputValueDataTypes_.PLACE, placeValueSpec,
+      'PLACEHOLDER_FOR_PLACE', dialogState);
+  }
+
+  /**
    * Asks user for a confirmation.
    *
    * @example
@@ -1305,16 +1392,34 @@ class AssistantApp {
    */
 
   /**
+   * @typedef {Object} LocationCoordinates
+   * @property {number} latitude
+   * @property {number} longitude
+   */
+
+  /**
+   * Location information.
+   * @typedef {Object} Location
+   * @property {LocationCoordinates} coordinates - {latitude, longitude}.
+   *     Requested with SupportedPermissions.DEVICE_PRECISE_LOCATION.
+   * @property {string} address - Full, formatted street address.
+   *     Requested with SupportedPermissions.DEVICE_PRECISE_LOCATION.
+   * @property {string} zipCode - Zip code.
+   *     Requested with SupportedPermissions.DEVICE_COARSE_LOCATION.
+   * @property {string} city - Device city.
+   *     Requested with SupportedPermissions.DEVICE_COARSE_LOCATION.
+   */
+
+  /**
    * User's permissioned device location.
-   * @typedef {Object} DeviceLocation
-   * @property {Object} coordinates - {latitude, longitude}. Requested with
-   *     SupportedPermissions.DEVICE_PRECISE_LOCATION.
-   * @property {string} address - Full, formatted street address. Requested with
-   *     SupportedPermissions.DEVICE_PRECISE_LOCATION.
-   * @property {string} zipCode - Zip code. Requested with
-   *      SupportedPermissions.DEVICE_COARSE_LOCATION.
-   * @property {string} city - Device city. Requested with
-   *     SupportedPermissions.DEVICE_COARSE_LOCATION.
+   * @typedef {Location} DeviceLocation
+   */
+
+  /**
+   * Place information
+   * @typedef {Location} Place
+   * @property {string} placeId Used with Places API to fetch details of a place.
+   * See {@link https://developers.google.com/places/web-service/place-id}
    */
 
   /**
@@ -1626,6 +1731,28 @@ class AssistantApp {
       return argument.extension;
     }
     debug('Failed to get order decision information');
+    return null;
+  }
+
+  /**
+   * Gets the user provided place. Use after askForPlace.
+   *
+   * @return {(Place|null)} Place information given by the user. Null if no place given.
+   * @dialogflow
+   * @actionssdk
+   */
+  getPlace () {
+    debug('getPlace');
+    const argument = this.findArgument_(this.BuiltInArgNames.PLACE);
+    if (argument) {
+      const place = argument.placeValue;
+      if (!place) {
+        return null;
+      }
+      place.address = place.formattedAddress;
+      return place;
+    }
+    debug('Failed to get place place information');
     return null;
   }
 
@@ -2495,6 +2622,29 @@ AssistantApp.prototype.SupportedPermissions = {
 };
 
 /**
+ * The property name used when specifying an input value data spec.
+ * @private
+ * @readonly
+ * @type {string}
+ * @actionssdk
+ * @dialogflow
+ */
+AssistantApp.prototype.ANY_TYPE_PROPERTY_ = '@type';
+
+/**
+ * List of built-in DialogSpec type names.
+ * @private
+ * @readonly
+ * @enum {string}
+ * @actionssdk
+ * @dialogflow
+ */
+AssistantApp.prototype.DialogSpecTypes_ = {
+  /** Place Dialog Spec. */
+  PLACE: 'type.googleapis.com/google.actions.v2.PlaceValueSpec.PlaceDialogSpec'
+};
+
+/**
  * List of built-in value type names.
  * @private
  * @readonly
@@ -2513,6 +2663,8 @@ AssistantApp.prototype.InputValueDataTypes_ = {
   DELIVERY_ADDRESS: 'type.googleapis.com/google.actions.v2.DeliveryAddressValueSpec',
   /** Transaction Decision Value Spec. */
   TRANSACTION_DECISION: 'type.googleapis.com/google.actions.v2.TransactionDecisionValueSpec',
+  /** Place Value Spec. */
+  PLACE: 'type.googleapis.com/google.actions.v2.PlaceValueSpec',
   /** Confirmation Value Spec. */
   CONFIRMATION: 'type.googleapis.com/google.actions.v2.ConfirmationValueSpec',
   /** DateTime Value Spec. */
@@ -2545,6 +2697,8 @@ AssistantApp.prototype.StandardIntents = {
   DELIVERY_ADDRESS: 'actions.intent.DELIVERY_ADDRESS',
   /** App fires TRANSACTION_DECISION intent when action asks for transaction decision. */
   TRANSACTION_DECISION: 'actions.intent.TRANSACTION_DECISION',
+  /** App fires PLACE intent when action asks for place. */
+  PLACE: 'actions.intent.PLACE',
   /** App fires CONFIRMATION intent when requesting affirmation from user. */
   CONFIRMATION: 'actions.intent.CONFIRMATION',
   /** App fires DATETIME intent when requesting date/time from user. */
@@ -2581,6 +2735,8 @@ AssistantApp.prototype.BuiltInArgNames = {
   DELIVERY_ADDRESS_VALUE: 'DELIVERY_ADDRESS_VALUE',
   /** Transactions decision argument. */
   TRANSACTION_DECISION_VALUE: 'TRANSACTION_DECISION_VALUE',
+  /** Place value argument. */
+  PLACE: 'PLACE',
   /** Confirmation argument. */
   CONFIRMATION: 'CONFIRMATION',
   /** DateTime argument. */
