@@ -280,7 +280,8 @@ const RichResponse = class {
   }
 
   /**
-   * Sets the suggestion link for this rich response.
+   * Sets the suggestion link for this rich response. The destination site must be verified
+   * (https://developers.google.com/actions/console/brand-verification).
    *
    * @param {string} destinationName Name of the link out destination.
    * @param {string} suggestionUrl - String URL to open when suggestion is used.
