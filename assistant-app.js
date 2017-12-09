@@ -224,108 +224,19 @@ class AssistantApp {
      */
     this.responded_ = false;
 
-    /**
-     * List of standard intents that the app provides.
-     * @readonly
-     * @enum {string}
-     * @actionssdk
-     * @dialogflow
-     */
-    this.StandardIntents = {
-      /** App fires MAIN intent for queries like [talk to $app]. */
-      MAIN: this.isNotApiVersionOne_() ? 'actions.intent.MAIN' : 'assistant.intent.action.MAIN',
-      /** App fires TEXT intent when action issues ask intent. */
-      TEXT: this.isNotApiVersionOne_() ? 'actions.intent.TEXT' : 'assistant.intent.action.TEXT',
-      /** App fires PERMISSION intent when action invokes askForPermission. */
-      PERMISSION: this.isNotApiVersionOne_() ? 'actions.intent.PERMISSION' : 'assistant.intent.action.PERMISSION',
-      /** App fires OPTION intent when user chooses from options provided. */
-      OPTION: 'actions.intent.OPTION',
-      /** App fires TRANSACTION_REQUIREMENTS_CHECK intent when action sets up transaction. */
-      TRANSACTION_REQUIREMENTS_CHECK: 'actions.intent.TRANSACTION_REQUIREMENTS_CHECK',
-      /** App fires DELIVERY_ADDRESS intent when action asks for delivery address. */
-      DELIVERY_ADDRESS: 'actions.intent.DELIVERY_ADDRESS',
-      /** App fires TRANSACTION_DECISION intent when action asks for transaction decision. */
-      TRANSACTION_DECISION: 'actions.intent.TRANSACTION_DECISION',
-      /** App fires CONFIRMATION intent when requesting affirmation from user. */
-      CONFIRMATION: 'actions.intent.CONFIRMATION',
-      /** App fires DATETIME intent when requesting date/time from user. */
-      DATETIME: 'actions.intent.DATETIME',
-      /** App fires SIGN_IN intent when requesting sign-in from user. */
-      SIGN_IN: 'actions.intent.SIGN_IN',
-      /** App fires NO_INPUT intent when user doesn't provide input. */
-      NO_INPUT: 'actions.intent.NO_INPUT',
-      /** App fires CANCEL intent when user exits app mid-dialog. */
-      CANCEL: 'actions.intent.CANCEL',
-      /** App fires NEW_SURFACE intent when requesting handoff to a new surface from user. */
-      NEW_SURFACE: 'actions.intent.NEW_SURFACE',
-      /** App fires REGISTER_UPDATE intent when requesting the user to register for proactive updates. */
-      REGISTER_UPDATE: 'actions.intent.REGISTER_UPDATE',
-      /** App receives CONFIGURE_UPDATES intent to indicate a custom REGISTER_UPDATE intent should be sent. */
-      CONFIGURE_UPDATES: 'actions.intent.CONFIGURE_UPDATES'
-    };
+    if (!this.isNotApiVersionOne_()) {
+      // Type annotations declared on the prototype below
+      this.StandardIntents = Object.assign({}, this.StandardIntents, {
+        MAIN: 'assistant.intent.action.MAIN',
+        TEXT: 'assistant.intent.action.TEXT',
+        PERMISSION: 'assistant.intent.action.PERMISSION'
+      });
 
-    /**
-     * List of supported permissions the app supports.
-     * @readonly
-     * @enum {string}
-     * @actionssdk
-     * @dialogflow
-     */
-    this.SupportedPermissions = {
-      /**
-       * The user's name as defined in the
-       * {@link https://developers.google.com/actions/reference/conversation#UserProfile|UserProfile object}
-       */
-      NAME: 'NAME',
-      /**
-       * The location of the user's current device, as defined in the
-       * {@link https://developers.google.com/actions/reference/conversation#Location|Location object}.
-       */
-      DEVICE_PRECISE_LOCATION: 'DEVICE_PRECISE_LOCATION',
-      /**
-       * City and zipcode corresponding to the location of the user's current device, as defined in the
-       * {@link https://developers.google.com/actions/reference/conversation#Location|Location object}.
-       */
-      DEVICE_COARSE_LOCATION: 'DEVICE_COARSE_LOCATION',
-      /**
-       * Confirmation to receive proactive content at any time from the app.
-       */
-      UPDATE: 'UPDATE'
-    };
-
-    /**
-     * List of built-in argument names.
-     * @readonly
-     * @enum {string}
-     * @actionssdk
-     * @dialogflow
-     */
-    this.BuiltInArgNames = {
-      /** Permission granted argument. */
-      PERMISSION_GRANTED: this.isNotApiVersionOne_() ? 'PERMISSION' : 'permission_granted',
-      /** Option selected argument. */
-      OPTION: 'OPTION',
-      /** Transaction requirements check result argument. */
-      TRANSACTION_REQ_CHECK_RESULT: 'TRANSACTION_REQUIREMENTS_CHECK_RESULT',
-      /** Delivery address value argument. */
-      DELIVERY_ADDRESS_VALUE: 'DELIVERY_ADDRESS_VALUE',
-      /** Transactions decision argument. */
-      TRANSACTION_DECISION_VALUE: 'TRANSACTION_DECISION_VALUE',
-      /** Confirmation argument. */
-      CONFIRMATION: 'CONFIRMATION',
-      /** DateTime argument. */
-      DATETIME: 'DATETIME',
-      /** Sign in status argument. */
-      SIGN_IN: 'SIGN_IN',
-      /** Reprompt count for consecutive NO_INPUT intents. */
-      REPROMPT_COUNT: 'REPROMPT_COUNT',
-      /** Flag representing finality of NO_INPUT intent. */
-      IS_FINAL_REPROMPT: 'IS_FINAL_REPROMPT',
-      /** New surface value argument. */
-      NEW_SURFACE: 'NEW_SURFACE',
-      /** Update registration value argument. */
-      REGISTER_UPDATE: 'REGISTER_UPDATE'
-    };
+      // Type annotations declared on the prototype below
+      this.BuiltInArgNames = Object.assign({}, this.BuiltInArgNames, {
+        PERMISSION_GRANTED: 'permission_granted'
+      });
+    }
 
     /**
      * The property name used when specifying an input value data spec.
@@ -336,35 +247,6 @@ class AssistantApp {
      * @dialogflow
      */
     this.ANY_TYPE_PROPERTY_ = '@type';
-
-    /**
-     * List of built-in value type names.
-     * @private
-     * @readonly
-     * @enum {string}
-     * @actionssdk
-     * @dialogflow
-     */
-    this.InputValueDataTypes_ = {
-      /** Permission Value Spec. */
-      PERMISSION: 'type.googleapis.com/google.actions.v2.PermissionValueSpec',
-      /** Option Value Spec. */
-      OPTION: 'type.googleapis.com/google.actions.v2.OptionValueSpec',
-      /** Transaction Requirements Check Value Spec. */
-      TRANSACTION_REQ_CHECK: 'type.googleapis.com/google.actions.v2.TransactionRequirementsCheckSpec',
-      /** Delivery Address Value Spec. */
-      DELIVERY_ADDRESS: 'type.googleapis.com/google.actions.v2.DeliveryAddressValueSpec',
-      /** Transaction Decision Value Spec. */
-      TRANSACTION_DECISION: 'type.googleapis.com/google.actions.v2.TransactionDecisionValueSpec',
-      /** Confirmation Value Spec. */
-      CONFIRMATION: 'type.googleapis.com/google.actions.v2.ConfirmationValueSpec',
-      /** DateTime Value Spec. */
-      DATETIME: 'type.googleapis.com/google.actions.v2.DateTimeValueSpec',
-      /** New Surface Value Spec. */
-      NEW_SURFACE: 'type.googleapis.com/google.actions.v2.NewSurfaceValueSpec',
-      /** Register Update Value Spec. */
-      REGISTER_UPDATE: 'type.googleapis.com/google.actions.v2.RegisterUpdateValueSpec'
-    };
 
     /**
      * List of possible conversation stages, as defined in the
@@ -414,24 +296,6 @@ class AssistantApp {
     };
 
     /**
-     * List of surface capabilities supported by the app.
-     * @readonly
-     * @enum {string}
-     * @actionssdk
-     * @dialogflow
-     */
-    this.SurfaceCapabilities = {
-      /**
-       * The ability to output audio.
-       */
-      AUDIO_OUTPUT: 'actions.capability.AUDIO_OUTPUT',
-      /**
-       * The ability to output on a screen
-       */
-      SCREEN_OUTPUT: 'actions.capability.SCREEN_OUTPUT'
-    };
-
-    /**
      * List of possible user input types.
      * @readonly
      * @enum {number}
@@ -458,24 +322,6 @@ class AssistantApp {
     };
 
     /**
-     * List of possible sign in result status values.
-     * @readonly
-     * @enum {string}
-     * @actionssdk
-     * @dialogflow
-     */
-    this.SignInStatus = {
-      // Unknown status.
-      UNSPECIFIED: 'SIGN_IN_STATUS_UNSPECIFIED',
-      // User successfully completed the account linking.
-      OK: 'OK',
-      // Cancelled or dismissed account linking.
-      CANCELLED: 'CANCELLED',
-      // System or network error.
-      ERROR: 'ERROR'
-    };
-
-    /**
      * API version describes version of the Assistant request.
      * @deprecated
      * @private
@@ -487,13 +333,6 @@ class AssistantApp {
       this.apiVersion_ = this.request_.get(CONVERSATION_API_VERSION_HEADER);
       debug(`Assistant API version: ${this.apiVersion_}`);
     }
-
-    /**
-     * Values related to supporting {@link Transactions}.
-     * @readonly
-     * @type {object}
-     */
-    this.Transactions = TransactionValues;
 
     /**
      * Possible update trigger time context frequencies.
@@ -2578,6 +2417,181 @@ class AssistantApp {
     return paymentOptions;
   }
 }
+
+/**
+ * List of possible sign in result status values.
+ * @readonly
+ * @enum {string}
+ * @actionssdk
+ * @dialogflow
+ */
+AssistantApp.prototype.SignInStatus = {
+  // Unknown status.
+  UNSPECIFIED: 'SIGN_IN_STATUS_UNSPECIFIED',
+  // User successfully completed the account linking.
+  OK: 'OK',
+  // Cancelled or dismissed account linking.
+  CANCELLED: 'CANCELLED',
+  // System or network error.
+  ERROR: 'ERROR'
+};
+
+/**
+ * List of surface capabilities supported by the app.
+ * @readonly
+ * @enum {string}
+ * @actionssdk
+ * @dialogflow
+ */
+AssistantApp.prototype.SurfaceCapabilities = {
+  /**
+   * The ability to output audio.
+   */
+  AUDIO_OUTPUT: 'actions.capability.AUDIO_OUTPUT',
+  /**
+   * The ability to output on a screen
+   */
+  SCREEN_OUTPUT: 'actions.capability.SCREEN_OUTPUT'
+};
+
+/**
+ * List of supported permissions the app supports.
+ * @readonly
+ * @enum {string}
+ * @actionssdk
+ * @dialogflow
+ */
+AssistantApp.prototype.SupportedPermissions = {
+  /**
+   * The user's name as defined in the
+   * {@link https://developers.google.com/actions/reference/conversation#UserProfile|UserProfile object}
+   */
+  NAME: 'NAME',
+  /**
+   * The location of the user's current device, as defined in the
+   * {@link https://developers.google.com/actions/reference/conversation#Location|Location object}.
+   */
+  DEVICE_PRECISE_LOCATION: 'DEVICE_PRECISE_LOCATION',
+  /**
+   * City and zipcode corresponding to the location of the user's current device, as defined in the
+   * {@link https://developers.google.com/actions/reference/conversation#Location|Location object}.
+   */
+  DEVICE_COARSE_LOCATION: 'DEVICE_COARSE_LOCATION',
+  /**
+   * Confirmation to receive proactive content at any time from the app.
+   */
+  UPDATE: 'UPDATE'
+};
+
+/**
+ * List of built-in value type names.
+ * @private
+ * @readonly
+ * @enum {string}
+ * @actionssdk
+ * @dialogflow
+ */
+AssistantApp.prototype.InputValueDataTypes_ = {
+  /** Permission Value Spec. */
+  PERMISSION: 'type.googleapis.com/google.actions.v2.PermissionValueSpec',
+  /** Option Value Spec. */
+  OPTION: 'type.googleapis.com/google.actions.v2.OptionValueSpec',
+  /** Transaction Requirements Check Value Spec. */
+  TRANSACTION_REQ_CHECK: 'type.googleapis.com/google.actions.v2.TransactionRequirementsCheckSpec',
+  /** Delivery Address Value Spec. */
+  DELIVERY_ADDRESS: 'type.googleapis.com/google.actions.v2.DeliveryAddressValueSpec',
+  /** Transaction Decision Value Spec. */
+  TRANSACTION_DECISION: 'type.googleapis.com/google.actions.v2.TransactionDecisionValueSpec',
+  /** Confirmation Value Spec. */
+  CONFIRMATION: 'type.googleapis.com/google.actions.v2.ConfirmationValueSpec',
+  /** DateTime Value Spec. */
+  DATETIME: 'type.googleapis.com/google.actions.v2.DateTimeValueSpec',
+  /** New Surface Value Spec. */
+  NEW_SURFACE: 'type.googleapis.com/google.actions.v2.NewSurfaceValueSpec',
+  /** Register Update Value Spec. */
+  REGISTER_UPDATE: 'type.googleapis.com/google.actions.v2.RegisterUpdateValueSpec'
+};
+
+/**
+ * List of standard intents that the app provides.
+ * @readonly
+ * @enum {string}
+ * @actionssdk
+ * @dialogflow
+ */
+AssistantApp.prototype.StandardIntents = {
+  /** App fires MAIN intent for queries like [talk to $app]. */
+  MAIN: 'actions.intent.MAIN',
+  /** App fires TEXT intent when action issues ask intent. */
+  TEXT: 'actions.intent.TEXT',
+  /** App fires PERMISSION intent when action invokes askForPermission. */
+  PERMISSION: 'actions.intent.PERMISSION',
+  /** App fires OPTION intent when user chooses from options provided. */
+  OPTION: 'actions.intent.OPTION',
+  /** App fires TRANSACTION_REQUIREMENTS_CHECK intent when action sets up transaction. */
+  TRANSACTION_REQUIREMENTS_CHECK: 'actions.intent.TRANSACTION_REQUIREMENTS_CHECK',
+  /** App fires DELIVERY_ADDRESS intent when action asks for delivery address. */
+  DELIVERY_ADDRESS: 'actions.intent.DELIVERY_ADDRESS',
+  /** App fires TRANSACTION_DECISION intent when action asks for transaction decision. */
+  TRANSACTION_DECISION: 'actions.intent.TRANSACTION_DECISION',
+  /** App fires CONFIRMATION intent when requesting affirmation from user. */
+  CONFIRMATION: 'actions.intent.CONFIRMATION',
+  /** App fires DATETIME intent when requesting date/time from user. */
+  DATETIME: 'actions.intent.DATETIME',
+  /** App fires SIGN_IN intent when requesting sign-in from user. */
+  SIGN_IN: 'actions.intent.SIGN_IN',
+  /** App fires NO_INPUT intent when user doesn't provide input. */
+  NO_INPUT: 'actions.intent.NO_INPUT',
+  /** App fires CANCEL intent when user exits app mid-dialog. */
+  CANCEL: 'actions.intent.CANCEL',
+  /** App fires NEW_SURFACE intent when requesting handoff to a new surface from user. */
+  NEW_SURFACE: 'actions.intent.NEW_SURFACE',
+  /** App fires REGISTER_UPDATE intent when requesting the user to register for proactive updates. */
+  REGISTER_UPDATE: 'actions.intent.REGISTER_UPDATE',
+  /** App receives CONFIGURE_UPDATES intent to indicate a custom REGISTER_UPDATE intent should be sent. */
+  CONFIGURE_UPDATES: 'actions.intent.CONFIGURE_UPDATES'
+};
+
+/**
+ * List of built-in argument names.
+ * @readonly
+ * @enum {string}
+ * @actionssdk
+ * @dialogflow
+ */
+AssistantApp.prototype.BuiltInArgNames = {
+  /** Permission granted argument. */
+  PERMISSION_GRANTED: 'acitons.intent.PERMISSION_GRANTED',
+  /** Option selected argument. */
+  OPTION: 'OPTION',
+  /** Transaction requirements check result argument. */
+  TRANSACTION_REQ_CHECK_RESULT: 'TRANSACTION_REQUIREMENTS_CHECK_RESULT',
+  /** Delivery address value argument. */
+  DELIVERY_ADDRESS_VALUE: 'DELIVERY_ADDRESS_VALUE',
+  /** Transactions decision argument. */
+  TRANSACTION_DECISION_VALUE: 'TRANSACTION_DECISION_VALUE',
+  /** Confirmation argument. */
+  CONFIRMATION: 'CONFIRMATION',
+  /** DateTime argument. */
+  DATETIME: 'DATETIME',
+  /** Sign in status argument. */
+  SIGN_IN: 'SIGN_IN',
+  /** Reprompt count for consecutive NO_INPUT intents. */
+  REPROMPT_COUNT: 'REPROMPT_COUNT',
+  /** Flag representing finality of NO_INPUT intent. */
+  IS_FINAL_REPROMPT: 'IS_FINAL_REPROMPT',
+  /** New surface value argument. */
+  NEW_SURFACE: 'NEW_SURFACE',
+  /** Update registration value argument. */
+  REGISTER_UPDATE: 'REGISTER_UPDATE'
+};
+
+/**
+ * Values related to supporting {@link Transactions}.
+ * @readonly
+ * @type {object}
+ */
+AssistantApp.prototype.Transactions = TransactionValues;
 
 /**
  * Utility class for representing intents by name.
