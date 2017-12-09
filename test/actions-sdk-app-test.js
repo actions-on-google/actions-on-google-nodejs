@@ -531,6 +531,120 @@ describe('ActionsSdkApp', function () {
     });
   });
 
+ /**
+   * Describes the behavior for ActionsSdkApp setSpeechBiasingHints method.
+   */
+  describe('#setSpeechBiasingHints', function () {
+      // Success case test, when the API returns a valid 200 response with the response object
+    it('Should return the valid JSON in the response object for the advanced success case.', function () {
+      const mockRequest = new MockRequest(headerV1, actionsSdkAppRequestBodyLive);
+      const app = new ActionsSdkApp({
+        request: mockRequest,
+        response: mockResponse
+      });
+
+      let inputPrompt = app.buildInputPrompt(false, 'Welcome to action snippets! Say a word.',
+        ['Say any word', 'Pick a word', 'What is the word?']);
+      const SPEECH_BIASING_HINTS = ['word1', 'word2', 'word3'];
+      app.setSpeechBiasingHints(SPEECH_BIASING_HINTS);
+      app.ask(inputPrompt);
+
+      // Validating the response object
+      let expectedResponse = {
+        'conversation_token': '{"state":null,"data":{}}',
+        'user_storage': '{"data":{}}',
+        'expect_user_response': true,
+        'expected_inputs': [
+          {
+            'input_prompt': {
+              'initial_prompts': [
+                {
+                  'text_to_speech': 'Welcome to action snippets! Say a word.'
+                }
+              ],
+              'no_input_prompts': [
+                {
+                  'text_to_speech': 'Say any word'
+                },
+                {
+                  'text_to_speech': 'Pick a word'
+                },
+                {
+                  'text_to_speech': 'What is the word?'
+                }
+              ]
+            },
+            'possible_intents': [
+              {
+                'intent': 'assistant.intent.action.TEXT'
+              }
+            ],
+            'speech_biasing_hints': [
+              'word1',
+              'word2',
+              'word3'
+            ]
+          }
+        ]
+      };
+      expect(JSON.stringify(mockResponse.body)).to.equal(JSON.stringify(expectedResponse));
+    });
+
+      // Success case test, when the API returns a valid 200 response with the response object
+    it('Should return the valid JSON in the response object for the advanced success case in V2.', function () {
+      const mockRequest = new MockRequest(headerV2, actionsSdkAppRequestBodyLive);
+      const app = new ActionsSdkApp({
+        request: mockRequest,
+        response: mockResponse
+      });
+      let inputPrompt = app.buildInputPrompt(false, 'Welcome to action snippets! Say a word.',
+        ['Say any word', 'Pick a word', 'What is the word?']);
+      const SPEECH_BIASING_HINTS = ['word1', 'word2', 'word3'];
+      app.setSpeechBiasingHints(SPEECH_BIASING_HINTS);
+      app.ask(inputPrompt);
+
+      // Validating the response object
+      let expectedResponse = {
+        'conversationToken': '{"state":null,"data":{}}',
+        'userStorage': '{"data":{}}',
+        'expectUserResponse': true,
+        'expectedInputs': [
+          {
+            'inputPrompt': {
+              'initialPrompts': [
+                {
+                  'textToSpeech': 'Welcome to action snippets! Say a word.'
+                }
+              ],
+              'noInputPrompts': [
+                {
+                  'textToSpeech': 'Say any word'
+                },
+                {
+                  'textToSpeech': 'Pick a word'
+                },
+                {
+                  'textToSpeech': 'What is the word?'
+                }
+              ]
+            },
+            'possibleIntents': [
+              {
+                'intent': 'actions.intent.TEXT'
+              }
+            ],
+            'speechBiasingHints': [
+              'word1',
+              'word2',
+              'word3'
+            ]
+          }
+        ]
+      };
+      expect(JSON.stringify(mockResponse.body)).to.equal(JSON.stringify(expectedResponse));
+    });
+  });
+
   /**
    * Describes the behavior for ActionsSdkApp askWithList method.
    */

@@ -412,7 +412,7 @@ class ActionsSdkApp extends AssistantApp {
     } else {
       const newSpeechBiasingHints = hints;
       this.newSpeechBiasingHints = newSpeechBiasingHints;
-    };
+    }
   }
 
   /**
@@ -463,8 +463,8 @@ class ActionsSdkApp extends AssistantApp {
       error('Error in building expected intent');
       return null;
     }
-    let speechBiasingHints = undefined;
-    if (this.newSpeechBiasingHints){
+    let speechBiasingHints;
+    if (this.newSpeechBiasingHints) {
       speechBiasingHints = this.newSpeechBiasingHints;
     }
     return this.buildAskHelper_(inputPrompt, [expectedIntent], dialogState, speechBiasingHints);
@@ -526,8 +526,8 @@ class ActionsSdkApp extends AssistantApp {
       error('Error in building expected intent');
       return null;
     }
-    let speechBiasingHints = undefined;
-    if (this.newSpeechBiasingHints){
+    let speechBiasingHints;
+    if (this.newSpeechBiasingHints) {
       speechBiasingHints = this.newSpeechBiasingHints;
     }
     if (this.isNotApiVersionOne_()) {
@@ -603,8 +603,8 @@ class ActionsSdkApp extends AssistantApp {
       error('Error in building expected intent');
       return null;
     }
-    let speechBiasingHints = undefined;
-    if (this.newSpeechBiasingHints){
+    let speechBiasingHints;
+    if (this.newSpeechBiasingHints) {
       speechBiasingHints = this.newSpeechBiasingHints;
     }
     if (this.isNotApiVersionOne_()) {
@@ -864,8 +864,8 @@ class ActionsSdkApp extends AssistantApp {
       };
       const inputPrompt = this.buildInputPrompt(false,
         'PLACEHOLDER_FOR_PERMISSION');
-      let speechBiasingHints = undefined;
-      if (this.newSpeechBiasingHints){
+      let speechBiasingHints;
+      if (this.newSpeechBiasingHints) {
         speechBiasingHints = this.newSpeechBiasingHints;
       }
       return this.buildAskHelper_(inputPrompt, [expectedIntent], dialogState, speechBiasingHints);
@@ -909,8 +909,8 @@ class ActionsSdkApp extends AssistantApp {
     // Send an Ask request to Assistant.
     const inputPrompt = this.buildInputPrompt(false, promptPlaceholder ||
       'PLACEHOLDER_FOR_INTENT');
-    let speechBiasingHints = undefined;
-    if (this.newSpeechBiasingHints){
+    let speechBiasingHints;
+    if (this.newSpeechBiasingHints) {
       speechBiasingHints = this.newSpeechBiasingHints;
     }
     return this.buildAskHelper_(inputPrompt, [expectedIntent], dialogState, speechBiasingHints);
