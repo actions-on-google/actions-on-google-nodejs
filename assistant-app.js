@@ -329,6 +329,7 @@ class AssistantApp {
 
     /**
      * The property name used when specifying an input value data spec.
+     * @private
      * @readonly
      * @type {string}
      * @actionssdk
