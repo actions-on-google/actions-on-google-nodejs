@@ -115,7 +115,7 @@ class ActionsSdkApp extends AssistantApp {
       }
       googleAuthClient.verifyIdToken(jwtToken, projectId, (err, login) => {
         if (err) {
-          error('ID token verification Failed: ' + err);
+          error(`ID token verification Failed: ${err}`);
           reject(err);
         } else {
           resolve(login);
@@ -159,7 +159,7 @@ class ActionsSdkApp extends AssistantApp {
       }
       googleAuthClient.verifyIdToken(jwtToken, projectId, (err, login) => {
         if (err) {
-          error('ID token verification Failed: ' + err);
+          error(`ID token verification Failed: ${err}`);
           reject(err);
         } else {
           resolve(login);
@@ -248,9 +248,8 @@ class ActionsSdkApp extends AssistantApp {
     const versionLabel = this.request_.get(CONVERSATION_API_AGENT_VERSION_HEADER);
     if (versionLabel) {
       return versionLabel;
-    } else {
-      return null;
     }
+    return null;
   }
 
   /**
@@ -615,17 +614,15 @@ class ActionsSdkApp extends AssistantApp {
           textToSpeech: textToSpeech
         };
       }
-    } else {
-      if (textToSpeech.items) {
-        finalResponse.richResponse = textToSpeech;
-      } else if (textToSpeech.speech) {
-        finalResponse.richResponse = this.buildRichResponse()
+    } else if (textToSpeech.items) {
+      finalResponse.richResponse = textToSpeech;
+    } else if (textToSpeech.speech) {
+      finalResponse.richResponse = this.buildRichResponse()
           .addSimpleResponse(textToSpeech);
-      } else {
-        this.handleError_('Invalid speech response. Must be string, ' +
+    } else {
+      this.handleError_('Invalid speech response. Must be string, ' +
           'RichResponse or SimpleResponse.');
-        return null;
-      }
+      return null;
     }
     const response = this.buildResponseHelper_(null, false, null, finalResponse);
     return this.doResponse_(response, RESPONSE_CODE_OK);
@@ -674,12 +671,11 @@ class ActionsSdkApp extends AssistantApp {
         initialPrompts: this.buildPromptsFromSsmlHelper_(initials),
         noInputPrompts: this.buildPromptsFromSsmlHelper_(noInputs)
       };
-    } else {
-      return {
-        initialPrompts: this.buildPromptsFromPlainTextHelper_(initials),
-        noInputPrompts: this.buildPromptsFromPlainTextHelper_(noInputs)
-      };
     }
+    return {
+      initialPrompts: this.buildPromptsFromPlainTextHelper_(initials),
+      noInputPrompts: this.buildPromptsFromPlainTextHelper_(noInputs)
+    };
   }
 
 // ---------------------------------------------------------------------------
@@ -793,18 +789,17 @@ class ActionsSdkApp extends AssistantApp {
       return this.fulfillSystemIntent_(this.StandardIntents.PERMISSION,
         this.InputValueDataTypes_.PERMISSION, permissionsSpec,
         'PLACEHOLDER_FOR_PERMISSION', dialogState);
-    } else {
-      // Build an Expected Intent object.
-      const expectedIntent = {
-        intent: this.StandardIntents.PERMISSION
-      };
-      expectedIntent.inputValueSpec = {
-        permissionValueSpec: permissionsSpec
-      };
-      const inputPrompt = this.buildInputPrompt(false,
-        'PLACEHOLDER_FOR_PERMISSION');
-      return this.buildAskHelper_(inputPrompt, [expectedIntent], dialogState);
     }
+      // Build an Expected Intent object.
+    const expectedIntent = {
+      intent: this.StandardIntents.PERMISSION
+    };
+    expectedIntent.inputValueSpec = {
+      permissionValueSpec: permissionsSpec
+    };
+    const inputPrompt = this.buildInputPrompt(false,
+        'PLACEHOLDER_FOR_PERMISSION');
+    return this.buildAskHelper_(inputPrompt, [expectedIntent], dialogState);
   }
 
   /**
@@ -867,13 +862,11 @@ class ActionsSdkApp extends AssistantApp {
     }
     if (typeof inputPrompt === 'string') {
       inputPrompt = this.buildInputPrompt(this.isSsml_(inputPrompt), inputPrompt);
-    } else {
-      if (inputPrompt.speech) {
-        inputPrompt = { richInitialPrompt: this.buildRichResponse()
+    } else if (inputPrompt.speech) {
+      inputPrompt = { richInitialPrompt: this.buildRichResponse()
           .addSimpleResponse(inputPrompt) };
-      } else if (inputPrompt.items) {
-        inputPrompt = { richInitialPrompt: inputPrompt };
-      }
+    } else if (inputPrompt.items) {
+      inputPrompt = { richInitialPrompt: inputPrompt };
     }
     if (!dialogState) {
       dialogState = {

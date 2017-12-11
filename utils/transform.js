@@ -103,8 +103,8 @@ function transform (object, keyTransformation) {
     });
   } else if (object && typeof object === 'object') {
     newObject = {};
-    for (let key of Object.keys(object)) {
-      let transformedKey = keyTransformation(key);
+    for (const key of Object.keys(object)) {
+      const transformedKey = keyTransformation(key);
       newObject[transformedKey] = transform(object[key], keyTransformation);
     }
   }

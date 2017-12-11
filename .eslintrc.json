@@ -32,7 +32,22 @@
         "String": "string"
       }
     }],
-    "prefer-destructuring": "error"
+    "prefer-destructuring": "error",
+    "quotes": [ "error", "single", {
+      "avoidEscape": true,
+      "allowTemplateLiterals": true
+    }],
+    "prefer-template": "error",
+    "prefer-const": "error",
+    "no-var": "error",
+    "no-useless-concat": "error",
+    "no-multi-str": "error",
+    "no-else-return": "error",
+    "no-lonely-if": "error",
+    "curly": ["error", "all"],
+    "brace-style": ["error", "1tbs", {
+      "allowSingleLine": false
+    }]
   },
   "plugins": [
     "chai-friendly",

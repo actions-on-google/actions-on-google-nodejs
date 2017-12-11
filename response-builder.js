@@ -161,7 +161,7 @@ const RichResponse = class {
     if (richResponse) {
       if (richResponse.items) {
         this.items = richResponse.items;
-        for (let item of this.items) {
+        for (const item of this.items) {
           if (item.basicCard) {
             item.basicCard = new BasicCard(item.basicCard);
           }
@@ -190,7 +190,7 @@ const RichResponse = class {
     }
     // Validate if RichResponse already contains two SimpleResponse objects
     let simpleResponseCount = 0;
-    for (let item of this.items) {
+    for (const item of this.items) {
       if (item.simpleResponse) {
         simpleResponseCount++;
       }
@@ -224,7 +224,7 @@ const RichResponse = class {
       return this;
     }
     // Validate if basic card is already present
-    for (let item of this.items) {
+    for (const item of this.items) {
       if (item.basicCard) {
         error('Cannot include >1 BasicCard in RichResponse');
         return this;
@@ -249,21 +249,19 @@ const RichResponse = class {
       return this;
     }
     if (Array.isArray(suggestions)) {
-      for (let suggestion of suggestions) {
+      for (const suggestion of suggestions) {
         if (this.isValidSuggestionText(suggestion)) {
           this.suggestions.push({title: suggestion});
         } else {
-          warn('Suggestion text can\'t be longer than 25 characters: ' + suggestion +
-            '. This suggestion won\'t be added to the list.');
+          warn(`Suggestion text can't be longer than 25 characters: ${suggestion}. ` +
+            `This suggestion won't be added to the list.`);
         }
       }
+    } else if (this.isValidSuggestionText(suggestions)) {
+      this.suggestions.push({title: suggestions});
     } else {
-      if (this.isValidSuggestionText(suggestions)) {
-        this.suggestions.push({title: suggestions});
-      } else {
-        warn('Suggestion text can\'t be longer than 25 characters: ' + suggestions +
-            '. This suggestion won\'t be added to the list.');
-      }
+      warn(`Suggestion text can't be longer than 25 characters: ${suggestions}. ` +
+        `This suggestion won't be added to the list.`);
     }
     return this;
   }
@@ -316,7 +314,7 @@ const RichResponse = class {
       return this;
     }
     // Validate if RichResponse already contains StructuredResponse object
-    for (let item of this.items) {
+    for (const item of this.items) {
       if (item.structuredResponse) {
         debug('Cannot include >1 StructuredResponses in RichResponse');
         return this;
@@ -576,7 +574,7 @@ const List = class {
       if (typeof list === 'string') {
         this.title = list;
       } else if (Array.isArray(list)) {
-        for (let item of list) {
+        for (const item of list) {
           this.items.push(new OptionItem(item));
         }
       } else if (typeof list === 'object') {
@@ -584,7 +582,7 @@ const List = class {
           this.title = list.title;
         }
         if (list.items) {
-          for (let item of list.items) {
+          for (const item of list.items) {
             this.items.push(new OptionItem(item));
           }
         }
@@ -619,7 +617,7 @@ const List = class {
       return this;
     }
     if (Array.isArray(optionItems)) {
-      for (let item of optionItems) {
+      for (const item of optionItems) {
         this.items.push(item);
       }
     } else {
@@ -627,8 +625,7 @@ const List = class {
     }
     if (this.items.length > LIST_ITEM_LIMIT) {
       this.items = this.items.slice(0, LIST_ITEM_LIMIT);
-      error('List can have no more than ' + LIST_ITEM_LIMIT +
-        ' items');
+      error(`List can have no more than ${LIST_ITEM_LIMIT} items`);
     }
     return this;
   }
@@ -654,12 +651,12 @@ const Carousel = class {
 
     if (carousel) {
       if (Array.isArray(carousel)) {
-        for (let item of carousel) {
+        for (const item of carousel) {
           this.items.push(new OptionItem(item));
         }
       } else if (typeof carousel === 'object') {
         if (carousel.items) {
-          for (let item of carousel.items) {
+          for (const item of carousel.items) {
             this.items.push(new OptionItem(item));
           }
         }
@@ -679,7 +676,7 @@ const Carousel = class {
       return this;
     }
     if (Array.isArray(optionItems)) {
-      for (let item of optionItems) {
+      for (const item of optionItems) {
         this.items.push(item);
       }
     } else {
@@ -687,8 +684,7 @@ const Carousel = class {
     }
     if (this.items.length > CAROUSEL_ITEM_LIMIT) {
       this.items = this.items.slice(0, CAROUSEL_ITEM_LIMIT);
-      error('Carousel can have no more than ' + CAROUSEL_ITEM_LIMIT +
-        ' items');
+      error(`Carousel can have no more than ${CAROUSEL_ITEM_LIMIT} items`);
     }
     return this;
   }
@@ -840,7 +836,7 @@ const OptionItem = class {
       return this;
     }
     if (Array.isArray(synonyms)) {
-      for (let synonym of synonyms) {
+      for (const synonym of synonyms) {
         this.optionInfo.synonyms.push(synonym);
       }
     } else {

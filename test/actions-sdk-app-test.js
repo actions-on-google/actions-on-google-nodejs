@@ -182,14 +182,14 @@ describe('ActionsSdkApp', function () {
 
       // Success case test, when the API returns a valid 200 response with the response object
     it('Should return the valid JSON in the response object for the success case.', function () {
-      let inputPrompt = app.buildInputPrompt(true, '<speak>Hi! <break time="1"/> ' +
+      const inputPrompt = app.buildInputPrompt(true, '<speak>Hi! <break time="1"/> ' +
         'I can read out an ordinal like ' +
         '<say-as interpret-as="ordinal">123</say-as>. Say a number.</speak>',
         ['I didn\'t hear a number', 'If you\'re still there, what\'s the number?', 'What is the number?']);
       app.ask(inputPrompt);
 
           // Validating the response object
-      let expectedResponse = {
+      const expectedResponse = {
         'conversation_token': '{"state":null,"data":{}}',
         'user_storage': '{"data":{}}',
         'expect_user_response': true,
@@ -226,7 +226,7 @@ describe('ActionsSdkApp', function () {
 
     it('Should return the valid JSON in the response object for the success case when String text was asked w/o input prompts.', function () {
       app.ask('What can I help you with?');
-      let expectedResponse = {
+      const expectedResponse = {
         'conversation_token': '{"state":null,"data":{}}',
         'user_storage': '{"data":{}}',
         'expect_user_response': true,
@@ -256,7 +256,7 @@ describe('ActionsSdkApp', function () {
     it('Should return the valid JSON in the response object for the success case when SSML text was asked w/o input prompts.', function () {
       app.ask('<speak>What <break time="1"/> can I help you with?</speak>');
       // Validating the response object
-      let expectedResponse = {
+      const expectedResponse = {
         'conversation_token': '{"state":null,"data":{}}',
         'user_storage': '{"data":{}}',
         'expect_user_response': true,
@@ -284,11 +284,11 @@ describe('ActionsSdkApp', function () {
     });
 
     it('Should return the valid JSON in the response object for the advanced success case.', function () {
-      let inputPrompt = app.buildInputPrompt(false, 'Welcome to action snippets! Say a number.',
+      const inputPrompt = app.buildInputPrompt(false, 'Welcome to action snippets! Say a number.',
         ['Say any number', 'Pick a number', 'What is the number?']);
       app.ask(inputPrompt);
       // Validating the response object
-      let expectedResponse = {
+      const expectedResponse = {
         'conversation_token': '{"state":null,"data":{}}',
         'user_storage': '{"data":{}}',
         'expect_user_response': true,
@@ -326,7 +326,7 @@ describe('ActionsSdkApp', function () {
     it('Should return the valid simple response JSON in the response object for the success case.', function () {
       app.ask({ speech: 'hello', displayText: 'hi' });
       // Validating the response object
-      let expectedResponse = {
+      const expectedResponse = {
         'conversation_token': '{"state":null,"data":{}}',
         'user_storage': '{"data":{}}',
         'expect_user_response': true,
@@ -364,7 +364,7 @@ describe('ActionsSdkApp', function () {
         .addSuggestions(['Say this', 'or this']));
 
       // Validating the response object
-      let expectedResponse = {
+      const expectedResponse = {
         'conversation_token': '{"state":null,"data":{}}',
         'expect_user_response': true,
         'user_storage': '{"data":{}}',
@@ -420,7 +420,7 @@ describe('ActionsSdkApp', function () {
     // Success case test, when the API returns a valid 200 response with the response object
     it('Should return the valid JSON in the response object for the success case.', function () {
       app.tell('Goodbye!');
-      let expectedResponse = {
+      const expectedResponse = {
         'user_storage': '{"data":{}}',
         'expect_user_response': false,
         'final_response': {
@@ -437,7 +437,7 @@ describe('ActionsSdkApp', function () {
       app.tell({ speech: 'hello', displayText: 'hi' });
 
       // Validating the response object
-      let expectedResponse = {
+      const expectedResponse = {
         'user_storage': '{"data":{}}',
         'expect_user_response': false,
         'final_response': {
@@ -465,7 +465,7 @@ describe('ActionsSdkApp', function () {
         .addSuggestions(['Say this', 'or this']));
 
       // Validating the response object
-      let expectedResponse = {
+      const expectedResponse = {
         'user_storage': '{"data":{}}',
         'expect_user_response': false,
         'final_response': {
@@ -501,7 +501,7 @@ describe('ActionsSdkApp', function () {
         });
       }
 
-      let actionMap = new Map();
+      const actionMap = new Map();
       actionMap.set('intent_name_not_present_in_the_body', handler);
 
       app.handleRequest(actionMap);
@@ -554,7 +554,7 @@ describe('ActionsSdkApp', function () {
         });
 
       // Validating the response object
-      let expectedResponse = {
+      const expectedResponse = {
         'conversationToken': '{"optionType":"list"}',
         'userStorage': '{"data":{}}',
         'expectUserResponse': true,
@@ -637,7 +637,7 @@ describe('ActionsSdkApp', function () {
         });
 
       // Validating the response object
-      let expectedResponse = {
+      const expectedResponse = {
         'conversationToken': '{"optionType":"carousel"}',
         'userStorage': '{"data":{}}',
         'expectUserResponse': true,
@@ -718,7 +718,7 @@ describe('ActionsSdkApp', function () {
       });
 
       // Validating the response object
-      let expectedResponse = {
+      const expectedResponse = {
         'conversation_token': '{"carType":"big"}',
         'user_storage': '{"data":{}}',
         'expect_user_response': true,
@@ -764,7 +764,7 @@ describe('ActionsSdkApp', function () {
         carType: 'big'
       });
       // Validating the response object
-      let expectedResponse = {
+      const expectedResponse = {
         'conversationToken': '{"carType":"big"}',
         'userStorage': '{"data":{}}',
         'expectUserResponse': true,
@@ -811,7 +811,7 @@ describe('ActionsSdkApp', function () {
     });
     // Success case test, when the API returns a valid 200 response with the response object
     it('Should return valid JSON transaction requirements with Google payment options', function () {
-      let transactionConfig = {
+      const transactionConfig = {
         deliveryAddressRequired: true,
         tokenizationParameters: {
           myParam: 'myParam'
@@ -823,7 +823,7 @@ describe('ActionsSdkApp', function () {
         prepaidCardDisallowed: false
       };
       app.askForTransactionRequirements(transactionConfig, { cartSize: 2 });
-      let expectedResponse = {
+      const expectedResponse = {
         'conversationToken': '{"cartSize":2}',
         'userStorage': '{"data":{}}',
         'expectUserResponse': true,
@@ -872,7 +872,7 @@ describe('ActionsSdkApp', function () {
 
     // Success case test, when the API returns a valid 200 response with the response object
     it('Should return valid JSON transaction requirements with Google payment options and custom tokenization type', function () {
-      let transactionConfig = {
+      const transactionConfig = {
         deliveryAddressRequired: true,
         tokenizationParameters: {
           myParam: 'myParam'
@@ -885,7 +885,7 @@ describe('ActionsSdkApp', function () {
         tokenizationType: 'CUSTOM STRING'
       };
       app.askForTransactionRequirements(transactionConfig, { cartSize: 2 });
-      let expectedResponse = {
+      const expectedResponse = {
         'conversationToken': '{"cartSize":2}',
         'userStorage': '{"data":{}}',
         'expectUserResponse': true,
@@ -934,13 +934,13 @@ describe('ActionsSdkApp', function () {
 
     // Success case test, when the API returns a valid 200 response with the response object
     it('Should return valid JSON transaction requirements with Action payment options', function () {
-      let transactionConfig = {
+      const transactionConfig = {
         deliveryAddressRequired: true,
         type: 'BANK',
         displayName: 'Checking-4773'
       };
       app.askForTransactionRequirements(transactionConfig, { cartSize: 2 });
-      let expectedResponse = {
+      const expectedResponse = {
         'conversationToken': '{"cartSize":2}',
         'userStorage': '{"data":{}}',
         'expectUserResponse': true,
@@ -985,13 +985,13 @@ describe('ActionsSdkApp', function () {
   describe('#askForDeliveryAddress', function () {
     // Success case test, when the API returns a valid 200 response with the response object
     it('Should return valid JSON delivery address', function () {
-      let mockRequest = new MockRequest(headerV2, actionsSdkAppRequestBodyLive);
-      let app = new ActionsSdkApp({
+      const mockRequest = new MockRequest(headerV2, actionsSdkAppRequestBodyLive);
+      const app = new ActionsSdkApp({
         request: mockRequest,
         response: mockResponse
       });
       app.askForDeliveryAddress('Just because', { cartSize: 2 });
-      let expectedResponse = {
+      const expectedResponse = {
         'conversationToken': '{"cartSize":2}',
         'userStorage': '{"data":{}}',
         'expectUserResponse': true,
@@ -1038,7 +1038,7 @@ describe('ActionsSdkApp', function () {
     });
     // Success case test, when the API returns a valid 200 response with the response object
     it('Should return valid JSON transaction decision with Google payment options', function () {
-      let transactionConfig = {
+      const transactionConfig = {
         deliveryAddressRequired: true,
         tokenizationParameters: {
           myParam: 'myParam'
@@ -1051,7 +1051,7 @@ describe('ActionsSdkApp', function () {
       };
       app.askForTransactionDecision({fakeOrderId: 'order_id'}, transactionConfig,
         {cartSize: 2});
-      let expectedResponse = {
+      const expectedResponse = {
         'conversationToken': '{"cartSize":2}',
         'userStorage': '{"data":{}}',
         'expectUserResponse': true,
@@ -1100,14 +1100,14 @@ describe('ActionsSdkApp', function () {
 
     // Success case test, when the API returns a valid 200 response with the response object
     it('Should return valid JSON transaction decision with Action payment options', function () {
-      let transactionConfig = {
+      const transactionConfig = {
         deliveryAddressRequired: true,
         type: 'BANK',
         displayName: 'Checking-4773'
       };
       app.askForTransactionDecision({fakeOrderId: 'order_id'}, transactionConfig,
         {cartSize: 2});
-      let expectedResponse = {
+      const expectedResponse = {
         'conversationToken': '{"cartSize":2}',
         'userStorage': '{"data":{}}',
         'expectUserResponse': true,
@@ -1161,7 +1161,7 @@ describe('ActionsSdkApp', function () {
     // Success case test, when the API returns a valid 200 response with the response object
     it('Should return valid JSON confirmation request', function () {
       app.askForConfirmation('You want to do that?', {cartSize: 2});
-      let expectedResponse = {
+      const expectedResponse = {
         'conversationToken': '{"cartSize":2}',
         'userStorage': '{"data":{}}',
         'expectUserResponse': true,
@@ -1195,7 +1195,7 @@ describe('ActionsSdkApp', function () {
     // Success case test, when the API returns a valid 200 response with the response object
     it('Should return valid JSON confirmation request without prompt', function () {
       app.askForConfirmation();
-      let expectedResponse = {
+      const expectedResponse = {
         'conversationToken': '{"state":null,"data":{}}',
         'userStorage': '{"data":{}}',
         'expectUserResponse': true,
@@ -1243,7 +1243,7 @@ describe('ActionsSdkApp', function () {
         'What is the best date for you?',
         'What time of day works best for you?', { cartSize: 2 });
 
-      let expectedResponse = {
+      const expectedResponse = {
         'conversationToken': '{"cartSize":2}',
         'userStorage': '{"data":{}}',
         'expectUserResponse': true,
@@ -1282,7 +1282,7 @@ describe('ActionsSdkApp', function () {
     it('Should return valid JSON datetime request with partial prompts', function () {
       app.askForDateTime('When do you want to come in?',
         null);
-      let expectedResponse = {
+      const expectedResponse = {
         'conversationToken': '{"state":null,"data":{}}',
         'userStorage': '{"data":{}}',
         'expectUserResponse': true,
@@ -1318,7 +1318,7 @@ describe('ActionsSdkApp', function () {
     // Success case test, when the API returns a valid 200 response with the response object
     it('Should return valid JSON datetime request without prompts', function () {
       app.askForDateTime();
-      let expectedResponse = {
+      const expectedResponse = {
         'conversationToken': '{"state":null,"data":{}}',
         'userStorage': '{"data":{}}',
         'expectUserResponse': true,
@@ -1355,13 +1355,13 @@ describe('ActionsSdkApp', function () {
   describe('#askForSignIn', function () {
     // Success case test, when the API returns a valid 200 response with the response object
     it('Should return valid JSON sign in request', function () {
-      let mockRequest = new MockRequest(headerV2, actionsSdkAppRequestBodyLive);
-      let app = new ActionsSdkApp({
+      const mockRequest = new MockRequest(headerV2, actionsSdkAppRequestBodyLive);
+      const app = new ActionsSdkApp({
         request: mockRequest,
         response: mockResponse
       });
       app.askForSignIn({cartSize: 2});
-      let expectedResponse = {
+      const expectedResponse = {
         'conversationToken': '{"cartSize":2}',
         'userStorage': '{"data":{}}',
         'expectUserResponse': true,
@@ -1394,13 +1394,13 @@ describe('ActionsSdkApp', function () {
   describe('#askForNewSurface', function () {
     // Success case test, when the API returns a valid 200 response with the response object
     it('Should return valid JSON sign in request', function () {
-      let mockRequest = new MockRequest(headerV2, actionsSdkAppRequestBodyLive);
-      let app = new ActionsSdkApp({
+      const mockRequest = new MockRequest(headerV2, actionsSdkAppRequestBodyLive);
+      const app = new ActionsSdkApp({
         request: mockRequest,
         response: mockResponse
       });
       app.askForNewSurface('test context', 'test title', ['cap_one', 'cap_two']);
-      let expectedResponse = {
+      const expectedResponse = {
         'conversationToken': '{"state":null,"data":{}}',
         'userStorage': '{"data":{}}',
         'expectUserResponse': true,
@@ -1524,8 +1524,8 @@ describe('ActionsSdkApp', function () {
         }
       ];
 
-      let mockRequest = new MockRequest(headerV2, actionsSdkAppRequestBodyLive);
-      let app = new ActionsSdkApp({
+      const mockRequest = new MockRequest(headerV2, actionsSdkAppRequestBodyLive);
+      const app = new ActionsSdkApp({
         request: mockRequest,
         response: mockResponse
       });
@@ -1569,8 +1569,8 @@ describe('ActionsSdkApp', function () {
 
     // Success case test, when the API returns a valid 200 response with the response object
     it('Should validate assistant request delivery address', function () {
-      let mockRequest = new MockRequest(headerV1, actionsSdkAppRequestBodyLive);
-      let app = new ActionsSdkApp({
+      const mockRequest = new MockRequest(headerV1, actionsSdkAppRequestBodyLive);
+      const app = new ActionsSdkApp({
         request: mockRequest,
         response: mockResponse
       });
@@ -1596,8 +1596,8 @@ describe('ActionsSdkApp', function () {
     // Success case test, when the API returns a valid 200 response with the response object
     it('Should validate assistant request delivery address for txn decision', function () {
       actionsSdkAppRequestBodyLive.inputs[0].arguments.name = 'DELIVERY_ADDRESS_VALUE';
-      let mockRequest = new MockRequest(headerV1, actionsSdkAppRequestBodyLive);
-      let app = new ActionsSdkApp({
+      const mockRequest = new MockRequest(headerV1, actionsSdkAppRequestBodyLive);
+      const app = new ActionsSdkApp({
         request: mockRequest,
         response: mockResponse
       });
@@ -1623,8 +1623,8 @@ describe('ActionsSdkApp', function () {
     // Success case test, when the API returns a valid 200 response with the response object
     it('Should return null when user rejects', function () {
       actionsSdkAppRequestBodyLive.inputs[0].arguments[0].extension.userDecision = 'REJECTED';
-      let mockRequest = new MockRequest(headerV1, actionsSdkAppRequestBodyLive);
-      let app = new ActionsSdkApp({
+      const mockRequest = new MockRequest(headerV1, actionsSdkAppRequestBodyLive);
+      const app = new ActionsSdkApp({
         request: mockRequest,
         response: mockResponse
       });
@@ -1663,8 +1663,8 @@ describe('ActionsSdkApp', function () {
           'name': 'TRANSACTION_DECISION_VALUE'
         }
       ];
-      let mockRequest = new MockRequest(headerV2, actionsSdkAppRequestBodyLive);
-      let app = new ActionsSdkApp({
+      const mockRequest = new MockRequest(headerV2, actionsSdkAppRequestBodyLive);
+      const app = new ActionsSdkApp({
         request: mockRequest,
         response: mockResponse
       });
@@ -1702,8 +1702,8 @@ describe('ActionsSdkApp', function () {
           'boolValue': true
         }
       ];
-      let mockRequest = new MockRequest(headerV2, actionsSdkAppRequestBodyLive);
-      let app = new ActionsSdkApp({
+      const mockRequest = new MockRequest(headerV2, actionsSdkAppRequestBodyLive);
+      const app = new ActionsSdkApp({
         request: mockRequest,
         response: mockResponse
       });
@@ -1719,9 +1719,9 @@ describe('ActionsSdkApp', function () {
           'boolValue': false
         }
       ];
-      let mockRequest = new MockRequest(headerV2, actionsSdkAppRequestBodyLive);
+      const mockRequest = new MockRequest(headerV2, actionsSdkAppRequestBodyLive);
 
-      let app = new ActionsSdkApp({
+      const app = new ActionsSdkApp({
         request: mockRequest,
         response: mockResponse
       });
@@ -1732,8 +1732,8 @@ describe('ActionsSdkApp', function () {
     // Success case test, when the API returns a valid 200 response with the response object
     it('Should validate assistant missing confirmation decision', function () {
       actionsSdkAppRequestBodyLive.inputs[0].arguments = [];
-      let mockRequest = new MockRequest(headerV2, actionsSdkAppRequestBodyLive);
-      let app = new ActionsSdkApp({
+      const mockRequest = new MockRequest(headerV2, actionsSdkAppRequestBodyLive);
+      const app = new ActionsSdkApp({
         request: mockRequest,
         response: mockResponse
       });
@@ -1762,8 +1762,8 @@ describe('ActionsSdkApp', function () {
           'name': 'DATETIME'
         }
       ];
-      let mockRequest = new MockRequest(headerV2, actionsSdkAppRequestBodyLive);
-      let app = new ActionsSdkApp({
+      const mockRequest = new MockRequest(headerV2, actionsSdkAppRequestBodyLive);
+      const app = new ActionsSdkApp({
         request: mockRequest,
         response: mockResponse
       });
@@ -1782,8 +1782,8 @@ describe('ActionsSdkApp', function () {
     // Success case test, when the API returns a valid 200 response with the response object
     it('Should validate assistant missing date time info', function () {
       actionsSdkAppRequestBodyLive.inputs[0].arguments = [];
-      let mockRequest = new MockRequest(headerV2, actionsSdkAppRequestBodyLive);
-      let app = new ActionsSdkApp({
+      const mockRequest = new MockRequest(headerV2, actionsSdkAppRequestBodyLive);
+      const app = new ActionsSdkApp({
         request: mockRequest,
         response: mockResponse
       });
@@ -1807,8 +1807,8 @@ describe('ActionsSdkApp', function () {
           }
         }
       ];
-      let mockRequest = new MockRequest(headerV2, actionsSdkAppRequestBodyLive);
-      let app = new ActionsSdkApp({
+      const mockRequest = new MockRequest(headerV2, actionsSdkAppRequestBodyLive);
+      const app = new ActionsSdkApp({
         request: mockRequest,
         response: mockResponse
       });
@@ -1819,8 +1819,8 @@ describe('ActionsSdkApp', function () {
     // Success case test, when the API returns a valid 200 response with the response object
     it('Should validate assistant missing sign in status', function () {
       actionsSdkAppRequestBodyLive.inputs[0].arguments = [];
-      let mockRequest = new MockRequest(headerV2, actionsSdkAppRequestBodyLive);
-      let app = new ActionsSdkApp({
+      const mockRequest = new MockRequest(headerV2, actionsSdkAppRequestBodyLive);
+      const app = new ActionsSdkApp({
         request: mockRequest,
         response: mockResponse
       });
@@ -1845,8 +1845,8 @@ describe('ActionsSdkApp', function () {
           'city': 'Anytown'
         }
       };
-      let mockRequest = new MockRequest(headerV1, actionsSdkAppRequestBodyLive);
-      let app = new ActionsSdkApp({
+      const mockRequest = new MockRequest(headerV1, actionsSdkAppRequestBodyLive);
+      const app = new ActionsSdkApp({
         request: mockRequest,
         response: mockResponse
       });
@@ -1864,8 +1864,8 @@ describe('ActionsSdkApp', function () {
     it('Should validate assistant request for device location when location is undefined.', function () {
       // Test the false case
       actionsSdkAppRequestBodyLive.device = undefined;
-      let mockRequest = new MockRequest(headerV1, actionsSdkAppRequestBodyLive);
-      let app = new ActionsSdkApp({
+      const mockRequest = new MockRequest(headerV1, actionsSdkAppRequestBodyLive);
+      const app = new ActionsSdkApp({
         request: mockRequest,
         response: mockResponse
       });
@@ -1903,8 +1903,8 @@ describe('ActionsSdkApp', function () {
         }
       ];
       actionsSdkAppRequestBodyLive.availableSurfaces = availableSurfaces;
-      let mockRequest = new MockRequest(headerV1, actionsSdkAppRequestBodyLive);
-      let app = new ActionsSdkApp({
+      const mockRequest = new MockRequest(headerV1, actionsSdkAppRequestBodyLive);
+      const app = new ActionsSdkApp({
         request: mockRequest,
         response: mockResponse
       });
@@ -1914,8 +1914,8 @@ describe('ActionsSdkApp', function () {
 
     // Failure case test
     it('Should return empty assistant available surfaces', function () {
-      let mockRequest = new MockRequest(headerV2, actionsSdkAppRequestBodyLive);
-      let app = new ActionsSdkApp({
+      const mockRequest = new MockRequest(headerV2, actionsSdkAppRequestBodyLive);
+      const app = new ActionsSdkApp({
         request: mockRequest,
         response: mockResponse
       });
@@ -1955,8 +1955,8 @@ describe('ActionsSdkApp', function () {
 
     // Success case test, when the API returns a valid 200 response with the response object
     it('Should return true for set of valid capabilities', function () {
-      let mockRequest = new MockRequest(headerV1, actionsSdkAppRequestBodyLive);
-      let app = new ActionsSdkApp({
+      const mockRequest = new MockRequest(headerV1, actionsSdkAppRequestBodyLive);
+      const app = new ActionsSdkApp({
         request: mockRequest,
         response: mockResponse
       });
@@ -1966,8 +1966,8 @@ describe('ActionsSdkApp', function () {
 
     // Success case test, when the API returns a valid 200 response with the response object
     it('Should return true for one valid capability', function () {
-      let mockRequest = new MockRequest(headerV1, actionsSdkAppRequestBodyLive);
-      let app = new ActionsSdkApp({
+      const mockRequest = new MockRequest(headerV1, actionsSdkAppRequestBodyLive);
+      const app = new ActionsSdkApp({
         request: mockRequest,
         response: mockResponse
       });
@@ -1977,8 +1977,8 @@ describe('ActionsSdkApp', function () {
 
     // Failure case test, when the API returns a valid 200 response with the response object
     it('Should return true for set of invalid capabilities', function () {
-      let mockRequest = new MockRequest(headerV1, actionsSdkAppRequestBodyLive);
-      let app = new ActionsSdkApp({
+      const mockRequest = new MockRequest(headerV1, actionsSdkAppRequestBodyLive);
+      const app = new ActionsSdkApp({
         request: mockRequest,
         response: mockResponse
       });
@@ -1988,8 +1988,8 @@ describe('ActionsSdkApp', function () {
 
     // Failure case test, when the API returns a valid 200 response with the response object
     it('Should return true for one invalid capability', function () {
-      let mockRequest = new MockRequest(headerV1, actionsSdkAppRequestBodyLive);
-      let app = new ActionsSdkApp({
+      const mockRequest = new MockRequest(headerV1, actionsSdkAppRequestBodyLive);
+      const app = new ActionsSdkApp({
         request: mockRequest,
         response: mockResponse
       });
@@ -2000,8 +2000,8 @@ describe('ActionsSdkApp', function () {
     // Failure case test
     it('Should return false for empty assistant available surfaces', function () {
       actionsSdkAppRequestBodyLive.availableSurfaces = undefined;
-      let mockRequest = new MockRequest(headerV2, actionsSdkAppRequestBodyLive);
-      let app = new ActionsSdkApp({
+      const mockRequest = new MockRequest(headerV2, actionsSdkAppRequestBodyLive);
+      const app = new ActionsSdkApp({
         request: mockRequest,
         response: mockResponse
       });
@@ -2024,9 +2024,9 @@ describe('ActionsSdkApp', function () {
         }
       ];
 
-      let mockRequest = new MockRequest(headerV1, actionsSdkAppRequestBodyLive);
+      const mockRequest = new MockRequest(headerV1, actionsSdkAppRequestBodyLive);
 
-      let app = new ActionsSdkApp({
+      const app = new ActionsSdkApp({
         request: mockRequest,
         response: mockResponse
       });
@@ -2045,9 +2045,9 @@ describe('ActionsSdkApp', function () {
         }
       ];
 
-      let mockRequest = new MockRequest(headerV1, actionsSdkAppRequestBodyLive);
+      const mockRequest = new MockRequest(headerV1, actionsSdkAppRequestBodyLive);
 
-      let app = new ActionsSdkApp({
+      const app = new ActionsSdkApp({
         request: mockRequest,
         response: mockResponse
       });
@@ -2069,9 +2069,9 @@ describe('ActionsSdkApp', function () {
         }
       ];
 
-      let mockRequest = new MockRequest(headerV1, actionsSdkAppRequestBodyLive);
+      const mockRequest = new MockRequest(headerV1, actionsSdkAppRequestBodyLive);
 
-      let app = new ActionsSdkApp({
+      const app = new ActionsSdkApp({
         request: mockRequest,
         response: mockResponse
       });
@@ -2087,8 +2087,8 @@ describe('ActionsSdkApp', function () {
           'text_value': 'false'
         }
       ];
-      let mockRequest = new MockRequest(headerV1, actionsSdkAppRequestBodyLive);
-      let app = new ActionsSdkApp({
+      const mockRequest = new MockRequest(headerV1, actionsSdkAppRequestBodyLive);
+      const app = new ActionsSdkApp({
         request: mockRequest,
         response: mockResponse
       });
@@ -2104,8 +2104,8 @@ describe('ActionsSdkApp', function () {
     // Success case test, when the API returns a valid 200 response with the response object
     it('Should validate when app is in sandbox mode.', function () {
       actionsSdkAppRequestBodyLive.isInSandbox = true;
-      let mockRequest = new MockRequest(headerV2, actionsSdkAppRequestBodyLive);
-      let app = new ActionsSdkApp({
+      const mockRequest = new MockRequest(headerV2, actionsSdkAppRequestBodyLive);
+      const app = new ActionsSdkApp({
         request: mockRequest,
         response: mockResponse
       });
@@ -2114,8 +2114,8 @@ describe('ActionsSdkApp', function () {
     it('Should validate when app is not in sandbox mode.', function () {
       // Test the false case
       actionsSdkAppRequestBodyLive.isInSandbox = false;
-      let mockRequest = new MockRequest(headerV2, actionsSdkAppRequestBodyLive);
-      let app = new ActionsSdkApp({
+      const mockRequest = new MockRequest(headerV2, actionsSdkAppRequestBodyLive);
+      const app = new ActionsSdkApp({
         request: mockRequest,
         response: mockResponse
       });
@@ -2142,8 +2142,8 @@ describe('ActionsSdkApp', function () {
           }
         ]
       }];
-      let mockRequest = new MockRequest(headerV2, actionsSdkAppRequestBodyLive);
-      let app = new ActionsSdkApp({
+      const mockRequest = new MockRequest(headerV2, actionsSdkAppRequestBodyLive);
+      const app = new ActionsSdkApp({
         request: mockRequest,
         response: mockResponse
       });
@@ -2151,8 +2151,8 @@ describe('ActionsSdkApp', function () {
     });
     // Test case checking it handles API requests without reprompt count correctly.
     it('Should return null when no reprompt count available.', function () {
-      let mockRequest = new MockRequest(headerV2, actionsSdkAppRequestBodyLive);
-      let app = new ActionsSdkApp({
+      const mockRequest = new MockRequest(headerV2, actionsSdkAppRequestBodyLive);
+      const app = new ActionsSdkApp({
         request: mockRequest,
         response: mockResponse
       });
@@ -2179,8 +2179,8 @@ describe('ActionsSdkApp', function () {
           }
         ]
       }];
-      let mockRequest = new MockRequest(headerV2, actionsSdkAppRequestBodyLive);
-      let app = new ActionsSdkApp({
+      const mockRequest = new MockRequest(headerV2, actionsSdkAppRequestBodyLive);
+      const app = new ActionsSdkApp({
         request: mockRequest,
         response: mockResponse
       });
@@ -2201,8 +2201,8 @@ describe('ActionsSdkApp', function () {
           }
         ]
       }];
-      let mockRequest = new MockRequest(headerV2, actionsSdkAppRequestBodyLive);
-      let app = new ActionsSdkApp({
+      const mockRequest = new MockRequest(headerV2, actionsSdkAppRequestBodyLive);
+      const app = new ActionsSdkApp({
         request: mockRequest,
         response: mockResponse
       });
@@ -2210,8 +2210,8 @@ describe('ActionsSdkApp', function () {
     });
     // Failure case test, when the API requests without reprompt count.
     it('Should return false when no reprompt count available.', function () {
-      let mockRequest = new MockRequest(headerV2, actionsSdkAppRequestBodyLive);
-      let app = new ActionsSdkApp({
+      const mockRequest = new MockRequest(headerV2, actionsSdkAppRequestBodyLive);
+      const app = new ActionsSdkApp({
         request: mockRequest,
         response: mockResponse
       });
@@ -2235,16 +2235,16 @@ describe('ActionsSdkApp', function () {
           }
         ]
       };
-      let mockRequest = new MockRequest(headerV1, actionsSdkAppRequestBodyLive);
+      const mockRequest = new MockRequest(headerV1, actionsSdkAppRequestBodyLive);
 
-      let app = new ActionsSdkApp({
+      const app = new ActionsSdkApp({
         request: mockRequest,
         response: mockResponse
       });
 
-      let hasScreenOutput =
+      const hasScreenOutput =
         app.hasSurfaceCapability(app.SurfaceCapabilities.SCREEN_OUTPUT);
-      let hasMagicPowers =
+      const hasMagicPowers =
         app.hasSurfaceCapability('MAGIC_POWERS');
       expect(hasScreenOutput).to.be.true;
       expect(hasMagicPowers).to.be.false;
@@ -2268,13 +2268,13 @@ describe('ActionsSdkApp', function () {
         ]
       };
 
-      let mockRequest = new MockRequest(headerV1, actionsSdkAppRequestBodyLive);
-      let app = new ActionsSdkApp({
+      const mockRequest = new MockRequest(headerV1, actionsSdkAppRequestBodyLive);
+      const app = new ActionsSdkApp({
         request: mockRequest,
         response: mockResponse
       });
 
-      let capabilities = app.getSurfaceCapabilities();
+      const capabilities = app.getSurfaceCapabilities();
       expect(capabilities).to.deep.equal([
         app.SurfaceCapabilities.AUDIO_OUTPUT,
         app.SurfaceCapabilities.SCREEN_OUTPUT
@@ -2295,14 +2295,14 @@ describe('ActionsSdkApp', function () {
           'query': 'talk to action snippets'
         }
       ];
-      let mockRequest = new MockRequest(headerV1, actionsSdkAppRequestBodyLive);
+      const mockRequest = new MockRequest(headerV1, actionsSdkAppRequestBodyLive);
 
-      let app = new ActionsSdkApp({
+      const app = new ActionsSdkApp({
         request: mockRequest,
         response: mockResponse
       });
 
-      let inputType = app.getInputType();
+      const inputType = app.getInputType();
       expect(inputType).to.equal(app.InputTypes.KEYBOARD);
     });
   });
@@ -2313,7 +2313,7 @@ describe('ActionsSdkApp', function () {
   describe('#getApiVersion', function () {
     // Success case test, when the API returns a valid 200 response with the response object
     it('Should validate assistant request info.', function () {
-      let headers = {
+      const headers = {
         'Content-Type': 'application/json',
         'Google-Assistant-API-Version': 'v1'
       };
@@ -2338,7 +2338,7 @@ describe('ActionsSdkApp', function () {
         request: mockRequest,
         response: mockResponse
       });
-      let dialogState = {'started': true};
+      const dialogState = {'started': true};
       expect(dialogState).to.deep.equal(app.getDialogState());
     });
   });
@@ -2349,7 +2349,7 @@ describe('ActionsSdkApp', function () {
   describe('#getActionVersionLabel', function () {
     // Success case test, when the API returns a valid 200 response with the response object
     it('Should validate assistant action version label info.', function () {
-      let headers = JSON.parse(JSON.stringify(headerV1));
+      const headers = JSON.parse(JSON.stringify(headerV1));
       headers['Agent-Version-Label'] = '1.0.0';
       const mockRequest = new MockRequest(headers, actionsSdkAppRequestBodyLive);
       const app = new ActionsSdkApp({
@@ -2409,8 +2409,8 @@ describe('ActionsSdkApp', function () {
           'key': 'value'
         }
       });
-      app.tell('You said ' + app.getArgument('number'));
-      let expectedResponse = {
+      app.tell(`You said ${app.getArgument('number')}`);
+      const expectedResponse = {
         'user_storage': '{"data":{}}',
         'expect_user_response': false,
         'final_response': {
@@ -2462,8 +2462,8 @@ describe('ActionsSdkApp', function () {
         request: mockRequest,
         response: mockResponse
       });
-      app.tell('<speak>You said <break time="2"/>' + app.getRawInput() + '</speak>');
-      let expectedResponse = {
+      app.tell(`<speak>You said <break time="2"/>${app.getRawInput()}</speak>`);
+      const expectedResponse = {
         'user_storage': '{"data":{}}',
         'expect_user_response': false,
         'final_response': {
@@ -2657,7 +2657,7 @@ describe('ActionsSdkApp', function () {
    */
   describe('#isRequestFromGoogle', function () {
     const body = actionsSdkAppRequestBodyLive;
-    let headerWithAuth = Object.assign({}, headerV1);
+    const headerWithAuth = Object.assign({}, headerV1);
     const authToken = 'abc123';
     const validProjectId = 'nodejs-cloud-test-project-1234';
     const sampleToken = 'sampleIDToken';
@@ -2739,7 +2739,7 @@ describe('ActionsSdkApp', function () {
           textValue: 'intent_value'
         }
       ]);
-      let expectedResponse = {
+      const expectedResponse = {
         'conversationToken': '{"state":null,"data":{}}',
         'userStorage': '{"data":{}}',
         'expectUserResponse': true,
@@ -2783,7 +2783,7 @@ describe('ActionsSdkApp', function () {
     // Success case test, when the API returns a valid 200 response with the response object without arguments
     it('Should return valid JSON update registration request', function () {
       app.askToRegisterDailyUpdate('test_intent');
-      let expectedResponse = {
+      const expectedResponse = {
         'conversationToken': '{"state":null,"data":{}}',
         'userStorage': '{"data":{}}',
         'expectUserResponse': true,
@@ -2884,7 +2884,7 @@ describe('ActionsSdkApp', function () {
         }
       ]);
       // Validating the response object
-      let expectedResponse = {
+      const expectedResponse = {
         'conversationToken': '{"state":null,"data":{}}',
         'userStorage': '{"data":{}}',
         'expectUserResponse': true,
@@ -2927,7 +2927,7 @@ describe('ActionsSdkApp', function () {
     it('Should return the valid JSON in the response object without arguments for the success case.', function () {
       app.askForUpdatePermission('test_intent');
       // Validating the response object
-      let expectedResponse = {
+      const expectedResponse = {
         'conversationToken': '{"state":null,"data":{}}',
         'userStorage': '{"data":{}}',
         'expectUserResponse': true,

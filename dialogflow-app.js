@@ -279,9 +279,9 @@ class DialogflowApp extends AssistantApp {
       error('No contexts included in request');
       return null;
     }
-    for (let context of this.body_.result.contexts) {
+    for (const context of this.body_.result.contexts) {
       if (context.name === contextName && context.parameters[argName]) {
-        let argument = { value: context.parameters[argName] };
+        const argument = { value: context.parameters[argName] };
         if (context.parameters[argName + ORIGINAL_SUFFIX]) {
           argument.original = context.parameters[argName + ORIGINAL_SUFFIX];
         }
@@ -322,16 +322,16 @@ class DialogflowApp extends AssistantApp {
    */
   getIncomingRichResponse () {
     debug('getIncomingRichResponse');
-    let response = this.buildRichResponse();
+    const response = this.buildRichResponse();
     if (this.body_.result &&
       this.body_.result.fulfillment &&
       this.body_.result.fulfillment.messages) {
-      for (let message of this.body_.result.fulfillment.messages) {
+      for (const message of this.body_.result.fulfillment.messages) {
         if (!message.type) {
           continue;
         }
         if (message.type === SIMPLE_RESPONSE) {
-          let item = {
+          const item = {
             simpleResponse: {}
           };
           Object.assign(item.simpleResponse, message);
@@ -339,7 +339,7 @@ class DialogflowApp extends AssistantApp {
           delete item.simpleResponse[PLATFORM];
           response.items.push(item);
         } else if (message.type === BASIC_CARD) {
-          let item = {
+          const item = {
             basicCard: {}
           };
           Object.assign(item.basicCard, message);
@@ -386,11 +386,11 @@ class DialogflowApp extends AssistantApp {
    */
   getIncomingList () {
     debug('getIncomingList');
-    let list = this.buildList();
+    const list = this.buildList();
     if (this.body_.result &&
       this.body_.result.fulfillment &&
       this.body_.result.fulfillment.messages) {
-      for (let message of this.body_.result.fulfillment.messages) {
+      for (const message of this.body_.result.fulfillment.messages) {
         if (!message.type) {
           continue;
         }
@@ -432,11 +432,11 @@ class DialogflowApp extends AssistantApp {
    */
   getIncomingCarousel () {
     debug('getIncomingCarousel');
-    let carousel = this.buildCarousel();
+    const carousel = this.buildCarousel();
     if (this.body_.result &&
       this.body_.result.fulfillment &&
       this.body_.result.fulfillment.messages) {
-      for (let message of this.body_.result.fulfillment.messages) {
+      for (const message of this.body_.result.fulfillment.messages) {
         if (!message.type) {
           continue;
         }
@@ -886,7 +886,7 @@ class DialogflowApp extends AssistantApp {
       error('No contexts included in request');
       return null;
     }
-    for (let context of this.body_.result.contexts) {
+    for (const context of this.body_.result.contexts) {
       if (context.name === name) {
         return context;
       }
@@ -930,10 +930,9 @@ class DialogflowApp extends AssistantApp {
     debug('getIntent_');
     if (this.body_.result) {
       return this.body_.result.action;
-    } else {
-      error('Missing result from request body');
-      return null;
     }
+    error('Missing result from request body');
+    return null;
   }
 
   /**
@@ -954,7 +953,7 @@ class DialogflowApp extends AssistantApp {
       error('Empty text to speech');
       return null;
     }
-    let isStringResponse = typeof textToSpeech === 'string';
+    const isStringResponse = typeof textToSpeech === 'string';
     if (!isStringResponse) {
       if (textToSpeech.speech) {
         // Convert SimpleResponse to RichResponse
@@ -1007,7 +1006,7 @@ class DialogflowApp extends AssistantApp {
         parameters: dialogState.data
       });
     }
-    for (let context of Object.keys(this.contexts_)) {
+    for (const context of Object.keys(this.contexts_)) {
       response.contextOut.push(this.contexts_[context]);
     }
     return response;
@@ -1053,16 +1052,15 @@ class DialogflowApp extends AssistantApp {
       return this.fulfillSystemIntent_(this.StandardIntents.PERMISSION,
         this.InputValueDataTypes_.PERMISSION, permissionsSpec,
         inputPrompt);
-    } else {
-      const response = this.buildResponse_(inputPrompt, true);
-      response.data.google.systemIntent = {
-        intent: this.StandardIntents.PERMISSION
-      };
-      response.data.google.systemIntent.spec = {
-        permissionValueSpec: permissionsSpec
-      };
-      return this.doResponse_(response, RESPONSE_CODE_OK);
     }
+    const response = this.buildResponse_(inputPrompt, true);
+    response.data.google.systemIntent = {
+      intent: this.StandardIntents.PERMISSION
+    };
+    response.data.google.systemIntent.spec = {
+      permissionValueSpec: permissionsSpec
+    };
+    return this.doResponse_(response, RESPONSE_CODE_OK);
   }
 
   /**

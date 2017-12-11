@@ -50,7 +50,7 @@ winston.loggers.add('DEFAULT_LOGGER', {
 describe('Order', () => {
   describe('#constructor', () => {
     it('should create valid object', () => {
-      let order = new Order('test_id');
+      const order = new Order('test_id');
       expect(JSON.parse(JSON.stringify(order))).to.deep.equal({
         id: 'test_id',
         otherItems: []
@@ -352,7 +352,7 @@ describe('Order', () => {
 describe('Cart', () => {
   describe('#constructor', () => {
     it('should create valid object', () => {
-      let cart = new Cart('test_id');
+      const cart = new Cart('test_id');
       expect(JSON.parse(JSON.stringify(cart))).to.deep.equal({
         id: 'test_id',
         lineItems: [],
@@ -516,7 +516,7 @@ describe('Cart', () => {
 describe('LineItem', () => {
   describe('#constructor', () => {
     it('should create valid object', () => {
-      let lineItem = new LineItem('test_item_id', 'test_item');
+      const lineItem = new LineItem('test_item_id', 'test_item');
       expect(JSON.parse(JSON.stringify(lineItem))).to.deep.equal({
         id: 'test_item_id',
         name: 'test_item'
@@ -821,7 +821,7 @@ describe('LineItem', () => {
 describe('OrderUpdate', () => {
   describe('#constructor', () => {
     it('should create valid object with Google order ID', () => {
-      let orderUpdate = new OrderUpdate('order_id', true);
+      const orderUpdate = new OrderUpdate('order_id', true);
       expect(JSON.parse(JSON.stringify(orderUpdate))).to.deep.equal({
         googleOrderId: 'order_id',
         lineItemUpdates: {},
@@ -830,7 +830,7 @@ describe('OrderUpdate', () => {
     });
 
     it('should create valid object with Action order ID', () => {
-      let orderUpdate = new OrderUpdate('order_id', false);
+      const orderUpdate = new OrderUpdate('order_id', false);
       expect(JSON.parse(JSON.stringify(orderUpdate))).to.deep.equal({
         actionOrderId: 'order_id',
         lineItemUpdates: {},

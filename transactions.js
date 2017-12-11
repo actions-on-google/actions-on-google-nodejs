@@ -836,7 +836,7 @@ const Order = class {
       return this;
     }
     if (Array.isArray(items)) {
-      for (let item of items) {
+      for (const item of items) {
         this.otherItems.push(item);
       }
     } else {
@@ -947,8 +947,7 @@ const Order = class {
       this.extension.locations = [];
     }
     if (this.extension.locations.length >= ORDER_LOCATION_LIMIT) {
-      error('Order can have no more than ' + ORDER_LOCATION_LIMIT +
-        ' associated locations');
+      error(`Order can have no more than ${ORDER_LOCATION_LIMIT} associated locations`);
       return this;
     }
     this.extension.locations.push({ type, location });
@@ -1070,7 +1069,7 @@ const Cart = class {
       return this;
     }
     if (Array.isArray(items)) {
-      for (let item of items) {
+      for (const item of items) {
         this.lineItems.push(item);
       }
     } else {
@@ -1091,7 +1090,7 @@ const Cart = class {
       return this;
     }
     if (Array.isArray(items)) {
-      for (let item of items) {
+      for (const item of items) {
         this.otherItems.push(item);
       }
     } else {
@@ -1440,7 +1439,7 @@ const OrderUpdate = class {
     // Round nanoseconds to the nearest millisecond. 1M ns = 1ms.
     const MILLISECONDS_IN_SECOND = 1000;
     const NANOSECONDS_IN_MILLISECOND = 1000000;
-    let dateObj = new Date((seconds * MILLISECONDS_IN_SECOND) + (nanos / NANOSECONDS_IN_MILLISECOND));
+    const dateObj = new Date((seconds * MILLISECONDS_IN_SECOND) + (nanos / NANOSECONDS_IN_MILLISECOND));
     this.updateTime = dateObj.toISOString();
     return this;
   }
@@ -1562,7 +1561,7 @@ const OrderUpdate = class {
       return this;
     }
 
-    let newPrice = {
+    const newPrice = {
       type: priceType,
       amount: {
         currencyCode: currencyCode,
@@ -1643,7 +1642,7 @@ const OrderUpdate = class {
     }
 
     // Clear out all other info properties
-    for (let infoType of Object.keys(TransactionValues.OrderStateInfo)) {
+    for (const infoType of Object.keys(TransactionValues.OrderStateInfo)) {
       delete this[TransactionValues.OrderStateInfo[infoType]];
     }
 

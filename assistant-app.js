@@ -143,12 +143,12 @@ class AssistantApp {
     // Populates API version from either request header or Dialogflow orig request.
     if (this.request_.get(ACTIONS_CONVERSATION_API_VERSION_HEADER)) {
       this.actionsApiVersion_ = this.request_.get(ACTIONS_CONVERSATION_API_VERSION_HEADER);
-      debug('Actions API version from header: ' + this.actionsApiVersion_);
+      debug(`Actions API version from header: ${this.actionsApiVersion_}`);
     }
     if (this.body_.originalRequest &&
       this.body_.originalRequest.version) {
       this.actionsApiVersion_ = this.body_.originalRequest.version;
-      debug('Actions API version from Dialogflow: ' + this.actionsApiVersion_);
+      debug(`Actions API version from Dialogflow: ${this.actionsApiVersion_}`);
     }
 
     /**
@@ -485,7 +485,7 @@ class AssistantApp {
     // Populates API version.
     if (this.request_.get(CONVERSATION_API_VERSION_HEADER)) {
       this.apiVersion_ = this.request_.get(CONVERSATION_API_VERSION_HEADER);
-      debug('Assistant API version: ' + this.apiVersion_);
+      debug(`Assistant API version: ${this.apiVersion_}`);
     }
 
     /**
@@ -669,10 +669,9 @@ class AssistantApp {
             this.tell(!reason.message ? ERROR_MESSAGE : reason.message);
             return Promise.reject(reason);
           });
-      } else {
-        // Handle functions
-        return Promise.resolve(handlerResult);
       }
+        // Handle functions
+      return Promise.resolve(handlerResult);
     } else if (handler instanceof Map) {
       debug('handleRequest: map');
       const intent = this.getIntent();
@@ -690,7 +689,7 @@ class AssistantApp {
         );
     }
     // Could not handle intent
-    this.handleError_('invalid intent handler type: ' + (typeof handler));
+    this.handleError_(`invalid intent handler type: ${typeof handler}`);
     this.tell(ERROR_MESSAGE);
     return Promise.reject(ERROR_MESSAGE);
   }
@@ -1193,7 +1192,7 @@ class AssistantApp {
   askForConfirmation (prompt, dialogState) {
     debug('askForConfirmation: prompt=%s, dialogState=%s', prompt,
       JSON.stringify(dialogState));
-    let confirmationValueSpec = {};
+    const confirmationValueSpec = {};
     if (prompt) {
       confirmationValueSpec.dialogSpec = {
         requestConfirmationText: prompt
@@ -1251,7 +1250,7 @@ class AssistantApp {
     debug('askForDateTime: initialPrompt=%s, datePrompt=%s, ' +
       'timePrompt=%s, dialogState=%s', initialPrompt, datePrompt, timePrompt,
       JSON.stringify(dialogState));
-    let dateTimeValueSpec = {};
+    const dateTimeValueSpec = {};
     if (initialPrompt || datePrompt || timePrompt) {
       dateTimeValueSpec.dialogSpec = {
         requestDatetimeText: initialPrompt || undefined,
@@ -1356,7 +1355,7 @@ class AssistantApp {
     debug('askForNewSurface: context=%s, notificationTitle=%s, ' +
         'capabilities=%s, dialogState=%s', context, notificationTitle,
         JSON.stringify(capabilities), dialogState);
-    let newSurfaceValueSpec = { context, notificationTitle, capabilities };
+    const newSurfaceValueSpec = { context, notificationTitle, capabilities };
     return this.fulfillSystemIntent_(this.StandardIntents.NEW_SURFACE,
        this.InputValueDataTypes_.NEW_SURFACE, newSurfaceValueSpec,
        'PLACEHOLDER_FOR_NEW_SURFACE', dialogState);
@@ -1715,13 +1714,11 @@ class AssistantApp {
       return null;
     } else if (argument.textValue) {
       return argument.textValue;
-    } else {
-      if (!this.isNotApiVersionOne_()) {
-        return transformToSnakeCase(argument);
-      } else {
-        return argument;
-      }
     }
+    if (!this.isNotApiVersionOne_()) {
+      return transformToSnakeCase(argument);
+    }
+    return argument;
   }
 
   /**
@@ -1765,10 +1762,9 @@ class AssistantApp {
           return null;
         }
         return location;
-      } else {
-        debug('User rejected giving delivery address');
-        return null;
       }
+      debug('User rejected giving delivery address');
+      return null;
     }
     debug('Failed to get order delivery address');
     return null;
@@ -1901,10 +1897,9 @@ class AssistantApp {
     }
     if (data && data.surface && data.surface.capabilities) {
       return data.surface.capabilities.map(capability => capability.name);
-    } else {
-      error('No surface capabilities in incoming request');
-      return null;
     }
+    error('No surface capabilities in incoming request');
+    return null;
   }
 
   /**
@@ -1937,7 +1932,7 @@ class AssistantApp {
       : [capabilities];
     const { availableSurfaces } = this.requestData();
     if (availableSurfaces) {
-      for (let surface of availableSurfaces) {
+      for (const surface of availableSurfaces) {
         const availableCapabilities = surface.capabilities.map(capability => capability.name);
         const unavailableCapabilities = capabilitiesArray
           .filter(capability => !availableCapabilities.includes(capability));
@@ -2130,7 +2125,7 @@ class AssistantApp {
    * @return {OptionItem} Constructed OptionItem.
    */
   buildOptionItem (key, synonyms) {
-    let optionItem = new OptionItem();
+    const optionItem = new OptionItem();
     if (key) {
       optionItem.setKey(key);
     }
@@ -2205,7 +2200,7 @@ class AssistantApp {
     debug('invokeIntentHandler_: handler=%s, intent=%s', handler, intent);
     this.lastErrorMessage_ = null;
     // map of intents or states
-    for (let key of handler.keys()) {
+    for (const key of handler.keys()) {
       const value = handler.get(key);
       let name;
       if (key instanceof Intent) {
@@ -2219,9 +2214,9 @@ class AssistantApp {
         // String id
         name = key;
       }
-      debug('name=' + name);
+      debug(`name=${name}`);
       if (value instanceof Map) {
-        debug('state=' + (this.state instanceof State ? this.state.getName() : this.state));
+        debug(`state=${this.state instanceof State ? this.state.getName() : this.state}`);
         // map of states
         if (!this.state && name === null) {
           debug('undefined state');
@@ -2249,14 +2244,13 @@ class AssistantApp {
               this.lastErrorMessage_ = reason.message;
               return Promise.reject(reason);
             });
-        } else {
-          // Handle functions
-          return Promise.resolve(handlerResult);
         }
+          // Handle functions
+        return Promise.resolve(handlerResult);
       }
     }
-    this.handleError_('no matching intent handler for: ' + intent);
-    return Promise.reject(new Error('no matching intent handler for: ' + intent));
+    this.handleError_(`no matching intent handler for: ${intent}`);
+    return Promise.reject(new Error(`no matching intent handler for: ${intent}`));
   }
 
   /**
@@ -2562,7 +2556,7 @@ class AssistantApp {
   buildPaymentOptions_ (transactionConfig) {
     debug('buildPromptsFromPlainTextHelper_: transactionConfig=%s',
       JSON.stringify(transactionConfig));
-    let paymentOptions = {};
+    const paymentOptions = {};
     if (transactionConfig.type) { // Action payment
       paymentOptions.actionProvidedOptions = {
         paymentType: transactionConfig.type,

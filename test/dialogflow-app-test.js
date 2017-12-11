@@ -108,7 +108,7 @@ describe('DialogflowApp', function () {
     });
 
     it('Does not detect v2 and transform originalRequest when version not present', function () {
-      let bodyWithoutVersion = dialogflowAppRequestBodyNewSession;
+      const bodyWithoutVersion = dialogflowAppRequestBodyNewSession;
       bodyWithoutVersion.originalRequest = {'foo_prop': 'bar_val'};
       bodyWithoutVersion.foo_field = 'bar_val';
       bodyWithoutVersion.result.parameters.foo_param = 'blue';
@@ -126,7 +126,7 @@ describe('DialogflowApp', function () {
     });
 
     it('Does detect v2 and not transform originalRequest when version is present', function () {
-      let bodyWithVersion = dialogflowAppRequestBodyNewSession;
+      const bodyWithVersion = dialogflowAppRequestBodyNewSession;
       bodyWithVersion.originalRequest = {'foo_prop': 'bar_val', 'version': '2'};
       bodyWithVersion.foo_field = 'bar_val';
       bodyWithVersion.result.parameters.foo_param = 'blue';
@@ -158,7 +158,7 @@ describe('DialogflowApp', function () {
     // Success case test, when the API returns a valid 200 response with the response object
     it('Should return the valid JSON in the response object for the success case.', function () {
       app.tell('hello');
-      let expectedResponse = {
+      const expectedResponse = {
         'speech': 'hello',
         'data': {
           'google': {
@@ -177,7 +177,7 @@ describe('DialogflowApp', function () {
       function () {
         app.tell({speech: 'hello', displayText: 'hi'});
         // Validating the response object
-        let expectedResponse = {
+        const expectedResponse = {
           'speech': 'hello',
           'data': {
             'google': {
@@ -210,7 +210,7 @@ describe('DialogflowApp', function () {
           .addSuggestions(['Say this', 'or this']));
 
         // Validating the response object
-        let expectedResponse = {
+        const expectedResponse = {
           'speech': 'hello',
           'data': {
             'google': {
@@ -266,7 +266,7 @@ describe('DialogflowApp', function () {
       function () {
         app.ask('hello');
         // Validating the response object
-        let expectedResponse = {
+        const expectedResponse = {
           'speech': 'hello',
           'data': {
             'google': {
@@ -292,7 +292,7 @@ describe('DialogflowApp', function () {
       function () {
         app.ask({speech: 'hello', displayText: 'hi'});
         // Validating the response object
-        let expectedResponse = {
+        const expectedResponse = {
           'speech': 'hello',
           'data': {
             'google': {
@@ -332,7 +332,7 @@ describe('DialogflowApp', function () {
           .addSuggestions(['Say this', 'or this']));
 
         // Validating the response object
-        let expectedResponse = {
+        const expectedResponse = {
           'speech': 'hello',
           'data': {
             'google': {
@@ -376,7 +376,7 @@ describe('DialogflowApp', function () {
       function () {
         app.ask('hello', ['no', 'input', 'prompts']);
         // Validating the response object
-        let expectedResponse = {
+        const expectedResponse = {
           'speech': 'hello',
           'data': {
             'google': {
@@ -415,7 +415,7 @@ describe('DialogflowApp', function () {
           .addSuggestions(['Say this', 'or this']), ['no', 'input', 'prompts']);
 
         // Validating the response object
-        let expectedResponse = {
+        const expectedResponse = {
           'speech': 'hello',
           'data': {
             'google': {
@@ -499,7 +499,7 @@ describe('DialogflowApp', function () {
           ]));
 
         // Validating the response object
-        let expectedResponse = {
+        const expectedResponse = {
           'speech': 'Here is a list',
           'data': {
             'google': {
@@ -577,7 +577,7 @@ describe('DialogflowApp', function () {
             ])
         );
         // Validating the response object
-        let expectedResponse = {
+        const expectedResponse = {
           'speech': 'Here is a carousel',
           'data': {
             'google': {
@@ -650,7 +650,7 @@ describe('DialogflowApp', function () {
     it('Should return the valid JSON in the response object for the success case.', function () {
       app.askForPermissions('To test', ['NAME', 'DEVICE_PRECISE_LOCATION']);
       // Validating the response object
-      let expectedResponse = {
+      const expectedResponse = {
         'speech': 'PLACEHOLDER_FOR_PERMISSION',
         'data': {
           'google': {
@@ -697,7 +697,7 @@ describe('DialogflowApp', function () {
     it('Should return the valid JSON in the response object for the success case.', function () {
       app.askForPermissions('To test', ['NAME', 'DEVICE_PRECISE_LOCATION']);
       // Validating the response object
-      let expectedResponse = {
+      const expectedResponse = {
         'speech': 'PLACEHOLDER_FOR_PERMISSION',
         'data': {
           'google': {
@@ -782,18 +782,16 @@ describe('DialogflowApp', function () {
   describe('#getUserLocale', function () {
     // Success case test, when the API returns a valid 200 response with the response object
     it('Should validate assistant request user with locale.', function () {
-      let mockRequest, app;
-      mockRequest = new MockRequest(headerV1, dialogflowAppRequestBodyLiveSession);
-      app = new DialogflowApp({request: mockRequest, response: mockResponse});
+      const mockRequest = new MockRequest(headerV1, dialogflowAppRequestBodyLiveSession);
+      const app = new DialogflowApp({request: mockRequest, response: mockResponse});
       expect(app.getUserLocale()).to.equal('en-US');
     });
 
     // Failure case
     it('Should return null for missing locale.', function () {
-      let mockRequest, app;
       dialogflowAppRequestBodyLiveSession.originalRequest.data.user.locale = undefined;
-      mockRequest = new MockRequest(headerV1, dialogflowAppRequestBodyLiveSession);
-      app = new DialogflowApp({request: mockRequest, response: mockResponse});
+      const mockRequest = new MockRequest(headerV1, dialogflowAppRequestBodyLiveSession);
+      const app = new DialogflowApp({request: mockRequest, response: mockResponse});
       expect(app.getUserLocale()).to.equal(null);
     });
   });
@@ -863,8 +861,8 @@ describe('DialogflowApp', function () {
 
     // Success case test, when the API returns a valid 200 response with the response object
     it('Should validate assistant request transaction result.', function () {
-      let mockRequest = new MockRequest(headerV1, dialogflowAppRequestBodyLiveSession);
-      let app = new DialogflowApp({
+      const mockRequest = new MockRequest(headerV1, dialogflowAppRequestBodyLiveSession);
+      const app = new DialogflowApp({
         request: mockRequest,
         response: mockResponse
       });
@@ -907,8 +905,8 @@ describe('DialogflowApp', function () {
 
     // Success case test, when the API returns a valid 200 response with the response object
     it('Should validate assistant request delivery address', function () {
-      let mockRequest = new MockRequest(headerV1, dialogflowAppRequestBodyLiveSession);
-      let app = new DialogflowApp({
+      const mockRequest = new MockRequest(headerV1, dialogflowAppRequestBodyLiveSession);
+      const app = new DialogflowApp({
         request: mockRequest,
         response: mockResponse
       });
@@ -934,8 +932,8 @@ describe('DialogflowApp', function () {
     // Success case test, when the API returns a valid 200 response with the response object
     it('Should validate assistant request delivery address for txn decision', function () {
       dialogflowAppRequestBodyLiveSession.originalRequest.data.inputs[0].arguments[0].name = 'TRANSACTION_DECISION_VALUE';
-      let mockRequest = new MockRequest(headerV1, dialogflowAppRequestBodyLiveSession);
-      let app = new DialogflowApp({
+      const mockRequest = new MockRequest(headerV1, dialogflowAppRequestBodyLiveSession);
+      const app = new DialogflowApp({
         request: mockRequest,
         response: mockResponse
       });
@@ -963,8 +961,8 @@ describe('DialogflowApp', function () {
     it('Should return null when user rejects', function () {
       dialogflowAppRequestBodyLiveSession.originalRequest.data.inputs[0].arguments[0].extension.userDecision =
         'REJECTED';
-      let mockRequest = new MockRequest(headerV1, dialogflowAppRequestBodyLiveSession);
-      let app = new DialogflowApp({
+      const mockRequest = new MockRequest(headerV1, dialogflowAppRequestBodyLiveSession);
+      const app = new DialogflowApp({
         request: mockRequest,
         response: mockResponse
       });
@@ -1002,10 +1000,10 @@ describe('DialogflowApp', function () {
           'name': 'TRANSACTION_DECISION_VALUE'
         }
       ];
-      let mockRequest = new MockRequest(headerV1, dialogflowAppRequestBodyLiveSession);
-      let mockResponse = new MockResponse();
+      const mockRequest = new MockRequest(headerV1, dialogflowAppRequestBodyLiveSession);
+      const mockResponse = new MockResponse();
 
-      let app = new DialogflowApp({
+      const app = new DialogflowApp({
         request: mockRequest,
         response: mockResponse
       });
@@ -1044,8 +1042,8 @@ describe('DialogflowApp', function () {
           'boolValue': true
         }
       ];
-      let mockRequest = new MockRequest(headerV1, dialogflowAppRequestBodyLiveSession);
-      let app = new DialogflowApp({
+      const mockRequest = new MockRequest(headerV1, dialogflowAppRequestBodyLiveSession);
+      const app = new DialogflowApp({
         request: mockRequest,
         response: mockResponse
       });
@@ -1060,8 +1058,8 @@ describe('DialogflowApp', function () {
           'boolValue': false
         }
       ];
-      let mockRequest = new MockRequest(headerV1, dialogflowAppRequestBodyLiveSession);
-      let app = new DialogflowApp({
+      const mockRequest = new MockRequest(headerV1, dialogflowAppRequestBodyLiveSession);
+      const app = new DialogflowApp({
         request: mockRequest,
         response: mockResponse
       });
@@ -1090,9 +1088,9 @@ describe('DialogflowApp', function () {
           'name': 'DATETIME'
         }
       ];
-      let mockRequest = new MockRequest(headerV1, dialogflowAppRequestBodyLiveSession);
+      const mockRequest = new MockRequest(headerV1, dialogflowAppRequestBodyLiveSession);
 
-      let app = new DialogflowApp({
+      const app = new DialogflowApp({
         request: mockRequest,
         response: mockResponse
       });
@@ -1112,9 +1110,9 @@ describe('DialogflowApp', function () {
     // Success case test, when the API returns a valid 200 response with the response object
     it('Should validate assistant request missing date/time information', function () {
       dialogflowAppRequestBodyLiveSession.originalRequest.data.inputs[0].arguments = [];
-      let mockRequest = new MockRequest(headerV1, dialogflowAppRequestBodyLiveSession);
+      const mockRequest = new MockRequest(headerV1, dialogflowAppRequestBodyLiveSession);
 
-      let app = new DialogflowApp({
+      const app = new DialogflowApp({
         request: mockRequest,
         response: mockResponse
       });
@@ -1137,9 +1135,9 @@ describe('DialogflowApp', function () {
           }
         }
       ];
-      let mockRequest = new MockRequest(headerV1, dialogflowAppRequestBodyLiveSession);
+      const mockRequest = new MockRequest(headerV1, dialogflowAppRequestBodyLiveSession);
 
-      let app = new DialogflowApp({
+      const app = new DialogflowApp({
         request: mockRequest,
         response: mockResponse
       });
@@ -1150,10 +1148,10 @@ describe('DialogflowApp', function () {
     // Success case test, when the API returns a valid 200 response with the response object
     it('Should validate assistant request missing sign in status', function () {
       dialogflowAppRequestBodyLiveSession.originalRequest.data.inputs[0].arguments = [];
-      let mockRequest = new MockRequest(headerV1, dialogflowAppRequestBodyLiveSession);
-      let mockResponse = new MockResponse();
+      const mockRequest = new MockRequest(headerV1, dialogflowAppRequestBodyLiveSession);
+      const mockResponse = new MockResponse();
 
-      let app = new DialogflowApp({
+      const app = new DialogflowApp({
         request: mockRequest,
         response: mockResponse
       });
@@ -1191,8 +1189,8 @@ describe('DialogflowApp', function () {
         }
       ];
       dialogflowAppRequestBodyLiveSession.originalRequest.data.availableSurfaces = availableSurfaces;
-      let mockRequest = new MockRequest(headerV1, dialogflowAppRequestBodyLiveSession);
-      let app = new DialogflowApp({
+      const mockRequest = new MockRequest(headerV1, dialogflowAppRequestBodyLiveSession);
+      const app = new DialogflowApp({
         request: mockRequest,
         response: mockResponse
       });
@@ -1202,8 +1200,8 @@ describe('DialogflowApp', function () {
 
     // Failure case test
     it('Should return empty assistant available surfaces', function () {
-      let mockRequest = new MockRequest(headerV2, dialogflowAppRequestBodyLiveSession);
-      let app = new DialogflowApp({
+      const mockRequest = new MockRequest(headerV2, dialogflowAppRequestBodyLiveSession);
+      const app = new DialogflowApp({
         request: mockRequest,
         response: mockResponse
       });
@@ -1243,8 +1241,8 @@ describe('DialogflowApp', function () {
 
     // Success case test, when the API returns a valid 200 response with the response object
     it('Should return true for set of valid capabilities', function () {
-      let mockRequest = new MockRequest(headerV1, dialogflowAppRequestBodyLiveSession);
-      let app = new DialogflowApp({
+      const mockRequest = new MockRequest(headerV1, dialogflowAppRequestBodyLiveSession);
+      const app = new DialogflowApp({
         request: mockRequest,
         response: mockResponse
       });
@@ -1254,8 +1252,8 @@ describe('DialogflowApp', function () {
 
     // Success case test, when the API returns a valid 200 response with the response object
     it('Should return true for one valid capability', function () {
-      let mockRequest = new MockRequest(headerV1, dialogflowAppRequestBodyLiveSession);
-      let app = new DialogflowApp({
+      const mockRequest = new MockRequest(headerV1, dialogflowAppRequestBodyLiveSession);
+      const app = new DialogflowApp({
         request: mockRequest,
         response: mockResponse
       });
@@ -1265,8 +1263,8 @@ describe('DialogflowApp', function () {
 
     // Failure case test, when the API returns a valid 200 response with the response object
     it('Should return false for set of invalid capabilities', function () {
-      let mockRequest = new MockRequest(headerV1, dialogflowAppRequestBodyLiveSession);
-      let app = new DialogflowApp({
+      const mockRequest = new MockRequest(headerV1, dialogflowAppRequestBodyLiveSession);
+      const app = new DialogflowApp({
         request: mockRequest,
         response: mockResponse
       });
@@ -1276,8 +1274,8 @@ describe('DialogflowApp', function () {
 
     // Failure case test, when the API returns a valid 200 response with the response object
     it('Should return false for one invalid capability', function () {
-      let mockRequest = new MockRequest(headerV1, dialogflowAppRequestBodyLiveSession);
-      let app = new DialogflowApp({
+      const mockRequest = new MockRequest(headerV1, dialogflowAppRequestBodyLiveSession);
+      const app = new DialogflowApp({
         request: mockRequest,
         response: mockResponse
       });
@@ -1288,8 +1286,8 @@ describe('DialogflowApp', function () {
     // Failure case test
     it('Should return false for empty assistant available surfaces', function () {
       dialogflowAppRequestBodyLiveSession.availableSurfaces = undefined;
-      let mockRequest = new MockRequest(headerV2, dialogflowAppRequestBodyLiveSession);
-      let app = new DialogflowApp({
+      const mockRequest = new MockRequest(headerV2, dialogflowAppRequestBodyLiveSession);
+      const app = new DialogflowApp({
         request: mockRequest,
         response: mockResponse
       });
@@ -1314,7 +1312,7 @@ describe('DialogflowApp', function () {
     // Success case test, when the API returns a valid 200 response with the response object
     it('Should return valid JSON transaction requirements with Google payment options',
       function () {
-        let transactionConfig = {
+        const transactionConfig = {
           deliveryAddressRequired: true,
           tokenizationParameters: {
             myParam: 'myParam'
@@ -1328,7 +1326,7 @@ describe('DialogflowApp', function () {
 
         app.askForTransactionRequirements(transactionConfig);
 
-        let expectedResponse = {
+        const expectedResponse = {
           'speech': 'PLACEHOLDER_FOR_TXN_REQUIREMENTS',
           'data': {
             'google': {
@@ -1377,7 +1375,7 @@ describe('DialogflowApp', function () {
     // Success case test, when the API returns a valid 200 response with the response object
     it('Should return valid JSON transaction requirements with Action payment options',
       function () {
-        let transactionConfig = {
+        const transactionConfig = {
           deliveryAddressRequired: true,
           type: 'BANK',
           displayName: 'Checking-4773'
@@ -1385,7 +1383,7 @@ describe('DialogflowApp', function () {
 
         app.askForTransactionRequirements(transactionConfig);
 
-        let expectedResponse = {
+        const expectedResponse = {
           'speech': 'PLACEHOLDER_FOR_TXN_REQUIREMENTS',
           'data': {
             'google': {
@@ -1429,16 +1427,16 @@ describe('DialogflowApp', function () {
   describe('#askForDeliveryAddress', function () {
     // Success case test, when the API returns a valid 200 response with the response object
     it('Should return valid JSON delivery address', function () {
-      let mockRequest = new MockRequest(headerV2, dialogflowAppRequestBodyLiveSession);
+      const mockRequest = new MockRequest(headerV2, dialogflowAppRequestBodyLiveSession);
 
-      let app = new DialogflowApp({
+      const app = new DialogflowApp({
         request: mockRequest,
         response: mockResponse
       });
 
       app.askForDeliveryAddress('Just because');
 
-      let expectedResponse = {
+      const expectedResponse = {
         'speech': 'PLACEHOLDER_FOR_DELIVERY_ADDRESS',
         'data': {
           'google': {
@@ -1485,7 +1483,7 @@ describe('DialogflowApp', function () {
     });
     // Success case test, when the API returns a valid 200 response with the response object
     it('Should return valid JSON transaction decision with Google payment options', function () {
-      let transactionConfig = {
+      const transactionConfig = {
         deliveryAddressRequired: true,
         tokenizationParameters: {
           myParam: 'myParam'
@@ -1502,7 +1500,7 @@ describe('DialogflowApp', function () {
 
       app.askForTransactionDecision({fakeOrderId: 'order_id'}, transactionConfig);
 
-      let expectedResponse = {
+      const expectedResponse = {
         'speech': 'PLACEHOLDER_FOR_TXN_DECISION',
         'data': {
           'google': {
@@ -1554,7 +1552,7 @@ describe('DialogflowApp', function () {
 
     // Success case test, when the API returns a valid 200 response with the response object
     it('Should return valid JSON transaction decision with Action payment options', function () {
-      let transactionConfig = {
+      const transactionConfig = {
         deliveryAddressRequired: true,
         type: 'BANK',
         displayName: 'Checking-4773',
@@ -1565,7 +1563,7 @@ describe('DialogflowApp', function () {
 
       app.askForTransactionDecision({fakeOrderId: 'order_id'}, transactionConfig);
 
-      let expectedResponse = {
+      const expectedResponse = {
         'speech': 'PLACEHOLDER_FOR_TXN_DECISION',
         'data': {
           'google': {
@@ -1624,7 +1622,7 @@ describe('DialogflowApp', function () {
     // Success case test, when the API returns a valid 200 response with the response object
     it('Should return valid JSON confirmation request', function () {
       app.askForConfirmation('You want to do that?');
-      let expectedResponse = {
+      const expectedResponse = {
         'speech': 'PLACEHOLDER_FOR_CONFIRMATION',
         'data': {
           'google': {
@@ -1659,7 +1657,7 @@ describe('DialogflowApp', function () {
     it('Should return valid JSON confirmation request without prompt', function () {
       app.askForConfirmation();
 
-      let expectedResponse = {
+      const expectedResponse = {
         'speech': 'PLACEHOLDER_FOR_CONFIRMATION',
         'data': {
           'google': {
@@ -1708,7 +1706,7 @@ describe('DialogflowApp', function () {
         'What is the best date for you?',
         'What time of day works best for you?');
 
-      let expectedResponse = {
+      const expectedResponse = {
         'speech': 'PLACEHOLDER_FOR_DATETIME',
         'data': {
           'google': {
@@ -1744,7 +1742,7 @@ describe('DialogflowApp', function () {
     // Success case test, when the API returns a valid 200 response with the response object
     it('Should return valid JSON datetime request with partial prompts', function () {
       app.askForDateTime('When do you want to come in?', null);
-      let expectedResponse = {
+      const expectedResponse = {
         'speech': 'PLACEHOLDER_FOR_DATETIME',
         'data': {
           'google': {
@@ -1779,7 +1777,7 @@ describe('DialogflowApp', function () {
     it('Should return valid JSON datetime request withouts prompt', function () {
       app.askForDateTime();
 
-      let expectedResponse = {
+      const expectedResponse = {
         'speech': 'PLACEHOLDER_FOR_DATETIME',
         'data': {
           'google': {
@@ -1825,7 +1823,7 @@ describe('DialogflowApp', function () {
     // Success case test, when the API returns a valid 200 response with the response object
     it('Should return valid JSON sign in request', function () {
       app.askForSignIn();
-      let expectedResponse = {
+      const expectedResponse = {
         'speech': 'PLACEHOLDER_FOR_SIGN_IN',
         'data': {
           'google': {
@@ -1869,7 +1867,7 @@ describe('DialogflowApp', function () {
     // Success case test, when the API returns a valid 200 response with the response object
     it('Should return valid JSON sign in request', function () {
       app.askForNewSurface('test context', 'test title', ['cap_one', 'cap_two']);
-      let expectedResponse = {
+      const expectedResponse = {
         'speech': 'PLACEHOLDER_FOR_NEW_SURFACE',
         'data': {
           'google': {
@@ -1916,9 +1914,9 @@ describe('DialogflowApp', function () {
         }
       ];
 
-      let mockRequest = new MockRequest(headerV1, dialogflowAppRequestBodyLiveSession);
+      const mockRequest = new MockRequest(headerV1, dialogflowAppRequestBodyLiveSession);
 
-      let app = new DialogflowApp({
+      const app = new DialogflowApp({
         request: mockRequest,
         response: mockResponse
       });
@@ -1937,9 +1935,9 @@ describe('DialogflowApp', function () {
         }
       ];
 
-      let mockRequest = new MockRequest(headerV1, dialogflowAppRequestBodyLiveSession);
+      const mockRequest = new MockRequest(headerV1, dialogflowAppRequestBodyLiveSession);
 
-      let app = new DialogflowApp({
+      const app = new DialogflowApp({
         request: mockRequest,
         response: mockResponse
       });
@@ -2024,8 +2022,8 @@ describe('DialogflowApp', function () {
           }
         ]
       }];
-      let mockRequest = new MockRequest(headerV2, dialogflowAppRequestBodyLiveSession);
-      let app = new DialogflowApp({
+      const mockRequest = new MockRequest(headerV2, dialogflowAppRequestBodyLiveSession);
+      const app = new DialogflowApp({
         request: mockRequest,
         response: mockResponse
       });
@@ -2033,8 +2031,8 @@ describe('DialogflowApp', function () {
     });
     // Test case checking it handles API requests without reprompt count correctly.
     it('Should return null when no reprompt count available.', function () {
-      let mockRequest = new MockRequest(headerV2, dialogflowAppRequestBodyLiveSession);
-      let app = new DialogflowApp({
+      const mockRequest = new MockRequest(headerV2, dialogflowAppRequestBodyLiveSession);
+      const app = new DialogflowApp({
         request: mockRequest,
         response: mockResponse
       });
@@ -2061,8 +2059,8 @@ describe('DialogflowApp', function () {
           }
         ]
       }];
-      let mockRequest = new MockRequest(headerV2, dialogflowAppRequestBodyLiveSession);
-      let app = new DialogflowApp({
+      const mockRequest = new MockRequest(headerV2, dialogflowAppRequestBodyLiveSession);
+      const app = new DialogflowApp({
         request: mockRequest,
         response: mockResponse
       });
@@ -2083,8 +2081,8 @@ describe('DialogflowApp', function () {
           }
         ]
       }];
-      let mockRequest = new MockRequest(headerV2, dialogflowAppRequestBodyLiveSession);
-      let app = new DialogflowApp({
+      const mockRequest = new MockRequest(headerV2, dialogflowAppRequestBodyLiveSession);
+      const app = new DialogflowApp({
         request: mockRequest,
         response: mockResponse
       });
@@ -2092,8 +2090,8 @@ describe('DialogflowApp', function () {
     });
     // Failure case test, when the API requests without reprompt count.
     it('Should return false when no reprompt count available.', function () {
-      let mockRequest = new MockRequest(headerV2, dialogflowAppRequestBodyLiveSession);
-      let app = new DialogflowApp({
+      const mockRequest = new MockRequest(headerV2, dialogflowAppRequestBodyLiveSession);
+      const app = new DialogflowApp({
         request: mockRequest,
         response: mockResponse
       });
@@ -2425,7 +2423,7 @@ describe('DialogflowApp', function () {
   describe('#isRequestFromDialogflow', function () {
     // Success case test, when the API returns a valid 200 response with the response object
     it('Should confirm request is from Dialogflow.', function () {
-      let header = JSON.parse(JSON.stringify(headerV1));
+      const header = JSON.parse(JSON.stringify(headerV1));
       header['Google-Assistant-Signature'] = 'YOUR_PRIVATE_KEY';
       const mockRequest = new MockRequest(header, dialogflowAppRequestBodyLiveSession);
 
@@ -2441,7 +2439,7 @@ describe('DialogflowApp', function () {
     });
 
     it('Should confirm request is NOT from Dialogflow.', function () {
-      let header = JSON.parse(JSON.stringify(headerV1));
+      const header = JSON.parse(JSON.stringify(headerV1));
       const mockRequest = new MockRequest(header, dialogflowAppRequestBodyLiveSession);
 
       const app = new DialogflowApp({
@@ -2474,16 +2472,16 @@ describe('DialogflowApp', function () {
           ]
         };
 
-        let mockRequest = new MockRequest(headerV1, dialogflowAppRequestBodyLiveSession);
+        const mockRequest = new MockRequest(headerV1, dialogflowAppRequestBodyLiveSession);
 
-        let app = new DialogflowApp({
+        const app = new DialogflowApp({
           request: mockRequest,
           response: mockResponse
         });
 
-        let hasScreenOutput =
+        const hasScreenOutput =
           app.hasSurfaceCapability(app.SurfaceCapabilities.SCREEN_OUTPUT);
-        let hasMagicPowers =
+        const hasMagicPowers =
           app.hasSurfaceCapability('MAGIC_POWERS');
         expect(hasScreenOutput).to.be.true;
         expect(hasMagicPowers).to.be.false;
@@ -2508,14 +2506,14 @@ describe('DialogflowApp', function () {
           ]
         };
 
-        let mockRequest = new MockRequest(headerV1, dialogflowAppRequestBodyLiveSession);
+        const mockRequest = new MockRequest(headerV1, dialogflowAppRequestBodyLiveSession);
 
-        let app = new DialogflowApp({
+        const app = new DialogflowApp({
           request: mockRequest,
           response: mockResponse
         });
 
-        let capabilities = app.getSurfaceCapabilities();
+        const capabilities = app.getSurfaceCapabilities();
         expect(capabilities).to.deep.equal([
           app.SurfaceCapabilities.AUDIO_OUTPUT,
           app.SurfaceCapabilities.SCREEN_OUTPUT
@@ -2539,13 +2537,13 @@ describe('DialogflowApp', function () {
           ]
         }
       ];
-      let mockRequest = new MockRequest(headerV1, dialogflowAppRequestBodyLiveSession);
-      let app = new DialogflowApp({
+      const mockRequest = new MockRequest(headerV1, dialogflowAppRequestBodyLiveSession);
+      const app = new DialogflowApp({
         request: mockRequest,
         response: mockResponse
       });
 
-      let inputType = app.getInputType();
+      const inputType = app.getInputType();
       expect(inputType).to.equal(app.InputTypes.KEYBOARD);
     });
   });
@@ -2586,7 +2584,7 @@ describe('DialogflowApp', function () {
       app.ask('Welcome to action snippets! Say a number.');
 
       // Validating the response object
-      let expectedResponse = {
+      const expectedResponse = {
         'speech': 'Welcome to action snippets! Say a number.',
         'data': {
           'google': {
@@ -2654,8 +2652,8 @@ describe('DialogflowApp', function () {
       ];
       mockRequest.body = dialogflowAppRequestBodyLiveSession;
       initMockApp();
-      let mockContexts = app.getContexts();
-      let expectedContexts = [
+      const mockContexts = app.getContexts();
+      const expectedContexts = [
         {
           'name': 'number',
           'lifespan': 5,
@@ -2680,8 +2678,8 @@ describe('DialogflowApp', function () {
         dialogflowAppRequestBodyLiveSession.result.contexts = [{'name': '_actions_on_google_'}];
         mockRequest.body = dialogflowAppRequestBodyLiveSession;
         initMockApp();
-        let mockContexts = app.getContexts();
-        let expectedContexts = [];
+        const mockContexts = app.getContexts();
+        const expectedContexts = [];
         expect(mockContexts).to.deep.equal(expectedContexts);
       });
     it('Should return the active contexts from incoming JSON when no contexts provided.',
@@ -2690,8 +2688,8 @@ describe('DialogflowApp', function () {
         dialogflowAppRequestBodyLiveSession.result.contexts = [];
         mockRequest.body = dialogflowAppRequestBodyLiveSession;
         initMockApp();
-        let mockContexts = app.getContexts();
-        let expectedContexts = [];
+        const mockContexts = app.getContexts();
+        const expectedContexts = [];
         expect(mockContexts).to.deep.equal(expectedContexts);
       });
   });
@@ -2726,8 +2724,8 @@ describe('DialogflowApp', function () {
       mockRequest.body = dialogflowAppRequestBodyLiveSession;
       initMockApp();
 
-      let mockContext = app.getContext('number');
-      let expectedContext = {
+      const mockContext = app.getContext('number');
+      const expectedContext = {
         'name': 'number',
         'lifespan': 5,
         'parameters': {
@@ -2744,8 +2742,8 @@ describe('DialogflowApp', function () {
         dialogflowAppRequestBodyLiveSession.result.contexts = [];
         mockRequest.body = dialogflowAppRequestBodyLiveSession;
         initMockApp();
-        let mockContext = app.getContext('name');
-        let expectedContext = null;
+        const mockContext = app.getContext('name');
+        const expectedContext = null;
         expect(mockContext).to.equal(expectedContext);
       });
   });
@@ -2765,7 +2763,7 @@ describe('DialogflowApp', function () {
       app.ask('Welcome to action snippets! Say a number.',
         ['Say any number', 'Pick a number', 'What is the number?']);
 
-      let expectedResponse = {
+      const expectedResponse = {
         'speech': 'Welcome to action snippets! Say a number.',
         'data': {
           'google': {
@@ -2995,7 +2993,7 @@ describe('DialogflowApp', function () {
           textValue: 'intent_value'
         }
       ]);
-      let expectedResponse = {
+      const expectedResponse = {
         'speech': 'PLACEHOLDER_FOR_REGISTER_UPDATE',
         'data': {
           'google': {
@@ -3038,7 +3036,7 @@ describe('DialogflowApp', function () {
     // Success case test, when the API returns a valid 200 response with the response object without arguments
     it('Should return valid JSON update registration request', function () {
       app.askToRegisterDailyUpdate('test_intent');
-      let expectedResponse = {
+      const expectedResponse = {
         'speech': 'PLACEHOLDER_FOR_REGISTER_UPDATE',
         'data': {
           'google': {
@@ -3138,7 +3136,7 @@ describe('DialogflowApp', function () {
         }
       ]);
       // Validating the response object
-      let expectedResponse = {
+      const expectedResponse = {
         'speech': 'PLACEHOLDER_FOR_PERMISSION',
         'data': {
           'google': {
@@ -3179,7 +3177,7 @@ describe('DialogflowApp', function () {
     it('Should return the valid JSON in the response object without arguments for the success case.', function () {
       app.askForUpdatePermission('test_intent');
       // Validating the response object
-      let expectedResponse = {
+      const expectedResponse = {
         'speech': 'PLACEHOLDER_FOR_PERMISSION',
         'data': {
           'google': {

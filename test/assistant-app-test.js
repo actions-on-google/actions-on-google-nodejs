@@ -58,7 +58,7 @@ describe('AssistantApp', function () {
    * Describes the behavior for Assistant isNotApiVersionOne_ method.
    */
   describe('#isNotApiVersionOne_', function () {
-    let invalidHeader = {
+    const invalidHeader = {
       'Content-Type': 'application/json',
       'google-assistant-api-version': 'v1',
       'Google-Actions-API-Version': '1'
@@ -87,7 +87,7 @@ describe('AssistantApp', function () {
     });
 
     it('Should detect v2 when header is present', function () {
-      let headerWithV2 = JSON.parse(JSON.stringify(headerV1));
+      const headerWithV2 = JSON.parse(JSON.stringify(headerV1));
       headerWithV2['Google-Actions-API-Version'] = '2';
       const mockRequest = new MockRequest(headerWithV2, {});
       const app = new AssistantApp({request: mockRequest, response: mockResponse});
@@ -177,7 +177,7 @@ describe('AssistantApp', function () {
     });
 
     it('Should resolve a promise when actionMap contains a handler that returns a promise', function (done) {
-      let handler = app => {
+      const handler = app => {
         return Promise.resolve('success');
       };
 
@@ -193,7 +193,7 @@ describe('AssistantApp', function () {
     });
 
     it('Should reject a promise when actionMap contains a handler that returns a promise error', function (done) {
-      let handler = app => {
+      const handler = app => {
         return Promise.reject(new Error('error'));
       };
 
@@ -209,7 +209,7 @@ describe('AssistantApp', function () {
     });
 
     it('Should resolve a promise when handler function returns a promise', function (done) {
-      let handler = app => {
+      const handler = app => {
         return Promise.resolve('success');
       };
 
@@ -222,7 +222,7 @@ describe('AssistantApp', function () {
     });
 
     it('Should reject a promise when handler function returns a promise error', function (done) {
-      let handler = app => {
+      const handler = app => {
         return Promise.reject(new Error('error'));
       };
 
@@ -235,7 +235,7 @@ describe('AssistantApp', function () {
     });
 
     it('Should resolve a promise when handler function does not return a promise', function (done) {
-      let handler = app => {
+      const handler = app => {
         return 'success';
       };
 
@@ -248,7 +248,7 @@ describe('AssistantApp', function () {
     });
 
     it('Should resolve a promise when actionMap contains a handler that does not return a promise', function (done) {
-      let handler = app => {
+      const handler = app => {
         return 'success';
       };
 

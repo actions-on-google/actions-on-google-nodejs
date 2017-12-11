@@ -94,7 +94,7 @@ describe('transformToSnakeCase', function () {
     });
   });
   it('Does not convert incoming function to object', function () {
-    let stubFunc = function () {};
+    const stubFunc = function () {};
     const camelCaseObject = {
       keyOne: {
         keyTwo: [
@@ -200,7 +200,7 @@ describe('transformToCamelCase', function () {
     });
   });
   it('Does not convert incoming function to object', function () {
-    let stubFunc = function () {};
+    const stubFunc = function () {};
     const snakeCaseObject = {
       key_one: {
         key_two: [

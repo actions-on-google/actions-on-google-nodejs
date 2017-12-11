@@ -54,7 +54,7 @@ winston.loggers.add('DEFAULT_LOGGER', {
 describe('RichResponse', () => {
   describe('#constructor', () => {
     it('should create valid object', () => {
-      let richResponse = new RichResponse();
+      const richResponse = new RichResponse();
       expect(JSON.parse(JSON.stringify(richResponse))).to.deep.equal({
         items: [],
         suggestions: []
@@ -307,7 +307,7 @@ describe('RichResponse', () => {
 describe('BasicCard', () => {
   describe('#constructor', () => {
     it('should create valid object', () => {
-      let basicCard = new BasicCard();
+      const basicCard = new BasicCard();
       expect(JSON.parse(JSON.stringify(basicCard))).to.deep.equal({
         formattedText: '',
         buttons: []
@@ -515,7 +515,7 @@ describe('BasicCard', () => {
 describe('List', () => {
   describe('#constructor', () => {
     it('should create valid object', () => {
-      let list = new List();
+      const list = new List();
       expect(JSON.parse(JSON.stringify(list))).to.deep.equal({
         items: []
       });
@@ -597,9 +597,9 @@ describe('List', () => {
     });
 
     it('should add no more than 30 items', () => {
-      let optionItems = [];
+      const optionItems = [];
       for (let i = 0; i < 35; i++) {
-        let optionItem = new OptionItem().setKey(i.toString());
+        const optionItem = new OptionItem().setKey(i.toString());
         optionItems.push(optionItem);
       }
       list.addItems(optionItems);
@@ -617,7 +617,7 @@ describe('List', () => {
 describe('Carousel', () => {
   describe('#constructor', () => {
     it('should create valid object', () => {
-      let carousel = new Carousel();
+      const carousel = new Carousel();
       expect(JSON.parse(JSON.stringify(carousel))).to.deep.equal({
         items: []
       });
@@ -674,9 +674,9 @@ describe('Carousel', () => {
     });
 
     it('should add no more than 10 items', () => {
-      let optionItems = [];
+      const optionItems = [];
       for (let i = 0; i < 15; i++) {
-        let optionItem = new OptionItem().setKey(i.toString());
+        const optionItem = new OptionItem().setKey(i.toString());
         optionItems.push(optionItem);
       }
       carousel.addItems(optionItems);
@@ -694,7 +694,7 @@ describe('Carousel', () => {
 describe('OptionItem', () => {
   describe('#constructor', () => {
     it('should create valid object', () => {
-      let optionItem = new OptionItem();
+      const optionItem = new OptionItem();
       expect(JSON.parse(JSON.stringify(optionItem))).to.deep.equal({
         title: '',
         optionInfo: {
