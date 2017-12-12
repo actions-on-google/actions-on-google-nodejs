@@ -47,6 +47,11 @@
     "curly": ["error", "all"],
     "brace-style": ["error", "1tbs", {
       "allowSingleLine": false
+    }],
+    "no-magic-numbers": ["error", {
+      "enforceConst": true,
+      "ignore": [0, 1, -1],
+      "ignoreArrayIndexes": false
     }]
   },
   "plugins": [

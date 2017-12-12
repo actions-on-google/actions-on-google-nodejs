@@ -21,6 +21,7 @@ const debug = Debug('actions-on-google:debug');
 const error = Debug('actions-on-google:error');
 const { AssistantApp, State } = require('./assistant-app');
 const { transformToCamelCase } = require('./utils/transform');
+const { Limits } = require('./response-builder');
 
 // Constants
 const RESPONSE_CODE_OK = 200;
@@ -592,8 +593,8 @@ class DialogflowApp extends AssistantApp {
       this.handleError_('Invalid list');
       return null;
     }
-    if (list.items.length < 2) {
-      this.handleError_('List requires at least 2 items');
+    if (list.items.length < Limits.OPTIONS_MIN) {
+      this.handleError_(`List requires at least ${Limits.OPTIONS_MIN} items`);
       return null;
     }
     const response = this.buildResponse_(inputPrompt, true);
@@ -672,8 +673,8 @@ class DialogflowApp extends AssistantApp {
       this.handleError_('Invalid carousel');
       return null;
     }
-    if (carousel.items.length < 2) {
-      this.handleError_('Carousel requires at least 2 items');
+    if (carousel.items.length < Limits.OPTIONS_MIN) {
+      this.handleError_(`Carousel requires at least ${Limits.OPTIONS_MIN} items`);
       return null;
     }
     const response = this.buildResponse_(inputPrompt, true);

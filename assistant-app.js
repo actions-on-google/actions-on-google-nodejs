@@ -248,6 +248,7 @@ class AssistantApp {
      */
     this.ANY_TYPE_PROPERTY_ = '@type';
 
+    /* eslint-disable no-magic-numbers */
     /**
      * List of possible conversation stages, as defined in the
      * {@link https://developers.google.com/actions/reference/conversation#Conversation|Conversation object}.
@@ -320,6 +321,7 @@ class AssistantApp {
        */
       KEYBOARD: this.isNotApiVersionOne_() ? 'KEYBOARD' : 3
     };
+    /* eslint-enable no-magic-numbers */
 
     /**
      * API version describes version of the Assistant request.

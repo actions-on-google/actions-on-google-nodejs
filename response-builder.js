@@ -25,8 +25,13 @@ const debug = Debug('actions-on-google:debug');
 const warn = Debug('actions-on-google:warn');
 const error = Debug('actions-on-google:error');
 
-const LIST_ITEM_LIMIT = 30;
-const CAROUSEL_ITEM_LIMIT = 10;
+const Limits = {
+  LIST_ITEM_MAX: 30,
+  CAROUSEL_ITEM_MAX: 10,
+  OPTIONS_MIN: 2,
+  SIMPLE_RESPONSE_MAX: 2,
+  SUGGESTION_TEXT_MAX: 25
+};
 
 /**
  * List of possible options to display the image in a BasicCard.
@@ -194,8 +199,8 @@ const RichResponse = class {
       if (item.simpleResponse) {
         simpleResponseCount++;
       }
-      if (simpleResponseCount >= 2) {
-        error('Cannot include >2 SimpleResponses in RichResponse');
+      if (simpleResponseCount >= Limits.SIMPLE_RESPONSE_MAX) {
+        error(`Cannot include >${Limits.SIMPLE_RESPONSE_MAX} SimpleResponses in RichResponse`);
         return this;
       }
     }
@@ -267,14 +272,15 @@ const RichResponse = class {
   }
 
   /**
-   * Returns true if the given suggestion text is valid to be added to the suggestion list. A valid
-   * text string is not longer than 25 characters.
+   * Returns true if the given suggestion text is valid to be added to the suggestion list.
+   * A valid text string is not longer than 25 characters.
    *
    * @param {string} suggestionText Text to validate as suggestion.
    * @return {boolean} True if the text is valid, false otherwise.s
    */
   isValidSuggestionText (suggestionText) {
-    return suggestionText && suggestionText.length && suggestionText.length <= 25;
+    return suggestionText && suggestionText.length &&
+      suggestionText.length <= Limits.SUGGESTION_TEXT_MAX;
   }
 
   /**
@@ -623,9 +629,9 @@ const List = class {
     } else {
       this.items.push(optionItems);
     }
-    if (this.items.length > LIST_ITEM_LIMIT) {
-      this.items = this.items.slice(0, LIST_ITEM_LIMIT);
-      error(`List can have no more than ${LIST_ITEM_LIMIT} items`);
+    if (this.items.length > Limits.LIST_ITEM_MAX) {
+      this.items = this.items.slice(0, Limits.LIST_ITEM_MAX);
+      error(`List can have no more than ${Limits.LIST_ITEM_MAX} items`);
     }
     return this;
   }
@@ -682,9 +688,9 @@ const Carousel = class {
     } else {
       this.items.push(optionItems);
     }
-    if (this.items.length > CAROUSEL_ITEM_LIMIT) {
-      this.items = this.items.slice(0, CAROUSEL_ITEM_LIMIT);
-      error(`Carousel can have no more than ${CAROUSEL_ITEM_LIMIT} items`);
+    if (this.items.length > Limits.CAROUSEL_ITEM_MAX) {
+      this.items = this.items.slice(0, Limits.CAROUSEL_ITEM_MAX);
+      error(`Carousel can have no more than ${Limits.CAROUSEL_ITEM_MAX} items`);
     }
     return this;
   }
@@ -863,5 +869,6 @@ module.exports = {
   Carousel,
   OptionItem,
   isSsml,
-  ImageDisplays
+  ImageDisplays,
+  Limits
 };
