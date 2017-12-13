@@ -2563,7 +2563,7 @@ AssistantApp.prototype.StandardIntents = {
  */
 AssistantApp.prototype.BuiltInArgNames = {
   /** Permission granted argument. */
-  PERMISSION_GRANTED: 'acitons.intent.PERMISSION_GRANTED',
+  PERMISSION_GRANTED: 'PERMISSION',
   /** Option selected argument. */
   OPTION: 'OPTION',
   /** Transaction requirements check result argument. */
