@@ -27,7 +27,8 @@ const {
   List,
   Carousel,
   OptionItem,
-  isSsml
+  isSsml,
+  ImageDisplays
 } = require('./response-builder');
 
 // Transaction classes
@@ -2587,6 +2588,13 @@ AssistantApp.prototype.BuiltInArgNames = {
   /** Update registration value argument. */
   REGISTER_UPDATE: 'REGISTER_UPDATE'
 };
+
+/**
+ * Values related to supporting {@link ImageDisplays}.
+ * @readonly
+ * @type {object}
+ */
+AssistantApp.prototype.ImageDisplays = ImageDisplays;
 
 /**
  * Values related to supporting {@link Transactions}.
