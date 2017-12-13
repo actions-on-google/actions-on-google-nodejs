@@ -33,6 +33,8 @@ const {
   OrderUpdate
 } = require('.././transactions');
 
+const { clone } = require('./utils/mocking');
+
 // Default logger
 winston.loggers.add('DEFAULT_LOGGER', {
   console: {
@@ -51,7 +53,7 @@ describe('Order', () => {
   describe('#constructor', () => {
     it('should create valid object', () => {
       const order = new Order('test_id');
-      expect(JSON.parse(JSON.stringify(order))).to.deep.equal({
+      expect(clone(order)).to.deep.equal({
         id: 'test_id',
         otherItems: []
       });
@@ -69,7 +71,7 @@ describe('Order', () => {
       order.setCart({
         test_property: 'test_value'
       });
-      expect(JSON.parse(JSON.stringify(order))).to.deep.equal({
+      expect(clone(order)).to.deep.equal({
         id: 'test_id',
         otherItems: [],
         cart: {
@@ -85,7 +87,7 @@ describe('Order', () => {
       order.setCart({
         test_property: 'test_value'
       });
-      expect(JSON.parse(JSON.stringify(order))).to.deep.equal({
+      expect(clone(order)).to.deep.equal({
         id: 'test_id',
         otherItems: [],
         cart: {
@@ -106,7 +108,7 @@ describe('Order', () => {
       order.addOtherItems({
         new_item: 'new_item'
       });
-      expect(JSON.parse(JSON.stringify(order))).to.deep.equal({
+      expect(clone(order)).to.deep.equal({
         id: 'test_id',
         otherItems: [{
           new_item: 'new_item'
@@ -122,7 +124,7 @@ describe('Order', () => {
         {
           new_item: 'new_item_2'
         }]);
-      expect(JSON.parse(JSON.stringify(order))).to.deep.equal({
+      expect(clone(order)).to.deep.equal({
         id: 'test_id',
         otherItems: [
           {
@@ -144,7 +146,7 @@ describe('Order', () => {
 
     it('should set the image', () => {
       order.setImage('http://image.com', 'ALT_TEXT', 100, 150);
-      expect(JSON.parse(JSON.stringify(order))).to.deep.equal({
+      expect(clone(order)).to.deep.equal({
         id: 'test_id',
         otherItems: [],
         image: {
@@ -159,7 +161,7 @@ describe('Order', () => {
     it('should overwrite previously set image', () => {
       order.setImage('http://image.com', 'ALT_TEXT', 100, 150);
       order.setImage('http://image.com/2', 'ALT_TEXT_2');
-      expect(JSON.parse(JSON.stringify(order))).to.deep.equal({
+      expect(clone(order)).to.deep.equal({
         id: 'test_id',
         otherItems: [],
         image: {
@@ -179,7 +181,7 @@ describe('Order', () => {
 
     it('should set the TOS', () => {
       order.setTermsOfService('http://example.com');
-      expect(JSON.parse(JSON.stringify(order))).to.deep.equal({
+      expect(clone(order)).to.deep.equal({
         id: 'test_id',
         otherItems: [],
         termsOfServiceUrl: 'http://example.com'
@@ -189,7 +191,7 @@ describe('Order', () => {
     it('should overwrite previously set TOS', () => {
       order.setTermsOfService('http://example.com');
       order.setTermsOfService('http://example.com/2');
-      expect(JSON.parse(JSON.stringify(order))).to.deep.equal({
+      expect(clone(order)).to.deep.equal({
         id: 'test_id',
         otherItems: [],
         termsOfServiceUrl: 'http://example.com/2'
@@ -206,7 +208,7 @@ describe('Order', () => {
 
     it('should set the price', () => {
       order.setTotalPrice('ACTUAL', 'USD', 30, 40);
-      expect(JSON.parse(JSON.stringify(order))).to.deep.equal({
+      expect(clone(order)).to.deep.equal({
         id: 'test_id',
         otherItems: [],
         totalPrice: {
@@ -223,7 +225,7 @@ describe('Order', () => {
     it('should overwrite previously set price', () => {
       order.setTotalPrice('ACTUAL', 'USD', 30, 40);
       order.setTotalPrice('ESTIMATE', 'GBP', 60);
-      expect(JSON.parse(JSON.stringify(order))).to.deep.equal({
+      expect(clone(order)).to.deep.equal({
         id: 'test_id',
         otherItems: [],
         totalPrice: {
@@ -247,7 +249,7 @@ describe('Order', () => {
 
     it('should set the time', () => {
       order.setTime('TIME_TYPE', 'SAMPLE_TIME');
-      expect(JSON.parse(JSON.stringify(order))).to.deep.equal({
+      expect(clone(order)).to.deep.equal({
         id: 'test_id',
         otherItems: [],
         extension: {
@@ -263,7 +265,7 @@ describe('Order', () => {
     it('should overwrite the previously set time', () => {
       order.setTime('TIME_TYPE', 'SAMPLE_TIME');
       order.setTime('TIME_TYPE_2', 'SAMPLE_TIME_2');
-      expect(JSON.parse(JSON.stringify(order))).to.deep.equal({
+      expect(clone(order)).to.deep.equal({
         id: 'test_id',
         otherItems: [],
         extension: {
@@ -307,7 +309,7 @@ describe('Order', () => {
 
     it('should add one location', () => {
       order.addLocation(locationOne.type, locationOne.location);
-      expect(JSON.parse(JSON.stringify(order))).to.deep.equal({
+      expect(clone(order)).to.deep.equal({
         id: 'test_id',
         otherItems: [],
         extension: {
@@ -320,7 +322,7 @@ describe('Order', () => {
     it('should add a second location', () => {
       order.addLocation(locationOne.type, locationOne.location);
       order.addLocation(locationTwo.type, locationTwo.location);
-      expect(JSON.parse(JSON.stringify(order))).to.deep.equal({
+      expect(clone(order)).to.deep.equal({
         id: 'test_id',
         otherItems: [],
         extension: {
@@ -334,7 +336,7 @@ describe('Order', () => {
       order.addLocation(locationOne.type, locationOne.location);
       order.addLocation(locationTwo.type, locationTwo.location);
       order.addLocation(locationThree.type, locationThree.location);
-      expect(JSON.parse(JSON.stringify(order))).to.deep.equal({
+      expect(clone(order)).to.deep.equal({
         id: 'test_id',
         otherItems: [],
         extension: {
@@ -353,7 +355,7 @@ describe('Cart', () => {
   describe('#constructor', () => {
     it('should create valid object', () => {
       const cart = new Cart('test_id');
-      expect(JSON.parse(JSON.stringify(cart))).to.deep.equal({
+      expect(clone(cart)).to.deep.equal({
         id: 'test_id',
         lineItems: [],
         otherItems: []
@@ -370,7 +372,7 @@ describe('Cart', () => {
 
     it('should set the merchant', () => {
       cart.setMerchant('merchant_id', 'My Merchant');
-      expect(JSON.parse(JSON.stringify(cart))).to.deep.equal({
+      expect(clone(cart)).to.deep.equal({
         id: 'test_id',
         lineItems: [],
         otherItems: [],
@@ -384,7 +386,7 @@ describe('Cart', () => {
     it('should overwrite previously set merchant', () => {
       cart.setMerchant('merchant_id', 'My Merchant');
       cart.setMerchant('merchant_id_2', 'Your Merchant');
-      expect(JSON.parse(JSON.stringify(cart))).to.deep.equal({
+      expect(clone(cart)).to.deep.equal({
         id: 'test_id',
         lineItems: [],
         otherItems: [],
@@ -405,7 +407,7 @@ describe('Cart', () => {
 
     it('should set the notes', () => {
       cart.setNotes('order notes');
-      expect(JSON.parse(JSON.stringify(cart))).to.deep.equal({
+      expect(clone(cart)).to.deep.equal({
         id: 'test_id',
         lineItems: [],
         otherItems: [],
@@ -416,7 +418,7 @@ describe('Cart', () => {
     it('should overwrite previously set notes', () => {
       cart.setNotes('order notes');
       cart.setNotes('order notes 2');
-      expect(JSON.parse(JSON.stringify(cart))).to.deep.equal({
+      expect(clone(cart)).to.deep.equal({
         id: 'test_id',
         lineItems: [],
         otherItems: [],
@@ -436,7 +438,7 @@ describe('Cart', () => {
       cart.addLineItems({
         new_item: 'new_item'
       });
-      expect(JSON.parse(JSON.stringify(cart))).to.deep.equal({
+      expect(clone(cart)).to.deep.equal({
         id: 'test_id',
         lineItems: [{
           new_item: 'new_item'
@@ -453,7 +455,7 @@ describe('Cart', () => {
         {
           new_item: 'new_item_2'
         }]);
-      expect(JSON.parse(JSON.stringify(cart))).to.deep.equal({
+      expect(clone(cart)).to.deep.equal({
         id: 'test_id',
         lineItems: [
           {
@@ -478,7 +480,7 @@ describe('Cart', () => {
       cart.addOtherItems({
         new_item: 'new_item'
       });
-      expect(JSON.parse(JSON.stringify(cart))).to.deep.equal({
+      expect(clone(cart)).to.deep.equal({
         id: 'test_id',
         lineItems: [],
         otherItems: [{
@@ -495,7 +497,7 @@ describe('Cart', () => {
         {
           new_item: 'new_item_2'
         }]);
-      expect(JSON.parse(JSON.stringify(cart))).to.deep.equal({
+      expect(clone(cart)).to.deep.equal({
         id: 'test_id',
         lineItems: [],
         otherItems: [
@@ -517,7 +519,7 @@ describe('LineItem', () => {
   describe('#constructor', () => {
     it('should create valid object', () => {
       const lineItem = new LineItem('test_item_id', 'test_item');
-      expect(JSON.parse(JSON.stringify(lineItem))).to.deep.equal({
+      expect(clone(lineItem)).to.deep.equal({
         id: 'test_item_id',
         name: 'test_item'
       });
@@ -535,7 +537,7 @@ describe('LineItem', () => {
       lineItem.addSublines({
         new_item: 'new_item'
       });
-      expect(JSON.parse(JSON.stringify(lineItem))).to.deep.equal({
+      expect(clone(lineItem)).to.deep.equal({
         id: 'test_item_id',
         name: 'test_item',
         subLines: [
@@ -556,7 +558,7 @@ describe('LineItem', () => {
         {
           new_item: 'new_item_2'
         }]);
-      expect(JSON.parse(JSON.stringify(lineItem))).to.deep.equal({
+      expect(clone(lineItem)).to.deep.equal({
         id: 'test_item_id',
         name: 'test_item',
         subLines: [
@@ -576,7 +578,7 @@ describe('LineItem', () => {
 
     it('should add a single string subline', () => {
       lineItem.addSublines('new_item');
-      expect(JSON.parse(JSON.stringify(lineItem))).to.deep.equal({
+      expect(clone(lineItem)).to.deep.equal({
         id: 'test_item_id',
         name: 'test_item',
         subLines: [
@@ -592,7 +594,7 @@ describe('LineItem', () => {
         'new_item',
         'new_item_2'
       ]);
-      expect(JSON.parse(JSON.stringify(lineItem))).to.deep.equal({
+      expect(clone(lineItem)).to.deep.equal({
         id: 'test_item_id',
         name: 'test_item',
         subLines: [
@@ -613,7 +615,7 @@ describe('LineItem', () => {
         },
         'new_item_2'
       ]);
-      expect(JSON.parse(JSON.stringify(lineItem))).to.deep.equal({
+      expect(clone(lineItem)).to.deep.equal({
         id: 'test_item_id',
         name: 'test_item',
         subLines: [
@@ -639,7 +641,7 @@ describe('LineItem', () => {
 
     it('should set the image', () => {
       lineItem.setImage('http://image.com', 'ALT_TEXT', 100, 150);
-      expect(JSON.parse(JSON.stringify(lineItem))).to.deep.equal({
+      expect(clone(lineItem)).to.deep.equal({
         id: 'test_item_id',
         name: 'test_item',
         image: {
@@ -654,7 +656,7 @@ describe('LineItem', () => {
     it('should overwrite previously set image', () => {
       lineItem.setImage('http://image.com', 'ALT_TEXT', 100, 150);
       lineItem.setImage('http://image.com/2', 'ALT_TEXT_2');
-      expect(JSON.parse(JSON.stringify(lineItem))).to.deep.equal({
+      expect(clone(lineItem)).to.deep.equal({
         id: 'test_item_id',
         name: 'test_item',
         image: {
@@ -674,7 +676,7 @@ describe('LineItem', () => {
 
     it('should set the price', () => {
       lineItem.setPrice('ACTUAL', 'USD', 30, 40);
-      expect(JSON.parse(JSON.stringify(lineItem))).to.deep.equal({
+      expect(clone(lineItem)).to.deep.equal({
         id: 'test_item_id',
         name: 'test_item',
         price: {
@@ -691,7 +693,7 @@ describe('LineItem', () => {
     it('should overwrite previously set price', () => {
       lineItem.setPrice('ACTUAL', 'USD', 30, 40);
       lineItem.setPrice('ESTIMATE', 'GBP', 60);
-      expect(JSON.parse(JSON.stringify(lineItem))).to.deep.equal({
+      expect(clone(lineItem)).to.deep.equal({
         id: 'test_item_id',
         name: 'test_item',
         price: {
@@ -715,7 +717,7 @@ describe('LineItem', () => {
 
     it('should set the type', () => {
       lineItem.setType('REGULAR');
-      expect(JSON.parse(JSON.stringify(lineItem))).to.deep.equal({
+      expect(clone(lineItem)).to.deep.equal({
         id: 'test_item_id',
         name: 'test_item',
         type: 'REGULAR'
@@ -725,7 +727,7 @@ describe('LineItem', () => {
     it('should overwrite previously set type', () => {
       lineItem.setType('REGULAR');
       lineItem.setType('FEE');
-      expect(JSON.parse(JSON.stringify(lineItem))).to.deep.equal({
+      expect(clone(lineItem)).to.deep.equal({
         id: 'test_item_id',
         name: 'test_item',
         type: 'FEE'
@@ -742,7 +744,7 @@ describe('LineItem', () => {
 
     it('should set the quantity', () => {
       lineItem.setQuantity(1);
-      expect(JSON.parse(JSON.stringify(lineItem))).to.deep.equal({
+      expect(clone(lineItem)).to.deep.equal({
         id: 'test_item_id',
         name: 'test_item',
         quantity: 1
@@ -752,7 +754,7 @@ describe('LineItem', () => {
     it('should overwrite previously set quantity', () => {
       lineItem.setQuantity(1);
       lineItem.setQuantity(2);
-      expect(JSON.parse(JSON.stringify(lineItem))).to.deep.equal({
+      expect(clone(lineItem)).to.deep.equal({
         id: 'test_item_id',
         name: 'test_item',
         quantity: 2
@@ -769,7 +771,7 @@ describe('LineItem', () => {
 
     it('should set the description', () => {
       lineItem.setDescription('A great item');
-      expect(JSON.parse(JSON.stringify(lineItem))).to.deep.equal({
+      expect(clone(lineItem)).to.deep.equal({
         id: 'test_item_id',
         name: 'test_item',
         description: 'A great item'
@@ -779,7 +781,7 @@ describe('LineItem', () => {
     it('should overwrite previously set description', () => {
       lineItem.setDescription('A great item');
       lineItem.setDescription('A good item');
-      expect(JSON.parse(JSON.stringify(lineItem))).to.deep.equal({
+      expect(clone(lineItem)).to.deep.equal({
         id: 'test_item_id',
         name: 'test_item',
         description: 'A good item'
@@ -796,7 +798,7 @@ describe('LineItem', () => {
 
     it('should set the offerId', () => {
       lineItem.setOfferId('offer');
-      expect(JSON.parse(JSON.stringify(lineItem))).to.deep.equal({
+      expect(clone(lineItem)).to.deep.equal({
         id: 'test_item_id',
         name: 'test_item',
         offerId: 'offer'
@@ -806,7 +808,7 @@ describe('LineItem', () => {
     it('should overwrite previously set offerId', () => {
       lineItem.setOfferId('offer');
       lineItem.setOfferId('24 hr offer');
-      expect(JSON.parse(JSON.stringify(lineItem))).to.deep.equal({
+      expect(clone(lineItem)).to.deep.equal({
         id: 'test_item_id',
         name: 'test_item',
         offerId: '24 hr offer'
@@ -822,7 +824,7 @@ describe('OrderUpdate', () => {
   describe('#constructor', () => {
     it('should create valid object with Google order ID', () => {
       const orderUpdate = new OrderUpdate('order_id', true);
-      expect(JSON.parse(JSON.stringify(orderUpdate))).to.deep.equal({
+      expect(clone(orderUpdate)).to.deep.equal({
         googleOrderId: 'order_id',
         lineItemUpdates: {},
         orderManagementActions: []
@@ -831,7 +833,7 @@ describe('OrderUpdate', () => {
 
     it('should create valid object with Action order ID', () => {
       const orderUpdate = new OrderUpdate('order_id', false);
-      expect(JSON.parse(JSON.stringify(orderUpdate))).to.deep.equal({
+      expect(clone(orderUpdate)).to.deep.equal({
         actionOrderId: 'order_id',
         lineItemUpdates: {},
         orderManagementActions: []
@@ -848,7 +850,7 @@ describe('OrderUpdate', () => {
 
     it('should set the price', () => {
       orderUpdate.setTotalPrice('ACTUAL', 'USD', 30, 40);
-      expect(JSON.parse(JSON.stringify(orderUpdate))).to.deep.equal({
+      expect(clone(orderUpdate)).to.deep.equal({
         googleOrderId: 'order_id',
         lineItemUpdates: {},
         orderManagementActions: [],
@@ -866,7 +868,7 @@ describe('OrderUpdate', () => {
     it('should overwrite previously set price', () => {
       orderUpdate.setTotalPrice('ACTUAL', 'USD', 30, 40);
       orderUpdate.setTotalPrice('ESTIMATE', 'GBP', 60);
-      expect(JSON.parse(JSON.stringify(orderUpdate))).to.deep.equal({
+      expect(clone(orderUpdate)).to.deep.equal({
         googleOrderId: 'order_id',
         lineItemUpdates: {},
         orderManagementActions: [],
@@ -891,7 +893,7 @@ describe('OrderUpdate', () => {
 
     it('should set the state', () => {
       orderUpdate.setOrderState('CONFIRMED', 'Your order was confirmed');
-      expect(JSON.parse(JSON.stringify(orderUpdate))).to.deep.equal({
+      expect(clone(orderUpdate)).to.deep.equal({
         googleOrderId: 'order_id',
         lineItemUpdates: {},
         orderManagementActions: [],
@@ -905,7 +907,7 @@ describe('OrderUpdate', () => {
     it('should overwrite previously set state', () => {
       orderUpdate.setOrderState('CONFIRMED', 'Your order was confirmed');
       orderUpdate.setOrderState('CANCELLED', 'Your order was canceled');
-      expect(JSON.parse(JSON.stringify(orderUpdate))).to.deep.equal({
+      expect(clone(orderUpdate)).to.deep.equal({
         googleOrderId: 'order_id',
         lineItemUpdates: {},
         orderManagementActions: [],
@@ -926,7 +928,7 @@ describe('OrderUpdate', () => {
 
     it('should set the update time', () => {
       orderUpdate.setUpdateTime(200, 300);
-      expect(JSON.parse(JSON.stringify(orderUpdate))).to.deep.equal({
+      expect(clone(orderUpdate)).to.deep.equal({
         googleOrderId: 'order_id',
         lineItemUpdates: {},
         orderManagementActions: [],
@@ -937,7 +939,7 @@ describe('OrderUpdate', () => {
     it('should overwrite previously set update time', () => {
       orderUpdate.setUpdateTime(200, 300);
       orderUpdate.setUpdateTime(100);
-      expect(JSON.parse(JSON.stringify(orderUpdate))).to.deep.equal({
+      expect(clone(orderUpdate)).to.deep.equal({
         googleOrderId: 'order_id',
         lineItemUpdates: {},
         orderManagementActions: [],
@@ -948,7 +950,7 @@ describe('OrderUpdate', () => {
     it('should round down the nanosecond field to the nearest millisecond', () => {
       const expectedTimeString = '1970-01-01T00:03:20.000Z';
       orderUpdate.setUpdateTime(200);
-      expect(JSON.parse(JSON.stringify(orderUpdate))).to.deep.equal({
+      expect(clone(orderUpdate)).to.deep.equal({
         googleOrderId: 'order_id',
         lineItemUpdates: {},
         orderManagementActions: [],
@@ -956,7 +958,7 @@ describe('OrderUpdate', () => {
       });
 
       orderUpdate.setUpdateTime(200, 100);
-      expect(JSON.parse(JSON.stringify(orderUpdate))).to.deep.equal({
+      expect(clone(orderUpdate)).to.deep.equal({
         googleOrderId: 'order_id',
         lineItemUpdates: {},
         orderManagementActions: [],
@@ -964,7 +966,7 @@ describe('OrderUpdate', () => {
       });
 
       orderUpdate.setUpdateTime(200, 1000000); // 1M ns = 1ms
-      expect(JSON.parse(JSON.stringify(orderUpdate))).to.deep.equal({
+      expect(clone(orderUpdate)).to.deep.equal({
         googleOrderId: 'order_id',
         lineItemUpdates: {},
         orderManagementActions: [],
@@ -982,7 +984,7 @@ describe('OrderUpdate', () => {
 
     it('should set the user notification', () => {
       orderUpdate.setUserNotification('Title', 'Order updated!');
-      expect(JSON.parse(JSON.stringify(orderUpdate))).to.deep.equal({
+      expect(clone(orderUpdate)).to.deep.equal({
         googleOrderId: 'order_id',
         lineItemUpdates: {},
         orderManagementActions: [],
@@ -996,7 +998,7 @@ describe('OrderUpdate', () => {
     it('should overwrite previously set user notification', () => {
       orderUpdate.setUserNotification('Title', 'Order updated!');
       orderUpdate.setUserNotification('Title_2', 'Your order updated!');
-      expect(JSON.parse(JSON.stringify(orderUpdate))).to.deep.equal({
+      expect(clone(orderUpdate)).to.deep.equal({
         googleOrderId: 'order_id',
         lineItemUpdates: {},
         orderManagementActions: [],
@@ -1020,7 +1022,7 @@ describe('OrderUpdate', () => {
         'http://example.com');
       orderUpdate.addOrderManagementAction('CANCEL', 'Cancel here',
         'http://example.com/cancel');
-      expect(JSON.parse(JSON.stringify(orderUpdate))).to.deep.equal({
+      expect(clone(orderUpdate)).to.deep.equal({
         googleOrderId: 'order_id',
         lineItemUpdates: {},
         orderManagementActions: [{
@@ -1054,7 +1056,7 @@ describe('OrderUpdate', () => {
     it('should set the order update info', () => {
       orderUpdate.setInfo(TransactionValues.OrderStateInfo.RECEIPT,
         { receipt_info: 'value' });
-      expect(JSON.parse(JSON.stringify(orderUpdate))).to.deep.equal({
+      expect(clone(orderUpdate)).to.deep.equal({
         googleOrderId: 'order_id',
         lineItemUpdates: {},
         orderManagementActions: [],
@@ -1069,7 +1071,7 @@ describe('OrderUpdate', () => {
         { receipt_info: 'value' });
       orderUpdate.setInfo(TransactionValues.OrderStateInfo.REJECTION,
         { reason: 'value' });
-      expect(JSON.parse(JSON.stringify(orderUpdate))).to.deep.equal({
+      expect(clone(orderUpdate)).to.deep.equal({
         googleOrderId: 'order_id',
         lineItemUpdates: {},
         orderManagementActions: [],
@@ -1081,7 +1083,7 @@ describe('OrderUpdate', () => {
 
     it('should recognize invalid update info types', () => {
       orderUpdate.setInfo('FAKE', { receipt_info: 'value' });
-      expect(JSON.parse(JSON.stringify(orderUpdate))).to.deep.equal({
+      expect(clone(orderUpdate)).to.deep.equal({
         googleOrderId: 'order_id',
         lineItemUpdates: {},
         orderManagementActions: []
@@ -1099,7 +1101,7 @@ describe('OrderUpdate', () => {
     it('should add a new update for line item', () => {
       orderUpdate.addLineItemPriceUpdate('item_id', 'ACTUAL', 'USD', 30, 40,
         'reason');
-      expect(JSON.parse(JSON.stringify(orderUpdate))).to.deep.equal({
+      expect(clone(orderUpdate)).to.deep.equal({
         googleOrderId: 'order_id',
         lineItemUpdates: {
           item_id: {
@@ -1120,7 +1122,7 @@ describe('OrderUpdate', () => {
 
     it('should fail for new item update without reason', () => {
       orderUpdate.addLineItemPriceUpdate('item_id', 'ACTUAL', 'USD', 30, 40);
-      expect(JSON.parse(JSON.stringify(orderUpdate))).to.deep.equal({
+      expect(clone(orderUpdate)).to.deep.equal({
         googleOrderId: 'order_id',
         lineItemUpdates: {},
         orderManagementActions: []
@@ -1134,7 +1136,7 @@ describe('OrderUpdate', () => {
       };
       orderUpdate.addLineItemPriceUpdate('item_id', 'ACTUAL', 'USD', 30, 40,
         'reason');
-      expect(JSON.parse(JSON.stringify(orderUpdate))).to.deep.equal({
+      expect(clone(orderUpdate)).to.deep.equal({
         googleOrderId: 'order_id',
         lineItemUpdates: {
           item_id: {
@@ -1159,7 +1161,7 @@ describe('OrderUpdate', () => {
         orderState: 'orderState'
       };
       orderUpdate.addLineItemPriceUpdate('item_id', 'ACTUAL', 'USD', 30, 40);
-      expect(JSON.parse(JSON.stringify(orderUpdate))).to.deep.equal({
+      expect(clone(orderUpdate)).to.deep.equal({
         googleOrderId: 'order_id',
         lineItemUpdates: {
           item_id: {
@@ -1181,7 +1183,7 @@ describe('OrderUpdate', () => {
     it('should add a new update for line item', () => {
       orderUpdate.addLineItemStateUpdate('item_id', 'CONFIRMED',
         'Confirmed item', 'reason');
-      expect(JSON.parse(JSON.stringify(orderUpdate))).to.deep.equal({
+      expect(clone(orderUpdate)).to.deep.equal({
         googleOrderId: 'order_id',
         lineItemUpdates: {
           item_id: {
@@ -1199,7 +1201,7 @@ describe('OrderUpdate', () => {
     it('should succeed for new item update without reason', () => {
       orderUpdate.addLineItemStateUpdate('item_id', 'CONFIRMED',
         'Confirmed item');
-      expect(JSON.parse(JSON.stringify(orderUpdate))).to.deep.equal({
+      expect(clone(orderUpdate)).to.deep.equal({
         googleOrderId: 'order_id',
         lineItemUpdates: {
           item_id: {
@@ -1227,7 +1229,7 @@ describe('OrderUpdate', () => {
       };
       orderUpdate.addLineItemStateUpdate('item_id', 'CONFIRMED',
         'Confirmed item', 'reason');
-      expect(JSON.parse(JSON.stringify(orderUpdate))).to.deep.equal({
+      expect(clone(orderUpdate)).to.deep.equal({
         googleOrderId: 'order_id',
         lineItemUpdates: {
           item_id: {
@@ -1263,7 +1265,7 @@ describe('OrderUpdate', () => {
       };
       orderUpdate.addLineItemStateUpdate('item_id', 'CONFIRMED',
         'Confirmed item');
-      expect(JSON.parse(JSON.stringify(orderUpdate))).to.deep.equal({
+      expect(clone(orderUpdate)).to.deep.equal({
         googleOrderId: 'order_id',
         lineItemUpdates: {
           item_id: {

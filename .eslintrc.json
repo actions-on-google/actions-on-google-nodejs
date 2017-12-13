@@ -52,7 +52,8 @@
       "enforceConst": true,
       "ignore": [0, 1, -1],
       "ignoreArrayIndexes": false
-    }]
+    }],
+    "max-len": ["error", 100]
   },
   "plugins": [
     "chai-friendly",

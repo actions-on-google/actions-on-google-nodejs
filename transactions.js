@@ -1439,7 +1439,9 @@ const OrderUpdate = class {
     // Round nanoseconds to the nearest millisecond. 1M ns = 1ms.
     const MILLISECONDS_IN_SECOND = 1000;
     const NANOSECONDS_IN_MILLISECOND = 1000000;
-    const dateObj = new Date((seconds * MILLISECONDS_IN_SECOND) + (nanos / NANOSECONDS_IN_MILLISECOND));
+    const secondsPart = seconds * MILLISECONDS_IN_SECOND;
+    const nanosPart = nanos / NANOSECONDS_IN_MILLISECOND;
+    const dateObj = new Date(secondsPart + nanosPart);
     this.updateTime = dateObj.toISOString();
     return this;
   }
