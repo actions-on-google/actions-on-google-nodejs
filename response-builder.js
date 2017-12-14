@@ -354,10 +354,10 @@ const RichResponse = class {
     debug('buildSimpleResponseHelper_: response=%s', JSON.stringify(response));
     let simpleResponseObj = {};
     if (typeof response === 'string') {
-      simpleResponseObj = isSsml(response)
+      simpleResponseObj = isSsml(response) || isPaddedSsml(response)
         ? { ssml: response } : { textToSpeech: response };
     } else if (response.speech) {
-      simpleResponseObj = isSsml(response.speech)
+      simpleResponseObj = isSsml(response.speech) || isPaddedSsml(response.speech)
         ? { ssml: response.speech } : { textToSpeech: response.speech };
       simpleResponseObj.displayText = response.displayText;
     } else {
@@ -858,9 +858,16 @@ const OptionItem = class {
  * @param {string} text Text to check.
  * @return {boolean} True if text contains SSML, false otherwise.
  */
-function isSsml (text) {
-  return /^<speak\b[^>]*>([^]*?)<\/speak>$/gi.test(text);
-}
+const isSsml = text => /^<speak\b[^>]*>([^]*?)<\/speak>$/gi.test(text);
+
+/**
+ * Check if given text contains SSML, allowing for whitespace padding.
+ *
+ * @param {string} text Text to check.
+ * @return {boolean} True if text contains possibly whitespace padded SSML,
+ *     false otherwise.
+ */
+const isPaddedSsml = text => /^\s*<speak\b[^>]*>([^]*?)<\/speak>\s*$/gi.test(text);
 
 module.exports = {
   RichResponse,
@@ -869,6 +876,7 @@ module.exports = {
   Carousel,
   OptionItem,
   isSsml,
+  isPaddedSsml,
   ImageDisplays,
   Limits
 };

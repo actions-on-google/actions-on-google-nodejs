@@ -99,6 +99,20 @@ describe('RichResponse', () => {
       });
     });
 
+    it('should add a simple response w/ just whitespace padded SSML speech', () => {
+      richResponse.addSimpleResponse('   <speak>This is speech</speak>   ');
+      expect(clone(richResponse)).to.deep.equal({
+        items: [
+          {
+            simpleResponse: {
+              ssml: '   <speak>This is speech</speak>   '
+            }
+          }
+        ],
+        suggestions: []
+      });
+    });
+
     it('should add a simple response w/ speech and display text', () => {
       richResponse.addSimpleResponse({
         speech: 'This is speech',
@@ -127,6 +141,24 @@ describe('RichResponse', () => {
           {
             simpleResponse: {
               ssml: '<speak>This is speech</speak>',
+              displayText: 'This is display text'
+            }
+          }
+        ],
+        suggestions: []
+      });
+    });
+
+    it('should add a simple response w/ whitespace padded SSML speech and display text', () => {
+      richResponse.addSimpleResponse({
+        speech: '   <speak>This is speech</speak>   ',
+        displayText: 'This is display text'
+      });
+      expect(clone(richResponse)).to.deep.equal({
+        items: [
+          {
+            simpleResponse: {
+              ssml: '   <speak>This is speech</speak>   ',
               displayText: 'This is display text'
             }
           }
