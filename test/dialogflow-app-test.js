@@ -243,6 +243,36 @@ describe('DialogflowApp', function () {
         expect(clone(mockResponse.body)).to.deep.equal(expectedResponse);
       });
 
+    // Success case test, when the API returns a valid 200 response with the response object
+    it('Should set response speech when SSML is contained in simple response', function () {
+      app.tell({speech: '<speak>hi</speak>', displayText: 'hi'});
+
+      // Validating the response object
+      const expectedResponse = {
+        'speech': '<speak>hi</speak>',
+        'data': {
+          'google': {
+            'user_storage': '{"data":{}}',
+            'expect_user_response': false,
+            'no_input_prompts': [],
+            'rich_response': {
+              'items': [
+                {
+                  'simple_response': {
+                    'ssml': '<speak>hi</speak>',
+                    'display_text': 'hi'
+                  }
+                }
+              ],
+              'suggestions': []
+            }
+          }
+        },
+        'contextOut': []
+      };
+      expect(clone(mockResponse.body)).to.deep.equal(expectedResponse);
+    });
+
     // Failure test, when the API returns a 400 response with the response object
     it('Should send failure response for rich response without simple response', function () {
       app.tell(app.buildRichResponse());
@@ -406,60 +436,95 @@ describe('DialogflowApp', function () {
       });
 
     // Success case test, when the API returns a valid 200 response with the response object
-    it('Should return no input prompts with a rich response',
-      function () {
-        app.ask(app.buildRichResponse()
-          .addSimpleResponse({speech: 'hello', displayText: 'hi'})
-          .addSuggestions(['Say this', 'or this']), ['no', 'input', 'prompts']);
+    it('Should return no input prompts with a rich response', function () {
+      app.ask(app.buildRichResponse()
+        .addSimpleResponse({speech: 'hello', displayText: 'hi'})
+        .addSuggestions(['Say this', 'or this']), ['no', 'input', 'prompts']);
 
-        // Validating the response object
-        const expectedResponse = {
-          'speech': 'hello',
-          'data': {
-            'google': {
-              'user_storage': '{"data":{}}',
-              'expect_user_response': true,
-              'no_input_prompts': [
+      // Validating the response object
+      const expectedResponse = {
+        'speech': 'hello',
+        'data': {
+          'google': {
+            'user_storage': '{"data":{}}',
+            'expect_user_response': true,
+            'no_input_prompts': [
+              {
+                'text_to_speech': 'no'
+              },
+              {
+                'text_to_speech': 'input'
+              },
+              {
+                'text_to_speech': 'prompts'
+              }
+            ],
+            'rich_response': {
+              'items': [
                 {
-                  'text_to_speech': 'no'
-                },
-                {
-                  'text_to_speech': 'input'
-                },
-                {
-                  'text_to_speech': 'prompts'
+                  'simple_response': {
+                    'text_to_speech': 'hello',
+                    'display_text': 'hi'
+                  }
                 }
               ],
-              'rich_response': {
-                'items': [
-                  {
-                    'simple_response': {
-                      'text_to_speech': 'hello',
-                      'display_text': 'hi'
-                    }
-                  }
-                ],
-                'suggestions': [
-                  {
-                    'title': 'Say this'
-                  },
-                  {
-                    'title': 'or this'
-                  }
-                ]
-              }
+              'suggestions': [
+                {
+                  'title': 'Say this'
+                },
+                {
+                  'title': 'or this'
+                }
+              ]
             }
-          },
-          'contextOut': [
-            {
-              'name': '_actions_on_google_',
-              'lifespan': 100,
-              'parameters': {}
+          }
+        },
+        'contextOut': [
+          {
+            'name': '_actions_on_google_',
+            'lifespan': 100,
+            'parameters': {}
+          }
+        ]
+      };
+      expect(clone(mockResponse.body)).to.deep.equal(expectedResponse);
+    });
+
+    // Success case test, when the API returns a valid 200 response with the response object
+    it('Should set response speech when SSML is contained in simple response', function () {
+      app.ask({speech: '<speak>hi</speak>', displayText: 'hi'});
+
+      // Validating the response object
+      const expectedResponse = {
+        'speech': '<speak>hi</speak>',
+        'data': {
+          'google': {
+            'user_storage': '{"data":{}}',
+            'expect_user_response': true,
+            'no_input_prompts': [],
+            'rich_response': {
+              'items': [
+                {
+                  'simple_response': {
+                    'ssml': '<speak>hi</speak>',
+                    'display_text': 'hi'
+                  }
+                }
+              ],
+              'suggestions': []
             }
-          ]
-        };
-        expect(clone(mockResponse.body)).to.deep.equal(expectedResponse);
-      });
+          }
+        },
+        'contextOut': [
+          {
+            'name': '_actions_on_google_',
+            'lifespan': 100,
+            'parameters': {}
+          }
+        ]
+      };
+      expect(clone(mockResponse.body)).to.deep.equal(expectedResponse);
+    });
 
     // Failure test, when the API returns a 400 response with the response object
     it('Should send failure response for rich response without simple response', function () {
