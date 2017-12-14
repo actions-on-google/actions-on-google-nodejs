@@ -32,7 +32,8 @@ const {
   headerV1,
   headerV2,
   MockRequest,
-  MockResponse
+  MockResponse,
+  clone
 } = require('./utils/mocking');
 
 chai.use(spies);
@@ -140,8 +141,8 @@ describe('AssistantApp', function () {
       expect(
         app.isSsml_('<speak><say-as interpret-as="date" format="ymd">1960-09-10</say-as></speak>'))
         .to.equal(true);
-      expect(app.isSsml_(
-        '<speak><say-as interpret-as="date" format="yyyymmdd" detail="1">1960-09-10</say-as></speak>'))
+      expect(app.isSsml_('<speak>' +
+        '<say-as interpret-as="date" format="yyyymmdd" detail="1">1960-09-10</say-as></speak>'))
         .to.equal(true);
       expect(app.isSsml_('<speak><say-as interpret-as="date" format="dm">10-9</say-as></speak>')).to
         .equal(true);
@@ -167,7 +168,7 @@ describe('AssistantApp', function () {
     let app;
 
     beforeEach(function () {
-      mockRequest = new MockRequest(headerV2, JSON.parse(JSON.stringify(dialogflowAppRequestBodyNewSessionMock)));
+      mockRequest = new MockRequest(headerV2, clone(dialogflowAppRequestBodyNewSessionMock));
       app = new AssistantApp({request: mockRequest, response: mockResponse});
 
       // mock getIntent
@@ -176,7 +177,8 @@ describe('AssistantApp', function () {
       };
     });
 
-    it('Should resolve a promise when actionMap contains a handler that returns a promise', function (done) {
+    it('Should resolve a promise when actionMap contains a handler ' +
+      'that returns a promise', function (done) {
       const handler = app => {
         return Promise.resolve('success');
       };
@@ -192,7 +194,8 @@ describe('AssistantApp', function () {
       );
     });
 
-    it('Should reject a promise when actionMap contains a handler that returns a promise error', function (done) {
+    it('Should reject a promise when actionMap contains a handler ' +
+      'that returns a promise error', function (done) {
       const handler = app => {
         return Promise.reject(new Error('error'));
       };
@@ -247,7 +250,8 @@ describe('AssistantApp', function () {
       );
     });
 
-    it('Should resolve a promise when actionMap contains a handler that does not return a promise', function (done) {
+    it('Should resolve a promise when actionMap contains a handler ' +
+      'that does not return a promise', function (done) {
       const handler = app => {
         return 'success';
       };

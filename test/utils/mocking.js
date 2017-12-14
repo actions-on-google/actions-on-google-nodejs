@@ -271,8 +271,13 @@ const actionsSdkAppRequestBodyLiveSessionMock = {
   ]
 };
 
-const actionsSdkAppRequestBodyNewSessionMockV2 = transformToCamelCase(actionsSdkAppRequestBodyNewSessionMock);
-const actionsSdkAppRequestBodyLiveSessionMockV2 = transformToCamelCase(actionsSdkAppRequestBodyLiveSessionMock);
+const actionsSdkAppRequestBodyNewSessionMockV2 =
+  transformToCamelCase(actionsSdkAppRequestBodyNewSessionMock);
+const actionsSdkAppRequestBodyLiveSessionMockV2 =
+  transformToCamelCase(actionsSdkAppRequestBodyLiveSessionMock);
+
+/** @param {Object} obj */
+const clone = obj => JSON.parse(JSON.stringify(obj));
 
 module.exports = {
   dialogflowAppRequestBodyLiveSessionMock,
@@ -286,5 +291,6 @@ module.exports = {
   actionsSdkAppRequestBodyNewSessionMockV2,
   actionsSdkAppRequestBodyLiveSessionMockV2,
   fakeConversationId,
-  fakeUserId
+  fakeUserId,
+  clone
 };

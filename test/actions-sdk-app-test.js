@@ -37,7 +37,8 @@ const {
   MockResponse,
   MockRequest,
   fakeConversationId,
-  fakeUserId
+  fakeUserId,
+  clone
 } = require('./utils/mocking');
 
 chai.use(spies);
@@ -52,9 +53,6 @@ winston.loggers.add('DEFAULT_LOGGER', {
     timestamp: true
   }
 });
-
-/** @param {Object} obj */
-const clone = obj => JSON.parse(JSON.stringify(obj));
 
 // ---------------------------------------------------------------------------
 //                   Actions SDK support
@@ -185,7 +183,11 @@ describe('ActionsSdkApp', function () {
       const inputPrompt = app.buildInputPrompt(true, '<speak>Hi! <break time="1"/> ' +
         'I can read out an ordinal like ' +
         '<say-as interpret-as="ordinal">123</say-as>. Say a number.</speak>',
-        ['I didn\'t hear a number', 'If you\'re still there, what\'s the number?', 'What is the number?']);
+        [
+          `I didn't hear a number`,
+          `If you're still there, what's the number?`,
+          'What is the number?'
+        ]);
       app.ask(inputPrompt);
 
           // Validating the response object
@@ -198,7 +200,9 @@ describe('ActionsSdkApp', function () {
             'input_prompt': {
               'initial_prompts': [
                 {
-                  'ssml': '<speak>Hi! <break time="1"/> I can read out an ordinal like <say-as interpret-as="ordinal">123</say-as>. Say a number.</speak>'
+                  'ssml': '<speak>Hi! <break time="1"/> ' +
+                    'I can read out an ordinal like ' +
+                    '<say-as interpret-as="ordinal">123</say-as>. Say a number.</speak>'
                 }
               ],
               'no_input_prompts': [
@@ -224,7 +228,8 @@ describe('ActionsSdkApp', function () {
       expect(mockResponse.body).to.deep.equal(expectedResponse);
     });
 
-    it('Should return the valid JSON in the response object for the success case when String text was asked w/o input prompts.', function () {
+    it('Should return the valid JSON in the response object for the success case ' +
+      'when String text was asked w/o input prompts.', function () {
       app.ask('What can I help you with?');
       const expectedResponse = {
         'conversation_token': '{"state":null,"data":{}}',
@@ -253,7 +258,8 @@ describe('ActionsSdkApp', function () {
       expect(mockResponse.body).to.deep.equal(expectedResponse);
     });
 
-    it('Should return the valid JSON in the response object for the success case when SSML text was asked w/o input prompts.', function () {
+    it('Should return the valid JSON in the response object for the success case ' +
+      'when SSML text was asked w/o input prompts.', function () {
       app.ask('<speak>What <break time="1"/> can I help you with?</speak>');
       // Validating the response object
       const expectedResponse = {
@@ -283,7 +289,8 @@ describe('ActionsSdkApp', function () {
       expect(mockResponse.body).to.deep.equal(expectedResponse);
     });
 
-    it('Should return the valid JSON in the response object for the advanced success case.', function () {
+    it('Should return the valid JSON in the response object ' +
+      'for the advanced success case.', function () {
       const inputPrompt = app.buildInputPrompt(false, 'Welcome to action snippets! Say a number.',
         ['Say any number', 'Pick a number', 'What is the number?']);
       app.ask(inputPrompt);
@@ -323,7 +330,8 @@ describe('ActionsSdkApp', function () {
       expect(JSON.stringify(mockResponse.body)).to.equal(JSON.stringify(expectedResponse));
     });
 
-    it('Should return the valid simple response JSON in the response object for the success case.', function () {
+    it('Should return the valid simple response JSON ' +
+      'in the response object for the success case.', function () {
       app.ask({ speech: 'hello', displayText: 'hi' });
       // Validating the response object
       const expectedResponse = {
@@ -358,7 +366,8 @@ describe('ActionsSdkApp', function () {
     });
 
       // Success case test, when the API returns a valid 200 response with the response object
-    it('Should return the valid rich response JSON in the response object for the success case.', function () {
+    it('Should return the valid rich response JSON ' +
+      'in the response object for the success case.', function () {
       app.ask(app.buildRichResponse()
         .addSimpleResponse({ speech: 'hello', displayText: 'hi' })
         .addSuggestions(['Say this', 'or this']));
@@ -433,7 +442,8 @@ describe('ActionsSdkApp', function () {
     });
 
     // Success case test, when the API returns a valid 200 response with the response object
-    it('Should return the valid simple rich response JSON in the response object for the success case.', function () {
+    it('Should return the valid simple rich response JSON ' +
+      'in the response object for the success case.', function () {
       app.tell({ speech: 'hello', displayText: 'hi' });
 
       // Validating the response object
@@ -459,7 +469,8 @@ describe('ActionsSdkApp', function () {
     });
 
     // Success case test, when the API returns a valid 200 response with the response object
-    it('Should return the valid rich response JSON in the response object for the success case.', function () {
+    it('Should return the valid rich response JSON ' +
+      'in the response object for the success case.', function () {
       app.tell(app.buildRichResponse()
         .addSimpleResponse({ speech: 'hello', displayText: 'hi' })
         .addSuggestions(['Say this', 'or this']));
@@ -544,7 +555,8 @@ describe('ActionsSdkApp', function () {
       });
     });
     // Success case test, when the API returns a valid 200 response with the response object
-    it('Should return the valid list JSON in the response object for the success case.', function () {
+    it('Should return the valid list JSON in the response object ' +
+      'for the success case.', function () {
       app.askWithList('Here is a list', app.buildList()
         .addItems([
           app.buildOptionItem('key_1', 'key one'),
@@ -627,7 +639,8 @@ describe('ActionsSdkApp', function () {
       });
     });
     // Success case test, when the API returns a valid 200 response with the response object
-    it('Should return the valid carousel JSON in the response object for the success case.', function () {
+    it('Should return the valid carousel JSON in the response object ' +
+      'for the success case.', function () {
       app.askWithCarousel('Here is a carousel', app.buildCarousel()
         .addItems([
           app.buildOptionItem('key_1', 'key one'),
@@ -751,7 +764,8 @@ describe('ActionsSdkApp', function () {
       expect(mockResponse.body).to.deep.equal(expectedResponse);
     });
 
-    it('Should return the valid JSON in the response object for the success case in v2.', function () {
+    it('Should return the valid JSON in the response object ' +
+      'for the success case in v2.', function () {
       const mockRequest = new MockRequest(headerV2, actionsSdkAppRequestBodyLive);
       const app = new ActionsSdkApp({
         request: mockRequest,
@@ -810,7 +824,8 @@ describe('ActionsSdkApp', function () {
       });
     });
     // Success case test, when the API returns a valid 200 response with the response object
-    it('Should return valid JSON transaction requirements with Google payment options', function () {
+    it('Should return valid JSON transaction requirements ' +
+      'with Google payment options', function () {
       const transactionConfig = {
         deliveryAddressRequired: true,
         tokenizationParameters: {
@@ -871,7 +886,8 @@ describe('ActionsSdkApp', function () {
     });
 
     // Success case test, when the API returns a valid 200 response with the response object
-    it('Should return valid JSON transaction requirements with Google payment options and custom tokenization type', function () {
+    it('Should return valid JSON transaction requirements ' +
+      'with Google payment options and custom tokenization type', function () {
       const transactionConfig = {
         deliveryAddressRequired: true,
         tokenizationParameters: {
@@ -933,7 +949,8 @@ describe('ActionsSdkApp', function () {
     });
 
     // Success case test, when the API returns a valid 200 response with the response object
-    it('Should return valid JSON transaction requirements with Action payment options', function () {
+    it('Should return valid JSON transaction requirements ' +
+      'with Action payment options', function () {
       const transactionConfig = {
         deliveryAddressRequired: true,
         type: 'BANK',
@@ -1833,7 +1850,8 @@ describe('ActionsSdkApp', function () {
    */
   describe('#getDeviceLocation', function () {
     // Success case test, when the API returns a valid 200 response with the response object
-    it('Should validate assistant request for device location when location is provided.', function () {
+    it('Should validate assistant request for device location ' +
+      'when location is provided.', function () {
       actionsSdkAppRequestBodyLive.device = {
         'location': {
           'coordinates': {
@@ -1861,7 +1879,8 @@ describe('ActionsSdkApp', function () {
       expect(app.getDeviceLocation().city).to.equal('Anytown');
     });
 
-    it('Should validate assistant request for device location when location is undefined.', function () {
+    it('Should validate assistant request for device location ' +
+      'when location is undefined.', function () {
       // Test the false case
       actionsSdkAppRequestBodyLive.device = undefined;
       const mockRequest = new MockRequest(headerV1, actionsSdkAppRequestBodyLive);
@@ -2224,7 +2243,8 @@ describe('ActionsSdkApp', function () {
    */
   describe('#hasSurfaceCapability', function () {
     // Success case test, when the API returns a valid 200 response with the response object
-    it('Should return true for a valid capability from incoming JSON for the success case.', function () {
+    it('Should return true for a valid capability from incoming JSON ' +
+      'for the success case.', function () {
       actionsSdkAppRequestBodyLive.surface = {
         'capabilities': [
           {
@@ -2256,7 +2276,8 @@ describe('ActionsSdkApp', function () {
    */
   describe('#getSurfaceCapabilities', function () {
     // Success case test, when the API returns a valid 200 response with the response object
-    it('Should return valid list of capabilities from incoming JSON for the success case.', function () {
+    it('Should return valid list of capabilities from incoming JSON ' +
+      'for the success case.', function () {
       actionsSdkAppRequestBodyLive.surface = {
         'capabilities': [
           {
@@ -2287,7 +2308,8 @@ describe('ActionsSdkApp', function () {
    */
   describe('#getInputType', function () {
     // Success case test, when the API returns a valid 200 response with the response object
-    it('Should return valid input type from incoming JSON for the success case.', function () {
+    it('Should return valid input type from incoming JSON ' +
+      'for the success case.', function () {
       const KEYBOARD = 3;
       actionsSdkAppRequestBodyLive.inputs[0].raw_inputs = [
         {
@@ -2780,7 +2802,8 @@ describe('ActionsSdkApp', function () {
       expect(mockResponse.body).to.deep.equal(expectedResponse);
     });
 
-    // Success case test, when the API returns a valid 200 response with the response object without arguments
+    // Success case test, when the API returns a valid 200 response
+    // with the response object without arguments
     it('Should return valid JSON update registration request', function () {
       app.askToRegisterDailyUpdate('test_intent');
       const expectedResponse = {
@@ -2923,8 +2946,10 @@ describe('ActionsSdkApp', function () {
       expect(mockResponse.body).to.deep.equal(expectedResponse);
     });
 
-    // Success case test, when the API returns a valid 200 response with the response object without arguments
-    it('Should return the valid JSON in the response object without arguments for the success case.', function () {
+    // Success case test, when the API returns a valid 200 response
+    // with the response object without arguments
+    it('Should return the valid JSON in the response object ' +
+      'without arguments for the success case.', function () {
       app.askForUpdatePermission('test_intent');
       // Validating the response object
       const expectedResponse = {

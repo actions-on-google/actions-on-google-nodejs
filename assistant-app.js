@@ -252,7 +252,8 @@ class AssistantApp {
     /* eslint-disable no-magic-numbers */
     /**
      * List of possible conversation stages, as defined in the
-     * {@link https://developers.google.com/actions/reference/conversation#Conversation|Conversation object}.
+     * {@link https://developers.google.com/actions/reference/conversation#Conversation|
+     *     Conversation object}.
      * @readonly
      * @enum {number}
      * @actionssdk
@@ -276,7 +277,8 @@ class AssistantApp {
 
     /**
      * List of possible conversation types, as defined in the
-     * {@link https://developers.google.com/actions/reference/conversation#Conversation|Conversation object}.
+     * {@link https://developers.google.com/actions/reference/conversation#Conversation|
+     *     Conversation object}.
      * @readonly
      * @enum {number}
      * @actionssdk
@@ -362,11 +364,17 @@ class AssistantApp {
    * // Actions SDK
    * const app = new ActionsSdkApp({request: request, response: response});
    *
+   * const noInputs = [
+   *   `I didn't hear a number`,
+   *   `If you're still there, what's the number?`,
+   *   'What is the number?'
+   * ];
+   *
    * function mainIntent (app) {
-   *   const inputPrompt = app.buildInputPrompt(true, '<speak>Hi! <break time="1"/> ' +
-   *         'I can read out an ordinal like ' +
-   *         '<say-as interpret-as="ordinal">123</say-as>. Say a number.</speak>',
-   *         ['I didn\'t hear a number', 'If you\'re still there, what\'s the number?', 'What is the number?']);
+   *   const ssml = '<speak>Hi! <break time="1"/> ' +
+   *     'I can read out an ordinal like ' +
+   *     '<say-as interpret-as="ordinal">123</say-as>. Say a number.</speak>';
+   *   const inputPrompt = app.buildInputPrompt(true, ssml, noInputs);
    *   app.ask(inputPrompt);
    * }
    *
@@ -374,9 +382,9 @@ class AssistantApp {
    *   if (app.getRawInput() === 'bye') {
    *     app.tell('Goodbye!');
    *   } else {
-   *     const inputPrompt = app.buildInputPrompt(true, '<speak>You said, <say-as interpret-as="ordinal">' +
-   *       app.getRawInput() + '</say-as></speak>',
-   *         ['I didn\'t hear a number', 'If you\'re still there, what\'s the number?', 'What is the number?']);
+   *     const ssml = '<speak>You said, <say-as interpret-as="ordinal">' +
+   *       app.getRawInput() + '</say-as></speak>';
+   *     const inputPrompt = app.buildInputPrompt(true, ssml, noInputs);
    *     app.ask(inputPrompt);
    *   }
    * }
@@ -423,11 +431,17 @@ class AssistantApp {
    * // Actions SDK
    * const app = new ActionsSdkApp({request: request, response: response});
    *
+   * const noInputs = [
+   *   `I didn't hear a number`,
+   *   `If you're still there, what's the number?`,
+   *   'What is the number?'
+   * ];
+   *
    * function mainIntent (app) {
-   *   const inputPrompt = app.buildInputPrompt(true, '<speak>Hi! <break time="1"/> ' +
-   *         'I can read out an ordinal like ' +
-   *         '<say-as interpret-as="ordinal">123</say-as>. Say a number.</speak>',
-   *         ['I didn\'t hear a number', 'If you\'re still there, what\'s the number?', 'What is the number?']);
+   *   const ssml = '<speak>Hi! <break time="1"/> ' +
+   *     'I can read out an ordinal like ' +
+   *     '<say-as interpret-as="ordinal">123</say-as>. Say a number.</speak>';
+   *   const inputPrompt = app.buildInputPrompt(true, ssml, noInputs);
    *   app.ask(inputPrompt);
    * }
    *
@@ -435,9 +449,9 @@ class AssistantApp {
    *   if (app.getRawInput() === 'bye') {
    *     app.tell('Goodbye!');
    *   } else {
-   *     const inputPrompt = app.buildInputPrompt(true, '<speak>You said, <say-as interpret-as="ordinal">' +
-   *       app.getRawInput() + '</say-as></speak>',
-   *         ['I didn\'t hear a number', 'If you\'re still there, what\'s the number?', 'What is the number?']);
+   *     const ssml = '<speak>You said, <say-as interpret-as="ordinal">' +
+   *       app.getRawInput() + '</say-as></speak>';
+   *     const inputPrompt = app.buildInputPrompt(true, ssml, noInputs);
    *     app.ask(inputPrompt);
    *   }
    * }
@@ -585,8 +599,8 @@ class AssistantApp {
    *     which comes from AssistantApp.SupportedPermissions.
    * @param {Object=} dialogState JSON object the app uses to hold dialog state that
    *     will be circulated back by Assistant. Used in {@link ActionsSdkApp}.
-   * @return {(Object|null)} A response is sent to Assistant to ask for the user's permission; for any
-   *     invalid input, we return null.
+   * @return {(Object|null)} A response is sent to Assistant to ask for the user's permission.
+   *     For any invalid input, we return null.
    * @actionssdk
    * @dialogflow
    */
@@ -668,8 +682,8 @@ class AssistantApp {
    *     {@link AssistantApp#getArgument}.
    * @param {Object=} dialogState JSON object the app uses to hold dialog state that
    *     will be circulated back by Assistant. Used in {@link ActionsSdkApp}.
-   * @return {(Object|null)} A response is sent to Assistant to ask for the user's permission; for any
-   *     invalid input, we return null.
+   * @return {(Object|null)} A response is sent to Assistant to ask for the user's permission.
+   *     For any invalid input, we return null.
    * @actionssdk
    * @dialogflow
    */
@@ -845,13 +859,15 @@ class AssistantApp {
    * I'll just need to get your name from Google, is that OK?'.
    *
    * Once the user accepts or denies the request, the Assistant will fire another intent:
-   * assistant.intent.action.PERMISSION with a boolean argument: AssistantApp.BuiltInArgNames.PERMISSION_GRANTED
+   * app.StandardIntents.PERMISSION with a boolean argument: app.BuiltInArgNames.PERMISSION_GRANTED
    * and, if granted, the information that you requested.
    *
    * Read more:
    *
-   * * {@link https://developers.google.com/actions/reference/conversation#ExpectedIntent|Supported Permissions}
-   * * Check if the permission has been granted with {@link AssistantApp#isPermissionGranted|isPermissionsGranted}
+   * * {@link https://developers.google.com/actions/reference/conversation#ExpectedIntent|
+   *       Supported Permissions}
+   * * Check if the permission has been granted with
+   *       {@link AssistantApp#isPermissionGranted|isPermissionsGranted}
    * * {@link AssistantApp#getDeviceLocation|getDeviceLocation}
    * * {@link AssistantApp#getUserName|getUserName}
    *
@@ -1302,10 +1318,9 @@ class AssistantApp {
    * User object.
    * @typedef {Object} User
    * @property {string} userId - Random string ID for Google user.
-   * @property {UserName} userName - User name information. Null if not
-   *     requested with {@link AssistantApp#askForPermission|askForPermission(SupportedPermissions.NAME)}.
-   * @property {string} accessToken - Unique Oauth2 token. Only available with
-   *     account linking.
+   * @property {UserName} userName - User name information. Null if not requested with
+   *     {@link AssistantApp#askForPermission|askForPermission(SupportedPermissions.NAME)}.
+   * @property {string} accessToken - Unique Oauth2 token. Only available with account linking.
    * @property {Timestamp} lastSeen - Timestamp for the last access from the user.
    *     Retrieve using app.getLastSeen() to get a Date object or null if never seen.
    * @property {string} userStorage - A string persistent across sessions.
@@ -1597,7 +1612,8 @@ class AssistantApp {
     } = this.BuiltInArgNames;
     const argument = this.findArgument_(DELIVERY_ADDRESS_VALUE, TRANSACTION_DECISION_VALUE);
     if (argument && argument.extension) {
-      if (argument.extension.userDecision === this.Transactions.DeliveryAddressUserDecision.ACCEPTED) {
+      const { userDecision } = argument.extension;
+      if (userDecision === this.Transactions.DeliveryAddressUserDecision.ACCEPTED) {
         const { location } = argument.extension;
         if (!location.postalAddress) {
           debug('User accepted, but may not have configured address in app');
@@ -2467,7 +2483,8 @@ AssistantApp.prototype.SurfaceCapabilities = {
 AssistantApp.prototype.SupportedPermissions = {
   /**
    * The user's name as defined in the
-   * {@link https://developers.google.com/actions/reference/conversation#UserProfile|UserProfile object}
+   * {@link https://developers.google.com/actions/reference/conversation#UserProfile|
+   *     UserProfile object}
    */
   NAME: 'NAME',
   /**
@@ -2549,9 +2566,9 @@ AssistantApp.prototype.StandardIntents = {
   CANCEL: 'actions.intent.CANCEL',
   /** App fires NEW_SURFACE intent when requesting handoff to a new surface from user. */
   NEW_SURFACE: 'actions.intent.NEW_SURFACE',
-  /** App fires REGISTER_UPDATE intent when requesting the user to register for proactive updates. */
+  /** App fires REGISTER_UPDATE intent when requesting user to register for proactive updates. */
   REGISTER_UPDATE: 'actions.intent.REGISTER_UPDATE',
-  /** App receives CONFIGURE_UPDATES intent to indicate a custom REGISTER_UPDATE intent should be sent. */
+  /** App receives CONFIGURE_UPDATES intent to indicate a REGISTER_UPDATE intent should be sent. */
   CONFIGURE_UPDATES: 'actions.intent.CONFIGURE_UPDATES'
 };
 

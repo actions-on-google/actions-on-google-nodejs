@@ -118,21 +118,21 @@ const ImageDisplays = {
  */
 
 /**
- * @typedef {Object} RichResponseItemBasicCard
+ * @typedef {Object} ItemBasicCard
  * @property {BasicCard} basicCard
  */
 
 /**
- * @typedef {Object} RichResponseItemSimpleResponse
+ * @typedef {Object} ItemSimpleResponse
  * @property {SimpleResponse} simpleResponse
  */
 
 /**
- * @typedef {Object} RichResponseItemStructuredResponse
+ * @typedef {Object} ItemStructuredResponse
  * @property {StructuredResponse} structuredResponse
  */
 
-/** @typedef {RichResponseItemBasicCard | RichResponseItemSimpleResponse | RichResponseItemStructuredResponse} RichResponseItem */
+/** @typedef {ItemBasicCard | ItemSimpleResponse | ItemStructuredResponse} RichResponseItem */
 
 /**
  * Class for initializing and constructing Rich Responses with chainable interface.

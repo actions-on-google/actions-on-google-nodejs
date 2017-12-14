@@ -33,6 +33,8 @@ const {
   OptionItem
 } = require('.././response-builder');
 
+const { clone } = require('./utils/mocking');
+
 const { OrderUpdate } = require('.././transactions');
 
 const { ImageDisplays } = require('.././response-builder');
@@ -55,7 +57,7 @@ describe('RichResponse', () => {
   describe('#constructor', () => {
     it('should create valid object', () => {
       const richResponse = new RichResponse();
-      expect(JSON.parse(JSON.stringify(richResponse))).to.deep.equal({
+      expect(clone(richResponse)).to.deep.equal({
         items: [],
         suggestions: []
       });
@@ -71,7 +73,7 @@ describe('RichResponse', () => {
 
     it('should add a simple response w/ just speech', () => {
       richResponse.addSimpleResponse('This is speech');
-      expect(JSON.parse(JSON.stringify(richResponse))).to.deep.equal({
+      expect(clone(richResponse)).to.deep.equal({
         items: [
           {
             simpleResponse: {
@@ -85,7 +87,7 @@ describe('RichResponse', () => {
 
     it('should add a simple response w/ just SSML speech', () => {
       richResponse.addSimpleResponse('<speak>This is speech</speak>');
-      expect(JSON.parse(JSON.stringify(richResponse))).to.deep.equal({
+      expect(clone(richResponse)).to.deep.equal({
         items: [
           {
             simpleResponse: {
@@ -102,7 +104,7 @@ describe('RichResponse', () => {
         speech: 'This is speech',
         displayText: 'This is display text'
       });
-      expect(JSON.parse(JSON.stringify(richResponse))).to.deep.equal({
+      expect(clone(richResponse)).to.deep.equal({
         items: [
           {
             simpleResponse: {
@@ -120,7 +122,7 @@ describe('RichResponse', () => {
         speech: '<speak>This is speech</speak>',
         displayText: 'This is display text'
       });
-      expect(JSON.parse(JSON.stringify(richResponse))).to.deep.equal({
+      expect(clone(richResponse)).to.deep.equal({
         items: [
           {
             simpleResponse: {
@@ -137,7 +139,7 @@ describe('RichResponse', () => {
       richResponse.addSimpleResponse('text');
       richResponse.addSimpleResponse('text');
       richResponse.addSimpleResponse('text');
-      expect(JSON.parse(JSON.stringify(richResponse))).to.deep.equal({
+      expect(clone(richResponse)).to.deep.equal({
         items: [
           {
             simpleResponse: {
@@ -224,7 +226,7 @@ describe('RichResponse', () => {
 
     it('should add a single suggestion', () => {
       richResponse.addSuggestions('suggestion');
-      expect(JSON.parse(JSON.stringify(richResponse))).to.deep.equal({
+      expect(clone(richResponse)).to.deep.equal({
         items: [],
         suggestions: [{
           title: 'suggestion'
@@ -234,7 +236,7 @@ describe('RichResponse', () => {
 
     it('should add multiple suggestions', () => {
       richResponse.addSuggestions(['suggestion one', 'suggestion two']);
-      expect(JSON.parse(JSON.stringify(richResponse))).to.deep.equal({
+      expect(clone(richResponse)).to.deep.equal({
         items: [],
         suggestions: [
           {
@@ -248,7 +250,7 @@ describe('RichResponse', () => {
 
     it('should not add a suggestion longer than 25 characters', () => {
       richResponse.addSuggestions(['suggestion one that is very long', 'suggestion two']);
-      expect(JSON.parse(JSON.stringify(richResponse))).to.deep.equal({
+      expect(clone(richResponse)).to.deep.equal({
         items: [],
         suggestions: [
           {
@@ -257,7 +259,7 @@ describe('RichResponse', () => {
       });
 
       richResponse.addSuggestions('suggestion one that is very long');
-      expect(JSON.parse(JSON.stringify(richResponse))).to.deep.equal({
+      expect(clone(richResponse)).to.deep.equal({
         items: [],
         suggestions: [
           {
@@ -276,7 +278,7 @@ describe('RichResponse', () => {
 
     it('should add a single suggestion link', () => {
       richResponse.addSuggestionLink('title', 'url');
-      expect(JSON.parse(JSON.stringify(richResponse))).to.deep.equal({
+      expect(clone(richResponse)).to.deep.equal({
         items: [],
         suggestions: [],
         linkOutSuggestion: {
@@ -289,7 +291,7 @@ describe('RichResponse', () => {
     it('should replace existing suggestion link', () => {
       richResponse.addSuggestionLink('title', 'url');
       richResponse.addSuggestionLink('replacement', 'replacement url');
-      expect(JSON.parse(JSON.stringify(richResponse))).to.deep.equal({
+      expect(clone(richResponse)).to.deep.equal({
         items: [],
         suggestions: [],
         linkOutSuggestion: {
@@ -308,7 +310,7 @@ describe('BasicCard', () => {
   describe('#constructor', () => {
     it('should create valid object', () => {
       const basicCard = new BasicCard();
-      expect(JSON.parse(JSON.stringify(basicCard))).to.deep.equal({
+      expect(clone(basicCard)).to.deep.equal({
         formattedText: '',
         buttons: []
       });
@@ -324,7 +326,7 @@ describe('BasicCard', () => {
 
     it('should set title', () => {
       basicCard.setTitle('Title');
-      expect(JSON.parse(JSON.stringify(basicCard))).to.deep.equal({
+      expect(clone(basicCard)).to.deep.equal({
         title: 'Title',
         formattedText: '',
         buttons: []
@@ -334,7 +336,7 @@ describe('BasicCard', () => {
     it('should overwrite previously set title', () => {
       basicCard.setTitle('Title');
       basicCard.setTitle('New title');
-      expect(JSON.parse(JSON.stringify(basicCard))).to.deep.equal({
+      expect(clone(basicCard)).to.deep.equal({
         title: 'New title',
         formattedText: '',
         buttons: []
@@ -351,7 +353,7 @@ describe('BasicCard', () => {
 
     it('should set subtitle', () => {
       basicCard.setSubtitle('Subtitle');
-      expect(JSON.parse(JSON.stringify(basicCard))).to.deep.equal({
+      expect(clone(basicCard)).to.deep.equal({
         subtitle: 'Subtitle',
         formattedText: '',
         buttons: []
@@ -361,7 +363,7 @@ describe('BasicCard', () => {
     it('should overwrite previously set subtitle', () => {
       basicCard.setSubtitle('Subtitle');
       basicCard.setSubtitle('New Subtitle');
-      expect(JSON.parse(JSON.stringify(basicCard))).to.deep.equal({
+      expect(clone(basicCard)).to.deep.equal({
         subtitle: 'New Subtitle',
         formattedText: '',
         buttons: []
@@ -378,7 +380,7 @@ describe('BasicCard', () => {
 
     it('should set body text', () => {
       basicCard.setBodyText('body text');
-      expect(JSON.parse(JSON.stringify(basicCard))).to.deep.equal({
+      expect(clone(basicCard)).to.deep.equal({
         formattedText: 'body text',
         buttons: []
       });
@@ -387,7 +389,7 @@ describe('BasicCard', () => {
     it('should overwrite previously set body text', () => {
       basicCard.setBodyText('body text');
       basicCard.setBodyText('New body text');
-      expect(JSON.parse(JSON.stringify(basicCard))).to.deep.equal({
+      expect(clone(basicCard)).to.deep.equal({
         formattedText: 'New body text',
         buttons: []
       });
@@ -403,7 +405,7 @@ describe('BasicCard', () => {
 
     it('should set image', () => {
       basicCard.setImage('url', 'accessibilityText');
-      expect(JSON.parse(JSON.stringify(basicCard))).to.deep.equal({
+      expect(clone(basicCard)).to.deep.equal({
         formattedText: '',
         buttons: [],
         image: {
@@ -416,7 +418,7 @@ describe('BasicCard', () => {
     it('should overwrite previously set image', () => {
       basicCard.setImage('url', 'accessibilityText');
       basicCard.setImage('new.url', 'new_accessibilityText');
-      expect(JSON.parse(JSON.stringify(basicCard))).to.deep.equal({
+      expect(clone(basicCard)).to.deep.equal({
         formattedText: '',
         buttons: [],
         image: {
@@ -440,7 +442,7 @@ describe('BasicCard', () => {
 
     it('should set image display options', () => {
       basicCard.setImageDisplay(ImageDisplays.WHITE);
-      expect(JSON.parse(JSON.stringify(basicCard))).to.deep.equal({
+      expect(clone(basicCard)).to.deep.equal({
         formattedText: '',
         buttons: [],
         imageDisplayOptions: ImageDisplays.WHITE
@@ -450,7 +452,7 @@ describe('BasicCard', () => {
     it('should overwrite previously set image display', () => {
       basicCard.setImageDisplay(ImageDisplays.WHITE);
       basicCard.setImageDisplay(ImageDisplays.CROPPED);
-      expect(JSON.parse(JSON.stringify(basicCard))).to.deep.equal({
+      expect(clone(basicCard)).to.deep.equal({
         formattedText: '',
         buttons: [],
         imageDisplayOptions: ImageDisplays.CROPPED
@@ -467,7 +469,7 @@ describe('BasicCard', () => {
 
     it('should add a single button', () => {
       basicCard.addButton('button', 'url');
-      expect(JSON.parse(JSON.stringify(basicCard))).to.deep.equal({
+      expect(clone(basicCard)).to.deep.equal({
         formattedText: '',
         buttons: [{
           title: 'button',
@@ -482,7 +484,7 @@ describe('BasicCard', () => {
       basicCard.addButton('button one', 'url.one');
       basicCard.addButton('button two', 'url.two');
       basicCard.addButton('button three', 'url.three');
-      expect(JSON.parse(JSON.stringify(basicCard))).to.deep.equal({
+      expect(clone(basicCard)).to.deep.equal({
         formattedText: '',
         buttons: [
           {
@@ -516,7 +518,7 @@ describe('List', () => {
   describe('#constructor', () => {
     it('should create valid object', () => {
       const list = new List();
-      expect(JSON.parse(JSON.stringify(list))).to.deep.equal({
+      expect(clone(list)).to.deep.equal({
         items: []
       });
     });
@@ -531,7 +533,7 @@ describe('List', () => {
 
     it('should set title', () => {
       list.setTitle('Title');
-      expect(JSON.parse(JSON.stringify(list))).to.deep.equal({
+      expect(clone(list)).to.deep.equal({
         title: 'Title',
         items: []
       });
@@ -540,7 +542,7 @@ describe('List', () => {
     it('should overwrite previously set title', () => {
       list.setTitle('Title');
       list.setTitle('New title');
-      expect(JSON.parse(JSON.stringify(list))).to.deep.equal({
+      expect(clone(list)).to.deep.equal({
         title: 'New title',
         items: []
       });
@@ -556,7 +558,7 @@ describe('List', () => {
 
     it('should add a single item', () => {
       list.addItems(new OptionItem());
-      expect(JSON.parse(JSON.stringify(list))).to.deep.equal({
+      expect(clone(list)).to.deep.equal({
         items: [{
           title: '',
           optionInfo: {
@@ -569,7 +571,7 @@ describe('List', () => {
 
     it('should add multiple items', () => {
       list.addItems([new OptionItem(), new OptionItem(), new OptionItem()]);
-      expect(JSON.parse(JSON.stringify(list))).to.deep.equal({
+      expect(clone(list)).to.deep.equal({
         items: [
           {
             title: '',
@@ -618,7 +620,7 @@ describe('Carousel', () => {
   describe('#constructor', () => {
     it('should create valid object', () => {
       const carousel = new Carousel();
-      expect(JSON.parse(JSON.stringify(carousel))).to.deep.equal({
+      expect(clone(carousel)).to.deep.equal({
         items: []
       });
     });
@@ -633,7 +635,7 @@ describe('Carousel', () => {
 
     it('should add a single item', () => {
       carousel.addItems(new OptionItem());
-      expect(JSON.parse(JSON.stringify(carousel))).to.deep.equal({
+      expect(clone(carousel)).to.deep.equal({
         items: [{
           title: '',
           optionInfo: {
@@ -646,7 +648,7 @@ describe('Carousel', () => {
 
     it('should add multiple items', () => {
       carousel.addItems([new OptionItem(), new OptionItem(), new OptionItem()]);
-      expect(JSON.parse(JSON.stringify(carousel))).to.deep.equal({
+      expect(clone(carousel)).to.deep.equal({
         items: [
           {
             title: '',
@@ -695,7 +697,7 @@ describe('OptionItem', () => {
   describe('#constructor', () => {
     it('should create valid object', () => {
       const optionItem = new OptionItem();
-      expect(JSON.parse(JSON.stringify(optionItem))).to.deep.equal({
+      expect(clone(optionItem)).to.deep.equal({
         title: '',
         optionInfo: {
           key: '',
@@ -714,7 +716,7 @@ describe('OptionItem', () => {
 
     it('should set title', () => {
       optionItem.setTitle('Title');
-      expect(JSON.parse(JSON.stringify(optionItem))).to.deep.equal({
+      expect(clone(optionItem)).to.deep.equal({
         title: 'Title',
         optionInfo: {
           key: '',
@@ -726,7 +728,7 @@ describe('OptionItem', () => {
     it('should overwrite previously set title', () => {
       optionItem.setTitle('Title');
       optionItem.setTitle('New title');
-      expect(JSON.parse(JSON.stringify(optionItem))).to.deep.equal({
+      expect(clone(optionItem)).to.deep.equal({
         title: 'New title',
         optionInfo: {
           key: '',
@@ -745,7 +747,7 @@ describe('OptionItem', () => {
 
     it('should set subtitle', () => {
       optionItem.setDescription('Description');
-      expect(JSON.parse(JSON.stringify(optionItem))).to.deep.equal({
+      expect(clone(optionItem)).to.deep.equal({
         title: '',
         description: 'Description',
         optionInfo: {
@@ -758,7 +760,7 @@ describe('OptionItem', () => {
     it('should overwrite previously set description', () => {
       optionItem.setDescription('Description');
       optionItem.setDescription('New Description');
-      expect(JSON.parse(JSON.stringify(optionItem))).to.deep.equal({
+      expect(clone(optionItem)).to.deep.equal({
         title: '',
         description: 'New Description',
         optionInfo: {
@@ -778,7 +780,7 @@ describe('OptionItem', () => {
 
     it('should set image', () => {
       optionItem.setImage('url', 'accessibilityText');
-      expect(JSON.parse(JSON.stringify(optionItem))).to.deep.equal({
+      expect(clone(optionItem)).to.deep.equal({
         title: '',
         optionInfo: {
           key: '',
@@ -794,7 +796,7 @@ describe('OptionItem', () => {
     it('should overwrite previously set image', () => {
       optionItem.setImage('url', 'accessibilityText');
       optionItem.setImage('new.url', 'new_accessibilityText');
-      expect(JSON.parse(JSON.stringify(optionItem))).to.deep.equal({
+      expect(clone(optionItem)).to.deep.equal({
         title: '',
         optionInfo: {
           key: '',

@@ -285,7 +285,8 @@ class ActionsSdkApp extends AssistantApp {
    *   const intent = app.getIntent();
    *   switch (intent) {
    *     case app.StandardIntents.MAIN:
-   *       const inputPrompt = app.buildInputPrompt(false, 'Welcome to action snippets! Say anything.');
+   *       const welcome = 'Welcome to action snippets! Say anything.';
+   *       const inputPrompt = app.buildInputPrompt(false, welcome);
    *       app.ask(inputPrompt);
    *       break;
    *
@@ -367,18 +368,24 @@ class ActionsSdkApp extends AssistantApp {
   }
 
   /**
-   * Asks to collect user's input; all user's queries need to be sent to
-   * the app.
-   * {@link https://developers.google.com/actions/policies/general-policies#user_experience|The guidelines when prompting the user for a response must be followed at all times}.
+   * Asks to collect user's input; all user's queries need to be sent to the app.
+   * {@link https://developers.google.com/actions/policies/general-policies#user_experience|
+   *     The guidelines when prompting the user for a response must be followed at all times}.
    *
    * @example
    * const app = new ActionsSdkApp({request: request, response: response});
    *
+   * const noInputs = [
+   *   `I didn't hear a number`,
+   *   `If you're still there, what's the number?`,
+   *   'What is the number?'
+   * ];
+   *
    * function mainIntent (app) {
-   *   const inputPrompt = app.buildInputPrompt(true, '<speak>Hi! <break time="1"/> ' +
-   *         'I can read out an ordinal like ' +
-   *         '<say-as interpret-as="ordinal">123</say-as>. Say a number.</speak>',
-   *         ['I didn\'t hear a number', 'If you\'re still there, what\'s the number?', 'What is the number?']);
+   *   const ssml = '<speak>Hi! <break time="1"/> ' +
+   *     'I can read out an ordinal like ' +
+   *     '<say-as interpret-as="ordinal">123</say-as>. Say a number.</speak>';
+   *   const inputPrompt = app.buildInputPrompt(true, ssml, noInputs);
    *   app.ask(inputPrompt);
    * }
    *
@@ -386,9 +393,9 @@ class ActionsSdkApp extends AssistantApp {
    *   if (app.getRawInput() === 'bye') {
    *     app.tell('Goodbye!');
    *   } else {
-   *     const inputPrompt = app.buildInputPrompt(true, '<speak>You said, <say-as interpret-as="ordinal">' +
-   *       app.getRawInput() + '</say-as></speak>',
-   *         ['I didn\'t hear a number', 'If you\'re still there, what\'s the number?', 'What is the number?']);
+   *     const ssml = '<speak>You said, <say-as interpret-as="ordinal">' +
+   *       app.getRawInput() + '</say-as></speak>';
+   *     const inputPrompt = app.buildInputPrompt(true, ssml, noInputs);
    *     app.ask(inputPrompt);
    *   }
    * }
@@ -568,11 +575,17 @@ class ActionsSdkApp extends AssistantApp {
    * @example
    * const app = new ActionsSdkApp({request: request, response: response});
    *
+   * const noInputs = [
+   *   `I didn't hear a number`,
+   *   `If you're still there, what's the number?`,
+   *   'What is the number?'
+   * ];
+   *
    * function mainIntent (app) {
-   *   const inputPrompt = app.buildInputPrompt(true, '<speak>Hi! <break time="1"/> ' +
-   *         'I can read out an ordinal like ' +
-   *         '<say-as interpret-as="ordinal">123</say-as>. Say a number.</speak>',
-   *         ['I didn\'t hear a number', 'If you\'re still there, what\'s the number?', 'What is the number?']);
+   *   const ssml = '<speak>Hi! <break time="1"/> ' +
+   *     'I can read out an ordinal like ' +
+   *     '<say-as interpret-as="ordinal">123</say-as>. Say a number.</speak>';
+   *   const inputPrompt = app.buildInputPrompt(true, ssml, noInputs);
    *   app.ask(inputPrompt);
    * }
    *
@@ -580,9 +593,9 @@ class ActionsSdkApp extends AssistantApp {
    *   if (app.getRawInput() === 'bye') {
    *     app.tell('Goodbye!');
    *   } else {
-   *     const inputPrompt = app.buildInputPrompt(true, '<speak>You said, <say-as interpret-as="ordinal">' +
-   *       app.getRawInput() + '</say-as></speak>',
-   *         ['I didn\'t hear a number', 'If you\'re still there, what\'s the number?', 'What is the number?']);
+   *     const ssml = '<speak>You said, <say-as interpret-as="ordinal">' +
+   *       app.getRawInput() + '</say-as></speak>';
+   *     const inputPrompt = app.buildInputPrompt(true, ssml, noInputs);
    *     app.ask(inputPrompt);
    *   }
    * }
@@ -630,8 +643,8 @@ class ActionsSdkApp extends AssistantApp {
   }
 
   /**
-   * Builds the {@link https://developers.google.com/actions/reference/conversation#InputPrompt|InputPrompt object}
-   * from initial prompt and no-input prompts.
+   * Builds the {@link https://developers.google.com/actions/reference/conversation#InputPrompt|
+   *     InputPrompt object} from initial prompt and no-input prompts.
    *
    * The App needs one initial prompt to start the conversation. If there is no user response,
    * the App re-opens the mic and renders the no-input prompts three times
@@ -649,7 +662,9 @@ class ActionsSdkApp extends AssistantApp {
    * @param {boolean} isSsml Indicates whether the text to speech is SSML or not.
    * @param {string} initialPrompt The initial prompt the App asks the user.
    * @param {Array<string>=} noInputs Array of re-prompts when the user does not respond (max 3).
-   * @return {Object} An {@link https://developers.google.com/actions/reference/conversation#InputPrompt|InputPrompt object}.
+   * @return {Object} An
+   * {@link https://developers.google.com/actions/reference/conversation#InputPrompt|
+   *     InputPrompt object}.
    * @actionssdk
    */
   buildInputPrompt (isSsml, initialPrompt, noInputs) {
@@ -892,15 +907,17 @@ class ActionsSdkApp extends AssistantApp {
   }
 
   /**
-   * Builds an ExpectedIntent object. Refer to {@link ActionsSdkApp#newRuntimeEntity} to create the list
-   * of runtime entities required by this method. Runtime entities need to be defined in
-   * the Action Package.
+   * Builds an ExpectedIntent object.
+   * Refer to {@link ActionsSdkApp#newRuntimeEntity} to create
+   * the list of runtime entities required by this method.
+   * Runtime entities need to be defined in the Action Package.
    *
    * @param {string} intent Developer specified in-dialog intent inside the Action
    *     Package or an App built-in intent like
    *     'assistant.intent.action.TEXT'.
-   * @return {Object} An {@link https://developers.google.com/actions/reference/conversation#ExpectedIntent|ExpectedIntent object}
-         encapsulating the intent and the runtime entities.
+   * @return {Object} An
+   * {@link https://developers.google.com/actions/reference/conversation#ExpectedIntent|
+   *     ExpectedIntent object} encapsulating the intent and the runtime entities.
    * @private
    * @actionssdk
    */

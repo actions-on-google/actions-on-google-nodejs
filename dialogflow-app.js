@@ -496,7 +496,8 @@ class DialogflowApp extends AssistantApp {
 
   /**
    * Asks to collect the user's input.
-   * {@link https://developers.google.com/actions/policies/general-policies#user_experience|The guidelines when prompting the user for a response must be followed at all times}.
+   * {@link https://developers.google.com/actions/policies/general-policies#user_experience|
+   *     The guidelines when prompting the user for a response must be followed at all times}.
    *
    * NOTE: Due to a bug, if you specify the no-input prompts,
    * the mic is closed after the 3rd prompt, so you should use the 3rd prompt
@@ -791,8 +792,9 @@ class DialogflowApp extends AssistantApp {
    * Dialogflow {@link https://dialogflow.com/docs/concept-contexts|Context}.
    * @typedef {Object} Context
    * @property {string} name - Full name of the context.
-   * @property {Object} parameters - Parameters carried within this context.
-                                     See {@link https://dialogflow.com/docs/concept-actions#section-extracting-values-from-contexts|here}.
+   * @property {Object} parameters - Parameters carried within this context. See
+   *     {@link https://dialogflow.com/docs/concept-actions#section-extracting-values-from-contexts|
+   *     here}.
    * @property {number} lifespan - Remaining number of intents
    */
 

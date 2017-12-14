@@ -40,7 +40,8 @@ const {
   headerV1,
   headerV2,
   MockResponse,
-  MockRequest
+  MockRequest,
+  clone
 } = require('./utils/mocking');
 
 chai.use(spies);
@@ -63,8 +64,8 @@ describe('DialogflowApp', function () {
   let dialogflowAppRequestBodyNewSession, dialogflowAppRequestBodyLiveSession, mockResponse;
 
   beforeEach(function () {
-    dialogflowAppRequestBodyNewSession = JSON.parse(JSON.stringify(dialogflowAppRequestBodyNewSessionMock));
-    dialogflowAppRequestBodyLiveSession = JSON.parse(JSON.stringify(dialogflowAppRequestBodyLiveSessionMock));
+    dialogflowAppRequestBodyNewSession = clone(dialogflowAppRequestBodyNewSessionMock);
+    dialogflowAppRequestBodyLiveSession = clone(dialogflowAppRequestBodyLiveSessionMock);
     mockResponse = new MockResponse();
   });
 
@@ -199,7 +200,7 @@ describe('DialogflowApp', function () {
           },
           'contextOut': []
         };
-        expect(JSON.parse(JSON.stringify(mockResponse.body))).to.deep.equal(expectedResponse);
+        expect(clone(mockResponse.body)).to.deep.equal(expectedResponse);
       });
 
     // Success case test, when the API returns a valid 200 response with the response object
@@ -239,8 +240,7 @@ describe('DialogflowApp', function () {
           },
           'contextOut': []
         };
-        expect(JSON.parse(JSON.stringify(mockResponse.body)))
-          .to.deep.equal(expectedResponse);
+        expect(clone(mockResponse.body)).to.deep.equal(expectedResponse);
       });
 
     // Failure test, when the API returns a 400 response with the response object
@@ -320,8 +320,7 @@ describe('DialogflowApp', function () {
             }
           ]
         };
-        expect(JSON.parse(JSON.stringify(mockResponse.body)))
-          .to.deep.equal(expectedResponse);
+        expect(clone(mockResponse.body)).to.deep.equal(expectedResponse);
       });
 
     // Success case test, when the API returns a valid 200 response with the response object
@@ -367,8 +366,7 @@ describe('DialogflowApp', function () {
             }
           ]
         };
-        expect(JSON.parse(JSON.stringify(mockResponse.body)))
-          .to.deep.equal(expectedResponse);
+        expect(clone(mockResponse.body)).to.deep.equal(expectedResponse);
       });
 
     // Success case test, when the API returns a valid 200 response with the response object
@@ -460,8 +458,7 @@ describe('DialogflowApp', function () {
             }
           ]
         };
-        expect(JSON.parse(JSON.stringify(mockResponse.body)))
-          .to.deep.equal(expectedResponse);
+        expect(clone(mockResponse.body)).to.deep.equal(expectedResponse);
       });
 
     // Failure test, when the API returns a 400 response with the response object
@@ -545,7 +542,7 @@ describe('DialogflowApp', function () {
             }
           ]
         };
-        expect(JSON.parse(JSON.stringify(mockResponse.body))).to.deep.equal(expectedResponse);
+        expect(clone(mockResponse.body)).to.deep.equal(expectedResponse);
       });
 
     it('Should return the an error JSON in the response when list has <2 items.', function () {
@@ -623,8 +620,7 @@ describe('DialogflowApp', function () {
             }
           ]
         };
-        expect(JSON.parse(JSON.stringify(mockResponse.body))).to
-          .deep.equal(expectedResponse);
+        expect(clone(mockResponse.body)).to.deep.equal(expectedResponse);
       });
 
     it('Should return the an error JSON in the response when carousel has <2 items.', function () {
@@ -734,7 +730,8 @@ describe('DialogflowApp', function () {
     let mockRequest, app;
 
     beforeEach(function () {
-      dialogflowAppRequestBodyLiveSession.originalRequest.data.user.user_id = '11112226094657824893';
+      dialogflowAppRequestBodyLiveSession.originalRequest.data
+        .user.user_id = '11112226094657824893';
       mockRequest = new MockRequest(headerV1, dialogflowAppRequestBodyLiveSession);
       app = new DialogflowApp({request: mockRequest, response: mockResponse});
     });
@@ -931,7 +928,8 @@ describe('DialogflowApp', function () {
 
     // Success case test, when the API returns a valid 200 response with the response object
     it('Should validate assistant request delivery address for txn decision', function () {
-      dialogflowAppRequestBodyLiveSession.originalRequest.data.inputs[0].arguments[0].name = 'TRANSACTION_DECISION_VALUE';
+      dialogflowAppRequestBodyLiveSession.originalRequest.data
+        .inputs[0].arguments[0].name = 'TRANSACTION_DECISION_VALUE';
       const mockRequest = new MockRequest(headerV1, dialogflowAppRequestBodyLiveSession);
       const app = new DialogflowApp({
         request: mockRequest,
@@ -959,7 +957,8 @@ describe('DialogflowApp', function () {
 
     // Success case test, when the API returns a valid 200 response with the response object
     it('Should return null when user rejects', function () {
-      dialogflowAppRequestBodyLiveSession.originalRequest.data.inputs[0].arguments[0].extension.userDecision =
+      dialogflowAppRequestBodyLiveSession.originalRequest.data
+        .inputs[0].arguments[0].extension.userDecision =
         'REJECTED';
       const mockRequest = new MockRequest(headerV1, dialogflowAppRequestBodyLiveSession);
       const app = new DialogflowApp({
@@ -1188,7 +1187,8 @@ describe('DialogflowApp', function () {
           ]
         }
       ];
-      dialogflowAppRequestBodyLiveSession.originalRequest.data.availableSurfaces = availableSurfaces;
+      dialogflowAppRequestBodyLiveSession.originalRequest.data
+        .availableSurfaces = availableSurfaces;
       const mockRequest = new MockRequest(headerV1, dialogflowAppRequestBodyLiveSession);
       const app = new DialogflowApp({
         request: mockRequest,
@@ -1236,7 +1236,8 @@ describe('DialogflowApp', function () {
           ]
         }
       ];
-      dialogflowAppRequestBodyLiveSession.originalRequest.data.availableSurfaces = availableSurfaces;
+      dialogflowAppRequestBodyLiveSession.originalRequest.data
+        .availableSurfaces = availableSurfaces;
     });
 
     // Success case test, when the API returns a valid 200 response with the response object
@@ -1770,7 +1771,7 @@ describe('DialogflowApp', function () {
         ]
       };
 
-      expect(JSON.parse(JSON.stringify(mockResponse.body))).to.deep.equal(expectedResponse);
+      expect(clone(mockResponse.body)).to.deep.equal(expectedResponse);
     });
 
     // Success case test, when the API returns a valid 200 response with the response object
@@ -1970,7 +1971,8 @@ describe('DialogflowApp', function () {
       expect(app.isPermissionGranted()).to.equal(true);
 
       // Test the false case
-      dialogflowAppRequestBodyLiveSession.originalRequest.data.inputs[0].arguments[0].text_value = false;
+      dialogflowAppRequestBodyLiveSession.originalRequest.data
+        .inputs[0].arguments[0].text_value = false;
       initMockApp();
       expect(app.isPermissionGranted()).to.equal(false);
     });
@@ -2247,8 +2249,7 @@ describe('DialogflowApp', function () {
         .addSuggestions('suggestion one')
         .addSuggestionLink('google', 'google.com');
 
-      expect(app.getIncomingRichResponse()).to
-        .deep.equal(JSON.parse(JSON.stringify(expectedResponse)));
+      expect(app.getIncomingRichResponse()).to.deep.equal(clone(expectedResponse));
     });
   });
 
@@ -2293,8 +2294,7 @@ describe('DialogflowApp', function () {
           new OptionItem().setTitle('second item').setKey('second_item')
         ]);
 
-      expect(app.getIncomingList()).to
-        .deep.equal(JSON.parse(JSON.stringify(expectedResponse)));
+      expect(app.getIncomingList()).to.deep.equal(clone(expectedResponse));
     });
   });
 
@@ -2342,7 +2342,7 @@ describe('DialogflowApp', function () {
             .setDescription('Your second choice')
         ]);
 
-      expect(app.getIncomingCarousel()).to.deep.equal(JSON.parse(JSON.stringify(expectedResponse)));
+      expect(app.getIncomingCarousel()).to.deep.equal(clone(expectedResponse));
     });
   });
 
@@ -2423,7 +2423,7 @@ describe('DialogflowApp', function () {
   describe('#isRequestFromDialogflow', function () {
     // Success case test, when the API returns a valid 200 response with the response object
     it('Should confirm request is from Dialogflow.', function () {
-      const header = JSON.parse(JSON.stringify(headerV1));
+      const header = clone(headerV1);
       header['Google-Assistant-Signature'] = 'YOUR_PRIVATE_KEY';
       const mockRequest = new MockRequest(header, dialogflowAppRequestBodyLiveSession);
 
@@ -2439,7 +2439,7 @@ describe('DialogflowApp', function () {
     });
 
     it('Should confirm request is NOT from Dialogflow.', function () {
-      const header = JSON.parse(JSON.stringify(headerV1));
+      const header = clone(headerV1);
       const mockRequest = new MockRequest(header, dialogflowAppRequestBodyLiveSession);
 
       const app = new DialogflowApp({
@@ -3033,7 +3033,8 @@ describe('DialogflowApp', function () {
       expect(mockResponse.body).to.deep.equal(expectedResponse);
     });
 
-    // Success case test, when the API returns a valid 200 response with the response object without arguments
+    // Success case test, when the API returns a valid 200 response
+    // with the response object without arguments
     it('Should return valid JSON update registration request', function () {
       app.askToRegisterDailyUpdate('test_intent');
       const expectedResponse = {
@@ -3110,7 +3111,8 @@ describe('DialogflowApp', function () {
       expect(app.isUpdateRegistered()).to.equal(true);
 
       // Test the false case
-      dialogflowAppRequestBodyLiveSession.originalRequest.data.inputs[0].arguments[0].extension.status = 'CANCELLED';
+      dialogflowAppRequestBodyLiveSession.originalRequest.data
+        .inputs[0].arguments[0].extension.status = 'CANCELLED';
       initMockApp();
       expect(app.isPermissionGranted()).to.equal(false);
     });
@@ -3173,8 +3175,10 @@ describe('DialogflowApp', function () {
       expect(mockResponse.body).to.deep.equal(expectedResponse);
     });
 
-    // Success case test, when the API returns a valid 200 response with the response object without arguments
-    it('Should return the valid JSON in the response object without arguments for the success case.', function () {
+    // Success case test, when the API returns a valid 200 response
+    // with the response object without arguments
+    it('Should return the valid JSON in the response object ' +
+      'without arguments for the success case.', function () {
       app.askForUpdatePermission('test_intent');
       // Validating the response object
       const expectedResponse = {
