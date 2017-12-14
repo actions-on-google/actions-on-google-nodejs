@@ -1527,37 +1527,15 @@ class AssistantApp {
   }
 
   /**
-   * Get the argument value by name from the current intent.
-   * If the argument is included in originalRequest, and is not a text argument,
-   * the entire argument object is returned.
+   * Utility function for the common getArgument logic between Dialogflow and ActionsSDK.
    *
-   * Note: If incoming request is using an API version under 2 (e.g. 'v1'),
-   * the argument object will be in Proto2 format (snake_case, etc).
-   *
-   * @example
-   * const app = new DialogflowApp({request: request, response: response});
-   * const WELCOME_INTENT = 'input.welcome';
-   * const NUMBER_INTENT = 'input.number';
-   *
-   * function welcomeIntent (app) {
-   *   app.ask('Welcome to action snippets! Say a number.');
-   * }
-   *
-   * function numberIntent (app) {
-   *   const number = app.getArgument(NUMBER_ARGUMENT);
-   *   app.tell('You said ' + number);
-   * }
-   *
-   * const actionMap = new Map();
-   * actionMap.set(WELCOME_INTENT, welcomeIntent);
-   * actionMap.set(NUMBER_INTENT, numberIntent);
-   * app.handleRequest(actionMap);
+   * Note this private method does not follow naming convention to have a underscore
+   * for backwards compatibility before this was labeled private.
    *
    * @param {string} argName Name of the argument.
    * @return {Object} Argument value matching argName
    *     or null if no matching argument.
-   * @dialogflow
-   * @actionssdk
+   * @private
    */
   getArgumentCommon (argName) {
     debug('getArgument: argName=%s', argName);
