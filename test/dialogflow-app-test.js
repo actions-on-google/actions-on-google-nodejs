@@ -2928,6 +2928,128 @@ describe('DialogflowApp', function () {
     });
   });
 
+  describe('#data', function () {
+    it('Should parse undefined AoG context as an empty data object for new session', function () {
+      const mockRequest = new MockRequest(headerV2, dialogflowAppRequestBodyNewSession);
+      const app = new DialogflowApp({
+        request: mockRequest,
+        response: mockResponse
+      });
+      expect(app.data).to.deep.equal({});
+    });
+    it('Should parse undefined AoG context as an empty data object for live session', function () {
+      const mockRequest = new MockRequest(headerV2, dialogflowAppRequestBodyLiveSession);
+      const app = new DialogflowApp({
+        request: mockRequest,
+        response: mockResponse
+      });
+      expect(app.data).to.deep.equal({});
+    });
+    it('Should parse undefined AoG context parameters as an empty data object for live session',
+      function () {
+        dialogflowAppRequestBodyLiveSession.result.contexts[0] = {
+          name: '_actions_on_google',
+          parameters: undefined
+        };
+        const mockRequest = new MockRequest(headerV2, dialogflowAppRequestBodyLiveSession);
+        const app = new DialogflowApp({
+          request: mockRequest,
+          response: mockResponse
+        });
+        expect(app.data).to.deep.equal({});
+      });
+    it('Should parse AoG context as a data object for new session', function () {
+      const testData = {
+        someProperty: 'someValue',
+        someOtherProperty: 'someOtherValue'
+      };
+      dialogflowAppRequestBodyNewSession.result.contexts[0] = {
+        name: '_actions_on_google_',
+        parameters: testData
+      };
+      const mockRequest = new MockRequest(headerV2, dialogflowAppRequestBodyNewSession);
+      const app = new DialogflowApp({
+        request: mockRequest,
+        response: mockResponse
+      });
+      expect(app.data).to.deep.equal(testData);
+    });
+    it('Should parse AoG context as a data object for live session', function () {
+      const testData = {
+        someProperty: 'someValue',
+        someOtherProperty: 'someOtherValue'
+      };
+      dialogflowAppRequestBodyLiveSession.result.contexts[0] = {
+        name: '_actions_on_google_',
+        parameters: testData
+      };
+      const mockRequest = new MockRequest(headerV2, dialogflowAppRequestBodyLiveSession);
+      const app = new DialogflowApp({
+        request: mockRequest,
+        response: mockResponse
+      });
+      expect(app.data).to.deep.equal(testData);
+    });
+    it('Should send AoG context in response body mid-dialog', function () {
+      const mockRequest = new MockRequest(headerV2, dialogflowAppRequestBodyLiveSession);
+      const app = new DialogflowApp({
+        request: mockRequest,
+        response: mockResponse
+      });
+      const testData = {
+        someProperty: 'someValue'
+      };
+      app.data = testData;
+      expect(app.data).to.deep.equal(testData);
+      app.ask('hi');
+      expect(mockResponse.body.contextOut[0]).to.deep.equal({
+        name: '_actions_on_google_',
+        parameters: testData,
+        lifespan: 100
+      });
+    });
+    it('Should send modified AoG context in response body mid-dialog', function () {
+      const testData = {
+        someProperty: 'someValue',
+        someOtherProperty: 'someOtherValue'
+      };
+      dialogflowAppRequestBodyLiveSession.result.contexts[0] = {
+        name: '_actions_on_google_',
+        parameters: testData
+      };
+      const mockRequest = new MockRequest(headerV2, dialogflowAppRequestBodyLiveSession);
+      const app = new DialogflowApp({
+        request: mockRequest,
+        response: mockResponse
+      });
+      const modifiedData = {
+        someProperty: 'test',
+        someOtherProperty: 'someOtherValue'
+      };
+      app.data = modifiedData;
+      app.ask('hi');
+      expect(mockResponse.body.contextOut[0]).to.deep.equal({
+        name: '_actions_on_google_',
+        parameters: modifiedData,
+        lifespan: 100
+      });
+    });
+    it('Should send empty AoG context in response body for dialog end', function () {
+      const mockRequest = new MockRequest(headerV2, dialogflowAppRequestBodyLiveSession);
+      const app = new DialogflowApp({
+        request: mockRequest,
+        response: mockResponse
+      });
+      const testData = {
+        someProperty: 'someValue'
+      };
+      app.data = testData;
+      expect(app.data).to.deep.equal(testData);
+      app.tell('hi');
+      expect(mockResponse.body.contextOut).to.be.an('array').that.is.empty;
+    });
+  });
+
   describe('#getLastSeen', function () {
     it('Should return null for empty lastSeen v2 proto3 Timestamp for new session', function () {
       const mockRequest = new MockRequest(headerV2, dialogflowAppRequestBodyNewSession);
