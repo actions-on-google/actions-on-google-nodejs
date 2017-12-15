@@ -18,7 +18,7 @@
 
 const { transformToCamelCase } = require('../../utils/transform');
 
-const MockRequest = class {
+class MockRequest {
   constructor (headers, body) {
     if (headers) {
       this.headers = headers;
@@ -37,7 +37,7 @@ const MockRequest = class {
   }
 };
 
-const MockResponse = class {
+class MockResponse {
   constructor () {
     this.statusCode = 200;
     this.headers = {};

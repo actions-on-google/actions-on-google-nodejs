@@ -758,7 +758,7 @@ const reverseOrderStateInfo = Object.keys(TransactionValues.OrderStateInfo)
 /**
  * Class for initializing and constructing Order with chainable interface.
  */
-const Order = class {
+class Order {
   /**
    * Constructor for Order.
    *
@@ -979,12 +979,12 @@ const Order = class {
     this.extension.time = { type, time_iso8601: time };
     return this;
   }
-};
+}
 
 /**
  * Class for initializing and constructing Cart with chainable interface.
  */
-const Cart = class {
+class Cart {
   /**
    * Constructor for Cart.
    *
@@ -1098,12 +1098,12 @@ const Cart = class {
     }
     return this;
   }
-};
+}
 
 /**
  * Class for initializing and constructing LineItem with chainable interface.
  */
-const LineItem = class {
+class LineItem {
   /**
    * Constructor for LineItem.
    *
@@ -1309,12 +1309,12 @@ const LineItem = class {
     this.offerId = offerId;
     return this;
   }
-};
+}
 
 /**
  * Class for initializing and constructing OrderUpdate with chainable interface.
  */
-const OrderUpdate = class {
+class OrderUpdate {
   /**
    * Constructor for OrderUpdate.
    *
@@ -1651,7 +1651,7 @@ const OrderUpdate = class {
     this[type] = data;
     return this;
   }
-};
+}
 
 module.exports = {
   TransactionValues,

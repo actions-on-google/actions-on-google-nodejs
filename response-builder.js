@@ -137,7 +137,7 @@ const ImageDisplays = {
 /**
  * Class for initializing and constructing Rich Responses with chainable interface.
  */
-const RichResponse = class {
+class RichResponse {
   /**
    * Constructor for RichResponse. Accepts optional RichResponse to clone.
    *
@@ -366,12 +366,12 @@ const RichResponse = class {
     }
     return simpleResponseObj;
   }
-};
+}
 
 /**
  * Class for initializing and constructing Basic Cards with chainable interface.
  */
-const BasicCard = class {
+class BasicCard {
   /**
    * Constructor for BasicCard. Accepts optional BasicCard to clone.
    *
@@ -549,12 +549,12 @@ const BasicCard = class {
     });
     return this;
   }
-};
+}
 
 /**
  * Class for initializing and constructing Lists with chainable interface.
  */
-const List = class {
+class List {
   /**
    * Constructor for List. Accepts optional List to clone, string title, or
    * list of items to copy.
@@ -635,12 +635,12 @@ const List = class {
     }
     return this;
   }
-};
+}
 
 /**
  * Class for initializing and constructing Carousel with chainable interface.
  */
-const Carousel = class {
+class Carousel {
   /**
    * Constructor for Carousel. Accepts optional Carousel to clone or list of
    * items to copy.
@@ -694,12 +694,12 @@ const Carousel = class {
     }
     return this;
   }
-};
+}
 
 /**
  * Class for initializing and constructing Option Items with chainable interface.
  */
-const OptionItem = class {
+class OptionItem {
   /**
    * Constructor for OptionItem. Accepts optional OptionItem to clone.
    *
@@ -850,7 +850,7 @@ const OptionItem = class {
     }
     return this;
   }
-};
+}
 
 /**
  * Check if given text contains SSML.

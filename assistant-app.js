@@ -2603,7 +2603,7 @@ AssistantApp.prototype.Transactions = TransactionValues;
  *
  * @private
  */
-const Intent = class {
+class Intent {
     /**
    * Constructor for Intent object.
    *
@@ -2621,14 +2621,14 @@ const Intent = class {
   getName () {
     return this.name_;
   }
-};
+}
 
 /**
  * Utility class for representing states by name.
  *
  * @private
  */
-const State = class {
+class State {
   /**
    * Constructor for State object.
    *
@@ -2646,7 +2646,7 @@ const State = class {
   getName () {
     return this.name_;
   }
-};
+}
 
 module.exports = {
   AssistantApp: AssistantApp,
