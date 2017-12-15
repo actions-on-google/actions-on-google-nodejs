@@ -632,7 +632,7 @@ class List {
     }
     if (this.items.length > Limits.LIST_ITEM_MAX) {
       this.items = this.items.slice(0, Limits.LIST_ITEM_MAX);
-      error(`List can have no more than ${Limits.LIST_ITEM_MAX} items`);
+      warn(`List can have no more than ${Limits.LIST_ITEM_MAX} items`);
     }
     return this;
   }
@@ -691,7 +691,7 @@ class Carousel {
     }
     if (this.items.length > Limits.CAROUSEL_ITEM_MAX) {
       this.items = this.items.slice(0, Limits.CAROUSEL_ITEM_MAX);
-      error(`Carousel can have no more than ${Limits.CAROUSEL_ITEM_MAX} items`);
+      warn(`Carousel can have no more than ${Limits.CAROUSEL_ITEM_MAX} items`);
     }
     return this;
   }
