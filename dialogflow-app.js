@@ -49,7 +49,8 @@ error.log = console.error.bind(console);
 // ---------------------------------------------------------------------------
 
 /**
- * This is the class that handles the communication with Dialogflow's fulfillment API.
+ * This is the class that handles the communication with Dialogflow's fulfillment API v1.
+ * Doesn't currently support Dialogflow's fulfillment API v2.
  */
 class DialogflowApp extends AssistantApp {
   /**

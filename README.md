@@ -21,7 +21,7 @@ const { ActionsSdkApp } = require('actions-on-google');
 const app = new ActionsSdkApp({request: request, response: response});
 ```
 
-### Dialogflow
+### Dialogflow v1
  1. Import the appropriate class:
 
 ```javascript
@@ -33,6 +33,8 @@ const { DialogflowApp } = require('actions-on-google');
 ```javascript
 const app = new DialogflowApp({request: request, response: response});
 ```
+
+Please note that Dialogflow v2 is not currently supported by this client library.
 
 ## References and How to report bugs
 * Actions on Google documentation: [https://developers.google.com/actions/](https://developers.google.com/actions/).
