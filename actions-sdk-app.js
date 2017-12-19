@@ -959,7 +959,7 @@ class ActionsSdkApp extends AssistantApp {
       inputPrompt: inputPrompt,
       possibleIntents: possibleIntents
     }];
-    if (speechBiasingHints !== undefined) {
+    if (speechBiasingHints) {
       expectedInputs[0].speechBiasingHints = speechBiasingHints;
     }
     const response = this.buildResponseHelper_(
