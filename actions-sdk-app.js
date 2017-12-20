@@ -367,6 +367,55 @@ class ActionsSdkApp extends AssistantApp {
   }
 
   /**
+   * Set speech biasing hints for the conversation lifetime.
+   *
+   * @example
+   * const app = new App({request: req, response: res});
+   * const SPEECH_BIASING_HINTS = ['word1', 'word2', 'word3'];
+   *
+   * function mainIntent (app) {
+   *   app.setSpeechBiasingHints(SPEECH_BIASING_HINTS);
+   *   app.ask('Welcome to action snippets! Say a word.');
+   * }
+   *
+   * function rawInput (app) {
+   *   if (app.getRawInput() === 'bye') {
+   *     app.tell('Goodbye!');
+   *   } else {
+   *     const inputPrompt = app.buildInputPrompt(true, '<speak>You said, ' +
+   *       app.getRawInput() + '</speak>',
+   *         ['I didn\'t hear a word', 'If you\'re still there, what\'s the word?', 'Goodbye!']);
+   *     app.ask(inputPrompt);
+   *   }
+   * }
+   *
+   * const actionMap = new Map();
+   * actionMap.set(app.StandardIntents.MAIN, mainIntent);
+   * actionMap.set(app.StandardIntents.TEXT, rawInput);
+   *
+   * app.handleRequest(actionMap);
+   *
+   * @param {Array<string>=} hints Array of of phrases or words the app wants Google to use for speech biasing (max 1000).
+   * @return {null|undefined} Null if the speech biasing hints is not defined or not an Array.
+   * @actionssdk
+   */
+  setSpeechBiasingHints (hints) {
+    debug('setSpeechBiasingHints:', hints);
+    if (!hints) {
+      error('No speech biasing hints provided');
+      this.handleError_('No parameter');
+      return null;
+    } else if (!Array.isArray(hints)) {
+      error('Hints must be an array of strings');
+      this.handleError_('Invalid parameter');
+      return null;
+    } else {
+      const newSpeechBiasingHints = hints;
+      this.newSpeechBiasingHints = newSpeechBiasingHints;
+    }
+  }
+
+  /**
    * Asks to collect user's input; all user's queries need to be sent to
    * the app.
    * {@link https://developers.google.com/actions/policies/general-policies#user_experience|The guidelines when prompting the user for a response must be followed at all times}.
@@ -414,7 +463,11 @@ class ActionsSdkApp extends AssistantApp {
       error('Error in building expected intent');
       return null;
     }
-    return this.buildAskHelper_(inputPrompt, [expectedIntent], dialogState);
+    let speechBiasingHints;
+    if (this.newSpeechBiasingHints) {
+      speechBiasingHints = this.newSpeechBiasingHints;
+    }
+    return this.buildAskHelper_(inputPrompt, [expectedIntent], dialogState, speechBiasingHints);
   }
 
   /**
@@ -473,6 +526,10 @@ class ActionsSdkApp extends AssistantApp {
       error('Error in building expected intent');
       return null;
     }
+    let speechBiasingHints;
+    if (this.newSpeechBiasingHints) {
+      speechBiasingHints = this.newSpeechBiasingHints;
+    }
     if (this.isNotApiVersionOne_()) {
       expectedIntent.inputValueData = Object.assign({
         [this.ANY_TYPE_PROPERTY_]: this.InputValueDataTypes_.OPTION
@@ -486,7 +543,7 @@ class ActionsSdkApp extends AssistantApp {
         }
       };
     }
-    return this.buildAskHelper_(inputPrompt, [expectedIntent], dialogState);
+    return this.buildAskHelper_(inputPrompt, [expectedIntent], dialogState, speechBiasingHints);
   }
 
   /**
@@ -546,6 +603,10 @@ class ActionsSdkApp extends AssistantApp {
       error('Error in building expected intent');
       return null;
     }
+    let speechBiasingHints;
+    if (this.newSpeechBiasingHints) {
+      speechBiasingHints = this.newSpeechBiasingHints;
+    }
     if (this.isNotApiVersionOne_()) {
       expectedIntent.inputValueData = Object.assign({
         [this.ANY_TYPE_PROPERTY_]: this.InputValueDataTypes_.OPTION
@@ -559,7 +620,7 @@ class ActionsSdkApp extends AssistantApp {
         }
       };
     }
-    return this.buildAskHelper_(inputPrompt, [expectedIntent], dialogState);
+    return this.buildAskHelper_(inputPrompt, [expectedIntent], dialogState, speechBiasingHints);
   }
 
   /**
@@ -803,7 +864,11 @@ class ActionsSdkApp extends AssistantApp {
       };
       const inputPrompt = this.buildInputPrompt(false,
         'PLACEHOLDER_FOR_PERMISSION');
-      return this.buildAskHelper_(inputPrompt, [expectedIntent], dialogState);
+      let speechBiasingHints;
+      if (this.newSpeechBiasingHints) {
+        speechBiasingHints = this.newSpeechBiasingHints;
+      }
+      return this.buildAskHelper_(inputPrompt, [expectedIntent], dialogState, speechBiasingHints);
     }
   }
 
@@ -844,7 +909,11 @@ class ActionsSdkApp extends AssistantApp {
     // Send an Ask request to Assistant.
     const inputPrompt = this.buildInputPrompt(false, promptPlaceholder ||
       'PLACEHOLDER_FOR_INTENT');
-    return this.buildAskHelper_(inputPrompt, [expectedIntent], dialogState);
+    let speechBiasingHints;
+    if (this.newSpeechBiasingHints) {
+      speechBiasingHints = this.newSpeechBiasingHints;
+    }
+    return this.buildAskHelper_(inputPrompt, [expectedIntent], dialogState, speechBiasingHints);
   }
 
   /**
@@ -854,13 +923,15 @@ class ActionsSdkApp extends AssistantApp {
    * @param {Array} possibleIntents Array of ExpectedIntents.
    * @param {Object} dialogState JSON object the app uses to hold dialog state that
    *     will be circulated back by Assistant.
+   * @param {Array<string>=} speechBiasingHints Array of of phrases or words the app
+   *     wants Google to use for speech biasing (max 1000).
    * @return {(Object|null)} The response that is sent to Assistant to ask user to provide input.
    * @private
    * @actionssdk
    */
-  buildAskHelper_ (inputPrompt, possibleIntents, dialogState) {
-    debug('buildAskHelper_: inputPrompt=%s, possibleIntents=%s,  dialogState=%s',
-      inputPrompt, possibleIntents, JSON.stringify(dialogState));
+  buildAskHelper_ (inputPrompt, possibleIntents, dialogState, speechBiasingHints) {
+    debug('buildAskHelper_: inputPrompt=%s, possibleIntents=%s,  dialogState=%s, speechBiasingHints=%s',
+      inputPrompt, possibleIntents, JSON.stringify(dialogState), speechBiasingHints);
     if (!inputPrompt) {
       error('Invalid input prompt');
       return null;
@@ -888,6 +959,9 @@ class ActionsSdkApp extends AssistantApp {
       inputPrompt: inputPrompt,
       possibleIntents: possibleIntents
     }];
+    if (speechBiasingHints) {
+      expectedInputs[0].speechBiasingHints = speechBiasingHints;
+    }
     const response = this.buildResponseHelper_(
       JSON.stringify(dialogState),
       true, // expectedUserResponse
