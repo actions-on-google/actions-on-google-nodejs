@@ -22,22 +22,22 @@ const error = Debug('actions-on-google:error');
 
 // Response Builder classes
 const {
-  RichResponse,
-  BasicCard,
-  List,
-  Carousel,
-  OptionItem,
-  isSsml
-} = require('./response-builder');
+    RichResponse,
+    BasicCard,
+    List,
+    Carousel,
+    OptionItem,
+    isSsml
+    } = require('./response-builder');
 
 // Transaction classes
 const {
-  TransactionValues,
-  Order,
-  Cart,
-  LineItem,
-  OrderUpdate
-} = require('./transactions');
+    TransactionValues,
+    Order,
+    Cart,
+    LineItem,
+    OrderUpdate
+    } = require('./transactions');
 
 const { transformToSnakeCase } = require('./utils/transform');
 
@@ -146,7 +146,7 @@ class AssistantApp {
       debug('Actions API version from header: ' + this.actionsApiVersion_);
     }
     if (this.body_.originalRequest &&
-      this.body_.originalRequest.version) {
+        this.body_.originalRequest.version) {
       this.actionsApiVersion_ = this.body_.originalRequest.version;
       debug('Actions API version from Dialogflow: ' + this.actionsApiVersion_);
     }
@@ -209,6 +209,13 @@ class AssistantApp {
      * @type {Object}
      */
     this.contexts_ = {};
+
+    /**
+     * The Dialogflow followup event.
+     * @private
+     * @type {Object}
+     */
+    this.followupEvent_ = null;
 
     /**
      * The last error message.
@@ -290,7 +297,11 @@ class AssistantApp {
       /**
        * Confirmation to receive proactive content at any time from the app.
        */
-      UPDATE: 'UPDATE'
+      UPDATE: 'UPDATE',
+
+      EMAIL: 'EMAIL',
+
+      PHONE_NUMBER: 'PHONE_NUMBER'
     };
 
     /**
@@ -658,16 +669,16 @@ class AssistantApp {
       const handlerResult = handler(this);
       if (handlerResult instanceof Promise) {
         return handlerResult.then(
-          (result) => {
-            debug(result);
-            return result;
-          })
-        .catch(
-          (reason) => {
-            this.handleError_('function failed: %s', reason.message);
-            this.tell(!reason.message ? ERROR_MESSAGE : reason.message);
-            return Promise.reject(reason);
-          });
+            (result) => {
+              debug(result);
+              return result;
+            })
+            .catch(
+                (reason) => {
+                  this.handleError_('function failed: %s', reason.message);
+                  this.tell(!reason.message ? ERROR_MESSAGE : reason.message);
+                  return Promise.reject(reason);
+                });
       } else {
         // Handle functions
         return Promise.resolve(handlerResult);
@@ -676,17 +687,17 @@ class AssistantApp {
       debug('handleRequest: map');
       const intent = this.getIntent();
       return this.invokeIntentHandler_(handler, intent)
-        .then(
-          (result) => {
-            debug(result);
-            return result;
-          })
-        .catch(
-          (reason) => {
-            this.tell(!this.lastErrorMessage_ ? ERROR_MESSAGE : this.lastErrorMessage_);
-            return Promise.reject(reason);
-          }
-        );
+          .then(
+              (result) => {
+                debug(result);
+                return result;
+              })
+          .catch(
+              (reason) => {
+                this.tell(!this.lastErrorMessage_ ? ERROR_MESSAGE : this.lastErrorMessage_);
+                return Promise.reject(reason);
+              }
+          );
     }
     // Could not handle intent
     this.handleError_('invalid intent handler type: ' + (typeof handler));
@@ -750,7 +761,7 @@ class AssistantApp {
    */
   askForPermissions (context, permissions, dialogState) {
     debug('askForPermissions: context=%s, permissions=%s, dialogState=%s',
-      context, permissions, JSON.stringify(dialogState));
+        context, permissions, JSON.stringify(dialogState));
     if (!context || context === '') {
       this.handleError_('Assistant context can NOT be empty.');
       return null;
@@ -762,10 +773,12 @@ class AssistantApp {
     for (let i = 0; i < permissions.length; i++) {
       const permission = permissions[i];
       if (permission !== this.SupportedPermissions.NAME &&
-        permission !== this.SupportedPermissions.DEVICE_PRECISE_LOCATION &&
-        permission !== this.SupportedPermissions.DEVICE_COARSE_LOCATION) {
+          permission !== this.SupportedPermissions.EMAIL &&
+          permission !== this.SupportedPermissions.PHONE_NUMBER &&
+          permission !== this.SupportedPermissions.DEVICE_PRECISE_LOCATION &&
+          permission !== this.SupportedPermissions.DEVICE_COARSE_LOCATION) {
         this.handleError_('Assistant permission must be one of ' +
-          '[NAME, DEVICE_PRECISE_LOCATION, DEVICE_COARSE_LOCATION]');
+            '[NAME, EMAIL, PHONE_NUMBER, DEVICE_PRECISE_LOCATION, DEVICE_COARSE_LOCATION]');
         return null;
       }
     }
@@ -833,7 +846,7 @@ class AssistantApp {
    */
   askForUpdatePermission (intent, intentArguments, dialogState) {
     debug('askForUpdatePermission: intent=%s, intentArguments=%s, dialogState=%s',
-      intent, intentArguments, JSON.stringify(dialogState));
+        intent, intentArguments, JSON.stringify(dialogState));
     if (!intent) {
       this.handleError_('Name of intent to trigger on update must be specified');
       return null;
@@ -892,12 +905,12 @@ class AssistantApp {
    */
   askForTransactionRequirements (transactionConfig, dialogState) {
     debug('checkForTransactionRequirements: transactionConfig=%s,' +
-      ' dialogState=%s',
-      JSON.stringify(transactionConfig), JSON.stringify(dialogState));
+        ' dialogState=%s',
+        JSON.stringify(transactionConfig), JSON.stringify(dialogState));
     if (transactionConfig && transactionConfig.type &&
-      transactionConfig.cardNetworks) {
+        transactionConfig.cardNetworks) {
       this.handleError_('Invalid transaction configuration. Must be of type' +
-        'ActionPaymentTransactionConfig or GooglePaymentTransactionConfig');
+          'ActionPaymentTransactionConfig or GooglePaymentTransactionConfig');
       return null;
     }
     const transactionRequirementsCheckSpec = {};
@@ -907,13 +920,13 @@ class AssistantApp {
       };
     }
     if (transactionConfig && (transactionConfig.type ||
-      transactionConfig.cardNetworks)) {
+        transactionConfig.cardNetworks)) {
       transactionRequirementsCheckSpec.paymentOptions =
-        this.buildPaymentOptions_(transactionConfig);
+          this.buildPaymentOptions_(transactionConfig);
     }
     return this.fulfillSystemIntent_(this.StandardIntents.TRANSACTION_REQUIREMENTS_CHECK,
-      this.InputValueDataTypes_.TRANSACTION_REQ_CHECK, transactionRequirementsCheckSpec,
-      'PLACEHOLDER_FOR_TXN_REQUIREMENTS', dialogState);
+        this.InputValueDataTypes_.TRANSACTION_REQ_CHECK, transactionRequirementsCheckSpec,
+        'PLACEHOLDER_FOR_TXN_REQUIREMENTS', dialogState);
   }
 
   /**
@@ -957,16 +970,16 @@ class AssistantApp {
    */
   askForTransactionDecision (order, transactionConfig, dialogState) {
     debug('askForTransactionDecision: order=%s, transactionConfig=%s,' +
-      ' dialogState=%s', JSON.stringify(order),
-      JSON.stringify(transactionConfig), JSON.stringify(dialogState));
+        ' dialogState=%s', JSON.stringify(order),
+        JSON.stringify(transactionConfig), JSON.stringify(dialogState));
     if (!order) {
       this.handleError_('Invalid order');
       return null;
     }
     if (transactionConfig && transactionConfig.type &&
-      transactionConfig.cardNetworks) {
+        transactionConfig.cardNetworks) {
       this.handleError_('Invalid transaction configuration. Must be of type' +
-        'ActionPaymentTransactionConfig or GooglePaymentTransactionConfig');
+          'ActionPaymentTransactionConfig or GooglePaymentTransactionConfig');
       return null;
     }
     const transactionDecisionValueSpec = {
@@ -978,20 +991,20 @@ class AssistantApp {
       };
     }
     if (transactionConfig && (transactionConfig.type ||
-      transactionConfig.cardNetworks)) {
+        transactionConfig.cardNetworks)) {
       transactionDecisionValueSpec.paymentOptions =
-        this.buildPaymentOptions_(transactionConfig);
+          this.buildPaymentOptions_(transactionConfig);
     }
     if (transactionConfig && transactionConfig.customerInfoOptions) {
       if (!transactionDecisionValueSpec.orderOptions) {
         transactionDecisionValueSpec.orderOptions = {};
       }
       transactionDecisionValueSpec.orderOptions.customerInfoOptions =
-        transactionConfig.customerInfoOptions;
+          transactionConfig.customerInfoOptions;
     }
     return this.fulfillSystemIntent_(this.StandardIntents.TRANSACTION_DECISION,
-      this.InputValueDataTypes_.TRANSACTION_DECISION, transactionDecisionValueSpec,
-      'PLACEHOLDER_FOR_TXN_DECISION', dialogState);
+        this.InputValueDataTypes_.TRANSACTION_DECISION, transactionDecisionValueSpec,
+        'PLACEHOLDER_FOR_TXN_DECISION', dialogState);
   }
 
   /**
@@ -1050,7 +1063,7 @@ class AssistantApp {
    */
   askForPermission (context, permission, dialogState) {
     debug('askForPermission: context=%s, permission=%s, dialogState=%s',
-      context, permission, JSON.stringify(dialogState));
+        context, permission, JSON.stringify(dialogState));
     return this.askForPermissions(context, [permission], dialogState);
   }
 
@@ -1151,8 +1164,8 @@ class AssistantApp {
       }
     };
     return this.fulfillSystemIntent_(this.StandardIntents.DELIVERY_ADDRESS,
-      this.InputValueDataTypes_.DELIVERY_ADDRESS, deliveryValueSpec,
-      'PLACEHOLDER_FOR_DELIVERY_ADDRESS', dialogState);
+        this.InputValueDataTypes_.DELIVERY_ADDRESS, deliveryValueSpec,
+        'PLACEHOLDER_FOR_DELIVERY_ADDRESS', dialogState);
   }
 
   /**
@@ -1191,7 +1204,7 @@ class AssistantApp {
    */
   askForConfirmation (prompt, dialogState) {
     debug('askForConfirmation: prompt=%s, dialogState=%s', prompt,
-      JSON.stringify(dialogState));
+        JSON.stringify(dialogState));
     let confirmationValueSpec = {};
     if (prompt) {
       confirmationValueSpec.dialogSpec = {
@@ -1199,8 +1212,8 @@ class AssistantApp {
       };
     }
     return this.fulfillSystemIntent_(this.StandardIntents.CONFIRMATION,
-      this.InputValueDataTypes_.CONFIRMATION, confirmationValueSpec,
-      'PLACEHOLDER_FOR_CONFIRMATION', dialogState);
+        this.InputValueDataTypes_.CONFIRMATION, confirmationValueSpec,
+        'PLACEHOLDER_FOR_CONFIRMATION', dialogState);
   }
 
   /**
@@ -1248,8 +1261,8 @@ class AssistantApp {
    */
   askForDateTime (initialPrompt, datePrompt, timePrompt, dialogState) {
     debug('askForDateTime: initialPrompt=%s, datePrompt=%s, ' +
-      'timePrompt=%s, dialogState=%s', initialPrompt, datePrompt, timePrompt,
-      JSON.stringify(dialogState));
+        'timePrompt=%s, dialogState=%s', initialPrompt, datePrompt, timePrompt,
+        JSON.stringify(dialogState));
     let dateTimeValueSpec = {};
     if (initialPrompt || datePrompt || timePrompt) {
       dateTimeValueSpec.dialogSpec = {
@@ -1259,8 +1272,8 @@ class AssistantApp {
       };
     }
     return this.fulfillSystemIntent_(this.StandardIntents.DATETIME,
-      this.InputValueDataTypes_.DATETIME, dateTimeValueSpec,
-      'PLACEHOLDER_FOR_DATETIME', dialogState);
+        this.InputValueDataTypes_.DATETIME, dateTimeValueSpec,
+        'PLACEHOLDER_FOR_DATETIME', dialogState);
   }
 
   /**
@@ -1301,8 +1314,8 @@ class AssistantApp {
   askForSignIn (dialogState) {
     debug('askForSignIn: dialogState=%s', JSON.stringify(dialogState));
     return this.fulfillSystemIntent_(this.StandardIntents.SIGN_IN,
-      this.InputValueDataTypes_.SIGN_IN, null,
-      'PLACEHOLDER_FOR_SIGN_IN', dialogState);
+        this.InputValueDataTypes_.SIGN_IN, null,
+        'PLACEHOLDER_FOR_SIGN_IN', dialogState);
   }
 
   /**
@@ -1357,8 +1370,8 @@ class AssistantApp {
         JSON.stringify(capabilities), dialogState);
     let newSurfaceValueSpec = { context, notificationTitle, capabilities };
     return this.fulfillSystemIntent_(this.StandardIntents.NEW_SURFACE,
-       this.InputValueDataTypes_.NEW_SURFACE, newSurfaceValueSpec,
-       'PLACEHOLDER_FOR_NEW_SURFACE', dialogState);
+        this.InputValueDataTypes_.NEW_SURFACE, newSurfaceValueSpec,
+        'PLACEHOLDER_FOR_NEW_SURFACE', dialogState);
   }
 
   /**
@@ -1418,8 +1431,8 @@ class AssistantApp {
       registerUpdateValueSpec.arguments = intentArguments;
     }
     return this.fulfillSystemIntent_(this.StandardIntents.REGISTER_UPDATE,
-       this.InputValueDataTypes_.REGISTER_UPDATE, registerUpdateValueSpec,
-       'PLACEHOLDER_FOR_REGISTER_UPDATE', dialogState);
+        this.InputValueDataTypes_.REGISTER_UPDATE, registerUpdateValueSpec,
+        'PLACEHOLDER_FOR_REGISTER_UPDATE', dialogState);
   }
 
   /**
@@ -1483,7 +1496,7 @@ class AssistantApp {
    * @property {string} name - Name of the capability.
    */
 
-   /**
+  /**
    * Intent Argument. For incoming intents, the argument value can be retrieved
    * using {@link AssistantApp#getArgument}.
    * @typedef {Object} IntentArgument
@@ -1565,7 +1578,7 @@ class AssistantApp {
   getUserName () {
     debug('getUserName');
     return this.getUser() && this.getUser().userName
-      ? this.getUser().userName : null;
+        ? this.getUser().userName : null;
   }
 
   /**
@@ -1584,7 +1597,7 @@ class AssistantApp {
   getUserLocale () {
     debug('getUserLocale');
     return this.getUser() && this.getUser().locale
-      ? this.getUser().locale : null;
+        ? this.getUser().locale : null;
   }
 
   /**
@@ -1752,9 +1765,9 @@ class AssistantApp {
   getDeliveryAddress () {
     debug('getDeliveryAddress');
     const {
-      DELIVERY_ADDRESS_VALUE,
-      TRANSACTION_DECISION_VALUE
-    } = this.BuiltInArgNames;
+        DELIVERY_ADDRESS_VALUE,
+        TRANSACTION_DECISION_VALUE
+        } = this.BuiltInArgNames;
     const argument = this.findArgument_(DELIVERY_ADDRESS_VALUE, TRANSACTION_DECISION_VALUE);
     if (argument && argument.extension) {
       if (argument.extension.userDecision === this.Transactions.DeliveryAddressUserDecision.ACCEPTED) {
@@ -1877,7 +1890,7 @@ class AssistantApp {
     const capabilities = this.getSurfaceCapabilities();
     if (!capabilities) {
       error('No incoming capabilities to search ' +
-        'for request capability: %s', requestedCapability);
+          'for request capability: %s', requestedCapability);
       return false;
     }
     return capabilities.includes(requestedCapability);
@@ -1933,13 +1946,13 @@ class AssistantApp {
   hasAvailableSurfaceCapabilities (capabilities) {
     debug('hasAvailableSurfaceCapabilities: capabilities=%s', capabilities);
     const capabilitiesArray = Array.isArray(capabilities) ? capabilities
-      : [capabilities];
+        : [capabilities];
     const { availableSurfaces } = this.requestData();
     if (availableSurfaces) {
       for (let surface of availableSurfaces) {
         const availableCapabilities = surface.capabilities.map(capability => capability.name);
         const unavailableCapabilities = capabilitiesArray
-          .filter(capability => !availableCapabilities.includes(capability));
+            .filter(capability => !availableCapabilities.includes(capability));
         if (!unavailableCapabilities.length) {
           return true;
         }
@@ -1948,19 +1961,19 @@ class AssistantApp {
     return false;
   }
 
- /**
-  * Returns the result of the AskForNewSurface helper.
-  *
-  * @return {boolean} True if user has triggered conversation on a new device
-  *     following the NEW_SURFACE intent.
-  * @actionssdk
-  * @dialogflow
-  */
+  /**
+   * Returns the result of the AskForNewSurface helper.
+   *
+   * @return {boolean} True if user has triggered conversation on a new device
+   *     following the NEW_SURFACE intent.
+   * @actionssdk
+   * @dialogflow
+   */
   isNewSurface () {
     debug('isNewSurface');
     const argument = this.findArgument_(this.BuiltInArgNames.NEW_SURFACE);
     return argument && argument.extension && argument.extension.status &&
-      argument.extension.status === 'OK';
+        argument.extension.status === 'OK';
   }
 
   /**
@@ -2237,17 +2250,17 @@ class AssistantApp {
         const handlerResult = value(this);
         if (handlerResult instanceof Promise) {
           return handlerResult.then(
-            (result) => {
-              // No-op
-              return result;
-            })
-          .catch(
-            (reason) => {
-              error(reason.message);
-              this.handleError_('intent handler failed: %s', reason.message);
-              this.lastErrorMessage_ = reason.message;
-              return Promise.reject(reason);
-            });
+              (result) => {
+                // No-op
+                return result;
+              })
+              .catch(
+                  (reason) => {
+                    error(reason.message);
+                    this.handleError_('intent handler failed: %s', reason.message);
+                    this.lastErrorMessage_ = reason.message;
+                    return Promise.reject(reason);
+                  });
         } else {
           // Handle functions
           return Promise.resolve(handlerResult);
@@ -2306,7 +2319,7 @@ class AssistantApp {
   isNotApiVersionOne_ () {
     debug('isNotApiVersionOne_');
     return this.actionsApiVersion_ !== null &&
-      parseInt(this.actionsApiVersion_, 10) >= ACTIONS_CONVERSATION_API_VERSION_TWO;
+        parseInt(this.actionsApiVersion_, 10) >= ACTIONS_CONVERSATION_API_VERSION_TWO;
   }
 
   /**
@@ -2560,7 +2573,7 @@ class AssistantApp {
    */
   buildPaymentOptions_ (transactionConfig) {
     debug('buildPromptsFromPlainTextHelper_: transactionConfig=%s',
-      JSON.stringify(transactionConfig));
+        JSON.stringify(transactionConfig));
     let paymentOptions = {};
     if (transactionConfig.type) { // Action payment
       paymentOptions.actionProvidedOptions = {
@@ -2590,7 +2603,7 @@ class AssistantApp {
  * @private
  */
 const Intent = class {
-    /**
+  /**
    * Constructor for Intent object.
    *
    * @param {string} name The name of the intent.
