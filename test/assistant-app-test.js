@@ -116,7 +116,7 @@ describe('AssistantApp', function () {
       const app = new AssistantApp({request: mockRequest, response: mockResponse});
       expect(app.isSsml_('<speak></speak>')).to.equal(true);
       expect(app.isSsml_('<SPEAK></SPEAK>')).to.equal(true);
-      expect(app.isSsml_('  <speak></speak>  ')).to.equal(false);
+      expect(app.isSsml_('  <speak></speak>  ')).to.equal(true);
       expect(app.isSsml_('<speak>  </speak>')).to.equal(true);
       expect(app.isSsml_('<speak version="1.0"></speak>')).to.equal(true);
       expect(app.isSsml_('<speak version="1.0">Hello world!</speak>')).to.equal(true);

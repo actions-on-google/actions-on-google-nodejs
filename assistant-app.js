@@ -28,6 +28,7 @@ const {
   Carousel,
   OptionItem,
   isSsml,
+  isPaddedSsml,
   ImageDisplays
 } = require('./response-builder');
 
@@ -2125,7 +2126,7 @@ class AssistantApp {
       error('Text can NOT be empty');
       return false;
     }
-    return isSsml(text);
+    return isSsml(text) || isPaddedSsml(text);
   }
 
   /**
