@@ -988,7 +988,8 @@ class DialogflowApp extends AssistantApp {
     }
     const response = {
       speech: isStringResponse ? textToSpeech
-        : textToSpeech.items[0].simpleResponse.textToSpeech,
+        : textToSpeech.items[0].simpleResponse.textToSpeech ||
+        textToSpeech.items[0].simpleResponse.ssml,
       contextOut: []
     };
     const google = Object.assign({
