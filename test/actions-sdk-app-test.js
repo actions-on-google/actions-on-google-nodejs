@@ -2631,6 +2631,113 @@ describe('ActionsSdkApp', function () {
     });
   });
 
+  describe('#data', function () {
+    it('Should parse undefined conversationToken as an empty data object for new session',
+      function () {
+        const mockRequest = new MockRequest(headerV2, actionsSdkAppRequestBodyNewV2);
+        const app = new ActionsSdkApp({
+          request: mockRequest,
+          response: mockResponse
+        });
+        expect(app.data).to.deep.equal({});
+      });
+    it('Should parse undefined conversationToken as an empty data object for live session',
+        function () {
+          const mockRequest = new MockRequest(headerV2, actionsSdkAppRequestBodyLiveV2);
+          const app = new ActionsSdkApp({
+            request: mockRequest,
+            response: mockResponse
+          });
+          expect(app.data).to.deep.equal({});
+        });
+    it('Should parse conversationToken as a data object for new session', function () {
+      const testData = {
+        someProperty: 'someValue',
+        someOtherProperty: 'someOtherValue'
+      };
+      actionsSdkAppRequestBodyNewV2.conversation.conversationToken = JSON.stringify({
+        data: testData
+      });
+      const mockRequest = new MockRequest(headerV2, actionsSdkAppRequestBodyNewV2);
+      const app = new ActionsSdkApp({
+        request: mockRequest,
+        response: mockResponse
+      });
+      expect(app.data).to.deep.equal(testData);
+    });
+    it('Should parse conversationToken as a data object for live session', function () {
+      const testData = {
+        someProperty: 'someValue',
+        someOtherProperty: 'someOtherValue'
+      };
+      actionsSdkAppRequestBodyLiveV2.conversation.conversationToken = JSON.stringify({
+        data: testData
+      });
+      const mockRequest = new MockRequest(headerV2, actionsSdkAppRequestBodyLiveV2);
+      const app = new ActionsSdkApp({
+        request: mockRequest,
+        response: mockResponse
+      });
+      expect(app.data).to.deep.equal(testData);
+    });
+    it('Should send conversationToken in response body mid-dialog', function () {
+      const mockRequest = new MockRequest(headerV2, actionsSdkAppRequestBodyLiveV2);
+      const app = new ActionsSdkApp({
+        request: mockRequest,
+        response: mockResponse
+      });
+      const testData = {
+        someProperty: 'someValue'
+      };
+      app.data = testData;
+      expect(app.data).to.deep.equal(testData);
+      app.ask('hi');
+      expect(mockResponse.body.conversationToken).to.equal(JSON.stringify({
+        state: null,
+        data: testData
+      }));
+    });
+    it('Should send modified conversationToken in response body mid-dialog', function () {
+      // Note that the outgoing response here has no 'state' property, since
+      // the incoming conversationToken has no 'state' property
+      const testData = {
+        someProperty: 'someValue',
+        someOtherProperty: 'someOtherValue'
+      };
+      actionsSdkAppRequestBodyLiveV2.conversation.conversationToken = JSON.stringify({
+        data: testData
+      });
+      const mockRequest = new MockRequest(headerV2, actionsSdkAppRequestBodyLiveV2);
+      const app = new ActionsSdkApp({
+        request: mockRequest,
+        response: mockResponse
+      });
+      const modifiedData = {
+        someProperty: 'test',
+        someOtherProperty: 'someOtherValue'
+      };
+      app.data = modifiedData;
+      app.ask('hi');
+      expect(mockResponse.body.conversationToken).to.equal(JSON.stringify({
+        data: modifiedData
+      }));
+    });
+    it('Should not send conversationToken in response body for dialog end', function () {
+      const mockRequest = new MockRequest(headerV2, actionsSdkAppRequestBodyLiveV2);
+      const app = new ActionsSdkApp({
+        request: mockRequest,
+        response: mockResponse
+      });
+      const testData = {
+        someProperty: 'someValue'
+      };
+      app.data = testData;
+      expect(app.data).to.deep.equal(testData);
+      app.tell('hi');
+      expect(mockResponse.body.conversationToken).to.be.undefined;
+    });
+  });
+
   describe('#getLastSeen', function () {
     it('Should return null for empty lastSeen v2 proto3 Timestamp for new session', function () {
       const mockRequest = new MockRequest(headerV2, actionsSdkAppRequestBodyNewV2);
