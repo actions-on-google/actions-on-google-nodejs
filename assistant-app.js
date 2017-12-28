@@ -461,7 +461,7 @@ class AssistantApp {
    * actionMap.set(app.StandardIntents.MAIN, mainIntent);
    * actionMap.set(app.StandardIntents.TEXT, rawInput);
    *
-   * app.handleRequest(actionMap)
+   * app.handleRequestAsync(actionMap)
    * .then(
    *   (result) => {
    *     // handle the result
@@ -488,7 +488,7 @@ class AssistantApp {
    * const actionMap = new Map();
    * actionMap.set(NAME_ACTION, makeName);
    *
-   * app.handleRequest(actionMap)
+   * app.handleRequestAsync(actionMap)
    * .then(
    *   (result) => {
    *     // handle the result
