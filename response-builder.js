@@ -51,7 +51,9 @@ const ImageDisplays = {
    */
   WHITE: 'WHITE',
   /**
-   * Image is centered and resized so the image fits perfectly in the container.
+   * Image is scaled such that the image width matches the container width. This may crop the top
+   * and bottom of the image if the scaled image height is greater than the container height. This
+   * is similar to "Zoom Mode" on a widescreen TV when playing a 4:3 video..
    */
   CROPPED: 'CROPPED'
 };
@@ -256,14 +258,14 @@ class RichResponse {
     if (Array.isArray(suggestions)) {
       for (const suggestion of suggestions) {
         if (this.isValidSuggestionText(suggestion)) {
-          this.suggestions.push({title: suggestion});
+          this.suggestions.push({ title: suggestion });
         } else {
           warn(`Suggestion text can't be longer than 25 characters: ${suggestion}. ` +
             `This suggestion won't be added to the list.`);
         }
       }
     } else if (this.isValidSuggestionText(suggestions)) {
-      this.suggestions.push({title: suggestions});
+      this.suggestions.push({ title: suggestions });
     } else {
       warn(`Suggestion text can't be longer than 25 characters: ${suggestions}. ` +
         `This suggestion won't be added to the list.`);
