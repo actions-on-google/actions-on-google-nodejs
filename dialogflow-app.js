@@ -741,6 +741,54 @@ class DialogflowApp extends AssistantApp {
   }
 
   /**
+  * Triggers an intent of your choosing by sending a followupEvent from the webhook. 
+  * This method is not sending `speech`, `displayText` JSON objects
+  * as they will be ignored by the system.
+  * A context created and  in order to pass the event data 
+  * you will need to reflect it in the intent created in Dialogflow console.
+  * Each variable in the intent should point to another one defined in the event data
+  * as stated at https://dialogflow.com/docs/events#sending_parameters_in_a_query_request.
+  *
+  * @example
+  * const app = new DialogflowApp({request: request, response: response});
+  * const APPLY_FOR_LICENSE = 'apply-for-license-event';
+  * const DATE_TIME = 'dateTime';
+  * app.sendFollowupEvent(APPLY_FOR_LICENSE, {
+  *     DATE_TIME: new Date()
+  * });
+  *
+  * @param {string} eventName Name of the event.
+  * @param {Object=} eventData Event JSON object.
+  * @return {null|undefined} Null if the event name is not string or event data 
+  *   is not a JSON object.
+  * @dialogflow
+  */
+  sendFollowupEvent (eventName, eventData) {
+    debug('sendFollowupEvent: eventName=%s, eventData=%s', eventName, JSON.stringify(eventData));
+    let isEventNameString = typeof eventName === 'string';
+    if (!isEventNameString) {
+      this.handleError_('Invalid event name!');
+      return null;
+    }
+    let isEventDataObject = typeof eventData === 'object';
+    if (!isEventDataObject) {
+      this.handleError_('Invalid event data!');
+      return null;
+    }
+    const response = {
+        followupEvent: {
+            name: eventName,
+            data: eventData
+        }
+    }
+    if (!response) {
+      this.handleError_('Error in building response!');
+      return null;
+    }
+    return this.doResponse_(response, RESPONSE_CODE_OK);
+  }
+
+  /**
    * Set a new context for the current intent.
    *
    * @example
