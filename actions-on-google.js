@@ -26,6 +26,12 @@ const ActionsSdkApp = require('./actions-sdk-app');
 const DialogflowApp = require('./dialogflow-app');
 const Transactions = require('./transactions');
 const Responses = require('./response-builder');
+const { version } = require('./package.json');
+
+const Debug = require('debug');
+const debug = Debug('actions-on-google:debug');
+debug.log = console.log.bind(console);
+debug(`Using Actions on Google Client Library v${version}`);
 
 module.exports = {
   AssistantApp,
@@ -50,5 +56,6 @@ module.exports = {
   get ApiAiApp () {
     console.log('Importing the class name ApiAiApp is *DEPRECATED*, use DialogflowApp');
     return DialogflowApp;
-  }
+  },
+  version
 };
