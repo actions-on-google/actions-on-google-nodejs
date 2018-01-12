@@ -110,14 +110,14 @@ describe('DialogflowApp', function () {
 
     it('Does not detect v2 and transform originalRequest when version not present', function () {
       const bodyWithoutVersion = dialogflowAppRequestBodyNewSession;
-      bodyWithoutVersion.originalRequest = {'foo_prop': 'bar_val'};
+      bodyWithoutVersion.originalRequest = { 'foo_prop': 'bar_val' };
       bodyWithoutVersion.foo_field = 'bar_val';
       bodyWithoutVersion.result.parameters.foo_param = 'blue';
       bodyWithoutVersion.result.fulfillment.messages[0]['foo_message'] = 'bar_val';
       bodyWithoutVersion.originalRequest['foo_prop'] = 'bar_val';
 
       const mockRequest = new MockRequest(headerV1, bodyWithoutVersion);
-      const app = new DialogflowApp({request: mockRequest, response: mockResponse});
+      const app = new DialogflowApp({ request: mockRequest, response: mockResponse });
 
       expect(app.isNotApiVersionOne_()).to.equal(false);
       expect(app.body_['foo_field']).to.equal('bar_val');
@@ -128,14 +128,14 @@ describe('DialogflowApp', function () {
 
     it('Does detect v2 and not transform originalRequest when version is present', function () {
       const bodyWithVersion = dialogflowAppRequestBodyNewSession;
-      bodyWithVersion.originalRequest = {'foo_prop': 'bar_val', 'version': '2'};
+      bodyWithVersion.originalRequest = { 'foo_prop': 'bar_val', 'version': '2' };
       bodyWithVersion.foo_field = 'bar_val';
       bodyWithVersion.result.parameters.foo_param = 'blue';
       bodyWithVersion.result.fulfillment.messages[0]['foo_message'] = 'bar_val';
       bodyWithVersion.originalRequest['foo_prop'] = 'bar_val';
 
       const mockRequest = new MockRequest(headerV1, bodyWithVersion);
-      const app = new DialogflowApp({request: mockRequest, response: mockResponse});
+      const app = new DialogflowApp({ request: mockRequest, response: mockResponse });
 
       expect(app.isNotApiVersionOne_()).to.equal(true);
       expect(app.body_['foo_field']).to.equal('bar_val');
@@ -153,7 +153,7 @@ describe('DialogflowApp', function () {
 
     beforeEach(function () {
       mockRequest = new MockRequest(headerV1, dialogflowAppRequestBodyLiveSession);
-      app = new DialogflowApp({request: mockRequest, response: mockResponse});
+      app = new DialogflowApp({ request: mockRequest, response: mockResponse });
     });
 
     // Success case test, when the API returns a valid 200 response with the response object
@@ -176,7 +176,7 @@ describe('DialogflowApp', function () {
 
     it('Should return the valid simple response JSON in the response object for the success case.',
       function () {
-        app.tell({speech: 'hello', displayText: 'hi'});
+        app.tell({ speech: 'hello', displayText: 'hi' });
         // Validating the response object
         const expectedResponse = {
           'speech': 'hello',
@@ -207,7 +207,7 @@ describe('DialogflowApp', function () {
     it('Should return the valid rich response JSON in the response object for the success case.',
       function () {
         app.tell(app.buildRichResponse()
-          .addSimpleResponse({speech: 'hello', displayText: 'hi'})
+          .addSimpleResponse({ speech: 'hello', displayText: 'hi' })
           .addSuggestions(['Say this', 'or this']));
 
         // Validating the response object
@@ -245,7 +245,7 @@ describe('DialogflowApp', function () {
 
     // Success case test, when the API returns a valid 200 response with the response object
     it('Should set response speech when SSML is contained in simple response', function () {
-      app.tell({speech: '<speak>hi</speak>', displayText: 'hi'});
+      app.tell({ speech: '<speak>hi</speak>', displayText: 'hi' });
 
       // Validating the response object
       const expectedResponse = {
@@ -288,7 +288,7 @@ describe('DialogflowApp', function () {
 
     beforeEach(function () {
       mockRequest = new MockRequest(headerV1, dialogflowAppRequestBodyLiveSession);
-      app = new DialogflowApp({request: mockRequest, response: mockResponse});
+      app = new DialogflowApp({ request: mockRequest, response: mockResponse });
     });
 
     // Success case test, when the API returns a valid 200 response with the response object
@@ -320,7 +320,7 @@ describe('DialogflowApp', function () {
     // Success case test, when the API returns a valid 200 response with the response object
     it('Should return the valid simple response JSON in the response object for the success case.',
       function () {
-        app.ask({speech: 'hello', displayText: 'hi'});
+        app.ask({ speech: 'hello', displayText: 'hi' });
         // Validating the response object
         const expectedResponse = {
           'speech': 'hello',
@@ -357,7 +357,7 @@ describe('DialogflowApp', function () {
     it('Should return the valid rich response JSON in the response object for the success case.',
       function () {
         app.ask(app.buildRichResponse()
-          .addSimpleResponse({speech: 'hello', displayText: 'hi'})
+          .addSimpleResponse({ speech: 'hello', displayText: 'hi' })
           .addSuggestions(['Say this', 'or this']));
 
         // Validating the response object
@@ -438,7 +438,7 @@ describe('DialogflowApp', function () {
     // Success case test, when the API returns a valid 200 response with the response object
     it('Should return no input prompts with a rich response', function () {
       app.ask(app.buildRichResponse()
-        .addSimpleResponse({speech: 'hello', displayText: 'hi'})
+        .addSimpleResponse({ speech: 'hello', displayText: 'hi' })
         .addSuggestions(['Say this', 'or this']), ['no', 'input', 'prompts']);
 
       // Validating the response object
@@ -492,7 +492,7 @@ describe('DialogflowApp', function () {
 
     // Success case test, when the API returns a valid 200 response with the response object
     it('Should set response speech when SSML is contained in simple response', function () {
-      app.ask({speech: '<speak>hi</speak>', displayText: 'hi'});
+      app.ask({ speech: '<speak>hi</speak>', displayText: 'hi' });
 
       // Validating the response object
       const expectedResponse = {
@@ -548,7 +548,7 @@ describe('DialogflowApp', function () {
     beforeEach(function () {
       dialogflowAppRequestBodyLiveSession.originalRequest.version = 2;
       mockRequest = new MockRequest(headerV1, dialogflowAppRequestBodyLiveSession);
-      app = new DialogflowApp({request: mockRequest, response: mockResponse});
+      app = new DialogflowApp({ request: mockRequest, response: mockResponse });
     });
 
     // Success case test, when the API returns a valid 200 response with the response object
@@ -625,7 +625,7 @@ describe('DialogflowApp', function () {
     beforeEach(function () {
       dialogflowAppRequestBodyLiveSession.originalRequest.version = 2;
       mockRequest = new MockRequest(headerV1, dialogflowAppRequestBodyLiveSession);
-      app = new DialogflowApp({request: mockRequest, response: mockResponse});
+      app = new DialogflowApp({ request: mockRequest, response: mockResponse });
     });
 
     // Success case test, when the API returns a valid 200 response with the response object
@@ -704,7 +704,7 @@ describe('DialogflowApp', function () {
 
     beforeEach(function () {
       mockRequest = new MockRequest(headerV1, dialogflowAppRequestBodyLiveSession);
-      app = new DialogflowApp({request: mockRequest, response: mockResponse});
+      app = new DialogflowApp({ request: mockRequest, response: mockResponse });
     });
 
     // Success case test, when the API returns a valid 200 response with the response object
@@ -751,7 +751,7 @@ describe('DialogflowApp', function () {
     beforeEach(function () {
       dialogflowAppRequestBodyLiveSession.originalRequest.version = 2;
       mockRequest = new MockRequest(headerV1, dialogflowAppRequestBodyLiveSession);
-      app = new DialogflowApp({request: mockRequest, response: mockResponse});
+      app = new DialogflowApp({ request: mockRequest, response: mockResponse });
     });
 
     // Success case test, when the API returns a valid 200 response with the response object
@@ -798,7 +798,7 @@ describe('DialogflowApp', function () {
       dialogflowAppRequestBodyLiveSession.originalRequest.data
         .user.user_id = '11112226094657824893';
       mockRequest = new MockRequest(headerV1, dialogflowAppRequestBodyLiveSession);
-      app = new DialogflowApp({request: mockRequest, response: mockResponse});
+      app = new DialogflowApp({ request: mockRequest, response: mockResponse });
     });
 
     // Success case test, when the API returns a valid 200 response with the response object
@@ -825,7 +825,7 @@ describe('DialogflowApp', function () {
         }
       };
       mockRequest = new MockRequest(headerV1, dialogflowAppRequestBodyLiveSession);
-      app = new DialogflowApp({request: mockRequest, response: mockResponse});
+      app = new DialogflowApp({ request: mockRequest, response: mockResponse });
       expect(app.getUserName().displayName).to.equal('John Smith');
       expect(app.getUserName().givenName).to.equal('John');
       expect(app.getUserName().familyName).to.equal('Smith');
@@ -833,7 +833,7 @@ describe('DialogflowApp', function () {
       // Test the false case
       dialogflowAppRequestBodyLiveSession.originalRequest.data.user.profile = undefined;
       mockRequest = new MockRequest(headerV1, dialogflowAppRequestBodyLiveSession);
-      app = new DialogflowApp({request: mockRequest, response: mockResponse});
+      app = new DialogflowApp({ request: mockRequest, response: mockResponse });
       expect(app.getUserName()).to.equal(null);
     });
   });
@@ -845,7 +845,7 @@ describe('DialogflowApp', function () {
     // Success case test, when the API returns a valid 200 response with the response object
     it('Should validate assistant request user with locale.', function () {
       const mockRequest = new MockRequest(headerV1, dialogflowAppRequestBodyLiveSession);
-      const app = new DialogflowApp({request: mockRequest, response: mockResponse});
+      const app = new DialogflowApp({ request: mockRequest, response: mockResponse });
       expect(app.getUserLocale()).to.equal('en-US');
     });
 
@@ -853,7 +853,7 @@ describe('DialogflowApp', function () {
     it('Should return null for missing locale.', function () {
       dialogflowAppRequestBodyLiveSession.originalRequest.data.user.locale = undefined;
       const mockRequest = new MockRequest(headerV1, dialogflowAppRequestBodyLiveSession);
-      const app = new DialogflowApp({request: mockRequest, response: mockResponse});
+      const app = new DialogflowApp({ request: mockRequest, response: mockResponse });
       expect(app.getUserLocale()).to.equal(null);
     });
   });
@@ -880,7 +880,7 @@ describe('DialogflowApp', function () {
 
     function initMockApp () {
       mockRequest = new MockRequest(headerV1, dialogflowAppRequestBodyLiveSession);
-      app = new DialogflowApp({request: mockRequest, response: mockResponse});
+      app = new DialogflowApp({ request: mockRequest, response: mockResponse });
     }
 
     // Success case test, when the API returns a valid 200 response with the response object
@@ -1047,14 +1047,14 @@ describe('DialogflowApp', function () {
             'checkResult': {
               'resultType': 'OK',
               'order': {
-                'finalOrder': {'fakeOrder': 'fake_order'},
+                'finalOrder': { 'fakeOrder': 'fake_order' },
                 'googleOrderId': 'goog_123',
                 'actionOrderId': 'action_123',
                 'orderDate': {
                   'seconds': 40,
                   'nanos': 880000000
                 },
-                'paymentInfo': {'fakePayment': 'fake_payment'},
+                'paymentInfo': { 'fakePayment': 'fake_payment' },
                 'customerInfo': {
                   'email': 'username@example.com'
                 }
@@ -1077,14 +1077,14 @@ describe('DialogflowApp', function () {
         'checkResult': {
           'resultType': 'OK',
           'order': {
-            'finalOrder': {'fakeOrder': 'fake_order'},
+            'finalOrder': { 'fakeOrder': 'fake_order' },
             'googleOrderId': 'goog_123',
             'actionOrderId': 'action_123',
             'orderDate': {
               'seconds': 40,
               'nanos': 880000000
             },
-            'paymentInfo': {'fakePayment': 'fake_payment'},
+            'paymentInfo': { 'fakePayment': 'fake_payment' },
             'customerInfo': {
               'email': 'username@example.com'
             }
@@ -1564,7 +1564,7 @@ describe('DialogflowApp', function () {
         ]
       };
 
-      app.askForTransactionDecision({fakeOrderId: 'order_id'}, transactionConfig);
+      app.askForTransactionDecision({ fakeOrderId: 'order_id' }, transactionConfig);
 
       const expectedResponse = {
         'speech': 'PLACEHOLDER_FOR_TXN_DECISION',
@@ -1578,7 +1578,7 @@ describe('DialogflowApp', function () {
               'intent': 'actions.intent.TRANSACTION_DECISION',
               'data': {
                 '@type': 'type.googleapis.com/google.actions.v2.TransactionDecisionValueSpec',
-                'proposedOrder': {'fakeOrderId': 'order_id'},
+                'proposedOrder': { 'fakeOrderId': 'order_id' },
                 'orderOptions': {
                   'requestDeliveryAddress': true,
                   'customerInfoOptions': [
@@ -1627,7 +1627,7 @@ describe('DialogflowApp', function () {
         ]
       };
 
-      app.askForTransactionDecision({fakeOrderId: 'order_id'}, transactionConfig);
+      app.askForTransactionDecision({ fakeOrderId: 'order_id' }, transactionConfig);
 
       const expectedResponse = {
         'speech': 'PLACEHOLDER_FOR_TXN_DECISION',
@@ -1641,7 +1641,7 @@ describe('DialogflowApp', function () {
               'intent': 'actions.intent.TRANSACTION_DECISION',
               'data': {
                 '@type': 'type.googleapis.com/google.actions.v2.TransactionDecisionValueSpec',
-                'proposedOrder': {'fakeOrderId': 'order_id'},
+                'proposedOrder': { 'fakeOrderId': 'order_id' },
                 'orderOptions': {
                   'requestDeliveryAddress': true,
                   'customerInfoOptions': [
@@ -2256,8 +2256,11 @@ describe('DialogflowApp', function () {
         response: mockResponse
       });
 
-      expect(app.getContextArgument('game', 'guess')).to.deep.equal({value: '50', original: '50'});
-      expect(app.getContextArgument('previous_answer', 'answer')).to.deep.equal({value: '68'});
+      expect(app.getContextArgument('game', 'guess')).to.deep.equal({
+        value: '50',
+        original: '50'
+      });
+      expect(app.getContextArgument('previous_answer', 'answer')).to.deep.equal({ value: '68' });
     });
   });
 
@@ -2740,7 +2743,7 @@ describe('DialogflowApp', function () {
     });
     it('Should return the active contexts from incoming JSON when only app.data incoming',
       function () {
-        dialogflowAppRequestBodyLiveSession.result.contexts = [{'name': '_actions_on_google_'}];
+        dialogflowAppRequestBodyLiveSession.result.contexts = [{ 'name': '_actions_on_google_' }];
         mockRequest.body = dialogflowAppRequestBodyLiveSession;
         initMockApp();
         const mockContexts = app.getContexts();
@@ -3313,7 +3316,7 @@ describe('DialogflowApp', function () {
 
     beforeEach(function () {
       mockRequest = new MockRequest(headerV2, dialogflowAppRequestBodyLiveSession);
-      app = new DialogflowApp({request: mockRequest, response: mockResponse});
+      app = new DialogflowApp({ request: mockRequest, response: mockResponse });
     });
 
     // Success case test, when the API returns a valid 200 response with the response object

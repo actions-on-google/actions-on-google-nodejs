@@ -1066,8 +1066,8 @@ describe('ActionsSdkApp', function () {
         ],
         prepaidCardDisallowed: false
       };
-      app.askForTransactionDecision({fakeOrderId: 'order_id'}, transactionConfig,
-        {cartSize: 2});
+      app.askForTransactionDecision({ fakeOrderId: 'order_id' }, transactionConfig,
+        { cartSize: 2 });
       const expectedResponse = {
         'conversationToken': '{"cartSize":2}',
         'userStorage': '{"data":{}}',
@@ -1087,7 +1087,7 @@ describe('ActionsSdkApp', function () {
                 'intent': 'actions.intent.TRANSACTION_DECISION',
                 'inputValueData': {
                   '@type': 'type.googleapis.com/google.actions.v2.TransactionDecisionValueSpec',
-                  'proposedOrder': {'fakeOrderId': 'order_id'},
+                  'proposedOrder': { 'fakeOrderId': 'order_id' },
                   'orderOptions': {
                     'requestDeliveryAddress': true
                   },
@@ -1122,8 +1122,8 @@ describe('ActionsSdkApp', function () {
         type: 'BANK',
         displayName: 'Checking-4773'
       };
-      app.askForTransactionDecision({fakeOrderId: 'order_id'}, transactionConfig,
-        {cartSize: 2});
+      app.askForTransactionDecision({ fakeOrderId: 'order_id' }, transactionConfig,
+        { cartSize: 2 });
       const expectedResponse = {
         'conversationToken': '{"cartSize":2}',
         'userStorage': '{"data":{}}',
@@ -1143,7 +1143,7 @@ describe('ActionsSdkApp', function () {
                 'intent': 'actions.intent.TRANSACTION_DECISION',
                 'inputValueData': {
                   '@type': 'type.googleapis.com/google.actions.v2.TransactionDecisionValueSpec',
-                  'proposedOrder': {'fakeOrderId': 'order_id'},
+                  'proposedOrder': { 'fakeOrderId': 'order_id' },
                   'orderOptions': {
                     'requestDeliveryAddress': true
                   },
@@ -1177,7 +1177,7 @@ describe('ActionsSdkApp', function () {
     });
     // Success case test, when the API returns a valid 200 response with the response object
     it('Should return valid JSON confirmation request', function () {
-      app.askForConfirmation('You want to do that?', {cartSize: 2});
+      app.askForConfirmation('You want to do that?', { cartSize: 2 });
       const expectedResponse = {
         'conversationToken': '{"cartSize":2}',
         'userStorage': '{"data":{}}',
@@ -1377,7 +1377,7 @@ describe('ActionsSdkApp', function () {
         request: mockRequest,
         response: mockResponse
       });
-      app.askForSignIn({cartSize: 2});
+      app.askForSignIn({ cartSize: 2 });
       const expectedResponse = {
         'conversationToken': '{"cartSize":2}',
         'userStorage': '{"data":{}}',
@@ -2360,7 +2360,7 @@ describe('ActionsSdkApp', function () {
         request: mockRequest,
         response: mockResponse
       });
-      const dialogState = {'started': true};
+      const dialogState = { 'started': true };
       expect(dialogState).to.deep.equal(app.getDialogState());
     });
   });
@@ -3002,7 +3002,7 @@ describe('ActionsSdkApp', function () {
 
     beforeEach(function () {
       mockRequest = new MockRequest(headerV2, actionsSdkAppRequestBodyLive);
-      app = new ActionsSdkApp({request: mockRequest, response: mockResponse});
+      app = new ActionsSdkApp({ request: mockRequest, response: mockResponse });
     });
 
     // Success case test, when the API returns a valid 200 response with the response object

@@ -67,13 +67,13 @@ describe('AssistantApp', function () {
 
     it('Should detect Proto2 when header isn\'t present', function () {
       const mockRequest = new MockRequest(headerV1, {});
-      const app = new AssistantApp({request: mockRequest, response: mockResponse});
+      const app = new AssistantApp({ request: mockRequest, response: mockResponse });
       expect(app.isNotApiVersionOne_()).to.equal(false);
     });
 
     it('Should detect v1 when header is present', function () {
       const mockRequest = new MockRequest(invalidHeader, {});
-      const app = new AssistantApp({request: mockRequest, response: mockResponse});
+      const app = new AssistantApp({ request: mockRequest, response: mockResponse });
       expect(app.isNotApiVersionOne_()).to.equal(false);
     });
 
@@ -83,7 +83,7 @@ describe('AssistantApp', function () {
           'version': 1
         }
       });
-      const app = new AssistantApp({request: mockRequest, response: mockResponse});
+      const app = new AssistantApp({ request: mockRequest, response: mockResponse });
       expect(app.isNotApiVersionOne_()).to.equal(false);
     });
 
@@ -91,7 +91,7 @@ describe('AssistantApp', function () {
       const headerWithV2 = JSON.parse(JSON.stringify(headerV1));
       headerWithV2['Google-Actions-API-Version'] = '2';
       const mockRequest = new MockRequest(headerWithV2, {});
-      const app = new AssistantApp({request: mockRequest, response: mockResponse});
+      const app = new AssistantApp({ request: mockRequest, response: mockResponse });
       expect(app.isNotApiVersionOne_()).to.equal(true);
     });
 
@@ -101,7 +101,7 @@ describe('AssistantApp', function () {
           'version': 2
         }
       });
-      const app = new AssistantApp({request: mockRequest, response: mockResponse});
+      const app = new AssistantApp({ request: mockRequest, response: mockResponse });
       expect(app.isNotApiVersionOne_()).to.equal(true);
     });
   });
@@ -113,7 +113,7 @@ describe('AssistantApp', function () {
     // Success case test, when the API returns a valid 200 response with the response object
     it('Should validate SSML syntax.', function () {
       const mockRequest = new MockRequest(headerV1, {});
-      const app = new AssistantApp({request: mockRequest, response: mockResponse});
+      const app = new AssistantApp({ request: mockRequest, response: mockResponse });
       expect(app.isSsml_('<speak></speak>')).to.equal(true);
       expect(app.isSsml_('<SPEAK></SPEAK>')).to.equal(true);
       expect(app.isSsml_('  <speak></speak>  ')).to.equal(true);
@@ -169,7 +169,7 @@ describe('AssistantApp', function () {
 
     beforeEach(function () {
       mockRequest = new MockRequest(headerV2, clone(dialogflowAppRequestBodyNewSessionMock));
-      app = new AssistantApp({request: mockRequest, response: mockResponse});
+      app = new AssistantApp({ request: mockRequest, response: mockResponse });
 
       // mock getIntent
       app.getIntent = () => {

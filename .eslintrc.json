@@ -53,7 +53,8 @@
       "ignore": [0, 1, -1],
       "ignoreArrayIndexes": false
     }],
-    "max-len": ["error", 100]
+    "max-len": ["error", 100],
+    "object-curly-spacing": ["error", "always"]
   },
   "plugins": [
     "chai-friendly",

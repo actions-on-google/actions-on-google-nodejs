@@ -1207,7 +1207,7 @@ class LineItem {
       error('accessibilityText cannot be empty');
       return this;
     }
-    this.image = {url, accessibilityText};
+    this.image = { url, accessibilityText };
     if (width) {
       this.image.width = width;
     }

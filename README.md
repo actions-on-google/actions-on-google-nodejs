@@ -18,7 +18,7 @@ const { ActionsSdkApp } = require('actions-on-google');
  2. Create an instance:
 
 ```javascript
-const app = new ActionsSdkApp({request: request, response: response});
+const app = new ActionsSdkApp({ request: request, response: response });
 ```
 
 ### Dialogflow v1
@@ -31,7 +31,7 @@ const { DialogflowApp } = require('actions-on-google');
  2. Create an instance:
 
 ```javascript
-const app = new DialogflowApp({request: request, response: response});
+const app = new DialogflowApp({ request: request, response: response });
 ```
 
 Please note that Dialogflow v2 is not currently supported by this client library.
