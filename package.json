@@ -12,6 +12,7 @@
     "lint": "eslint --fix \"*.js\" \"test/*.js\" \"utils/*.js\"",
     "test": "npm run lint && ./node_modules/.bin/mocha --reporter spec ./test/*.js",
     "coverage": "nyc --reporter=lcov --reporter=html npm test && nyc report",
+    "coverage_json": "nyc --reporter=json-summary npm test && nyc report",
     "docs": "jsdoc ./ -t node_modules/jsdoc-baseline -d docs"
   },
   "repository": {
