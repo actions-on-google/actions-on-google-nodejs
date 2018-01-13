@@ -472,6 +472,14 @@ describe('BasicCard', () => {
       expect(basicCard.imageDisplayOptions).to.equal(undefined);
     });
 
+    it('should ignore invalid image display option', () => {
+      basicCard.setImageDisplay('INVALID');
+      expect(clone(basicCard)).to.deep.equal({
+        formattedText: '',
+        buttons: []
+      });
+    });
+
     it('should set image display options', () => {
       basicCard.setImageDisplay(ImageDisplays.WHITE);
       expect(clone(basicCard)).to.deep.equal({

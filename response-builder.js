@@ -522,7 +522,7 @@ class BasicCard {
         this.imageDisplayOptions = option;
         break;
       default:
-        console.error(`Image display option ${option} is invalid`);
+        error(`Image display option ${option} is invalid`);
     }
     return this;
   }
