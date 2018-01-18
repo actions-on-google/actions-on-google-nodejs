@@ -6,7 +6,7 @@
   "license": "Apache-2.0",
   "author": "Google Inc.",
   "engines": {
-    "node": ">=6.2.2"
+    "node": ">=6.0.0"
   },
   "directories": {
     "test": "test"
