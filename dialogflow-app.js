@@ -1069,6 +1069,27 @@ class DialogflowApp extends AssistantApp {
   }
 
   /**
+   * Gets the unique conversation ID. It's a new ID for the initial query,
+   * and stays the same until the end of the conversation.
+   *
+   * @example
+   * const app = new DialogflowApp({request: request, response: response});
+   * const conversationId = app.getConversationId();
+   *
+   * @return {string} Conversation ID or null if no value.
+   * @dialogflow
+   */
+  getConversationId () {
+    debug('getConversationId');
+    if (!this.body_.originalRequest.data.conversation ||
+        !this.body_.originalRequest.data.conversation.conversationId) {
+      error('No conversation ID');
+      return null;
+    }
+    return this.body_.originalRequest.data.conversation.conversationId;
+  }
+
+  /**
    * Uses a given intent spec to construct and send a non-TEXT intent response
    * to Google.
    *

@@ -41,6 +41,7 @@ const {
   headerV2,
   MockResponse,
   MockRequest,
+  fakeConversationId,
   clone
 } = require('./utils/mocking');
 
@@ -2181,6 +2182,23 @@ describe('DialogflowApp', function () {
       });
 
       expect(app.getIntent()).to.equal('check_guess');
+    });
+  });
+
+  /**
+   * Describes the behavior for DialogflowApp getConversationId method.
+   */
+  describe('#getConversationId', function () {
+    // Success case test, when the API returns a valid 200 response with the response object
+    it('Should validate assistant conversation ID.', function () {
+      dialogflowAppRequestBodyLiveSession
+          .originalRequest.data.conversation.conversationId = fakeConversationId;
+      const mockRequest = new MockRequest(headerV1, dialogflowAppRequestBodyLiveSession);
+      const app = new DialogflowApp({
+        request: mockRequest,
+        response: mockResponse
+      });
+      expect(app.getConversationId()).to.equal(fakeConversationId);
     });
   });
 
