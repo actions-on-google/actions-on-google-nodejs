@@ -42,19 +42,19 @@ module.exports = {
   Responses,
   // Backwards compatibility
   get Assistant () {
-    console.log('Importing the class name Assistant is *DEPRECATED*, use AssistantApp');
+    console.warn('Importing the class name Assistant is *DEPRECATED*, use AssistantApp');
     return AssistantApp;
   },
   get ActionsSdkAssistant () {
-    console.log('Importing the class name ActionsSdkAssistant is *DEPRECATED*, use ActionsSdkApp');
+    console.warn('Importing the class name ActionsSdkAssistant is *DEPRECATED*, use ActionsSdkApp');
     return ActionsSdkApp;
   },
   get ApiAiAssistant () {
-    console.log('Importing the class name ApiAiAssistant is *DEPRECATED*, use DialogflowApp');
+    console.warn('Importing the class name ApiAiAssistant is *DEPRECATED*, use DialogflowApp');
     return DialogflowApp;
   },
   get ApiAiApp () {
-    console.log('Importing the class name ApiAiApp is *DEPRECATED*, use DialogflowApp');
+    console.warn('Importing the class name ApiAiApp is *DEPRECATED*, use DialogflowApp');
     return DialogflowApp;
   },
   version
