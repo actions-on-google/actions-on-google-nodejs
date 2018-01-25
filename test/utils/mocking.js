@@ -35,7 +35,7 @@ class MockRequest {
   get (header) {
     return this.headers[header];
   }
-};
+}
 
 class MockResponse {
   constructor () {
@@ -57,7 +57,7 @@ class MockResponse {
     this.headers[header] = value;
     return this;
   }
-};
+}
 
 const headerV1 = {
   'Content-Type': 'application/json',
