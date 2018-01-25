@@ -16,10 +16,9 @@
 
 'use strict';
 
-const GoogleAuth = require('google-auth-library');
+const { OAuth2Client } = require('google-auth-library');
 
-const auth = new GoogleAuth();
-const googleAuthClient = new auth.OAuth2();
+const googleAuthClient = new OAuth2Client();
 
 module.exports = {
   googleAuthClient
