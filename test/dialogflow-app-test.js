@@ -2882,6 +2882,16 @@ describe('DialogflowApp', function () {
       });
       expect(app.userStorage).to.deep.equal({});
     });
+    it('Should parse invalid userStorage from request body user data as empty object', function () {
+      // This is invalid JSON
+      dialogflowAppRequestBodyNewSession.originalRequest.data.user.userStorage = '{{}}';
+      const mockRequest = new MockRequest(headerV2, dialogflowAppRequestBodyNewSession);
+      const app = new DialogflowApp({
+        request: mockRequest,
+        response: mockResponse
+      });
+      expect(app.userStorage).to.deep.equal({});
+    });
     it('Should send userStorage in response body', function () {
       const mockRequest = new MockRequest(headerV2, dialogflowAppRequestBodyLiveSession);
       const app = new DialogflowApp({

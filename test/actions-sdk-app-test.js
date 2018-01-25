@@ -2517,6 +2517,15 @@ describe('ActionsSdkApp', function () {
       });
       expect(app.userStorage).to.deep.equal({});
     });
+    it('Should parse invalid userStorage from request body user data as empty object', function () {
+      actionsSdkAppRequestBodyNewV2.user.userStorage = '{{}}'; // This is invalid JSON
+      const mockRequest = new MockRequest(headerV2, actionsSdkAppRequestBodyNewV2);
+      const app = new ActionsSdkApp({
+        request: mockRequest,
+        response: mockResponse
+      });
+      expect(app.userStorage).to.deep.equal({});
+    });
     it('Should send userStorage in response body', function () {
       const mockRequest = new MockRequest(headerV2, actionsSdkAppRequestBodyLiveV2);
       const app = new ActionsSdkApp({

@@ -2237,15 +2237,19 @@ class AssistantApp {
     debug('extractUserStorage_');
     const user = this.getUser();
     if (!user) {
-      this.userStorage = {};
+      error('No user object found');
       return;
     }
     const { userStorage } = user;
     if (!userStorage) {
-      this.userStorage = {};
+      error('No userStorage found');
       return;
     }
-    this.userStorage = JSON.parse(userStorage).data || {};
+    try {
+      this.userStorage = JSON.parse(userStorage).data || {};
+    } catch (e) {
+      error('Unable to parse userStorage', e);
+    }
   }
 
   /**
