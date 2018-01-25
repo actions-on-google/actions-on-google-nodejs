@@ -728,6 +728,24 @@ describe('Carousel', () => {
       }
     });
   });
+
+  describe('#setImageDisplay', () => {
+    let carousel;
+
+    beforeEach(() => {
+      carousel = new Carousel();
+    });
+
+    it('sets a valid ImageDisplayOption', () => {
+      carousel.setImageDisplay(ImageDisplays.CROPPED);
+      expect(carousel.imageDisplayOptions).to.equal(ImageDisplays.CROPPED);
+    });
+
+    it('sets an invalid ImageDisplayOption', () => {
+      carousel.setImageDisplay('INVALID');
+      expect(carousel.imageDisplayOptions).to.equal(undefined);
+    });
+  });
 });
 
 /**

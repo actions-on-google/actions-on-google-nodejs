@@ -515,15 +515,10 @@ class BasicCard {
    * @return {BasicCard} Returns current constructed BasicCard.
    */
   setImageDisplay (option) {
-    switch (option) {
-      case ImageDisplays.DEFAULT:
-      case ImageDisplays.WHITE:
-      case ImageDisplays.CROPPED:
-        this.imageDisplayOptions = option;
-        break;
-      default:
-        error(`Image display option ${option} is invalid`);
+    if (!ImageDisplays[option]) {
+      return error(`Image display option ${option} is invalid`);
     }
+    this.imageDisplayOptions = option;
     return this;
   }
 
@@ -694,6 +689,22 @@ class Carousel {
       this.items = this.items.slice(0, Limits.CAROUSEL_ITEM_MAX);
       error(`Carousel can have no more than ${Limits.CAROUSEL_ITEM_MAX} items`);
     }
+    return this;
+  }
+
+  /**
+   * Sets the display options for the images in this carousel.
+   * Use one of the image display constants. If none is chosen,
+   * ImageDisplays.DEFAULT will be enforced.
+   *
+   * @param {string} option The option for displaying the image.
+   * @return {Carousel} Returns current constructed Carousel.
+   */
+  setImageDisplay (option) {
+    if (!ImageDisplays[option]) {
+      return error(`Image display option ${option} is invalid`);
+    }
+    this.imageDisplayOptions = option;
     return this;
   }
 }
