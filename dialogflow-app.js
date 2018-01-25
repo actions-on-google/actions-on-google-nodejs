@@ -962,10 +962,10 @@ class DialogflowApp extends AssistantApp {
       if (textToSpeech.speech) {
         // Convert SimpleResponse to RichResponse
         textToSpeech = this.buildRichResponse().addSimpleResponse(textToSpeech);
-      } else if (!(textToSpeech.items &&
+      } else if (!((textToSpeech.items &&
         textToSpeech.items[0] &&
-        textToSpeech.items[0].simpleResponse)) {
-        error('Invalid RichResponse. First item must be SimpleResponse');
+        textToSpeech.items[0].simpleResponse) || textToSpeech.event)) {
+        error('Invalid RichResponse. First item must be simpleResponse or contains an event');
         return null;
       }
     }
@@ -987,11 +987,17 @@ class DialogflowApp extends AssistantApp {
       noInputs = [];
     }
     const response = {
-      speech: isStringResponse ? textToSpeech
-        : textToSpeech.items[0].simpleResponse.textToSpeech ||
-        textToSpeech.items[0].simpleResponse.ssml,
       contextOut: []
     };
+    const simpleResponse = isStringResponse ? null
+      : textToSpeech.items[0] && textToSpeech.items[0].simpleResponse;
+    if (isStringResponse || simpleResponse) {
+      response.speech = isStringResponse ? textToSpeech
+      : simpleResponse.textToSpeech || simpleResponse.ssml;
+    }
+    if (textToSpeech.event) {
+      response.followupEvent = textToSpeech.event;
+    }
     const google = Object.assign({
       expectUserResponse,
       noInputPrompts: noInputs
