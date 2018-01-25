@@ -177,7 +177,8 @@ class DialogflowApp extends AssistantApp {
     debug('getIntent');
     const intent = this.getIntent_();
     if (!intent) {
-      error('The current action name could not be found in request body');
+      error('The current action name could not be found in request body. ' +
+        'Is there a defined action name for this intent in the Dialogflow console?');
       return null;
     }
     return intent;
