@@ -3413,4 +3413,76 @@ describe('DialogflowApp', function () {
       expect(mockResponse.statusCode).to.equal(400);
     });
   });
+
+  /**
+   * Describes the behavior for DialogflowApp askForUpdatePermission method in v1.
+   */
+  describe('#followUpEvents', function () {
+    let mockRequest, app;
+
+    beforeEach(function () {
+      mockRequest = new MockRequest(headerV1, dialogflowAppRequestBodyLiveSession);
+      app = new DialogflowApp({ request: mockRequest, response: mockResponse });
+    });
+    it('Should contain followUpEvent in root when you add an event to response', function () {
+      app.tell(app.buildRichResponse()
+        .setEvent('foo', { bar: 'foobar' }));
+
+      // Validating the response object
+      const expectedResponse = {
+        'followupEvent': {
+          'data': {
+            'bar': 'foobar'
+          },
+          'name': 'foo'
+        },
+        'data': {
+          'google': {
+            'user_storage': '{"data":{}}',
+            'expect_user_response': false,
+            'no_input_prompts': [],
+            'rich_response': {
+              'event': {
+                'name': 'foo',
+                'data': {
+                  'bar': 'foobar'
+                }
+              },
+              'items': [],
+              'suggestions': []
+            }
+          }
+        },
+        'contextOut': []
+      };
+      expect(clone(mockResponse.body)).to.deep.equal(expectedResponse);
+    });
+    it('Event might have only a name', function () {
+      app.tell(app.buildRichResponse()
+        .setEvent('foo'));
+
+      // Validating the response object
+      const expectedResponse = {
+        'followupEvent': {
+          'name': 'foo'
+        },
+        'data': {
+          'google': {
+            'user_storage': '{"data":{}}',
+            'expect_user_response': false,
+            'no_input_prompts': [],
+            'rich_response': {
+              'event': {
+                'name': 'foo'
+              },
+              'items': [],
+              'suggestions': []
+            }
+          }
+        },
+        'contextOut': []
+      };
+      expect(clone(mockResponse.body)).to.deep.equal(expectedResponse);
+    });
+  });
 });

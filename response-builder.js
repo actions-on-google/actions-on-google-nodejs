@@ -226,7 +226,7 @@ class RichResponse {
     if (this.items.length > 0 && (this.items[0].basicCard ||
       this.items[0].structuredResponse)) {
       this.items.unshift(simpleResponseObj);
-    } else if (simpleResponseObj.simpleResponse){
+    } else if (simpleResponseObj.simpleResponse) {
       this.items.push(simpleResponseObj);
     }
     return this;

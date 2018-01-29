@@ -325,6 +325,9 @@ class DialogflowApp extends AssistantApp {
   getIncomingRichResponse () {
     debug('getIncomingRichResponse');
     const response = this.buildRichResponse();
+    if (response.event === undefined) {
+      delete response.event;
+    }
     if (this.body_.result &&
       this.body_.result.fulfillment &&
       this.body_.result.fulfillment.messages) {
@@ -1006,6 +1009,7 @@ class DialogflowApp extends AssistantApp {
     } : {
       richResponse: textToSpeech
     });
+    console.log('data:google', google);
     this.addUserStorageToResponse_(google);
     response.data = {
       google
