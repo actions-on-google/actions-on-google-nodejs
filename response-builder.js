@@ -25,6 +25,10 @@ const debug = Debug('actions-on-google:debug');
 const warn = Debug('actions-on-google:warn');
 const error = Debug('actions-on-google:error');
 
+// Configure logging for hosting platforms that only support console.log and console.error
+debug.log = console.log.bind(console);
+error.log = console.error.bind(console);
+
 const Limits = {
   LIST_ITEM_MAX: 30,
   CAROUSEL_ITEM_MAX: 10,
