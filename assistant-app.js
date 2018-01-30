@@ -1848,8 +1848,11 @@ class AssistantApp {
    */
   getRepromptCount () {
     debug('getRepromptCount');
-    const repromptCount = this.getArgumentCommon(this.BuiltInArgNames.REPROMPT_COUNT);
-    return repromptCount !== null ? parseInt(repromptCount, 10) : null;
+    const repromptArg = this.getArgumentCommon(this.BuiltInArgNames.REPROMPT_COUNT);
+    if (repromptArg && repromptArg.intValue) {
+      return parseInt(repromptArg.intValue, 10);
+    }
+    return null;
   }
 
   /**
@@ -1887,8 +1890,11 @@ class AssistantApp {
    */
   isFinalReprompt () {
     debug('isFinalReprompt');
-    const finalReprompt = this.getArgumentCommon(this.BuiltInArgNames.IS_FINAL_REPROMPT);
-    return finalReprompt === '1';
+    const finalRepromptArg = this.getArgumentCommon(this.BuiltInArgNames.IS_FINAL_REPROMPT);
+    if (finalRepromptArg && finalRepromptArg.boolValue) {
+      return finalRepromptArg.boolValue;
+    }
+    return false;
   }
 
   /**

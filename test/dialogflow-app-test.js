@@ -2081,11 +2081,11 @@ describe('DialogflowApp', function () {
         'arguments': [
           {
             'name': 'REPROMPT_COUNT',
-            'textValue': '1'
+            'intValue': '1'
           },
           {
             'name': 'IS_FINAL_REPROMPT',
-            'textValue': '0'
+            'boolValue': false
           }
         ]
       }];
@@ -2118,11 +2118,11 @@ describe('DialogflowApp', function () {
         'arguments': [
           {
             'name': 'REPROMPT_COUNT',
-            'textValue': '2'
+            'intValue': '2'
           },
           {
             'name': 'IS_FINAL_REPROMPT',
-            'textValue': '1'
+            'boolValue': true
           }
         ]
       }];
@@ -2140,11 +2140,11 @@ describe('DialogflowApp', function () {
         'arguments': [
           {
             'name': 'REPROMPT_COUNT',
-            'textValue': '0'
+            'intValue': '0'
           },
           {
             'name': 'IS_FINAL_REPROMPT',
-            'textValue': '0'
+            'boolValue': false
           }
         ]
       }];
