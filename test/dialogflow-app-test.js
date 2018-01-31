@@ -2317,7 +2317,10 @@ describe('DialogflowApp', function () {
         .addSuggestions('suggestion one')
         .addSuggestionLink('google', 'google.com');
 
-      expect(app.getIncomingRichResponse()).to.deep.equal(clone(expectedResponse));
+      const expected = clone(expectedResponse);
+      expected.event = undefined; // clone removes undefined props
+
+      expect(app.getIncomingRichResponse()).to.deep.equal(expected);
     });
   });
 
@@ -3424,7 +3427,8 @@ describe('DialogflowApp', function () {
       mockRequest = new MockRequest(headerV1, dialogflowAppRequestBodyLiveSession);
       app = new DialogflowApp({ request: mockRequest, response: mockResponse });
     });
-    it('Should contain followUpEvent in root when you add an event to response', function () {
+    it('Should contain followUpEvent in json at root when you add an ' +
+      'event to response', function () {
       app.tell(app.buildRichResponse()
         .setEvent('foo', { bar: 'foobar' }));
 
@@ -3457,7 +3461,7 @@ describe('DialogflowApp', function () {
       };
       expect(clone(mockResponse.body)).to.deep.equal(expectedResponse);
     });
-    it('Event might have only a name', function () {
+    it('Events can have only a name and no data', function () {
       app.tell(app.buildRichResponse()
         .setEvent('foo'));
 

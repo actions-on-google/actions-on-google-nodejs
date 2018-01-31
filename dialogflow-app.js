@@ -325,9 +325,6 @@ class DialogflowApp extends AssistantApp {
   getIncomingRichResponse () {
     debug('getIncomingRichResponse');
     const response = this.buildRichResponse();
-    if (response.event === undefined) {
-      delete response.event;
-    }
     if (this.body_.result &&
       this.body_.result.fulfillment &&
       this.body_.result.fulfillment.messages) {
@@ -965,10 +962,11 @@ class DialogflowApp extends AssistantApp {
       if (textToSpeech.speech) {
         // Convert SimpleResponse to RichResponse
         textToSpeech = this.buildRichResponse().addSimpleResponse(textToSpeech);
-      } else if (!((textToSpeech.items &&
+      } else if (!(textToSpeech.items &&
         textToSpeech.items[0] &&
-        textToSpeech.items[0].simpleResponse) || textToSpeech.event)) {
-        error('Invalid RichResponse. First item must be simpleResponse or contains an event');
+        textToSpeech.items[0].simpleResponse) && !textToSpeech.event) {
+        error('Invalid RichResponse. First item must be simpleResponse or ' +
+          'on the contrary it should contain an event');
         return null;
       }
     }
@@ -1009,7 +1007,6 @@ class DialogflowApp extends AssistantApp {
     } : {
       richResponse: textToSpeech
     });
-    console.log('data:google', google);
     this.addUserStorageToResponse_(google);
     response.data = {
       google

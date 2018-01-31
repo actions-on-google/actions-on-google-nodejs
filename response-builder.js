@@ -193,6 +193,9 @@ class RichResponse {
       if (richResponse.linkOutSuggestion) {
         this.linkOutSuggestion = richResponse.linkOutSuggestion;
       }
+      if (richResponse.event) {
+        this.event = richResponse.event;
+      }
     }
   }
 
