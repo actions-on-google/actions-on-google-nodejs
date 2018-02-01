@@ -184,6 +184,31 @@ class DialogflowApp extends AssistantApp {
   }
 
   /**
+   * Get the intent name from DialogFlow
+   *
+   * @example
+   * const app = new DialogflowApp({request: request, response: response});
+   *
+   * function responseHandler (app) {
+   *   const intentName = app.getIntentName();
+   * }
+   *
+   * app.handleRequest(responseHandler);
+   *
+   * @return {string} Intent name or null if no value
+   * @dialogflow
+   */
+  getIntentName () {
+    debug('getIntentName');
+    const intentName = this.getIntentName_();
+    if (!intentName) {
+      error('The current intent name could not be found in request body');
+      return null;
+    }
+    return intentName;
+  }
+
+  /**
    * Get the argument value by name from the current intent. If the argument
    * is included in originalRequest, and is not a text argument, the entire
    * argument object is returned.
@@ -934,6 +959,22 @@ class DialogflowApp extends AssistantApp {
     debug('getIntent_');
     if (this.body_.result) {
       return this.body_.result.action;
+    }
+    error('Missing result from request body');
+    return null;
+  }
+
+  /**
+   * Get the current DialogFlow intent.
+   *
+   * @return {string} The intent name.
+   * @private
+   * @dialogflow
+   */
+  getIntentName_ () {
+    debug('getIntentName_');
+    if (this.body_.result && this.body_.result.metadata) {
+      return this.body_.result.metadata.intentName;
     }
     error('Missing result from request body');
     return null;

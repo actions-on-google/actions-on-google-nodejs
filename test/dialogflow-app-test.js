@@ -2185,6 +2185,24 @@ describe('DialogflowApp', function () {
   });
 
   /**
+   * Describes the behavior for DialogflowApp getIntent method.
+   */
+  describe('#getIntentName', function () {
+    // Success case test, when the API returns a valid 200 response with the response object
+    it('Should get the intent value for the success case.', function () {
+      dialogflowAppRequestBodyLiveSession.result.metadata.intentName = 'greetings';
+      const mockRequest = new MockRequest(headerV1, dialogflowAppRequestBodyLiveSession);
+
+      const app = new DialogflowApp({
+        request: mockRequest,
+        response: mockResponse
+      });
+
+      expect(app.getIntentName()).to.equal('greetings');
+    });
+  });
+
+  /**
    * Describes the behavior for DialogflowApp getArgument method.
    */
   describe('#getArgument', function () {
