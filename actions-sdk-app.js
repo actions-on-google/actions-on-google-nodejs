@@ -114,14 +114,13 @@ class ActionsSdkApp extends AssistantApp {
         error(errorMsg);
         reject(errorMsg);
       }
-      googleAuthClient.verifyIdToken(jwtToken, projectId, (err, login) => {
-        if (err) {
+      googleAuthClient.verifyIdToken({ idToken: jwtToken, audience: projectId })
+        .then((loginTicket) => {
+          resolve(loginTicket);
+        }).catch((err) => {
           error(`ID token verification Failed: ${err}`);
           reject(err);
-        } else {
-          resolve(login);
-        }
-      });
+        });
     });
   }
 
@@ -158,14 +157,13 @@ class ActionsSdkApp extends AssistantApp {
         error(errorMsg);
         reject(errorMsg);
       }
-      googleAuthClient.verifyIdToken(jwtToken, projectId, (err, login) => {
-        if (err) {
+      googleAuthClient.verifyIdToken({ idToken: jwtToken, audience: projectId })
+        .then((loginTicket) => {
+          resolve(loginTicket);
+        }).catch((err) => {
           error(`ID token verification Failed: ${err}`);
           reject(err);
-        } else {
-          resolve(login);
-        }
-      });
+        });
     });
   }
 

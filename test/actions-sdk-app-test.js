@@ -2799,12 +2799,14 @@ describe('ActionsSdkApp', function () {
 
     before(() => {
       require('../utils/auth').googleAuthClient = {
-        verifyIdToken: (argOne, projectId, callback) => {
-          if (projectId === validProjectId) {
-            callback(null, sampleToken);
-          } else {
-            callback(errorMsg, null);
-          }
+        verifyIdToken: (options) => {
+          return new Promise((resolve, reject) => {
+            if (options.audience === validProjectId) {
+              resolve(sampleToken);
+            } else {
+              reject(errorMsg);
+            }
+          });
         }
       };
     });
