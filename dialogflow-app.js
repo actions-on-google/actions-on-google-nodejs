@@ -195,7 +195,7 @@ class DialogflowApp extends AssistantApp {
    *
    * app.handleRequest(responseHandler);
    *
-   * @return {string} Intent name or null if no value
+   * @return {string|null} Intent name or null if no value
    * @dialogflow
    */
   getIntentName () {
