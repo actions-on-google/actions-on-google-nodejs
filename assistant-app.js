@@ -2457,7 +2457,11 @@ AssistantApp.prototype.SurfaceCapabilities = {
   /**
    * The ability to output on a screen
    */
-  SCREEN_OUTPUT: 'actions.capability.SCREEN_OUTPUT'
+  SCREEN_OUTPUT: 'actions.capability.SCREEN_OUTPUT',
+  /**
+   * The ability to open a web URL
+   */
+  WEB_BROWSER: 'actions.capability.WEB_BROWSER'
 };
 
 /**
