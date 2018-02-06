@@ -2200,6 +2200,18 @@ describe('DialogflowApp', function () {
 
       expect(app.getIntentName()).to.equal('greetings');
     });
+    // Failure case test, when the API returns null for invalid request object
+    it('Should get the intent value for the failure case.', function () {
+      dialogflowAppRequestBodyLiveSession.result = null;
+      const mockRequest = new MockRequest(headerV1, dialogflowAppRequestBodyLiveSession);
+
+      const app = new DialogflowApp({
+        request: mockRequest,
+        response: mockResponse
+      });
+
+      expect(app.getIntentName()).to.equal(null);
+    });
   });
 
   /**
