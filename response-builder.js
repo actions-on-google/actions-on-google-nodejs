@@ -114,6 +114,13 @@ const ImageDisplays = {
  *     to indicate this option if they do not use the key.
  */
 
+ /**
+ * Event. Used in rich response as followupEvent to trigger another intent.
+ * @typedef {Object} Event
+ * @property {string} name - event name
+ * @property {Object} data - a map with parameter name as key and their parameter value as value
+ */
+
 /**
  * @typedef {Object} StructuredResponse
  * @property {OrderUpdate} orderUpdate
@@ -165,6 +172,12 @@ class RichResponse {
      */
     this.linkOutSuggestion = undefined;
 
+    /**
+     * Add event for this rich response. Optional.
+     * @type {Event}
+     */
+    this.event = undefined;
+
     if (richResponse) {
       if (richResponse.items) {
         this.items = richResponse.items;
@@ -179,6 +192,9 @@ class RichResponse {
       }
       if (richResponse.linkOutSuggestion) {
         this.linkOutSuggestion = richResponse.linkOutSuggestion;
+      }
+      if (richResponse.event) {
+        this.event = richResponse.event;
       }
     }
   }
@@ -213,7 +229,7 @@ class RichResponse {
     if (this.items.length > 0 && (this.items[0].basicCard ||
       this.items[0].structuredResponse)) {
       this.items.unshift(simpleResponseObj);
-    } else {
+    } else if (simpleResponseObj.simpleResponse) {
       this.items.push(simpleResponseObj);
     }
     return this;
@@ -240,6 +256,26 @@ class RichResponse {
     this.items.push({
       basicCard: basicCard
     });
+    return this;
+  }
+
+  /**
+   * Set an Event to this rich response
+   *
+   * @param {string} name - event name
+   * @param {Object} payload - event data, a map with parameter name as key and their
+   * parameter value as value
+   * @return {RichResponse} Returns current constructed RichResponse.
+   */
+  setEvent (name, payload) {
+    if (!(typeof name === 'string' || (payload && typeof payload === 'object'))) {
+      error('Invalid event');
+      return this;
+    }
+    this.event = { name };
+    if (payload) {
+      this.event.data = payload;
+    }
     return this;
   }
 
