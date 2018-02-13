@@ -77,6 +77,10 @@ class DialogflowApp extends AssistantApp {
       if (!this.body_) {
         return null;
       }
+      // Check for Dialogflow v2 webhook request
+      if (this.body_.queryResult) {
+        throw new Error(`Dialogflow v2 is not currently supported`);
+      }
       const { originalRequest } = this.body_;
       if (!originalRequest) {
         return null;
