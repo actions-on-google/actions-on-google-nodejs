@@ -293,7 +293,7 @@ const TransactionValues = {
     /**
      * Unspecified.
      */
-    UNSPECIFIED: 'UNSPECIFIED',
+    PAYMENT_TYPE_UNSPECIFIED: 'PAYMENT_TYPE_UNSPECIFIED',
     /**
      * Payment card.
      */
