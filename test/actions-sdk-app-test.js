@@ -3228,4 +3228,87 @@ describe('ActionsSdkApp', function () {
       expect(mockResponse.statusCode).to.equal(400);
     });
   });
+
+  /**
+   * Describes the behavior for ActionsSdkApp askToDeepLink.
+   */
+  describe('#askToDeepLink', function () {
+    let mockRequest, app;
+
+    beforeEach(function () {
+      mockRequest = new MockRequest(headerV2, actionsSdkAppRequestBodyLive);
+      app = new ActionsSdkApp({ request: mockRequest, response: mockResponse });
+    });
+
+    // Success case test, when the API returns a valid 200 response with the response object
+    it('Should return the valid JSON in the response object for the success case.', function () {
+      app.askToDeepLink('Great! Looks like we can do that in the app.', 'Google',
+        'example://gizmos', 'com.example.gizmos', 'handle this for you');
+      // Validating the response object
+      const expectedResponse = {
+        'conversationToken': '{"state":null,"data":{}}',
+        'userStorage': '{"data":{}}',
+        'expectUserResponse': true,
+        'expectedInputs': [
+          {
+            'inputPrompt': {
+              'initialPrompts': [
+                {
+                  'textToSpeech': 'Great! Looks like we can do that in the app.'
+                }
+              ],
+              'noInputPrompts': [
+              ]
+            },
+            'possibleIntents': [
+              {
+                'intent': 'actions.intent.LINK',
+                'inputValueData': {
+                  '@type': 'type.googleapis.com/google.actions.v2.LinkValueSpec',
+                  'openUrlAction': {
+                    'url': 'example://gizmos',
+                    'androidApp': {
+                      'packageName': 'com.example.gizmos'
+                    }
+                  },
+                  'dialogSpec': {
+                    'extension': {
+                      '@type': 'type.googleapis.com/google.actions.v2.LinkValueSpec.LinkDialogSpec',
+                      'destinationName': 'Google',
+                      'requestLinkReason': 'handle this for you'
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      };
+      expect(mockResponse.body).to.deep.equal(expectedResponse);
+    });
+  });
+
+  /**
+   * Describes the behavior for ActionsSdkApp getLinkStatus method.
+   */
+  describe('#getLinkStatus', function () {
+    let app, mockRequest;
+
+    // Success case test, when the API returns a valid 200 response with the response object
+    it('Should validate user registration status.', function () {
+      actionsSdkAppRequestBodyLive.inputs[0].arguments = [
+        {
+          'name': 'LINK',
+          'status': {
+            'code': 9
+          }
+        }];
+      mockRequest = new MockRequest(headerV1, actionsSdkAppRequestBodyLive);
+      app = new ActionsSdkApp({
+        request: mockRequest,
+        response: mockResponse
+      });
+      expect(app.getLinkStatus()).to.equal(9);
+    });
+  });
 });

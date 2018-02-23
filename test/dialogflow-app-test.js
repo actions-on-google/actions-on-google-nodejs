@@ -3542,4 +3542,86 @@ describe('DialogflowApp', function () {
       expect(mockResponse.statusCode).to.equal(400);
     });
   });
+
+  /**
+   * Describes the behavior for DialogflowApp askToDeepLink.
+   */
+  describe('#askToDeepLink', function () {
+    let mockRequest, app;
+
+    beforeEach(function () {
+      mockRequest = new MockRequest(headerV2, dialogflowAppRequestBodyLiveSession);
+      app = new DialogflowApp({ request: mockRequest, response: mockResponse });
+    });
+
+    // Success case test, when the API returns a valid 200 response with the response object
+    it('Should return the valid JSON in the response object for the success case.', function () {
+      app.askToDeepLink('Great! Looks like we can do that in the app.', 'Google',
+        'example://gizmos', 'com.example.gizmos', 'handle this for you');
+      // Validating the response object
+      const expectedResponse = {
+        'speech': 'Great! Looks like we can do that in the app.',
+        'data': {
+          'google': {
+            'userStorage': '{"data":{}}',
+            'expectUserResponse': true,
+            'isSsml': false,
+            'noInputPrompts': [],
+            'systemIntent': {
+              'intent': 'actions.intent.LINK',
+              'data': {
+                '@type': 'type.googleapis.com/google.actions.v2.LinkValueSpec',
+                'dialogSpec': {
+                  'extension': {
+                    '@type': 'type.googleapis.com/google.actions.v2.LinkValueSpec.LinkDialogSpec',
+                    'destinationName': 'Google',
+                    'requestLinkReason': 'handle this for you'
+                  }
+                },
+                'openUrlAction': {
+                  'url': 'example://gizmos',
+                  'androidApp': {
+                    'packageName': 'com.example.gizmos'
+                  }
+                }
+              }
+            }
+          }
+        },
+        'contextOut': [
+          {
+            'name': '_actions_on_google_',
+            'lifespan': 100,
+            'parameters': {}
+          }
+        ]
+      };
+      expect(mockResponse.body).to.deep.equal(expectedResponse);
+    });
+  });
+
+  /**
+   * Describes the behavior for DialogflowApp getLinkStatus method.
+   */
+  describe('#getLinkStatus', function () {
+    let app, mockRequest;
+
+    // Success case test, when the API returns a valid 200 response with the response object
+    it('Should validate user registration status.', function () {
+      dialogflowAppRequestBodyLiveSession.originalRequest.data
+      .inputs[0].arguments = [
+        {
+          'name': 'LINK',
+          'status': {
+            'code': 9
+          }
+        }];
+      mockRequest = new MockRequest(headerV1, dialogflowAppRequestBodyLiveSession);
+      app = new DialogflowApp({
+        request: mockRequest,
+        response: mockResponse
+      });
+      expect(app.getLinkStatus()).to.equal(9);
+    });
+  });
 });

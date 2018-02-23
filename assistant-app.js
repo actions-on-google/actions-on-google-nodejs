@@ -1371,6 +1371,93 @@ class AssistantApp {
   }
 
   /**
+   * Requests the user to transfer to a linked out Android app intent. Using this feature
+   * requires verifying the linked app in the (Actions console)[console.actions.google.com].
+   *
+   * @example
+   * // For DialogflowApp:
+   *
+   * // Dialogflow Actions
+   * const WELCOME_ACTION = 'input.welcome';
+   * const HANDLE_LINK = 'handle.link'; // Create Dialogflow Action with actions_intent_LINK event
+   *
+   * const app = new DialogflowApp({ request, response });
+   *
+   * console.log('Request headers: ' + JSON.stringify(request.headers));
+   * console.log('Request body: ' + JSON.stringify(request.body));
+   *
+   * function requestLink (app) {
+   *   app.askToDeepLink('Great! Looks like we can do that in the app.', 'Google',
+   *     'example://gizmos', 'com.example.gizmos', 'handle this for you');
+   * }
+   *
+   * function handleLink (app) {
+   *   const linkStatus = app.getLinkStatus();
+   *   app.tell('Okay maybe we can take care of that another time.');
+   * }
+   *
+   * const actionMap = new Map();
+   * actionMap.set(WELCOME_ACTION, requestLink);
+   * actionMap.set(HANDLE_LINK, handleLink);
+   * app.handleRequest(actionMap);
+   *
+   * // For ActionsSdkApp
+   * const app = new ActionsSdkApp({ request, response });
+   *
+   * console.log('Request headers: ' + JSON.stringify(request.headers));
+   * console.log('Request body: ' + JSON.stringify(request.body));
+   *
+   * function requestLink (app) {
+   *   app.askToDeepLink('Great! Looks like we can do that in the app.', 'Google',
+   *     'example://gizmos', 'com.example.gizmos', 'handle this for you.');
+   * }
+   *
+   * function handleLink (app) {
+   *   const linkStatus = app.getLinkStatus();
+   *   app.tell('Okay maybe we can take care of that another time.');
+   * }
+   *
+   * const actionMap = new Map();
+   * actionMap.set(app.StandardIntents.MAIN, requestLink);
+   * actionMap.set(app.StandardIntents.LINK, handleLink);
+   * app.handleRequest(actionMap);
+   *
+   * @param {(string|SimpleResponse|null)} prompt A simple response to prepend to the link request.
+   * @param {string} destinationName The name of the link destination.
+   * @param {string} url URL of Android deep link.
+   * @param {string} packageName Android app package name to which to link.
+   * @param {(string|null)=} reason The reason to transfer the user. This may be appended to a
+   *     Google-specified prompt.
+   * @param {Object=} dialogState JSON object the app uses to hold dialog state that
+   *     will be circulated back by Assistant. Used in {@link ActionsSdkApp}.
+   * @return {(Object|null)} HTTP response.
+   * @dialogflow
+   * @actionssdk
+   */
+  askToDeepLink (prompt, destinationName, url, packageName, reason, dialogState) {
+    debug('askToDeepLink: prompt=%s, destinationName=%s, url=%s, packageName=%s, reason=%s,' +
+      'dialogState=%s', JSON.stringify(prompt), destinationName, url, packageName, reason,
+      JSON.stringify(dialogState));
+    const linkValueSpec = {
+      openUrlAction: {
+        url,
+        androidApp: {
+          packageName
+        }
+      },
+      dialogSpec: {
+        extension: {
+          [this.ANY_TYPE_PROPERTY_]: this.DialogSpecTypes_.LINK,
+          destinationName,
+          requestLinkReason: reason || undefined
+        }
+      }
+    };
+    return this.fulfillSystemIntent_(this.StandardIntents.LINK,
+       this.InputValueDataTypes_.LINK, linkValueSpec, prompt, dialogState);
+  }
+
+  /**
    * User provided date/time info.
    * @typedef {Object} DateTime
    * @property {Object} date
@@ -2038,6 +2125,22 @@ class AssistantApp {
     return argument && argument.extension && argument.extension.status === 'OK';
   }
 
+  /**
+   * Returns the status of a link request. Used with
+   * {@link AssistantApp#askToDeepLink}
+   *
+   * @return {number} The status code of the request to link.
+   * @dialogflow
+   * @actionssdk
+   */
+  getLinkStatus () {
+    debug('getLinkStatus');
+    const argument = this.findArgument_(this.BuiltInArgNames.LINK);
+    if (argument && argument.status && argument.status.code) {
+      return argument.status.code;
+    }
+  }
+
   // ---------------------------------------------------------------------------
   //                   Response Builders
   // ---------------------------------------------------------------------------
@@ -2641,7 +2744,9 @@ AssistantApp.prototype.ANY_TYPE_PROPERTY_ = '@type';
  */
 AssistantApp.prototype.DialogSpecTypes_ = {
   /** Place Dialog Spec. */
-  PLACE: 'type.googleapis.com/google.actions.v2.PlaceValueSpec.PlaceDialogSpec'
+  PLACE: 'type.googleapis.com/google.actions.v2.PlaceValueSpec.PlaceDialogSpec',
+  /** Link Dialog Spec. */
+  LINK: 'type.googleapis.com/google.actions.v2.LinkValueSpec.LinkDialogSpec'
 };
 
 /**
@@ -2672,7 +2777,9 @@ AssistantApp.prototype.InputValueDataTypes_ = {
   /** New Surface Value Spec. */
   NEW_SURFACE: 'type.googleapis.com/google.actions.v2.NewSurfaceValueSpec',
   /** Register Update Value Spec. */
-  REGISTER_UPDATE: 'type.googleapis.com/google.actions.v2.RegisterUpdateValueSpec'
+  REGISTER_UPDATE: 'type.googleapis.com/google.actions.v2.RegisterUpdateValueSpec',
+  /** Link Value Spec */
+  LINK: 'type.googleapis.com/google.actions.v2.LinkValueSpec'
 };
 
 /**
@@ -2714,7 +2821,9 @@ AssistantApp.prototype.StandardIntents = {
   /** App fires REGISTER_UPDATE intent when requesting user to register for proactive updates. */
   REGISTER_UPDATE: 'actions.intent.REGISTER_UPDATE',
   /** App receives CONFIGURE_UPDATES intent to indicate a REGISTER_UPDATE intent should be sent. */
-  CONFIGURE_UPDATES: 'actions.intent.CONFIGURE_UPDATES'
+  CONFIGURE_UPDATES: 'actions.intent.CONFIGURE_UPDATES',
+  /** App fires LINK intent to request user to open to link. */
+  LINK: 'actions.intent.LINK'
 };
 
 /**
@@ -2750,7 +2859,9 @@ AssistantApp.prototype.BuiltInArgNames = {
   /** New surface value argument. */
   NEW_SURFACE: 'NEW_SURFACE',
   /** Update registration value argument. */
-  REGISTER_UPDATE: 'REGISTER_UPDATE'
+  REGISTER_UPDATE: 'REGISTER_UPDATE',
+  /** Link request result argument. */
+  LINK: 'LINK'
 };
 
 /**
