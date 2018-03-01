@@ -26,11 +26,13 @@ const winston = require('winston');
 const chai = require('chai');
 const { expect } = chai;
 const {
-  RichResponse,
   BasicCard,
-  List,
+  BrowseCarousel,
+  BrowseItem,
   Carousel,
-  OptionItem
+  List,
+  OptionItem,
+  RichResponse
 } = require('.././response-builder');
 
 const { clone } = require('./utils/mocking');
@@ -42,10 +44,10 @@ const { ImageDisplays } = require('.././response-builder');
 // Default logger
 winston.loggers.add('DEFAULT_LOGGER', {
   console: {
-    level: 'error',
     colorize: true,
-    label: 'Default logger',
     json: true,
+    label: 'Default logger',
+    level: 'error',
     timestamp: true
   }
 });
@@ -653,6 +655,94 @@ describe('List', () => {
   });
 });
 
+/**
+ * Describes the behavior for Carousel interface.
+ */
+describe('BrowseCarousel', () => {
+  describe('#constructor', () => {
+    it('should create valid object', () => {
+      const browseCarousel = new BrowseCarousel();
+      expect(clone(browseCarousel)).to.deep.equal({
+        items: []
+      });
+    });
+  });
+
+  describe('#addItems', () => {
+    let browseCarousel;
+
+    beforeEach(() => {
+      browseCarousel = new BrowseCarousel();
+    });
+
+    it('should add a single item', () => {
+      browseCarousel.addItems(new BrowseItem());
+      expect(clone(browseCarousel)).to.deep.equal({
+        items: [{
+          title: '',
+          openUrlAction: {
+            urlTypeHint: 'URL_TYPE_HINT_UNSPECIFIED'
+          }
+        }]
+      });
+    });
+
+    it('should add multiple items', () => {
+      browseCarousel.addItems([new BrowseItem(), new BrowseItem(), new BrowseItem()]);
+      expect(clone(browseCarousel)).to.deep.equal({
+        items: [
+          {
+            title: '',
+            openUrlAction: {
+              urlTypeHint: 'URL_TYPE_HINT_UNSPECIFIED'
+            }
+          },
+          {
+            title: '',
+            openUrlAction: {
+              urlTypeHint: 'URL_TYPE_HINT_UNSPECIFIED'
+            }
+          },
+          {
+            title: '',
+            openUrlAction: {
+              urlTypeHint: 'URL_TYPE_HINT_UNSPECIFIED'
+            }
+          }
+        ]
+      });
+    });
+
+    it('should add no more than 10 items', () => {
+      const browseItems = [];
+      for (let i = 0; i < 15; i++) {
+        const browseItem = new BrowseItem();
+        browseItems.push(browseItem);
+      }
+      browseCarousel.addItems(browseItems);
+      expect(browseCarousel.items.length).to.equal(10);
+    });
+  });
+
+  describe('#setImageDisplay', () => {
+    let browseCarousel;
+
+    beforeEach(() => {
+      browseCarousel = new BrowseCarousel();
+    });
+
+    it('sets a valid ImageDisplayOption', () => {
+      browseCarousel.setImageDisplay(ImageDisplays.CROPPED);
+      expect(browseCarousel.imageDisplayOptions)
+          .to.equal(ImageDisplays.CROPPED);
+    });
+
+    it('sets an invalid ImageDisplayOption', () => {
+      browseCarousel.setImageDisplay('INVALID');
+      expect(browseCarousel.imageDisplayOptions).to.equal(undefined);
+    });
+  });
+});
 /**
  * Describes the behavior for Carousel interface.
  */

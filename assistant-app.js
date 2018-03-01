@@ -26,7 +26,9 @@ const {
   BasicCard,
   List,
   Carousel,
+  BrowseCarousel,
   OptionItem,
+  BrowseItem,
   isSsml,
   isPaddedSsml,
   ImageDisplays
@@ -2190,6 +2192,15 @@ class AssistantApp {
   }
 
   /**
+   * Constructs a Browse Carousel with chainable property setters.
+   *
+   * @return {BrowseCarousel} Constructed Browse Carousel.
+   */
+  buildBrowseCarousel () {
+    return new BrowseCarousel();
+  }
+
+  /**
    * Constructs OptionItem with chainable property setters.
    *
    * @param {string=} key A unique key to identify this option. This key will
@@ -2208,6 +2219,24 @@ class AssistantApp {
       optionItem.addSynonyms(synonyms);
     }
     return optionItem;
+  }
+
+/**
+   * Constructs BrowseItem for the Browse Carousel with chainable property setters.
+   *
+   * @param {string=} title The displayed title of the Browse Carousel card.
+   * @param {string=} url The URL linked to by clicking the card.
+   * @return {BrowseItem} Constructed BrowseItem.
+   */
+  buildBrowseItem (title, url) {
+    const browseItem = new BrowseItem();
+    if (title) {
+      browseItem.setTitle(title);
+    }
+    if (url) {
+      browseItem.setOpenUrlAction(url);
+    }
+    return browseItem;
   }
 
   // ---------------------------------------------------------------------------

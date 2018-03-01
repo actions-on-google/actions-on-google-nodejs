@@ -215,7 +215,7 @@ class RichResponse {
     };
     // Check first if needs to replace BasicCard at beginning of items list
     if (this.items.length > 0 && (this.items[0].basicCard ||
-      this.items[0].structuredResponse)) {
+        this.items[0].structuredResponse)) {
       this.items.unshift(simpleResponseObj);
     } else {
       this.items.push(simpleResponseObj);
@@ -244,6 +244,22 @@ class RichResponse {
     this.items.push({
       basicCard: basicCard
     });
+    return this;
+  }
+
+  /**
+   * Adds a Browse Carousel to list of items.
+   *
+   * @param {string|BrowseCarousel} browseCarousel Browse Carousel to present to
+   *     user
+   * @return {RichResponse} Returns current constructed RichResponse.
+   */
+  addBrowseCarousel (browseCarousel) {
+    if (!browseCarousel) {
+      error('Invalid browse carousel');
+      return this;
+    }
+    this.items.push({ carouselBrowse: browseCarousel });
     return this;
   }
 
@@ -641,6 +657,81 @@ class List {
 /**
  * Class for initializing and constructing Carousel with chainable interface.
  */
+class BrowseCarousel {
+  /**
+   * Constructor for BrowseCarousel. Accepts optional BrowseCarousel to
+   * clone or list of items to copy.
+   *
+   * @param {(BrowseCarousel|Array<OptionItem>)=} carousel Either a carousel
+   *     to clone or an array of OptionItem to initialize a new carousel
+   */
+  constructor (carousel) {
+    /**
+     * List of 2-20 items to show in this carousel. Required.
+     * @type {Array<OptionItems>}
+     */
+    this.items = [];
+
+    if (carousel) {
+      if (Array.isArray(carousel)) {
+        for (const item of carousel) {
+          this.items.push(new OptionItem(item));
+        }
+      } else if (typeof carousel === 'object') {
+        if (carousel.items) {
+          for (const item of carousel.items) {
+            this.items.push(new OptionItem(item));
+          }
+        }
+      }
+    }
+  }
+
+  /**
+   * Adds a single item or list of items to the carousel.
+   *
+   * @param {BrowseItem|Array<BrowseItem>} browseItems BrowseItems to add.
+   * @return {Carousel} Returns current constructed Carousel.
+   */
+  addItems (browseItems) {
+    if (!browseItems) {
+      error('optionItems cannot be null');
+      return this;
+    }
+    if (Array.isArray(browseItems)) {
+      for (const item of browseItems) {
+        this.items.push(item);
+      }
+    } else {
+      this.items.push(browseItems);
+    }
+    if (this.items.length > Limits.CAROUSEL_ITEM_MAX) {
+      this.items = this.items.slice(0, Limits.CAROUSEL_ITEM_MAX);
+      error(`Carousel can have no more than ${Limits.CAROUSEL_ITEM_MAX} items`);
+    }
+    return this;
+  }
+
+  /**
+   * Sets the display options for the images in this carousel.
+   * Use one of the image display constants. If none is chosen,
+   * ImageDisplays.DEFAULT will be enforced.
+   *
+   * @param {string} option The option for displaying the image.
+   * @return {Carousel} Returns current constructed Carousel.
+   */
+  setImageDisplay (option) {
+    if (!ImageDisplays[option]) {
+      return error(`Image display option ${option} is invalid`);
+    }
+    this.imageDisplayOptions = option;
+    return this;
+  }
+}
+
+/**
+ * Class for initializing and constructing Carousel with chainable interface.
+ */
 class Carousel {
   /**
    * Constructor for Carousel. Accepts optional Carousel to clone or list of
@@ -709,6 +800,193 @@ class Carousel {
       return error(`Image display option ${option} is invalid`);
     }
     this.imageDisplayOptions = option;
+    return this;
+  }
+}
+
+/**
+ * Class for initializing and constructing Option Items with chainable interface.
+ */
+class BrowseItem {
+  /**
+   * Constructor for BrowseItem. Accepts a title and URL for the Browse Item
+   * card.
+   *
+   * @param {string=} title The title of the Browse Item card.
+   * @param {string=} url The URL of the link opened by clicking the  Browse Item card.
+   */
+  constructor (title, url) {
+    const { URL_TYPE_HINT_UNSPECIFIED } = this.urlTypeHints();
+
+    /**
+     * Title of the option item. Required.
+     * @type {string}
+     */
+    this.title = '';
+
+    /**
+     * Description text of the item. Optional.
+     * @type {string}
+     */
+    this.description = undefined;
+
+    /**
+     * Footer text of the item. Optional.
+     * @type {string}
+     */
+    this.footer = undefined;
+
+    /**
+     * Image to show on item. Optional.
+     * @type {Image}
+     */
+    this.image = undefined;
+
+    /**
+     * Url to that clicking the card opens. Optional.
+     *
+     * @type {Object}
+     */
+    this.openUrlAction = {
+      url: undefined,
+      urlTypeHint: URL_TYPE_HINT_UNSPECIFIED
+    };
+
+    if (title) {
+      this.setTitle(title);
+    }
+    if (url) {
+      this.setOpenUrlAction(url);
+    }
+  }
+
+  /**
+   * @return {Object} Returns the possible valid values for URL type hints
+   */
+  urlTypeHints () {
+    return {
+      URL_TYPE_HINT_UNSPECIFIED: 'URL_TYPE_HINT_UNSPECIFIED',
+      AMP_CONTENT: 'AMP_CONTENT'
+    };
+  }
+
+  /**
+   * Sets the title for this Option Item.
+   *
+   * @param {string} title Title to show on item.
+   * @return {OptionItem} Returns current constructed OptionItem.
+   */
+  setTitle (title) {
+    if (!title) {
+      error('title cannot be empty');
+      return this;
+    }
+    this.title = title;
+    return this;
+  }
+
+  /**
+   * Sets the description for this Browse Item.
+   *
+   * @param {string} description Description to show on item.
+   * @return {BrowseItem} Returns current constructed BrowseItem.
+   */
+  setDescription (description) {
+    if (!description) {
+      error('descriptions cannot be empty');
+      return this;
+    }
+    this.description = description;
+    return this;
+  }
+
+  /**
+   * Sets the footer for this Browse Item.
+   *
+   * @param {string} footerText text to show on item.
+   * @return {BrowseItem} Returns current constructed BrowseItem.
+   */
+  setFooter (footerText) {
+    if (!footerText) {
+      error('footer cannot be empty');
+      return this;
+    }
+    this.footer = footerText;
+    return this;
+  }
+
+  /**
+   * Sets the image for this Browse Item.
+   *
+   * @param {string} url Image source URL.
+   * @param {string} accessibilityText Text to replace for image for
+   *     accessibility.
+   * @param {number=} width Width of the image.
+   * @param {number=} height Height of the image.
+   * @return {BrowseItem} Returns current constructed BrowseItem.
+   */
+  setImage (url, accessibilityText, width, height) {
+    if (!url) {
+      error('url cannot be empty');
+      return this;
+    }
+    if (!accessibilityText) {
+      error('accessibilityText cannot be empty');
+      return this;
+    }
+    this.image = { url, accessibilityText };
+    if (width) {
+      this.image.width = width;
+    }
+    if (height) {
+      this.image.height = height;
+    }
+    return this;
+  }
+
+  /**
+   * Sets the Open URL action - which includes the url and possibly the typeHint
+   *
+   * @param {string} url Image source URL.
+   * @param {!string} urlTypeHint One of the typeHints enumerated by
+   *    this.urlTypeHints()
+   * @return {BrowseItem} Returns the current constructed BrowseItem
+   */
+  setOpenUrlAction (url, urlTypeHint) {
+    this.setUrl(url);
+    return urlTypeHint ? this.setUrlTypeHint(urlTypeHint) : this;
+  }
+
+  /**
+   * Sets the URL target of the BrowseItem card
+   *
+   * @param {string} url Image source URL.
+   * @return {BrowseItem} Returns the current constructed BrowseItem
+   */
+  setUrl (url) {
+    if (!url) {
+      error('url cannot be empty');
+      return this;
+    }
+    this.openUrlAction.url = url;
+    return this;
+  }
+
+  /**
+   * Sets the URL type hint for the BrowseItem card
+   *
+   * @param {!string} urlTypeHint One of the typeHints enumerated by
+   *    this.urlTypeHints()
+   * @return {BrowseItem} Returns the current constructed BrowseItem
+   */
+  setUrlTypeHint (urlTypeHint) {
+    const possibleValues = Object.values(this.urlTypeHints());
+    const urlTypeHintIsInvalid = possibleValues.indexOf(urlTypeHint) === -1;
+    if (urlTypeHintIsInvalid) {
+      error('URL type hint must be valid');
+      return this;
+    }
+    this.openUrlAction.urlTypeHint = urlTypeHint;
     return this;
   }
 }
@@ -891,6 +1169,8 @@ module.exports = {
   BasicCard,
   List,
   Carousel,
+  BrowseCarousel,
+  BrowseItem,
   OptionItem,
   isSsml,
   isPaddedSsml,
