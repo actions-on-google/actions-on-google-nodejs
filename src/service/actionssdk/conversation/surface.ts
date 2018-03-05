@@ -1,0 +1,80 @@
+/**
+ * Copyright 2018 Google Inc. All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+import * as Api from '../api/v2'
+
+/** @public */
+export type SurfaceCapability =
+  'actions.capability.AUDIO_OUTPUT' |
+  'actions.capability.SCREEN_OUTPUT'
+
+export class Surface {
+  /** @public */
+  capabilities: Capabilities
+
+  constructor(surface: Api.GoogleActionsV2Surface = {}) {
+    this.capabilities = new Capabilities(surface.capabilities)
+  }
+}
+
+export class Capabilities {
+  /** @public */
+  list: Api.GoogleActionsV2Capability[]
+
+  constructor(list: Api.GoogleActionsV2Capability[] = []) {
+    this.list = list
+  }
+
+  /** @public */
+  has(capability: SurfaceCapability) {
+    return this.list.map(c => c.name).indexOf(capability) > -1
+  }
+}
+
+export class AvailableSurfacesCapabilities {
+  /** @public */
+  surfaces: Surface[]
+
+  constructor(surfaces: Surface[]) {
+    this.surfaces = surfaces
+  }
+
+  /** @public */
+  has(capability: SurfaceCapability) {
+    return this.surfaces.findIndex(surface => surface.capabilities.has(capability)) > -1
+  }
+}
+
+export class AvailableSurfaces {
+  /** @public */
+  list: Surface[]
+  /** @public */
+  capabilities: AvailableSurfacesCapabilities
+
+  constructor(list: Api.GoogleActionsV2Surface[]) {
+    this.list = list.map(surface => new Surface(surface))
+    this.capabilities = new AvailableSurfacesCapabilities(this.list)
+  }
+}
+
+export class Available {
+  /** @public */
+  surfaces: AvailableSurfaces
+
+  constructor(surfaces: Api.GoogleActionsV2Surface[] = []) {
+    this.surfaces = new AvailableSurfaces(surfaces)
+  }
+}

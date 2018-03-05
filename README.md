@@ -1,41 +1,70 @@
-# Actions On Google Client Library
+# Actions on Google Client Library
 
-This Actions On Google client library makes it easy to create your apps for the Google Assistant.
+This Actions on Google client library makes it easy to create your apps for the Google Assistant.
 
-The client library supports both the Actions SDK webhook and Dialogflow fulfillment.
+The client library supports both Dialogflow fulfillment and the Actions SDK webhook.
 
 [![NPM Version](https://img.shields.io/npm/v/actions-on-google.svg)](https://www.npmjs.org/package/actions-on-google)
-[![Build Status](https://travis-ci.org/actions-on-google/actions-on-google-nodejs.svg?branch=master)](https://travis-ci.org/actions-on-google/actions-on-google-nodejs)
+[![Build Status](https://travis-ci.org/actions-on-google/actions-on-google-nodejs.svg?branch=v2.0.0-alpha)](https://travis-ci.org/actions-on-google/actions-on-google-nodejs)
 
 ## Setup Instructions
 
+Install the library with either `npm i actions-on-google@2.0.0-alpha.1` or `yarn add actions-on-google@2.0.0-alpha.1` if you use yarn.
+
+### Dialogflow
+ 1. Import the appropriate service:
+
+```javascript
+const { dialogflow } = require('actions-on-google')
+```
+
+ 2. Create an instance:
+
+```javascript
+const app = dialogflow()
+```
+
 ### Actions SDK
- 1. Import the appropriate class:
+ 1. Import the appropriate service:
 
 ```javascript
-const { ActionsSdkApp } = require('actions-on-google');
+const { actionssdk } = require('actions-on-google')
 ```
 
- 2. Create an instance:
+ 2. Create an app instance:
 
 ```javascript
-const app = new ActionsSdkApp({ request: request, response: response });
+const app = actionssdk()
 ```
 
-### Dialogflow v1
- 1. Import the appropriate class:
+## Alpha Instructions
+This library uses `yarn` to run commands. Install yarn using instructions from https://yarnpkg.com/en/docs/install or with npm: `npm i -g yarn`.
 
-```javascript
-const { DialogflowApp } = require('actions-on-google');
-```
+Install the library dependencies with `yarn` then run `yarn sample` to build everything and setup the samples.
 
- 2. Create an instance:
+Public interfaces, classes, functions, objects, and properties are labeled with the JSDoc `@public` tag and exported at the top level. During the alpha, anything can be changed so make sure to strictly reference the version rather than use approximations (don't use `^`, `~`, `>=`, or `*` in the `package.json` version). After alpha during general availability, everything else that is not labeled `@public` and exported at the top level is considered internal and may be changed.
 
-```javascript
-const app = new DialogflowApp({ request: request, response: response });
-```
+This library supports the following Services:
+* Dialogflow v1 and v2
+* Actions SDK **v2 only**
 
-Please note that Dialogflow v2 is not currently supported by this client library.
+### Actions SDK
+Since Actions SDK v1 will only be supported for [one year starting May 17, 2017](https://developers.google.com/actions/reference/v1/migration#why_do_i_need_to_migrate) and thus not supported after May 17, 2018), the library will only support Actions SDK fulfillment version 2 during and after alpha.
+
+To ensure that your fulfillment uses version 2, set the [`"fulfillmentApiVersion": 2`](https://github.com/actions-on-google/actionssdk-eliza-nodejs/blob/a44a1b0ef0026ce2b0e525ce38bebbf8540ce344/eliza.json#L41) property in your action package.
+
+### Supported Features
+The alpha currently covers most features that exist in v1 with some notable exceptions:
+* Transactions support is currently not implemented for the alpha.
+* New features released in `1.9.0` and `1.10.0` are not yet implemented but will be soon which includes:
+  * Place helper intent known as `askForPlace` in v1.
+  * Android Deep Link helper intent known as `askToDeepLink` in v1.
+  * Media Controls RichResponse
+  * Browse Carousel RichResponse
+  * Play Entitlements retrieval
+
+### Samples
+To run the samples included with the alpha, follow the instructions in the README for each sample's folder.
 
 ## References and How to report bugs
 * Actions on Google documentation: [https://developers.google.com/actions/](https://developers.google.com/actions/).

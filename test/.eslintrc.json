@@ -1,7 +1,0 @@
-{
-  "rules": {
-    "require-jsdoc": "off",
-    "valid-jsdoc": "off",
-    "no-magic-numbers": "off"
-  }
-}
