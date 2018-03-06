@@ -2472,7 +2472,7 @@ class AssistantApp {
     }
     const { userStorage } = user;
     if (!userStorage) {
-      error('No userStorage found');
+      debug('No userStorage found');
       return;
     }
     try {
