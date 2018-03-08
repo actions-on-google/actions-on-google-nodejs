@@ -3319,4 +3319,36 @@ describe('ActionsSdkApp', function () {
       expect(app.getLinkStatus()).to.equal(9);
     });
   });
+
+  /**
+   * Describes the behavior for ActionsSdkApp getPackageEntitlements method.
+   */
+  describe('#getPackageEntitlements', function () {
+    let app, mockRequest;
+
+    // Success case test, when the API returns a valid 200 response with the response object
+    it('Should return package entitlements.', function () {
+      actionsSdkAppRequestBodyLive.user.packageEntitlements = {
+        'testKey': 'testVal'
+      };
+      mockRequest = new MockRequest(headerV1, actionsSdkAppRequestBodyLive);
+      app = new ActionsSdkApp({
+        request: mockRequest,
+        response: mockResponse
+      });
+      expect(app.getPackageEntitlements()).to.deep.equal({
+        'testKey': 'testVal'
+      });
+    });
+
+    // Failure case test, when no Package Entitlements are present
+    it('Should return null.', function () {
+      mockRequest = new MockRequest(headerV1, actionsSdkAppRequestBodyLive);
+      app = new ActionsSdkApp({
+        request: mockRequest,
+        response: mockResponse
+      });
+      expect(app.getPackageEntitlements()).to.be.null;
+    });
+  });
 });

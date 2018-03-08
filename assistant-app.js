@@ -1526,6 +1526,24 @@ class AssistantApp {
    * @property {string} userStorage - A string persistent across sessions.
    *    Retrieved and set using app.userStorage which allows you to store it like an JSON object
    *    which is abstracted for convenience by the client library.
+  */
+
+  /**
+   * Google Play Android App Package Entitlements
+   * @typedef {Object} PackageEntitlement
+   * @property {string} packageName - Name of the Android app package.
+   * @property {Array<Entitlement>} entitlements - List of entitlements for a given app.
+   */
+
+  /**
+   * A user's digital entitlement.
+   * @typedef {Object} Entitlement
+   * @property {string} sku - Product SKU. Matches getSku() in Google Play InApp Billing API.
+   * @property {string} skuType - The type of SKU. One of EntitlementSkuType.
+   * @property {Object} inAppDetails - For in app purchases/subscriptions, relevant details.
+   * @property {Object} inAppDetails.inAppPurchaseData - JSON data of the in app purchase.
+   * @property {Object} inAppDetails.inAppDataSignature - Matches IN_APP_DATA_SIGNATURE from
+   *     getPurchases() method in Play InApp Billing API.
    */
 
   /**
@@ -1666,6 +1684,32 @@ class AssistantApp {
       return null;
     }
     return new Date(lastSeen);
+  }
+
+  /**
+   * Get the the list of all digital goods that your user purchased from
+   * your published Android apps. To enable this feature, see the instructions
+   * in the (documentation)[https://developers.google.com/actions/identity/digital-goods].
+   *
+   * @example
+   * const app = new DialogflowApp({request, response});
+   * const packageEntitlements = app.getPackageEntitlements();
+   *
+   * @return {Array<PackageEntitlement> | null} The list of digital goods purchased by the user in
+   *     any verified Android app package. Null if no Package Entitlements present in the request.
+   */
+  getPackageEntitlements () {
+    debug('getPackageEntitlements');
+    const user = this.getUser();
+    if (!user) {
+      return null;
+    }
+    /** @type {Array<PackageEntitlement>} */
+    const { packageEntitlements } = user;
+    if (!packageEntitlements) {
+      return null;
+    }
+    return packageEntitlements;
   }
 
   /**
@@ -2987,6 +3031,20 @@ AssistantApp.prototype.Transactions = TransactionValues;
  * @type {object}
  */
 AssistantApp.prototype.Media = MediaValues;
+
+/**
+ * SKU (Stock Keeping Units) types for Play Package Entitlements.
+ * @readonly
+ * @type {object}
+ */
+AssistantApp.prototype.EntitlementSkuTypes = {
+  /** In app purchase */
+  IN_APP: 'IN_APP',
+  /** In app subscription */
+  SUBSCRIPTION: 'SUBSCRIPTION',
+  /** Paid app. */
+  APP: 'APP'
+};
 
 /**
  * Utility class for representing intents by name.
