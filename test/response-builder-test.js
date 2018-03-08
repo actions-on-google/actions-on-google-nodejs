@@ -32,7 +32,10 @@ const {
   Carousel,
   List,
   OptionItem,
-  RichResponse
+  RichResponse,
+  MediaResponse,
+  MediaObject,
+  MediaValues
 } = require('.././response-builder');
 
 const { clone } = require('./utils/mocking');
@@ -956,5 +959,79 @@ describe('OptionItem', () => {
         }
       });
     });
+  });
+});
+
+/**
+ * Describes the behavior for MediaResponse.
+ */
+describe('MediaResponse', () => {
+  let mediaResponse;
+
+  beforeEach(() => {
+    mediaResponse = new MediaResponse();
+  });
+
+  it('should be initialized with an empty media objects array', () => {
+    expect(mediaResponse.mediaObjects.length).to.equal(0);
+  });
+
+  it('should default to audio media type', () => {
+    expect(mediaResponse.mediaType).to.equal(MediaValues.Type.AUDIO);
+  });
+
+  it('should allow to override the media type', () => {
+    mediaResponse = new MediaResponse('fooBar');
+    expect(mediaResponse.mediaType).to.equal('fooBar');
+  });
+
+  it('should add a single media object', () => {
+    const mediaObject = new MediaObject('fooBar', 'fooBarUrl');
+    mediaResponse.addMediaObjects(mediaObject);
+    expect(mediaResponse.mediaObjects.length).to.equal(1);
+    expect(mediaResponse.mediaObjects[0]).to.deep.equal(mediaObject);
+  });
+
+  it('should add an array of media objects', () => {
+    const mediaObject1 = new MediaObject('fooBar1', 'fooBarUrl1');
+    const mediaObject2 = new MediaObject('fooBar2', 'fooBarUrl2');
+    mediaResponse.addMediaObjects([mediaObject1, mediaObject2]);
+    expect(mediaResponse.mediaObjects.length).to.equal(2);
+    expect(mediaResponse.mediaObjects[0]).to.deep.equal(mediaObject1);
+    expect(mediaResponse.mediaObjects[1]).to.deep.equal(mediaObject2);
+  });
+});
+
+/**
+ * Describes the behavior for MediaObject.
+ */
+describe('MediaObject', () => {
+  let mediaObject;
+
+  beforeEach(() => {
+    mediaObject = new MediaObject('fooBar', 'fooBarUrl1');
+  });
+
+  it('should be initialized with empty description, largeImage and icon', () => {
+    expect(mediaObject.description).to.equal(undefined);
+    expect(mediaObject.length).to.equal(undefined);
+    expect(mediaObject.length).to.equal(undefined);
+  });
+
+  it('should set the description', () => {
+    mediaObject.setDescription('fooBar');
+    expect(mediaObject.description).to.equal('fooBar');
+  });
+
+  it('should set largeImage if type is LARGE', () => {
+    mediaObject.setImage('fooBarImageUrl', MediaValues.ImageType.LARGE);
+    expect(mediaObject.largeImage).to.deep.equal({ url: 'fooBarImageUrl' });
+    expect(mediaObject.icon).to.equal(undefined);
+  });
+
+  it('should set icon if type is ICON', () => {
+    mediaObject.setImage('fooBarImageUrl', MediaValues.ImageType.ICON);
+    expect(mediaObject.icon).to.deep.equal({ url: 'fooBarImageUrl' });
+    expect(mediaObject.largeImage).to.equal(undefined);
   });
 });

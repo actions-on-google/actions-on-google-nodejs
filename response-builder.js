@@ -63,6 +63,59 @@ const ImageDisplays = {
 };
 
 /**
+ * Values related to supporting media.
+ * @readonly
+ * @type {Object}
+ */
+const MediaValues = {
+  /**
+   * Type of the media within a MediaResponse.
+   * @readonly
+   * @enum {string}
+   */
+  Type: {
+    /**
+     * Unspecified.
+     */
+    MEDIA_TYPE_UNSPECIFIED: 'MEDIA_TYPE_UNSPECIFIED',
+    /**
+     * Audio stream.
+     */
+    AUDIO: 'AUDIO'
+  },
+  /**
+   * List of media control status' returned.
+   * @readonly
+   * @enum {string}
+   */
+  Status: {
+    /**
+     * Unspecified.
+     */
+    UNSPECIFIED: 'STATUS_UNSPECIFIED',
+    /**
+     * Finished.
+     */
+    FINISHED: 'FINISHED'
+  },
+  /**
+   * List of possible item types.
+   * @readonly
+   * @enum {string}
+   */
+  ImageType: {
+    /**
+     * Icon.
+     */
+    ICON: 'ICON',
+    /**
+     * Large image.
+     */
+    LARGE: 'LARGE_IMAGE'
+  }
+};
+
+/**
  * Simple Response type.
  * @typedef {Object} SimpleResponse
  * @property {string} speech - Speech to be spoken to user. SSML allowed.
@@ -241,9 +294,29 @@ class RichResponse {
         return this;
       }
     }
-    this.items.push({
-      basicCard: basicCard
-    });
+    this.items.push({ basicCard });
+    return this;
+  }
+
+  /**
+   * Adds media to this response.
+   *
+   * @param {MediaResponse} mediaResponse MediaResponse to include in response.
+   * @return {RichResponse} Returns current constructed RichResponse.
+   */
+  addMediaResponse (mediaResponse) {
+    if (!mediaResponse) {
+      error('Invalid MediaResponse');
+      return this;
+    }
+    // Validate if RichResponse already contains MediaResponse object in an item
+    for (const item of this.items) {
+      if (item.mediaResponse) {
+        debug('Cannot include >1 MediaResponse in RichResponse');
+        return this;
+      }
+    }
+    this.items.push({ mediaResponse });
     return this;
   }
 
@@ -1148,6 +1221,130 @@ class OptionItem {
 }
 
 /**
+ * Class for initializing and constructing MediaResponse with chainable interface.
+ */
+const MediaResponse = class {
+  /**
+   * Constructor for MediaResponse.
+   * @param {MediaValues.Type=} mediaType Type of the media which defaults to MediaValues.Type.AUDIO
+   */
+  constructor (mediaType = MediaValues.Type.AUDIO) {
+    /**
+     * Array of MediaObject held in the MediaResponse.
+     * @type {Array<MediaObject>}
+     */
+    this.mediaObjects = [];
+
+    /**
+     * Type of the media within this MediaResponse
+     */
+    this.mediaType = mediaType;
+  }
+
+  /**
+   * Adds a single media file or list of media files to the cart.
+   *
+   * @param {MediaObject | Array<MediaObject>} items Single or Array of MediaObject to add.
+   * @return {MediaResponse} Returns current constructed MediaResponse.
+   */
+  addMediaObjects (items) {
+    if (!items) {
+      error('items cannot be null');
+      return this;
+    }
+    this.mediaObjects.push(...(Array.isArray(items) ? items : [items]));
+    return this;
+  }
+};
+
+/**
+ * Class for initializing and constructing MediaObject with chainable interface.
+ */
+const MediaObject = class {
+  /**
+   * Constructor for MediaObject.
+   *
+   * @param {string} name Name of the MediaObject.
+   * @param {string} contentUrl URL of the MediaObject.
+   */
+  constructor (name, contentUrl) {
+    /**
+     * Name of the MediaObject.
+     * @type {string}
+     */
+    this.name = name;
+
+    /**
+     * MediaObject URL.
+     * @type {string}
+     */
+    this.contentUrl = contentUrl;
+
+    /**
+     * Description of the MediaObject.
+     * @type {string | undefined}
+     */
+    this.description = undefined;
+
+    /**
+     * Large image.
+     * @type {Image | undefined}
+     */
+    this.largeImage = undefined;
+
+    /**
+     * Icon image.
+     * @type {Image | undefined}
+     */
+    this.icon = undefined;
+  }
+
+  /**
+   * Set the description of the item.
+   *
+   * @param {string} description Description of the item.
+   * @return {MediaObject} Returns current constructed MediaObject.
+   */
+  setDescription (description) {
+    if (!description) {
+      error('description cannot be empty');
+      return this;
+    }
+    this.description = description;
+    return this;
+  }
+
+  /**
+   * Sets the image for this item.
+   *
+   * @param {string} url Image source URL.
+   * @param {MediaValues.ImageType} type Type of image (LARGE or ICON).
+   * @return {MediaObject} Returns current constructed MediaObject.
+   */
+  setImage (url, type) {
+    if (!url) {
+      error('url cannot be empty');
+      return this;
+    }
+    if (!type) {
+      error('type cannot be empty');
+      return this;
+    }
+    if (type === MediaValues.ImageType.ICON) {
+      this.icon = { url };
+      this.largeImage = undefined;
+    } else if (type === MediaValues.ImageType.LARGE) {
+      this.largeImage = { url };
+      this.icon = undefined;
+    } else {
+      error('Invalid type');
+      return this;
+    }
+    return this;
+  }
+};
+
+/**
  * Check if given text contains SSML.
  *
  * @param {string} text Text to check.
@@ -1175,5 +1372,8 @@ module.exports = {
   isSsml,
   isPaddedSsml,
   ImageDisplays,
-  Limits
+  Limits,
+  MediaValues,
+  MediaResponse,
+  MediaObject
 };

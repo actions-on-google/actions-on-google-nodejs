@@ -31,7 +31,10 @@ const {
   BrowseItem,
   isSsml,
   isPaddedSsml,
-  ImageDisplays
+  ImageDisplays,
+  MediaResponse,
+  MediaObject,
+  MediaValues
 } = require('./response-builder');
 
 // Transaction classes
@@ -1901,6 +1904,41 @@ class AssistantApp {
   }
 
   /**
+   * Get status of MEDIA_STATUS intent.
+   *
+   * @example
+   * const app = new DialogflowApp({request: request, response: response});
+   *
+   * function mediaStatusIntent (app) {
+   *   const status = app.getMediaStatus();
+   *   if (status === app.Media.Status.FINISHED) {
+   *     app.tell('Oh, I see you are done playing the media!');
+   *   } else {
+   *     app.tell(`I don't understand the current media status: ${status}`);
+   *   }
+   * }
+   *
+   * const actionMap = new Map();
+   * actionMap.set(app.StandardIntents.MEDIA_STATUS, mediaStatusIntent);
+   * app.handleRequest(actionMap);
+   *
+   * @return {string} Result of media status intent. One of
+   *   AssistantApp.Media.Status
+   *   Null if no media status
+   * @dialogflow
+   * @actionssdk
+   */
+  getMediaStatus () {
+    debug('getMediaStatus');
+    const argument = this.findArgument_(this.BuiltInArgNames.MEDIA_STATUS);
+    if (argument && argument.extension && argument.extension.status) {
+      return argument.extension.status;
+    }
+    debug('Failed to get media status');
+    return null;
+  }
+
+  /**
    * Returns true if user device has a given surface capability.
    *
    * @param {string} requestedCapability Must be one of {@link SurfaceCapabilities}.
@@ -2286,6 +2324,30 @@ class AssistantApp {
    */
   buildOrderUpdate (orderId, isGoogleOrderId) {
     return new OrderUpdate(orderId, isGoogleOrderId);
+  }
+
+  // ---------------------------------------------------------------------------
+  //                   Media Builders
+  // ---------------------------------------------------------------------------
+
+  /**
+   * Constructs Media Response with chainable property setters.
+   *
+   * @return {MediaResponse} Constructed Media Response.
+   */
+  buildMediaResponse () {
+    return new MediaResponse();
+  }
+
+  /**
+   * Constructs MediaObject with chainable property setters.
+   *
+   * @param {string} name Name of media file.
+   * @param {string} contentUrl Location of media file.
+   * @return {MediaObject} Constructed MediaObject.
+   */
+  buildMediaObject (name, contentUrl) {
+    return new MediaObject(name, contentUrl);
   }
 
   // ---------------------------------------------------------------------------
@@ -2722,6 +2784,10 @@ AssistantApp.prototype.SurfaceCapabilities = {
    */
   SCREEN_OUTPUT: 'actions.capability.SCREEN_OUTPUT',
   /**
+   * The ability to output a MediaResponse
+   */
+  MEDIA_RESPONSE_AUDIO: 'actions.capability.MEDIA_RESPONSE_AUDIO',
+  /**
    * The ability to open a web URL
    */
   WEB_BROWSER: 'actions.capability.WEB_BROWSER'
@@ -2856,7 +2922,9 @@ AssistantApp.prototype.StandardIntents = {
   /** App receives CONFIGURE_UPDATES intent to indicate a REGISTER_UPDATE intent should be sent. */
   CONFIGURE_UPDATES: 'actions.intent.CONFIGURE_UPDATES',
   /** App fires LINK intent to request user to open to link. */
-  LINK: 'actions.intent.LINK'
+  LINK: 'actions.intent.LINK',
+  /** App receives MEDIA_STATUS intent when the MediaResponse status is updated from user. */
+  MEDIA_STATUS: 'actions.intent.MEDIA_STATUS'
 };
 
 /**
@@ -2894,7 +2962,9 @@ AssistantApp.prototype.BuiltInArgNames = {
   /** Update registration value argument. */
   REGISTER_UPDATE: 'REGISTER_UPDATE',
   /** Link request result argument. */
-  LINK: 'LINK'
+  LINK: 'LINK',
+  /** MediaStatus value argument. */
+  MEDIA_STATUS: 'actions.intent.MEDIA_STATUS'
 };
 
 /**
@@ -2910,6 +2980,13 @@ AssistantApp.prototype.ImageDisplays = ImageDisplays;
  * @type {object}
  */
 AssistantApp.prototype.Transactions = TransactionValues;
+
+/**
+ * Values related to supporting {@link Media}.
+ * @readonly
+ * @type {object}
+ */
+AssistantApp.prototype.Media = MediaValues;
 
 /**
  * Utility class for representing intents by name.

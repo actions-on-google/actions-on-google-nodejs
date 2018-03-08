@@ -2657,6 +2657,9 @@ describe('DialogflowApp', function () {
               'name': 'actions.capability.SCREEN_OUTPUT'
             },
             {
+              'name': 'actions.capability.MEDIA_RESPONSE_AUDIO'
+            },
+            {
               'name': 'actions.capability.WEB_BROWSER'
             }
           ]
@@ -2694,6 +2697,9 @@ describe('DialogflowApp', function () {
               'name': 'actions.capability.SCREEN_OUTPUT'
             },
             {
+              'name': 'actions.capability.MEDIA_RESPONSE_AUDIO'
+            },
+            {
               'name': 'actions.capability.WEB_BROWSER'
             }
           ]
@@ -2710,6 +2716,7 @@ describe('DialogflowApp', function () {
         expect(capabilities).to.deep.equal([
           app.SurfaceCapabilities.AUDIO_OUTPUT,
           app.SurfaceCapabilities.SCREEN_OUTPUT,
+          app.SurfaceCapabilities.MEDIA_RESPONSE_AUDIO,
           app.SurfaceCapabilities.WEB_BROWSER
         ]);
       });
