@@ -2655,6 +2655,9 @@ describe('DialogflowApp', function () {
             },
             {
               'name': 'actions.capability.SCREEN_OUTPUT'
+            },
+            {
+              'name': 'actions.capability.WEB_BROWSER'
             }
           ]
         };
@@ -2689,6 +2692,9 @@ describe('DialogflowApp', function () {
             },
             {
               'name': 'actions.capability.SCREEN_OUTPUT'
+            },
+            {
+              'name': 'actions.capability.WEB_BROWSER'
             }
           ]
         };
@@ -2703,7 +2709,8 @@ describe('DialogflowApp', function () {
         const capabilities = app.getSurfaceCapabilities();
         expect(capabilities).to.deep.equal([
           app.SurfaceCapabilities.AUDIO_OUTPUT,
-          app.SurfaceCapabilities.SCREEN_OUTPUT
+          app.SurfaceCapabilities.SCREEN_OUTPUT,
+          app.SurfaceCapabilities.WEB_BROWSER
         ]);
       });
   });
