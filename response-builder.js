@@ -728,32 +728,32 @@ class List {
 }
 
 /**
- * Class for initializing and constructing Carousel with chainable interface.
+ * Class for initializing and constructing Browse Carousel with chainable interface.
  */
 class BrowseCarousel {
   /**
    * Constructor for BrowseCarousel. Accepts optional BrowseCarousel to
    * clone or list of items to copy.
    *
-   * @param {(BrowseCarousel|Array<OptionItem>)=} carousel Either a carousel
-   *     to clone or an array of OptionItem to initialize a new carousel
+   * @param {(BrowseCarousel|Array<BrowseItem>)=} carousel Either a carousel
+   *     to clone or an array of BrowseItem to initialize a new carousel
    */
   constructor (carousel) {
     /**
      * List of 2-20 items to show in this carousel. Required.
-     * @type {Array<OptionItems>}
+     * @type {Array<BrowseItem>}
      */
     this.items = [];
 
     if (carousel) {
       if (Array.isArray(carousel)) {
         for (const item of carousel) {
-          this.items.push(new OptionItem(item));
+          this.items.push(new BrowseItem(item));
         }
       } else if (typeof carousel === 'object') {
         if (carousel.items) {
           for (const item of carousel.items) {
-            this.items.push(new OptionItem(item));
+            this.items.push(new BrowseItem(item));
           }
         }
       }
@@ -764,7 +764,7 @@ class BrowseCarousel {
    * Adds a single item or list of items to the carousel.
    *
    * @param {BrowseItem|Array<BrowseItem>} browseItems BrowseItems to add.
-   * @return {Carousel} Returns current constructed Carousel.
+   * @return {BrowseCarousel} Returns current constructed Browse Carousel.
    */
   addItems (browseItems) {
     if (!browseItems) {
@@ -791,7 +791,7 @@ class BrowseCarousel {
    * ImageDisplays.DEFAULT will be enforced.
    *
    * @param {string} option The option for displaying the image.
-   * @return {Carousel} Returns current constructed Carousel.
+   * @return {BrowseCarousel} Returns current constructed Browse Carousel.
    */
   setImageDisplay (option) {
     if (!ImageDisplays[option]) {
