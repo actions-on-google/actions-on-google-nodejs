@@ -129,6 +129,11 @@ export class ContextValues<TContexts extends Contexts> {
   }
 
   /** @public */
+  delete(name: string) {
+    this.set(name, 0)
+  }
+
+  /** @public */
   [Symbol.iterator]() {
     return values(this.input).values()
   }

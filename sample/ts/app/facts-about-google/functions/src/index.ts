@@ -37,7 +37,6 @@ enum AppContexts {
 
 enum Lifespans {
   DEFAULT = 5,
-  END = 0,
 }
 
 interface TellFactParameters extends Parameters {
@@ -132,8 +131,8 @@ app.intent('tell_cat_fact', conv => {
   const { cats } = conv.data
   const fact = randomPop(cats)
   if (!fact) {
-    conv.contexts.set(AppContexts.FACT, Lifespans.END)
-    conv.contexts.set(AppContexts.CATS, Lifespans.END)
+    conv.contexts.delete(AppContexts.FACT)
+    conv.contexts.delete(AppContexts.CATS)
     conv.ask(responses.transitions.cats.heardItAll)
     return conv.ask(responses.general.suggestions.confirmation)
   }
