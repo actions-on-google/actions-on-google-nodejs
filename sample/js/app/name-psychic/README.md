@@ -5,6 +5,7 @@ name and where you are. This sample introduces permissions requests for user
 information on the Actions on Google platform.
 
 ## Setup Instructions
+This sample uses `yarn` to run commands. Install yarn using instructions from https://yarnpkg.com/en/docs/install or with npm: `npm i -g yarn`.
 
 ### Steps
 1. Use the [Actions on Google Console](https://console.actions.google.com) to add a new project with a name of your choosing.
@@ -19,6 +20,7 @@ information on the Actions on Google platform.
    1. Run the following command replacing `<THE_API_KEY>` with your API Key for the Google Maps API: `firebase functions:config:set maps.key="<THE API KEY>"`
    1. In the [Google Cloud Console API Library](https://console.cloud.google.com/apis/library), enable the Static Maps API for your project.
     1. cd to the functions directory with `cd functions`
+    1. Setup the dependencies with `yarn setup`
     1. Run `yarn deploy` and take note of the endpoint where the fulfillment webhook has been published. It should look like `Function URL (namePsychic): https://us-central1-YOUR_PROJECT.cloudfunctions.net/namePsychic`
 1. Go back to the Dialogflow console and select *Fulfillment* from the left navigation menu. Enable *Webhook*, set the value of *URL* to the `Function URL` from the previous step, then click *Save*.
 1. Select *Intents* from the left navigation menu. Select the `handle_permission` fallback intent, scroll down to the *Actions on Google* section, check *End Conversation*, then click *Save*.

@@ -9,6 +9,8 @@ subject other than Google!
 
 See the developer guide and release notes at [https://developers.google.com/actions/](https://developers.google.com/actions/) for more details.
 
+This sample uses `yarn` to run commands. Install yarn using instructions from https://yarnpkg.com/en/docs/install or with npm: `npm i -g yarn`.
+
 ### Steps
 1. Use the [Actions on Google Console](https://console.actions.google.com) to add a new project with a name of your choosing.
 1. Under *Build a custom app*, click *BUILD* in the Dialogflow box and then click *Create Actions on Dialogflow*.
@@ -20,6 +22,7 @@ See the developer guide and release notes at [https://developers.google.com/acti
 (https://firebase.google.com/docs/functions/):
     1. Follow the instructions to [set up and initialize Firebase SDK for Cloud Functions](https://firebase.google.com/docs/functions/get-started#set_up_and_initialize_functions_sdk). Make sure to select the project that you have previously generated in the Actions on Google Console and to reply `N` when asked to overwrite existing files by the Firebase CLI.
     1. cd to the functions directory with `cd functions`
+    1. Setup the dependencies with `yarn setup`
     1. Run `yarn deploy` and take note of the endpoint where the fulfillment webhook has been published. It should look like `Function URL (factsAboutGoogle): https://${REGION}-${PROJECT}.cloudfunctions.net/factsAboutGoogle`
 1. Go back to the Dialogflow console and select *Fulfillment* from the left navigation menu. Enable *Webhook*, set the value of *URL* to the `Function URL` from the previous step, then click *Save*.
 1. Select *Integrations* from the left navigation menu and open the *Settings* menu for Actions on Google.
