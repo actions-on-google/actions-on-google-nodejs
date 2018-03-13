@@ -24,7 +24,7 @@ export type PermissionArgument = boolean
 /** @public */
 export interface PermissionOptions {
   /** @public */
-  context: string
+  context?: string
 
   /** @public */
   permissions: Api.GoogleActionsV2PermissionValueSpecPermissions |

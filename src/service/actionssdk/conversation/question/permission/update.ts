@@ -23,20 +23,16 @@ export type UpdatePermissionArgument = PermissionArgument
 /** @public */
 export interface UpdatePermissionOptions {
   /** @public */
-  context: string
-
-  /** @public */
   intent: string
 
   /** @public */
-  arguments: Api.GoogleActionsV2Argument[]
+  arguments?: Api.GoogleActionsV2Argument[]
 }
 
 /** @public */
 export class UpdatePermission extends Permission {
   constructor(options: UpdatePermissionOptions) {
     super({
-      context: options.context,
       permissions: 'UPDATE',
       extra: {
         updatePermissionValueSpec: {
