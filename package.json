@@ -3,7 +3,7 @@
   "description": "Actions on Google Client Library for Node.js",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
-  "version": "2.0.0-alpha.1",
+  "version": "2.0.0-alpha.2",
   "license": "Apache-2.0",
   "author": "Google Inc.",
   "engines": {
@@ -19,15 +19,15 @@
     "package": "yarn build:clean && yarn pack",
     "test": "yarn build:clean && ava --fail-fast",
     "test:watch": "yarn build:clean && concurrently -rk \"yarn build:watch\" \"ava -w --fail-fast\"",
-    "sync:js:facts-about-google": "cd sample/js/app/facts-about-google/functions && npm i",
-    "sync:js:name-psychic": "cd sample/js/app/name-psychic/functions && npm i",
-    "sync:ts:facts-about-google": "cd sample/ts/app/facts-about-google/functions && npm i",
-    "sync:ts:name-psychic": "cd sample/ts/app/name-psychic/functions && npm i",
-    "deploy:js:facts-about-google": "cd sample/js/app/facts-about-google/functions && npm i && yarn deploy",
-    "deploy:js:name-psychic": "cd sample/js/app/name-psychic/functions && npm i && yarn deploy",
-    "deploy:ts:facts-about-google": "cd sample/ts/app/facts-about-google/functions && npm i && yarn deploy",
-    "deploy:ts:name-psychic": "cd sample/ts/app/name-psychic/functions && npm i && yarn deploy",
-    "samples": "yarn sync:ts:facts-about-google && yarn sync:ts:name-psychic && yarn sync:js:facts-about-google && yarn sync:js:name-psychic"
+    "sync:js:facts-about-google": "cd sample/js/app/facts-about-google/functions && yarn setup",
+    "sync:js:name-psychic": "cd sample/js/app/name-psychic/functions && yarn setup",
+    "sync:ts:facts-about-google": "cd sample/ts/app/facts-about-google/functions && yarn setup",
+    "sync:ts:name-psychic": "cd sample/ts/app/name-psychic/functions && yarn setup",
+    "deploy:js:facts-about-google": "cd sample/js/app/facts-about-google/functions && yarn setup && yarn deploy",
+    "deploy:js:name-psychic": "cd sample/js/app/name-psychic/functions && yarn setup && yarn deploy",
+    "deploy:ts:facts-about-google": "cd sample/ts/app/facts-about-google/functions && yarn setup && yarn deploy",
+    "deploy:ts:name-psychic": "cd sample/ts/app/name-psychic/functions && yarn setup && yarn deploy",
+    "samples": "yarn sync:js:facts-about-google && yarn sync:js:name-psychic && sync:ts:facts-about-google && yarn sync:ts:name-psychic"
   },
   "repository": {
     "type": "git",
@@ -44,18 +44,17 @@
     "client library"
   ],
   "devDependencies": {
-    "@types/aws-lambda": "^0.0.33",
-    "@types/debug": "^0.0.30",
-    "@types/node": "^9.4.6",
     "ava": "^0.25.0",
     "concurrently": "^3.5.1",
-    "firebase-admin": "^5.9.1",
-    "firebase-functions": "^0.8.1",
     "tslint": "^5.9.1",
     "tslint-eslint-rules": "^5.1.0",
     "typescript": "^2.7.2"
   },
   "dependencies": {
+    "@types/aws-lambda": "^0.0.33",
+    "@types/debug": "^0.0.30",
+    "@types/express": "^4.11.1",
+    "@types/node": "^9.4.6",
     "debug": "^3.1.0"
   }
 }

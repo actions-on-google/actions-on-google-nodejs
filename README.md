@@ -11,7 +11,7 @@ supports both Dialogflow fulfillment and the Actions SDK webhook.
 
 ## Setup Instructions
 
-Install the library with either `npm i actions-on-google@2.0.0-alpha.1` or `yarn add actions-on-google@2.0.0-alpha.1` if you use yarn.
+Install the library with either `npm i actions-on-google@2.0.0-alpha.2` or `yarn add actions-on-google@2.0.0-alpha.2` if you use yarn.
 
 ### Dialogflow
  1. Import the appropriate service:
