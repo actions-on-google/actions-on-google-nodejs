@@ -6,3 +6,5 @@ docs/
 *.log
 *.tgz
 dist
+/util
+/plugin

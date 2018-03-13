@@ -28,8 +28,7 @@ const {
   PermissionArgument,
   NewSurface,
 } = require('actions-on-google')
-
-const { ssml } = require('./util')
+const { ssml } = require('actions-on-google/util/ssml')
 
 const config = functions.config()
 

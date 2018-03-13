@@ -120,7 +120,8 @@
     "quotemark": [
       true,
       "single",
-      "avoid-escape"
+      "avoid-escape",
+      "jsx-double"
     ],
     "no-trailing-whitespace": true,
     "object-literal-key-quotes": [

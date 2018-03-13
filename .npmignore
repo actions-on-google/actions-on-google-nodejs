@@ -1,6 +1,5 @@
 samples
 _test
-src
 tslint.json
 tsconfig.json
 .travis.yml

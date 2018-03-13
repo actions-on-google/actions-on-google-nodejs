@@ -28,8 +28,7 @@ import {
   PermissionArgument,
   NewSurface,
 } from 'actions-on-google'
-
-import { ssml } from './util'
+import { ssml } from 'actions-on-google/util/ssml'
 
 const config = functions.config()
 
@@ -56,29 +55,29 @@ const locationResponse = (city: string, speech: string) => {
 }
 
 const responses = {
-  sayName: (name: string) => ssml`
+  sayName: (name: string) =>
     <speak>
       I am reading your mind now.
       <break time="2s"/>
-      This is easy, you are ${name}
+      This is easy, you are {name}
       <break time="500ms"/>
       I hope I pronounced that right.
       <break time="500ms"/>
       Okay! I am off to read more minds.
     </speak>
-  `,
-  sayLocation: (city: string) => locationResponse(city, ssml`
+  ,
+  sayLocation: (city: string) => locationResponse(city,
     <speak>
       I am reading your mind now.
       <break time="2s"/>
-      This is easy, you are in ${city}
+      This is easy, you are in {city}
       <break time="500ms"/>
       That is a beautiful town.
       <break time="500ms"/>
       Okay! I am off to read more minds.
-    </speak>
-  `),
-  greetUser: ssml`
+    </speak>,
+  ),
+  greetUser:
     <speak>
       Welcome to your Psychic!
       <break time="500ms"/>
@@ -86,22 +85,22 @@ const responses = {
       I wonder which of your secrets I shall unlock.
       Would you prefer I guess your name, or your location?
     </speak>
-  `,
-  unhandledDeepLinks: (input: string) => ssml`
+  ,
+  unhandledDeepLinks: (input: string) =>
     <speak>
       Welcome to your Psychic! I can guess many things about you,
-      but I cannot make guesses about ${input}.
+      but I cannot make guesses about {input}.
       Instead, I shall guess your name or location. Which do you prefer?
     </speak>
-  `,
-  readMindError: ssml`
+  ,
+  readMindError:
     <speak>
       Wow!
       <break time="1s"/>
       This has never happened before. I cannot read your mind. I need more practice.
       Ask me again later.
     </speak>
-  `,
+  ,
   permissionReason: 'To read your mind',
   newSurfaceContext: 'To show you your location',
   notificationText: 'See you where you are...',

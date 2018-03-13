@@ -4,7 +4,9 @@
     "module": "commonjs",
     "outDir": "lib",
     "sourceMap": true,
-    "target": "es6"
+    "target": "es6",
+    "jsx": "react",
+    "jsxFactory": "ssml.create"
   },
   "compileOnSave": true,
   "include": [

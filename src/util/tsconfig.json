@@ -1,0 +1,10 @@
+{
+  "extends": "../../tsconfig",
+  "compilerOptions": {
+    "outDir": "../../util"
+  },
+  "include": [
+    "**/*"
+  ],
+  "exclude": []
+}
