@@ -1,10 +1,12 @@
-# Actions on Google Client Library
+# Actions on Google Client Library - V2 Alpha release
+This is an Alpha release of the Actions on Google client library for Node.js.
+The APIs presented are not to be considered stable; we might make breaking changes
+to address feedback from the Actions on Google developers community.
 
-This Actions on Google client library makes it easy to create your apps for the Google Assistant.
+This client library makes it easy to create your apps for the Google Assistant, and
+supports both Dialogflow fulfillment and the Actions SDK webhook.
 
-The client library supports both Dialogflow fulfillment and the Actions SDK webhook.
-
-[![NPM Version](https://img.shields.io/npm/v/actions-on-google.svg)](https://www.npmjs.org/package/actions-on-google)
+[![NPM Version](https://img.shields.io/npm/v/actions-on-google/alpha.svg)](https://www.npmjs.org/package/actions-on-google)
 [![Build Status](https://travis-ci.org/actions-on-google/actions-on-google-nodejs.svg?branch=v2.0.0-alpha)](https://travis-ci.org/actions-on-google/actions-on-google-nodejs)
 
 ## Setup Instructions
@@ -37,10 +39,12 @@ const { actionssdk } = require('actions-on-google')
 const app = actionssdk()
 ```
 
+You can find more usage samples in the `samples` directory, both for Javascript and Typescript.
+
 ## Alpha Instructions
 This library uses `yarn` to run commands. Install yarn using instructions from https://yarnpkg.com/en/docs/install or with npm: `npm i -g yarn`.
 
-Install the library dependencies with `yarn` then run `yarn sample` to build everything and setup the samples.
+Install the library dependencies with `yarn`. If you want to run any of the sample apps, follow the instructions in the sample README.
 
 Public interfaces, classes, functions, objects, and properties are labeled with the JSDoc `@public` tag and exported at the top level. During the alpha, anything can be changed so make sure to strictly reference the version rather than use approximations (don't use `^`, `~`, `>=`, or `*` in the `package.json` version). After alpha during general availability, everything else that is not labeled `@public` and exported at the top level is considered internal and may be changed.
 
@@ -49,7 +53,7 @@ This library supports the following Services:
 * Actions SDK **v2 only**
 
 ### Actions SDK
-Since Actions SDK v1 will only be supported for [one year starting May 17, 2017](https://developers.google.com/actions/reference/v1/migration#why_do_i_need_to_migrate) and thus not supported after May 17, 2018), the library will only support Actions SDK fulfillment version 2 during and after alpha.
+This library supports only Actions SDK fulfillment version 2.
 
 To ensure that your fulfillment uses version 2, set the [`"fulfillmentApiVersion": 2`](https://github.com/actions-on-google/actionssdk-eliza-nodejs/blob/a44a1b0ef0026ce2b0e525ce38bebbf8540ce344/eliza.json#L41) property in your action package.
 
@@ -78,7 +82,7 @@ Please read and follow the steps in the CONTRIBUTING.md.
 See LICENSE.md.
 
 ## Terms
-Your use of this sample is subject to, and by using or downloading the sample files you agree to comply with, the [Google APIs Terms of Service](https://developers.google.com/terms/).
+Your use of this library is subject to, and by using or downloading the sample files you agree to comply with, the [Google APIs Terms of Service](https://developers.google.com/terms/).
 
 ## Google+
 Actions on Google Developers Community on Google+ [https://g.co/actionsdev](https://g.co/actionsdev).

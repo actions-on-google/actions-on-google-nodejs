@@ -27,7 +27,7 @@
     "deploy:js:name-psychic": "cd sample/js/app/name-psychic/functions && npm i && yarn deploy",
     "deploy:ts:facts-about-google": "cd sample/ts/app/facts-about-google/functions && npm i && yarn deploy",
     "deploy:ts:name-psychic": "cd sample/ts/app/name-psychic/functions && npm i && yarn deploy",
-    "sample": "yarn sync:ts:facts-about-google && yarn sync:ts:name-psychic && yarn sync:js:facts-about-google && yarn sync:js:name-psychic"
+    "samples": "yarn sync:ts:facts-about-google && yarn sync:ts:name-psychic && yarn sync:js:facts-about-google && yarn sync:js:name-psychic"
   },
   "repository": {
     "type": "git",
