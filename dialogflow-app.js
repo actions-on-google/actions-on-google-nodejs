@@ -758,37 +758,29 @@ class DialogflowApp extends AssistantApp {
   * const app = new DialogflowApp({request: request, response: response});
   * const APPLY_FOR_LICENSE = 'apply-for-license-event';
   * const DATE_TIME = 'dateTime';
-  * app.askWithFollowupEvent(APPLY_FOR_LICENSE, {
+  * app.sendFollowupEvent(APPLY_FOR_LICENSE, {
   *     DATE_TIME: new Date()
   * });
   *
-  * @param {string} eventName Name of the event.
-  * @param {Object=} eventData Event JSON object.
+  * @param {string} name Name of the event.
+  * @param {Object} data Event payload JSON object (optional).
   * @return {null|undefined} Null if the event name is not string or event data
-  * is not a JSON object.
+  *     (if present) is not a JSON object.
   * @dialogflow
   */
-  askWithFollowupEvent (eventName, eventData) {
-    debug('askWithFollowupEvent: eventName=%s, eventData=%s', eventName, JSON.stringify(eventData));
-    let isEventNameString = typeof eventName === 'string';
-    if (!isEventNameString) {
-      this.handleError_('Invalid event name!');
-      return null;
-    }
-    let isEventDataObject = typeof eventData === 'object';
-    if (!isEventDataObject) {
-      this.handleError_('Invalid event data!');
+  sendFollowupEvent (name, data) {
+    debug('sendFollowupEvent: name=%s, data=%s', name, JSON.stringify(data));
+    if (!(typeof name === 'string' || (data && typeof data === 'object'))) {
+      error('Invalid event');
       return null;
     }
     const response = {
-        followupEvent: {
-            name: eventName,
-            data: eventData
-        }
-    }
-    if (!response) {
-      this.handleError_('Error in building response!');
-      return null;
+      followupEvent: {
+        name
+      }
+    };
+    if (data) {
+      response.followupEvent.data = data;
     }
     return this.doResponse_(response, RESPONSE_CODE_OK);
   }
