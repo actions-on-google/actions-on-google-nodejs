@@ -3678,7 +3678,7 @@ describe('DialogflowApp', function () {
     let mockRequest, app;
 
     beforeEach(function () {
-      mockRequest = new MockRequest(headerV1, dialogflowAppRequestBodyLiveSession);
+      mockRequest = new MockRequest(headerV2, dialogflowAppRequestBodyLiveSession);
       app = new DialogflowApp({ request: mockRequest, response: mockResponse });
     });
 
@@ -3687,7 +3687,7 @@ describe('DialogflowApp', function () {
 
       // Validating the response object
       const expectedResponse = {
-        'followup_event': {
+        'followupEvent': {
           'data': {
             'bar': 'foobar'
           },
@@ -3701,7 +3701,7 @@ describe('DialogflowApp', function () {
 
       // Validating the response object
       const expectedResponse = {
-        'followup_event': {
+        'followupEvent': {
           'name': 'foo'
         }
       };
