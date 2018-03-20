@@ -16,39 +16,15 @@
 
 import * as Api from './api/v2'
 import { ServiceBaseApp, AppOptions, AppHandler, attach } from '../../assistant'
-import { Conversation, ConversationOptionsInit, ExceptionHandler, Argument } from './conversation'
+import {
+  Conversation,
+  ConversationOptionsInit,
+  ExceptionHandler,
+  Argument,
+  Intent,
+} from './conversation'
 import { Headers } from '../../framework'
 import { debug, stringify, Traversed } from '../../common'
-
-/** @public */
-export type Intent =
-  'actions.intent.MAIN' |
-  'actions.intent.TEXT' |
-  'actions.intent.PERMISSION' |
-  'actions.intent.OPTION' |
-  'actions.intent.TRANSACTION_REQUIREMENTS_CHECK' |
-  'actions.intent.DELIVERY_ADDRESS' |
-  'actions.intent.TRANSACTION_DECISION' |
-  'actions.intent.CONFIRMATION' |
-  'actions.intent.DATETIME' |
-  'actions.intent.SIGN_IN' |
-  'actions.intent.NO_INPUT' |
-  'actions.intent.CANCEL' |
-  'actions.intent.NEW_SURFACE' |
-  'actions.intent.REGISTER_UPDATE' |
-  'actions.intent.CONFIGURE_UPDATES'
-
-export type InputValueSpec =
-  'type.googleapis.com/google.actions.v2.PermissionValueSpec' |
-  'type.googleapis.com/google.actions.v2.OptionValueSpec' |
-  'type.googleapis.com/google.actions.v2.TransactionRequirementsCheckSpec' |
-  'type.googleapis.com/google.actions.v2.DeliveryAddressValueSpec' |
-  'type.googleapis.com/google.actions.v2.TransactionDecisionValueSpec' |
-  'type.googleapis.com/google.actions.v2.ConfirmationValueSpec' |
-  'type.googleapis.com/google.actions.v2.DateTimeValueSpec' |
-  'type.googleapis.com/google.actions.v2.NewSurfaceValueSpec' |
-  'type.googleapis.com/google.actions.v2.RegisterUpdateValueSpec' |
-  'type.googleapis.com/google.actions.v2.SignInValueSpec'
 
 /** @public */
 export interface ActionsSdkConversationOptions<TConvData, TUserStorage> {
@@ -175,6 +151,12 @@ export interface ActionsSdkApp<
   /** @public */
   intent<TArgument extends Argument>(
     intent: Intent,
+    handler: ActionsSdkIntentHandler<TConvData, TUserStorage, TConversation, TArgument> | Intent,
+  ): this
+
+  /** @public */
+  intent<TArgument extends Argument>(
+    intent: string,
     handler: ActionsSdkIntentHandler<TConvData, TUserStorage, TConversation, TArgument> | string,
   ): this
 
@@ -230,7 +212,7 @@ export const actionssdk: ActionsSdk = <
   intent<TInput>(
     this: ActionsSdkApp<TConvData, TUserStorage, TConversation>,
     intent: Intent,
-    handler: ActionsSdkIntentHandler<TConvData, TUserStorage, TConversation, TInput>,
+    handler: ActionsSdkIntentHandler<TConvData, TUserStorage, TConversation, TInput> | string,
   ) {
     this.intents[intent] = handler
     return this

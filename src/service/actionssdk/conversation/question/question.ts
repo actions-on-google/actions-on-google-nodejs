@@ -15,26 +15,20 @@
  */
 
 import * as Api from '../../api/v2'
-import { Intent, InputValueSpec } from '../../actionssdk'
+import { Intent, InputValueSpec } from '../conversation'
 import { ProtoAny } from '../../../../common'
 
-export interface QuestionData extends ProtoAny {
-  '@type': InputValueSpec
-}
-
-export interface Question extends Api.GoogleActionsV2ExpectedIntent { }
-export abstract class Question implements Api.GoogleActionsV2ExpectedIntent {
-  inputValueData: QuestionData
+export interface Question<TValueSpec> extends Api.GoogleActionsV2ExpectedIntent { }
+export abstract class Question<TValueSpec> implements Api.GoogleActionsV2ExpectedIntent {
+  inputValueData: ProtoAny<InputValueSpec, TValueSpec>
 
   constructor(public intent: Intent) {
   }
 
-  data<TValueSpec>(type: InputValueSpec, spec: TValueSpec) {
-    this.inputValueData = Object.assign({
-      '@type': type,
-    }, spec)
+  data(type: InputValueSpec, spec?: TValueSpec) {
+    this.inputValueData = Object.assign({ '@type': type }, spec)
   }
 }
 
-export abstract class SoloQuestion extends Question {
+export abstract class SoloQuestion<TValueSpec> extends Question<TValueSpec> {
 }

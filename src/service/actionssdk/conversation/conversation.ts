@@ -29,6 +29,45 @@ import { Question, SoloQuestion } from './question'
 import { Arguments } from './argument'
 import { Device } from './device'
 import { Input } from './input'
+import { JsonObject } from '../../../common'
+
+/** @public */
+export type Intent =
+  'actions.intent.MAIN' |
+  'actions.intent.TEXT' |
+  'actions.intent.PERMISSION' |
+  'actions.intent.OPTION' |
+  'actions.intent.TRANSACTION_REQUIREMENTS_CHECK' |
+  'actions.intent.DELIVERY_ADDRESS' |
+  'actions.intent.TRANSACTION_DECISION' |
+  'actions.intent.CONFIRMATION' |
+  'actions.intent.DATETIME' |
+  'actions.intent.SIGN_IN' |
+  'actions.intent.NO_INPUT' |
+  'actions.intent.CANCEL' |
+  'actions.intent.NEW_SURFACE' |
+  'actions.intent.REGISTER_UPDATE' |
+  'actions.intent.CONFIGURE_UPDATES' |
+  'actions.intent.PLACE' |
+  'actions.intent.LINK'
+
+export type InputValueSpec =
+  'type.googleapis.com/google.actions.v2.PermissionValueSpec' |
+  'type.googleapis.com/google.actions.v2.OptionValueSpec' |
+  'type.googleapis.com/google.actions.v2.TransactionRequirementsCheckSpec' |
+  'type.googleapis.com/google.actions.v2.DeliveryAddressValueSpec' |
+  'type.googleapis.com/google.actions.v2.TransactionDecisionValueSpec' |
+  'type.googleapis.com/google.actions.v2.ConfirmationValueSpec' |
+  'type.googleapis.com/google.actions.v2.DateTimeValueSpec' |
+  'type.googleapis.com/google.actions.v2.NewSurfaceValueSpec' |
+  'type.googleapis.com/google.actions.v2.RegisterUpdateValueSpec' |
+  'type.googleapis.com/google.actions.v2.SignInValueSpec' |
+  'type.googleapis.com/google.actions.v2.PlaceValueSpec' |
+  'type.googleapis.com/google.actions.v2.LinkValueSpec'
+
+export type DialogSpec =
+  'type.googleapis.com/google.actions.v2.PlaceValueSpec.PlaceDialogSpec' |
+  'type.googleapis.com/google.actions.v2.LinkValueSpec.LinkDialogSpec'
 
 /** @public */
 export type Response =
@@ -38,7 +77,7 @@ export type Response =
   BasicCard |
   Suggestions |
   Image |
-  Question
+  Question<JsonObject>
 
 export interface ConversationResponse {
   richResponse: Api.GoogleActionsV2RichResponse

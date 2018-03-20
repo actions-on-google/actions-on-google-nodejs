@@ -22,6 +22,8 @@ import {
   ConfirmationArgument,
   DateTimeArgument,
   SignInArgument,
+  PlaceArgument,
+  DeepLinkArgument,
 } from '..'
 import {
   RepromptArgument,
@@ -31,10 +33,7 @@ import {
 /** @public */
 export type Argument = Api.GoogleActionsV2Argument[keyof Api.GoogleActionsV2Argument]
 
-export interface ArgumentsInput {
-  /** @public */
-  [name: string]: Argument | undefined
-
+export interface ArgumentsNamed {
   /** @public */
   PERMISSION?: PermissionArgument
 
@@ -70,6 +69,17 @@ export interface ArgumentsInput {
 
   /** @public */
   REGISTER_UPDATE?: Argument
+
+  /** @public */
+  PLACE?: PlaceArgument
+
+  /** @public */
+  LINK?: DeepLinkArgument
+}
+
+export interface ArgumentsInput extends ArgumentsNamed {
+  /** @public */
+  [name: string]: Argument | undefined
 }
 
 export interface ArgumentsIndexable {
@@ -100,9 +110,21 @@ export class Arguments {
       }
       return (arg as ArgumentsIndexable)[key]
     }
+    // Manually handle the PERMISSION argument because of a bug not returning boolValue
+    if (arg.name === 'PERMISSION') {
+      return !!arg.boolValue
+    }
     if (arg.textValue) {
       return arg.textValue
     }
     return arg.status
+  }
+
+  /** @public */
+  get<TName extends keyof ArgumentsNamed>(argument: TName): ArgumentsNamed[TName]
+  /** @public */
+  get(argument: string): Argument
+  get(argument: string) {
+    return this.input[argument]
   }
 }

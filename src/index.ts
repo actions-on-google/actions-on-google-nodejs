@@ -83,6 +83,11 @@ export {
   RegisterUpdateArgument,
   RegisterUpdateOptions,
   RegisterUpdate,
+  PlaceArgument,
+  Place,
+  DeepLinkArgument,
+  DeepLinkOptions,
+  DeepLink,
 } from './service/actionssdk'
 
 export {

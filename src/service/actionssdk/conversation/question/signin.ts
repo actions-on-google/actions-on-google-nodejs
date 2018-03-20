@@ -21,12 +21,10 @@ import { SoloQuestion } from './question'
 export type SignInArgument = Api.GoogleActionsV2SignInValue
 
 /** @public */
-export class SignIn extends SoloQuestion {
+export class SignIn extends SoloQuestion<Api.GoogleActionsV2SignInValueSpec> {
   constructor() {
     super('actions.intent.SIGN_IN')
 
-    this.data<Api.GoogleActionsV2SignInValueSpec>(
-      'type.googleapis.com/google.actions.v2.SignInValueSpec', {
-    })
+    this.data('type.googleapis.com/google.actions.v2.SignInValueSpec')
   }
 }

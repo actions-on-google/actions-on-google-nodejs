@@ -20,7 +20,7 @@ import * as ActionsApi from '../actionssdk/api/v2'
 import { ServiceBaseApp, AppOptions, AppHandler, attach } from '../../assistant'
 import { Conversation, ConversationOptionsInit, ExceptionHandler, Argument } from '../actionssdk'
 import { Headers } from '../../framework'
-import { debug, stringify, toArray, ProtoAny, Traversed } from '../../common'
+import { debug, stringify, toArray, ProtoAny, Traversed, JsonObject } from '../../common'
 import { Contexts, ContextValues } from './context'
 
 const APP_DATA_CONTEXT = '_actions_on_google'
@@ -28,7 +28,7 @@ const APP_DATA_CONTEXT_LIFESPAN = 99
 
 export interface SystemIntent {
   intent: string
-  data: ProtoAny
+  data: ProtoAny<string, JsonObject>
 }
 
 export interface GoogleAssistantResponse {
@@ -186,7 +186,7 @@ export class DialogflowConversation<
       userStorage,
       systemIntent: expectedIntent && {
         intent: expectedIntent.intent!,
-        data: expectedIntent.inputValueData as ProtoAny,
+        data: expectedIntent.inputValueData as ProtoAny<string, JsonObject>,
       },
     }
     const payload: PayloadGoogle = {

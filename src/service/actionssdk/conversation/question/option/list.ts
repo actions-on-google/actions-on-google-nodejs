@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import * as Api from '../../api/v2'
-import { Question } from './question'
+import * as Api from '../../../api/v2'
+import { Question } from '../question'
 import { OptionArgument, OptionItems, convert } from './option'
 
 /** @public */
@@ -31,12 +31,11 @@ export interface ListOptions {
 }
 
 /** @public */
-export class List extends Question {
+export class List extends Question<Api.GoogleActionsV2OptionValueSpec> {
   constructor(options: ListOptions) {
     super('actions.intent.OPTION')
 
-    this.data<Api.GoogleActionsV2OptionValueSpec>(
-      'type.googleapis.com/google.actions.v2.OptionValueSpec', {
+    this.data('type.googleapis.com/google.actions.v2.OptionValueSpec', {
       listSelect: {
         title: options.title,
         items: Array.isArray(options.items) ? options.items : convert(options.items),

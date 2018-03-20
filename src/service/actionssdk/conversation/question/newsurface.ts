@@ -34,12 +34,11 @@ export interface NewSurfaceOptions {
 }
 
 /** @public */
-export class NewSurface extends SoloQuestion {
+export class NewSurface extends SoloQuestion<Api.GoogleActionsV2NewSurfaceValueSpec> {
   constructor(options: NewSurfaceOptions) {
     super('actions.intent.NEW_SURFACE')
 
-    this.data<Api.GoogleActionsV2NewSurfaceValueSpec>(
-      'type.googleapis.com/google.actions.v2.NewSurfaceValueSpec', {
+    this.data('type.googleapis.com/google.actions.v2.NewSurfaceValueSpec', {
       capabilities: toArray(options.capabilities),
       context: options.context,
       notificationTitle: options.notification,

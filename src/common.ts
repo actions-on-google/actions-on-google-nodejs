@@ -39,11 +39,7 @@ export const clone = <T>(o: T): T => JSON.parse(JSON.stringify(o))
 export const stringify =
   (o: {}, override?: {}) => JSON.stringify(Object.assign(clone(o), override), null, 2)
 
-export interface ProtoAny extends JsonObject {
-  '@type': string
-  // tslint:disable-next-line:no-any protobuf any properties can be anything
-  [key: string]: any
-}
+export type ProtoAny<TType, TSpec> = { '@type': TType } & TSpec
 
 export const toArray = <T>(a: T | T[]) => Array.isArray(a) ? a : [a]
 

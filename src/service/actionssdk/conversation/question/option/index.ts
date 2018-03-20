@@ -14,21 +14,6 @@
  * limitations under the License.
  */
 
-import * as Api from '../../api/v2'
-import { SoloQuestion } from './question'
-
-/** @public */
-export type ConfirmationArgument = boolean
-
-/** @public */
-export class Confirmation extends SoloQuestion<Api.GoogleActionsV2ConfirmationValueSpec> {
-  constructor(text: string) {
-    super('actions.intent.CONFIRMATION')
-
-    this.data('type.googleapis.com/google.actions.v2.ConfirmationValueSpec', {
-      dialogSpec: {
-        requestConfirmationText: text,
-      },
-    })
-  }
-}
+export * from './carousel'
+export * from './list'
+export * from './option'

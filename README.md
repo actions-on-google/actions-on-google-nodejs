@@ -60,9 +60,7 @@ To ensure that your fulfillment uses version 2, set the [`"fulfillmentApiVersion
 ### Supported Features
 The alpha currently covers most features that exist in v1 with some notable exceptions:
 * Transactions support is currently not implemented for the alpha.
-* New features released in `1.9.0` and `1.10.0` are not yet implemented but will be soon which includes:
-  * Place helper intent known as `askForPlace` in v1.
-  * Android Deep Link helper intent known as `askToDeepLink` in v1.
+* New features released in `1.10.0` are not yet implemented but will be soon which includes:
   * Media Controls RichResponse
   * Browse Carousel RichResponse
   * Play Entitlements retrieval

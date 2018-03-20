@@ -14,21 +14,26 @@
  * limitations under the License.
  */
 
-import * as Api from '../../api/v2'
-import { SoloQuestion } from './question'
+'use strict'
 
-/** @public */
-export type ConfirmationArgument = boolean
+const fs = require('fs')
+const path = require('path')
+const { execFile } = require('child_process')
 
-/** @public */
-export class Confirmation extends SoloQuestion<Api.GoogleActionsV2ConfirmationValueSpec> {
-  constructor(text: string) {
-    super('actions.intent.CONFIRMATION')
+const encoding = 'utf8'
 
-    this.data('type.googleapis.com/google.actions.v2.ConfirmationValueSpec', {
-      dialogSpec: {
-        requestConfirmationText: text,
-      },
-    })
-  }
+const [node, script, file] = process.argv
+
+let last = ''
+let linted = fs.readFileSync(file, encoding)
+
+while (last !== linted) {
+  execFile('node', [
+    path.resolve(__dirname, '../node_modules/.bin/tslint'),
+    '-p',
+    path.resolve(__dirname, '..'),
+    '--fix',
+  ])
+  last = linted
+  linted = fs.readFileSync(file, encoding)
 }

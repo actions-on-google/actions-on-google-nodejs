@@ -23,100 +23,116 @@ export type GoogleActionsV2ConversationType = 'TYPE_UNSPECIFIED'|'NEW'|'ACTIVE'
 
 
 export type GoogleActionsV2DeliveryAddressValueUserDecision =
-    'UNKNOWN_USER_DECISION'|'ACCEPTED'|'REJECTED'
+  'UNKNOWN_USER_DECISION'|'ACCEPTED'|'REJECTED'
+
+
+export type GoogleActionsV2EntitlementSkuType =
+  'TYPE_UNSPECIFIED'|'IN_APP'|'SUBSCRIPTION'|'APP'
+
+
+export type GoogleActionsV2MediaResponseMediaType =
+  'MEDIA_TYPE_UNSPECIFIED'|'AUDIO'
 
 
 export type GoogleActionsV2NewSurfaceValueStatus =
-    'NEW_SURFACE_STATUS_UNSPECIFIED'|'CANCELLED'|'OK'
+  'NEW_SURFACE_STATUS_UNSPECIFIED'|'CANCELLED'|'OK'
 
 
 export type GoogleActionsV2OrdersActionProvidedPaymentOptionsPaymentType =
-    'PAYMENT_TYPE_UNSPECIFIED'|'PAYMENT_CARD'|'BANK'|'LOYALTY_PROGRAM'|
-    'ON_FULFILLMENT'|'GIFT_CARD'
+  'PAYMENT_TYPE_UNSPECIFIED'|'PAYMENT_CARD'|'BANK'|'LOYALTY_PROGRAM'|
+  'ON_FULFILLMENT'|'GIFT_CARD'
 
 
 export type GoogleActionsV2OrdersCustomerInfoOptionsCustomerInfoProperties =
-    'CUSTOMER_INFO_PROPERTY_UNSPECIFIED'|'EMAIL'
+  'CUSTOMER_INFO_PROPERTY_UNSPECIFIED'|'EMAIL'
 
 
 export type GoogleActionsV2OrdersGoogleProvidedPaymentOptionsSupportedCardNetworks =
-    'UNSPECIFIED_CARD_NETWORK'|'AMEX'|'DISCOVER'|'MASTERCARD'|'VISA'|'JCB'
+  'UNSPECIFIED_CARD_NETWORK'|'AMEX'|'DISCOVER'|'MASTERCARD'|'VISA'|'JCB'
 
 
 export type GoogleActionsV2OrdersLineItemType = 'UNSPECIFIED'|'REGULAR'|'TAX'|
-    'DISCOUNT'|'GRATUITY'|'DELIVERY'|'SUBTOTAL'|'FEE'
+  'DISCOUNT'|'GRATUITY'|'DELIVERY'|'SUBTOTAL'|'FEE'
 
 
 export type GoogleActionsV2OrdersOrderLocationType =
-    'UNKNOWN'|'DELIVERY'|'BUSINESS'|'ORIGIN'|'DESTINATION'|'PICK_UP'
+  'UNKNOWN'|'DELIVERY'|'BUSINESS'|'ORIGIN'|'DESTINATION'|'PICK_UP'
 
 
 export type GoogleActionsV2OrdersOrderUpdateActionType =
-    'UNKNOWN'|'VIEW_DETAILS'|'MODIFY'|'CANCEL'|'RETURN'|'EXCHANGE'|'EMAIL'|
-    'CALL'|'REORDER'|'REVIEW'|'CUSTOMER_SERVICE'
+  'UNKNOWN'|'VIEW_DETAILS'|'MODIFY'|'CANCEL'|'RETURN'|'EXCHANGE'|'EMAIL'|
+  'CALL'|'REORDER'|'REVIEW'|'CUSTOMER_SERVICE'
 
 
 export type GoogleActionsV2OrdersPaymentInfoPaymentType =
-    'PAYMENT_TYPE_UNSPECIFIED'|'PAYMENT_CARD'|'BANK'|'LOYALTY_PROGRAM'|
-    'ON_FULFILLMENT'|'GIFT_CARD'
+  'PAYMENT_TYPE_UNSPECIFIED'|'PAYMENT_CARD'|'BANK'|'LOYALTY_PROGRAM'|
+  'ON_FULFILLMENT'|'GIFT_CARD'
 
 
 export type GoogleActionsV2OrdersPaymentMethodTokenizationParametersTokenizationType =
-    'UNSPECIFIED_TOKENIZATION_TYPE'|'PAYMENT_GATEWAY'|'DIRECT'
+  'UNSPECIFIED_TOKENIZATION_TYPE'|'PAYMENT_GATEWAY'|'DIRECT'
 
 
 export type GoogleActionsV2OrdersPriceType = 'UNKNOWN'|'ESTIMATE'|'ACTUAL'
 
 
 export type GoogleActionsV2OrdersRejectionInfoType = 'UNKNOWN'|
-    'PAYMENT_DECLINED'|'INELIGIBLE'|'PROMO_NOT_APPLICABLE'|'UNAVAILABLE_SLOT'
+  'PAYMENT_DECLINED'|'INELIGIBLE'|'PROMO_NOT_APPLICABLE'|'UNAVAILABLE_SLOT'
 
 
 export type GoogleActionsV2OrdersTimeType =
-    'UNKNOWN'|'DELIVERY_DATE'|'ETA'|'RESERVATION_SLOT'
+  'UNKNOWN'|'DELIVERY_DATE'|'ETA'|'RESERVATION_SLOT'
 
 
 export type GoogleActionsV2PermissionValueSpecPermissions =
-    'UNSPECIFIED_PERMISSION'|'NAME'|'DEVICE_PRECISE_LOCATION'|
-    'DEVICE_COARSE_LOCATION'|'UPDATE'
+  'UNSPECIFIED_PERMISSION'|'NAME'|'DEVICE_PRECISE_LOCATION'|
+  'DEVICE_COARSE_LOCATION'|'UPDATE'
 
 
 export type GoogleActionsV2RawInputInputType =
-    'UNSPECIFIED_INPUT_TYPE'|'TOUCH'|'VOICE'|'KEYBOARD'
+  'UNSPECIFIED_INPUT_TYPE'|'TOUCH'|'VOICE'|'KEYBOARD'
 
 
 export type GoogleActionsV2RegisterUpdateValueStatus =
-    'REGISTER_UPDATE_STATUS_UNSPECIFIED'|'OK'|'CANCELLED'
+  'REGISTER_UPDATE_STATUS_UNSPECIFIED'|'OK'|'CANCELLED'
 
 
 export type GoogleActionsV2SignInValueStatus =
-    'SIGN_IN_STATUS_UNSPECIFIED'|'OK'|'CANCELLED'|'ERROR'
+  'SIGN_IN_STATUS_UNSPECIFIED'|'OK'|'CANCELLED'|'ERROR'
 
 
 export type GoogleActionsV2TransactionDecisionValueUserDecision =
-    'UNKNOWN_USER_DECISION'|'ORDER_ACCEPTED'|'ORDER_REJECTED'|
-    'DELIVERY_ADDRESS_UPDATED'|'CART_CHANGE_REQUESTED'
+  'UNKNOWN_USER_DECISION'|'ORDER_ACCEPTED'|'ORDER_REJECTED'|
+  'DELIVERY_ADDRESS_UPDATED'|'CART_CHANGE_REQUESTED'
 
 
 export type GoogleActionsV2TransactionRequirementsCheckResultResultType =
-    'RESULT_TYPE_UNSPECIFIED'|'OK'|'USER_ACTION_REQUIRED'|
-    'ASSISTANT_SURFACE_NOT_SUPPORTED'|'REGION_NOT_SUPPORTED'
+  'RESULT_TYPE_UNSPECIFIED'|'OK'|'USER_ACTION_REQUIRED'|
+  'ASSISTANT_SURFACE_NOT_SUPPORTED'|'REGION_NOT_SUPPORTED'
 
 
 export type GoogleActionsV2TriggerContextTimeContextFrequency =
-    'FREQUENCY_UNSPECIFIED'|'DAILY'
+  'FREQUENCY_UNSPECIFIED'|'DAILY'
 
 
 export type GoogleActionsV2UiElementsBasicCardImageDisplayOptions =
-    'DEFAULT'|'WHITE'|'CROPPED'
+  'DEFAULT'|'WHITE'|'CROPPED'
+
+
+export type GoogleActionsV2UiElementsCarouselBrowseImageDisplayOptions =
+  'DEFAULT'|'WHITE'|'CROPPED'
 
 
 export type GoogleActionsV2UiElementsCarouselSelectImageDisplayOptions =
-    'DEFAULT'|'WHITE'|'CROPPED'
+  'DEFAULT'|'WHITE'|'CROPPED'
+
+
+export type GoogleActionsV2UiElementsOpenUrlActionUrlTypeHint =
+  'URL_TYPE_HINT_UNSPECIFIED'|'AMP_CONTENT'
 
 
 export type GoogleActionsV2UserPermissions = 'UNSPECIFIED_PERMISSION'|'NAME'|
-    'DEVICE_PRECISE_LOCATION'|'DEVICE_COARSE_LOCATION'|'UPDATE'
+  'DEVICE_PRECISE_LOCATION'|'DEVICE_COARSE_LOCATION'|'UPDATE'
 
 
 export interface GoogleActionsV2AppRequest {
@@ -151,6 +167,7 @@ export interface GoogleActionsV2Argument {
   datetimeValue?: GoogleActionsV2DateTime
   placeValue?: GoogleActionsV2Location
   extension?: ApiClientObjectMap<any>
+  structuredValue?: ApiClientObjectMap<any>
 }
 
 export interface GoogleActionsV2Capability {
@@ -230,6 +247,12 @@ export interface GoogleActionsV2DialogSpec {
   extension?: ApiClientObjectMap<any>
 }
 
+export interface GoogleActionsV2Entitlement {
+  sku?: string
+  skuType?: GoogleActionsV2EntitlementSkuType
+  inAppDetails?: GoogleActionsV2SignedData
+}
+
 export interface GoogleActionsV2ExpectedInput {
   inputPrompt?: GoogleActionsV2InputPrompt
   possibleIntents?: GoogleActionsV2ExpectedIntent[]
@@ -262,6 +285,11 @@ export interface GoogleActionsV2LinkValueSpec {
   dialogSpec?: GoogleActionsV2DialogSpec
 }
 
+export interface GoogleActionsV2LinkValueSpecLinkDialogSpec {
+  destinationName?: string
+  requestLinkReason?: string
+}
+
 export interface GoogleActionsV2Location {
   coordinates?: GoogleTypeLatLng
   formattedAddress?: string
@@ -271,6 +299,19 @@ export interface GoogleActionsV2Location {
   name?: string
   phoneNumber?: string
   notes?: string
+}
+
+export interface GoogleActionsV2MediaObject {
+  name?: string
+  description?: string
+  largeImage?: GoogleActionsV2UiElementsImage
+  icon?: GoogleActionsV2UiElementsImage
+  contentUrl?: string
+}
+
+export interface GoogleActionsV2MediaResponse {
+  mediaType?: GoogleActionsV2MediaResponseMediaType
+  mediaObjects?: GoogleActionsV2MediaObject[]
 }
 
 export interface GoogleActionsV2NewSurfaceValue {
@@ -319,7 +360,7 @@ export interface GoogleActionsV2OrdersCustomerInfo {
 
 export interface GoogleActionsV2OrdersCustomerInfoOptions {
   customerInfoProperties?:
-      GoogleActionsV2OrdersCustomerInfoOptionsCustomerInfoProperties[]
+    GoogleActionsV2OrdersCustomerInfoOptionsCustomerInfoProperties[]
 }
 
 export interface GoogleActionsV2OrdersFulfillmentInfo {
@@ -333,7 +374,7 @@ export interface GoogleActionsV2OrdersGenericExtension {
 
 export interface GoogleActionsV2OrdersGoogleProvidedPaymentOptions {
   tokenizationParameters?:
-      GoogleActionsV2OrdersPaymentMethodTokenizationParameters
+    GoogleActionsV2OrdersPaymentMethodTokenizationParameters
   supportedCardNetworks?: GoogleActionsV2OrdersGoogleProvidedPaymentOptionsSupportedCardNetworks[]
   prepaidCardDisallowed?: boolean
 }
@@ -428,7 +469,7 @@ export interface GoogleActionsV2OrdersPaymentInfo {
   paymentType?: GoogleActionsV2OrdersPaymentInfoPaymentType
   displayName?: string
   googleProvidedPaymentInstrument?:
-      GoogleActionsV2OrdersPaymentInfoGoogleProvidedPaymentInstrument
+    GoogleActionsV2OrdersPaymentInfoGoogleProvidedPaymentInstrument
 }
 
 export interface GoogleActionsV2OrdersPaymentInfoGoogleProvidedPaymentInstrument {
@@ -437,7 +478,7 @@ export interface GoogleActionsV2OrdersPaymentInfoGoogleProvidedPaymentInstrument
 
 export interface GoogleActionsV2OrdersPaymentMethodTokenizationParameters {
   tokenizationType?:
-      GoogleActionsV2OrdersPaymentMethodTokenizationParametersTokenizationType
+    GoogleActionsV2OrdersPaymentMethodTokenizationParametersTokenizationType
   parameters?: ApiClientObjectMap<string>
 }
 
@@ -484,10 +525,24 @@ export interface GoogleActionsV2OrdersTime {
   timeIso8601?: string
 }
 
+export interface GoogleActionsV2PackageEntitlement {
+  packageName?: string
+  entitlements?: GoogleActionsV2Entitlement[]
+}
+
 export interface GoogleActionsV2PermissionValueSpec {
   optContext?: string
   permissions?: GoogleActionsV2PermissionValueSpecPermissions[]
   updatePermissionValueSpec?: GoogleActionsV2UpdatePermissionValueSpec
+}
+
+export interface GoogleActionsV2PlaceValueSpec {
+  dialogSpec?: GoogleActionsV2DialogSpec
+}
+
+export interface GoogleActionsV2PlaceValueSpecPlaceDialogSpec {
+  requestPrompt?: string
+  permissionContext?: string
 }
 
 export interface GoogleActionsV2RawInput {
@@ -515,6 +570,8 @@ export interface GoogleActionsV2RichResponseItem {
   simpleResponse?: GoogleActionsV2SimpleResponse
   basicCard?: GoogleActionsV2UiElementsBasicCard
   structuredResponse?: GoogleActionsV2StructuredResponse
+  mediaResponse?: GoogleActionsV2MediaResponse
+  carouselBrowse?: GoogleActionsV2UiElementsCarouselBrowse
 }
 
 export interface GoogleActionsV2SignInValue {
@@ -522,6 +579,11 @@ export interface GoogleActionsV2SignInValue {
 }
 
 export interface GoogleActionsV2SignInValueSpec {}
+
+export interface GoogleActionsV2SignedData {
+  inAppPurchaseData?: ApiClientObjectMap<any>
+  inAppDataSignature?: string
+}
 
 export interface GoogleActionsV2SimpleResponse {
   textToSpeech?: string
@@ -590,10 +652,24 @@ export interface GoogleActionsV2UiElementsButton {
   openUrlAction?: GoogleActionsV2UiElementsOpenUrlAction
 }
 
+export interface GoogleActionsV2UiElementsCarouselBrowse {
+  items?: GoogleActionsV2UiElementsCarouselBrowseItem[]
+  imageDisplayOptions?:
+    GoogleActionsV2UiElementsCarouselBrowseImageDisplayOptions
+}
+
+export interface GoogleActionsV2UiElementsCarouselBrowseItem {
+  title?: string
+  description?: string
+  footer?: string
+  image?: GoogleActionsV2UiElementsImage
+  openUrlAction?: GoogleActionsV2UiElementsOpenUrlAction
+}
+
 export interface GoogleActionsV2UiElementsCarouselSelect {
   items?: GoogleActionsV2UiElementsCarouselSelectCarouselItem[]
   imageDisplayOptions?:
-      GoogleActionsV2UiElementsCarouselSelectImageDisplayOptions
+    GoogleActionsV2UiElementsCarouselSelectImageDisplayOptions
 }
 
 export interface GoogleActionsV2UiElementsCarouselSelectCarouselItem {
@@ -631,6 +707,7 @@ export interface GoogleActionsV2UiElementsListSelectListItem {
 export interface GoogleActionsV2UiElementsOpenUrlAction {
   url?: string
   androidApp?: GoogleActionsV2DevicesAndroidApp
+  urlTypeHint?: GoogleActionsV2UiElementsOpenUrlActionUrlTypeHint
 }
 
 export interface GoogleActionsV2UiElementsSuggestion {
@@ -650,6 +727,7 @@ export interface GoogleActionsV2User {
   locale?: string
   lastSeen?: string
   userStorage?: string
+  packageEntitlements?: GoogleActionsV2PackageEntitlement[]
 }
 
 export interface GoogleActionsV2UserNotification {

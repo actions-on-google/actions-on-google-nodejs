@@ -33,20 +33,18 @@ export interface RegisterUpdateOptions {
 }
 
 /** @public */
-export class RegisterUpdate extends SoloQuestion {
+export class RegisterUpdate extends SoloQuestion<Api.GoogleActionsV2RegisterUpdateValueSpec> {
   constructor(options: RegisterUpdateOptions) {
     super('actions.intent.REGISTER_UPDATE')
 
-    this.data<Api.GoogleActionsV2RegisterUpdateValueSpec>(
-      'type.googleapis.com/google.actions.v2.RegisterUpdateValueSpec', {
-        intent: options.intent,
-        arguments: options.arguments,
-        triggerContext: {
-          timeContext: {
-            frequency: options.frequency,
-          },
+    this.data('type.googleapis.com/google.actions.v2.RegisterUpdateValueSpec', {
+      intent: options.intent,
+      arguments: options.arguments,
+      triggerContext: {
+        timeContext: {
+          frequency: options.frequency,
         },
       },
-    )
+    })
   }
 }

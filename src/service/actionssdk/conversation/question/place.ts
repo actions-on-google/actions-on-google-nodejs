@@ -16,39 +16,35 @@
 
 import * as Api from '../../api/v2'
 import { SoloQuestion } from './question'
+import { ProtoAny } from '../../../../common'
+import { DialogSpec } from '../conversation'
 
 /** @public */
-export type DateTimeArgument = Api.GoogleActionsV2DateTime
-
-export interface DateTimeOptionsPrompts {
+export interface PlaceOptions {
   /** @public */
-  initial?: string
+  context: string
 
   /** @public */
-  date?: string
-
-  /** @public */
-  time?: string
+  prompt: string
 }
 
 /** @public */
-export interface DateTimeOptions {
-  /** @public */
-  prompts?: DateTimeOptionsPrompts
-}
+export type PlaceArgument = Api.GoogleActionsV2Location
 
 /** @public */
-export class DateTime extends SoloQuestion<Api.GoogleActionsV2DateTimeValueSpec> {
-  constructor(options: DateTimeOptions) {
-    super('actions.intent.DATETIME')
+export class Place extends SoloQuestion<Api.GoogleActionsV2PlaceValueSpec> {
+  constructor(options: PlaceOptions) {
+    super('actions.intent.PLACE')
 
-    const { prompts = {} } = options
+    const extension: ProtoAny<DialogSpec, Api.GoogleActionsV2PlaceValueSpecPlaceDialogSpec> = {
+      '@type': 'type.googleapis.com/google.actions.v2.PlaceValueSpec.PlaceDialogSpec',
+      permissionContext: options.context,
+      requestPrompt: options.prompt,
+    }
 
-    this.data('type.googleapis.com/google.actions.v2.DateTimeValueSpec', {
+    this.data('type.googleapis.com/google.actions.v2.PlaceValueSpec', {
       dialogSpec: {
-        requestDatetimeText: prompts.initial,
-        requestDateText: prompts.date,
-        requestTimeText: prompts.time,
+        extension,
       },
     })
   }

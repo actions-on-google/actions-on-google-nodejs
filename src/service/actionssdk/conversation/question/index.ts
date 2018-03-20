@@ -17,12 +17,12 @@
 export * from './question'
 
 export * from './newsurface'
-export * from './permission'
 export * from './confirmation'
 export * from './datetime'
 export * from './signin'
 export * from './registerupdate'
+export * from './place'
+export * from './deeplink'
 
+export * from './permission'
 export * from './option'
-export * from './carousel'
-export * from './list'

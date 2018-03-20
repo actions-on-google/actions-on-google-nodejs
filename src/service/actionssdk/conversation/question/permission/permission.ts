@@ -35,16 +35,14 @@ export interface PermissionOptions {
 }
 
 /** @public */
-export class Permission extends SoloQuestion {
+export class Permission extends SoloQuestion<Api.GoogleActionsV2PermissionValueSpec> {
   constructor(options: PermissionOptions) {
     super('actions.intent.PERMISSION')
 
-    this.data<Api.GoogleActionsV2PermissionValueSpec>(
-      'type.googleapis.com/google.actions.v2.PermissionValueSpec', {
-        optContext: options.context,
-        permissions: toArray(options.permissions),
-        ...(options.extra || {}),
-      },
-    )
+    this.data('type.googleapis.com/google.actions.v2.PermissionValueSpec', {
+      optContext: options.context,
+      permissions: toArray(options.permissions),
+      ...options.extra,
+    })
   }
 }
