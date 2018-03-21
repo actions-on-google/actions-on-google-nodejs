@@ -75,6 +75,8 @@ To run the samples included with the alpha, follow the instructions in the READM
 * If you find any issues, please open a bug on [GitHub](https://github.com/actions-on-google/actions-on-google-nodejs).
 * Questions are answered on [StackOverflow](https://stackoverflow.com/questions/tagged/actions-on-google).
 
+Note that the Actions on Google documentation currently shows usage of v1 of the client library, as that is still the stable version. 
+
 ## How to make contributions?
 Please read and follow the steps in the CONTRIBUTING.md.
 
