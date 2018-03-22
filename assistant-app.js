@@ -1219,7 +1219,6 @@ class AssistantApp {
    * are set in the {@link https://console.actions.google.com|Actions Console}.
    * Retrieve the access token in subsequent intents using
    * app.getUser().accessToken.
-   * Works only for en-* locales.
    *
    * @example
    * const app = new DialogflowApp({ request, response });
