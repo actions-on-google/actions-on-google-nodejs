@@ -14,6 +14,19 @@
  * limitations under the License.
  */
 
-export * from './actionssdk'
-export * from './conv'
-export * from './conversation'
+import * as Api from '../../../api/v2'
+import { SoloQuestion } from '../question'
+
+/** @public */
+export type DeliveryAddressArgument = Api.GoogleActionsV2DeliveryAddressValue
+
+/** @public */
+export class DeliveryAddress extends SoloQuestion<
+  Api.GoogleActionsV2DeliveryAddressValueSpec
+> {
+  constructor(options?: Api.GoogleActionsV2DeliveryAddressValueSpec) {
+    super('actions.intent.DELIVERY_ADDRESS')
+
+    this.data('type.googleapis.com/google.actions.v2.DeliveryAddressValueSpec', options)
+  }
+}

@@ -14,6 +14,19 @@
  * limitations under the License.
  */
 
-export * from './actionssdk'
-export * from './conv'
-export * from './conversation'
+import * as Api from '../../api/v2'
+
+/** @public */
+export interface OpenUrlActionOptions {
+  /** @public */
+  url: string
+}
+
+/** @public */
+export interface OpenUrlAction extends Api.GoogleActionsV2UiElementsOpenUrlAction { }
+export class OpenUrlAction implements Api.GoogleActionsV2UiElementsOpenUrlAction {
+  /** @public */
+  constructor(options: OpenUrlActionOptions) {
+    this.url = options.url
+  }
+}

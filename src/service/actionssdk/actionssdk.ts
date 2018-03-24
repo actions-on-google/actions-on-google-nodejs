@@ -16,99 +16,9 @@
 
 import * as Api from './api/v2'
 import { ServiceBaseApp, AppOptions, AppHandler, attach } from '../../assistant'
-import {
-  Conversation,
-  ConversationOptionsInit,
-  ExceptionHandler,
-  Argument,
-  Intent,
-} from './conversation'
-import { Headers } from '../../framework'
-import { debug, stringify, Traversed } from '../../common'
-
-/** @public */
-export interface ActionsSdkConversationOptions<TConvData, TUserStorage> {
-  body: Api.GoogleActionsV2AppRequest
-  headers: Headers
-  init?: ActionsSdkConversationOptionsInit<TConvData, TUserStorage>
-}
-
-export interface ActionsSdkConversationOptionsInit<
-  TConvData,
-  TUserStorage,
-> extends ConversationOptionsInit<TUserStorage> {
-  data?: TConvData
-}
-
-/** @public */
-export class ActionsSdkConversation<
-  TConvData = {},
-  TUserStorage = {}
-> extends Conversation<TUserStorage> {
-  /** @public */
-  body: Api.GoogleActionsV2AppRequest
-
-  /** @public */
-  intent: string
-
-  /** @public */
-  data: TConvData
-
-  constructor(options: ActionsSdkConversationOptions<TConvData, TUserStorage>) {
-    super({
-      request: options.body,
-      headers: options.headers,
-    })
-
-    const { body, init } = options
-
-    this.body = body
-
-    const { intent = '' } = this.body!.inputs![0]
-    const { conversation } = this.body
-    const { conversationToken } = conversation!
-
-    this.intent = intent
-
-    this.data = conversationToken ? JSON.parse(conversationToken).data : ((init && init.data) || {})
-
-    debug('Conversation', stringify(this, {
-      request: null,
-      headers: null,
-      body: null,
-    }))
-  }
-
-  serialize(): Api.GoogleActionsV2AppResponse {
-    const {
-      richResponse,
-      expectUserResponse,
-      userStorage,
-      expectedIntent,
-    } = this.response()
-    const inputPrompt: Api.GoogleActionsV2InputPrompt = {
-      richInitialPrompt: richResponse,
-    }
-    const possibleIntents: Api.GoogleActionsV2ExpectedIntent[] = [{
-      intent: 'actions.intent.TEXT',
-    }]
-    if (expectedIntent) {
-      possibleIntents.push(expectedIntent)
-    }
-    const expectedInput: Api.GoogleActionsV2ExpectedInput = {
-      inputPrompt,
-      possibleIntents,
-    }
-    const conversationToken = JSON.stringify({ data: this.data })
-    return {
-      expectUserResponse,
-      expectedInputs: expectUserResponse ? [expectedInput] : undefined,
-      finalResponse: expectUserResponse ? undefined : { richResponse },
-      conversationToken,
-      userStorage,
-    }
-  }
-}
+import { ExceptionHandler, Argument, Intent, Traversed } from './conversation'
+import { ActionsSdkConversation, ActionsSdkConversationOptionsInit } from './conv'
+import { OAuth2Client } from 'google-auth-library'
 
 /** @public */
 export interface ActionsSdkIntentHandler<
@@ -117,8 +27,13 @@ export interface ActionsSdkIntentHandler<
   TConversation extends ActionsSdkConversation<TConvData, TUserStorage>,
   TArgument extends Argument,
 > {
-  // tslint:disable-next-line:no-any allow developer to return any just detect if is promise
-  (conv: TConversation, input: string, argument: TArgument): Promise<any> | any
+  (
+    conv: TConversation,
+    input: string,
+    argument: TArgument,
+    status: Api.GoogleRpcStatus | undefined,
+    // tslint:disable-next-line:no-any allow developer to return any just detect if is promise
+  ): Promise<any> | any
 }
 
 export interface ActionSdkIntentHandlers {
@@ -130,13 +45,28 @@ export interface ActionSdkIntentHandlers {
   > | string | undefined
 }
 
+export interface ActionsSdkHandlers<
+  TConvData,
+  TUserStorage,
+  TConversation extends ActionsSdkConversation<TConvData, TUserStorage>
+> {
+  intents: ActionSdkIntentHandlers
+  catcher: ExceptionHandler<TUserStorage, TConversation>
+  fallback?: ActionsSdkIntentHandler<
+    {},
+    {},
+    ActionsSdkConversation<{}, {}>,
+    string | Argument
+  > | string
+}
+
 /** @public */
 export interface ActionsSdkMiddleware<
   TConversationPlugin extends ActionsSdkConversation<{}, {}>
 > {
   (
     conv: ActionsSdkConversation<{}, {}>,
-  ): ActionsSdkConversation<{}, {}> & TConversationPlugin
+  ): (ActionsSdkConversation<{}, {}> & TConversationPlugin) | void
 }
 
 /** @public */
@@ -145,8 +75,7 @@ export interface ActionsSdkApp<
   TUserStorage,
   TConversation extends ActionsSdkConversation<TConvData, TUserStorage>
 > extends ServiceBaseApp {
-  intents: ActionSdkIntentHandlers
-  catcher: ExceptionHandler<TUserStorage, TConversation>
+  handlers: ActionsSdkHandlers<TConvData, TUserStorage, TConversation>
 
   /** @public */
   intent<TArgument extends Argument>(
@@ -163,12 +92,23 @@ export interface ActionsSdkApp<
   /** @public */
   catch(catcher: ExceptionHandler<TUserStorage, TConversation>): this
 
+  /** @public */
+  fallback(
+    handler: ActionsSdkIntentHandler<TConvData, TUserStorage, TConversation, Argument> | string,
+  ): this
+
   middlewares: ActionsSdkMiddleware<ActionsSdkConversation<{}, {}>>[]
 
   /** @public */
   middleware<TConversationPlugin extends ActionsSdkConversation<{}, {}>>(
     middleware: ActionsSdkMiddleware<TConversationPlugin>,
   ): this
+
+  /** @public */
+  init?: () => ActionsSdkConversationOptionsInit<TConvData, TUserStorage>
+
+  /** @public */
+  verification?: ActionsSdkVerification | string
 }
 
 /** @public */
@@ -194,10 +134,27 @@ export interface ActionsSdk {
 }
 
 /** @public */
+export interface ActionsSdkVerification {
+  /** @public */
+  project: string
+
+  /** @public */
+  status?: number
+
+  /** @public */
+  error?: string | ((error: string) => string)
+}
+
+/** @public */
 export interface ActionsSdkOptions<TConvData, TUserStorage> extends AppOptions {
   /** @public */
   init?: () => ActionsSdkConversationOptionsInit<TConvData, TUserStorage>
+
+  /** @public */
+  verification?: ActionsSdkVerification | string
 }
+
+const client = new OAuth2Client()
 
 /** @public */
 export const actionssdk: ActionsSdk = <
@@ -207,22 +164,28 @@ export const actionssdk: ActionsSdk = <
 >(
   options: ActionsSdkOptions<TConvData, TUserStorage> = {},
 ) => attach<ActionsSdkApp<TConvData, TUserStorage, TConversation>>({
-  intents: {},
+  handlers: {
+    intents: {},
+    catcher: (conv, e) => {
+      throw e
+    },
+  },
   middlewares: [],
   intent<TInput>(
     this: ActionsSdkApp<TConvData, TUserStorage, TConversation>,
     intent: Intent,
     handler: ActionsSdkIntentHandler<TConvData, TUserStorage, TConversation, TInput> | string,
   ) {
-    this.intents[intent] = handler
+    this.handlers.intents[intent] = handler
     return this
   },
   catch(this: ActionsSdkApp<TConvData, TUserStorage, TConversation>, catcher) {
-    this.catcher = catcher
+    this.handlers.catcher = catcher
     return this
   },
-  catcher(conv, e) {
-    throw e
+  fallback(this: ActionsSdkApp<TConvData, TUserStorage, TConversation>, handler) {
+    this.handlers.fallback = handler
+    return this
   },
   middleware(
     this: ActionsSdkApp<TConvData, TUserStorage, TConversation>,
@@ -231,37 +194,71 @@ export const actionssdk: ActionsSdk = <
     this.middlewares.push(middleware)
     return this
   },
+  init: options.init,
+  verification: options.verification,
   async handler(
-    this: ActionsSdkApp<TConvData, TUserStorage, TConversation>,
+    this: AppHandler & ActionsSdkApp<TConvData, TUserStorage, TConversation>,
     body: Api.GoogleActionsV2AppRequest,
     headers,
   ) {
-    const { init } = options
+    const { debug, init, verification } = this
+    if (verification) {
+      const {
+        project,
+        status = 403,
+        error = (e: string) => e,
+      } = typeof verification === 'string' ? { project: verification } : verification
+      const token = headers['authorization'] as string
+      try {
+        await client.verifyIdToken({
+          idToken: token,
+          audience: project,
+        })
+      } catch (e) {
+        return {
+          status,
+          body: {
+            error: typeof error === 'string' ? error :
+              error(`ID token verification failed: ${e.stack || e.message || e}`),
+          },
+        }
+      }
+    }
     let conv = new ActionsSdkConversation({
       body,
       headers,
       init: init && init(),
+      debug,
     })
     for (const middleware of this.middlewares) {
-      conv = middleware(conv) as ActionsSdkConversation<TConvData, TUserStorage>
+      conv = (middleware(conv) as ActionsSdkConversation<TConvData, TUserStorage> | void) || conv
     }
     const { intent } = conv
     const traversed: Traversed = {}
-    let handler: typeof this.intents[string] = intent
+    let handler: typeof this.handlers.intents[string] = intent
     while (typeof handler !== 'function') {
       if (typeof handler === 'undefined') {
-        throw new Error(`Actions SDK IntentHandler not found for intent: ${intent}`)
+        if (!this.handlers.fallback) {
+          throw new Error(`Actions SDK IntentHandler not found for intent: ${intent}`)
+        }
+        handler = this.handlers.fallback
+        continue
       }
       if (traversed[handler]) {
         throw new Error(`Circular intent map detected: "${handler}" traversed twice`)
       }
       traversed[handler] = true
-      handler = this.intents[handler]
+      handler = this.handlers.intents[handler]
     }
     try {
-      await handler(conv, conv.input.raw, conv.arguments.list[0])
+      await handler(
+        conv,
+        conv.input.raw,
+        conv.arguments.parsed.list[0],
+        conv.arguments.status.list[0],
+      )
     } catch (e) {
-      await this.catcher(conv as TConversation, e)
+      await this.handlers.catcher(conv as TConversation, e)
     }
     return {
       status: 200,

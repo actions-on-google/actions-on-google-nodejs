@@ -14,6 +14,24 @@
  * limitations under the License.
  */
 
-export * from './actionssdk'
-export * from './conv'
-export * from './conversation'
+import * as Api from '../../api/v2'
+import { toArray } from '../../../../common'
+
+/** @public */
+export class Suggestions {
+  /** @public */
+  suggestions: Api.GoogleActionsV2UiElementsSuggestion[] = []
+
+  /** @public */
+  constructor(...suggestions: (string[] | string)[]) {
+    for (const suggestion of suggestions) {
+      this.add(...toArray(suggestion))
+    }
+  }
+
+  /** @public */
+  add(...suggestions: string[]) {
+    this.suggestions.push(...suggestions.map(title => ({ title })))
+    return this
+  }
+}

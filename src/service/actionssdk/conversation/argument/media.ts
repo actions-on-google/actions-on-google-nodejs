@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
-export * from './actionssdk'
-export * from './conv'
-export * from './conversation'
+import * as Api from '../../api/v2'
+
+/** @public */
+export type MediaStatusArgument = Api.GoogleActionsV2MediaStatus

@@ -14,7 +14,9 @@
  * limitations under the License.
  */
 
-/* tslint:disable:no-any auto generated types from protobufs */
+// DO NOT MANUALLY EDIT: this file contains types generated from protobuf messages
+
+/* tslint:disable:no-any max-line-length auto generated from protobufs */
 
 import { ApiClientObjectMap } from '../../../common'
 

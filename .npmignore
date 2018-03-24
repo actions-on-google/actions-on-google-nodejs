@@ -4,3 +4,9 @@ tslint.json
 tsconfig.json
 .travis.yml
 CONTRIBUTING.md
+*.log
+*.tgz
+*.DS_Store
+.nyc_output
+coverage
+docs/

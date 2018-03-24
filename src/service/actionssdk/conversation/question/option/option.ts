@@ -19,9 +19,9 @@ import * as Api from '../../../api/v2'
 /** @public */
 export type OptionArgument = string
 
-export interface OptionItems {
+export interface OptionItems<TOptionItem = OptionItem | string> {
   /** @public */
-  [key: string]: OptionItem
+  [key: string]: TOptionItem
 }
 
 /** @public */
@@ -33,16 +33,26 @@ export interface OptionItem {
   title: string
 
   /** @public */
-  description: string
+  description?: string
 
   /** @public */
-  image: Api.GoogleActionsV2UiElementsImage
+  image?: Api.GoogleActionsV2UiElementsImage
 }
 
 export interface ApiOptionItem extends Api.GoogleActionsV2UiElementsCarouselSelectCarouselItem { }
 
 export const convert = (items: OptionItems) => Object.keys(items).map(key => {
-  const { description, image, synonyms, title } = items[key]
+  const value = items[key]
+  if (typeof value === 'string') {
+    const item: ApiOptionItem = {
+      title: value,
+      optionInfo: {
+        key,
+      },
+    }
+    return item
+  }
+  const { description, image, synonyms, title } = value
   const item: ApiOptionItem = {
     optionInfo: {
       key,

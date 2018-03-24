@@ -15,4 +15,5 @@
  */
 
 export * from './dialogflow'
+export * from './conv'
 export * from './context'

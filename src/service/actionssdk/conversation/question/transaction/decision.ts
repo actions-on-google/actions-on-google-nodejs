@@ -14,6 +14,19 @@
  * limitations under the License.
  */
 
-export * from './actionssdk'
-export * from './conv'
-export * from './conversation'
+import * as Api from '../../../api/v2'
+import { SoloQuestion } from '../question'
+
+/** @public */
+export type TransactionDecisionArgument = Api.GoogleActionsV2TransactionDecisionValue
+
+/** @public */
+export class TransactionDecision extends SoloQuestion<
+  Api.GoogleActionsV2TransactionDecisionValueSpec
+> {
+  constructor(options?: Api.GoogleActionsV2TransactionDecisionValueSpec) {
+    super('actions.intent.TRANSACTION_DECISION')
+
+    this.data('type.googleapis.com/google.actions.v2.TransactionDecisionValueSpec', options)
+  }
+}

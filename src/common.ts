@@ -46,8 +46,3 @@ export const toArray = <T>(a: T | T[]) => Array.isArray(a) ? a : [a]
 export interface ApiClientObjectMap<TValue> {
   [key: string]: TValue
 }
-
-
-export interface Traversed {
-  [key: string]: boolean
-}

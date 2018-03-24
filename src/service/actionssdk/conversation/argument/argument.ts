@@ -24,11 +24,23 @@ import {
   SignInArgument,
   PlaceArgument,
   DeepLinkArgument,
+  TransactionDecisionArgument,
+  TransactionRequirementsArgument,
+  DeliveryAddressArgument,
+  RegisterUpdateArgument,
 } from '..'
 import {
   RepromptArgument,
   FinalRepromptArgument,
 } from './noinput'
+import {
+  MediaStatusArgument,
+} from './media'
+
+// Need to import because of https://github.com/Microsoft/TypeScript/issues/9944
+import { ApiClientObjectMap } from '../../../../common'
+// Need to use type to avoid unused local linter errors
+export { ApiClientObjectMap }
 
 /** @public */
 export type Argument = Api.GoogleActionsV2Argument[keyof Api.GoogleActionsV2Argument]
@@ -41,13 +53,13 @@ export interface ArgumentsNamed {
   OPTION?: OptionArgument
 
   /** @public */
-  TRANSACTION_REQUIREMENTS_CHECK_RESULT?: Argument
+  TRANSACTION_REQUIREMENTS_CHECK_RESULT?: TransactionRequirementsArgument
 
   /** @public */
-  DELIVERY_ADDRESS_VALUE?: Argument
+  DELIVERY_ADDRESS_VALUE?: DeliveryAddressArgument
 
   /** @public */
-  TRANSACTION_DECISION_VALUE?: Argument
+  TRANSACTION_DECISION_VALUE?: TransactionDecisionArgument
 
   /** @public */
   CONFIRMATION?: ConfirmationArgument
@@ -68,16 +80,19 @@ export interface ArgumentsNamed {
   NEW_SURFACE?: NewSurfaceArgument
 
   /** @public */
-  REGISTER_UPDATE?: Argument
+  REGISTER_UPDATE?: RegisterUpdateArgument
 
   /** @public */
   PLACE?: PlaceArgument
 
   /** @public */
   LINK?: DeepLinkArgument
+
+  /** @public */
+  MEDIA_STATUS?: MediaStatusArgument
 }
 
-export interface ArgumentsInput extends ArgumentsNamed {
+export interface ArgumentsParsed extends ArgumentsNamed {
   /** @public */
   [name: string]: Argument | undefined
 }
@@ -86,16 +101,24 @@ export interface ArgumentsIndexable {
   [key: string]: Argument
 }
 
-export class Arguments {
+export interface ArgumentsStatus {
+  /** @public */
+  [name: string]: Api.GoogleRpcStatus | undefined
+}
+
+export interface ArgumentsRaw {
+  [name: string]: Api.GoogleActionsV2Argument
+}
+
+export class Parsed {
   /** @public */
   list: Argument[]
 
   /** @public */
-  input: ArgumentsInput
+  input: ArgumentsParsed = {}
 
-  constructor(list: Api.GoogleActionsV2Argument[] = []) {
-    this.input = {}
-    this.list = list.map(arg => {
+  constructor(raw: Api.GoogleActionsV2Argument[]) {
+    this.list = raw.map((arg, i) => {
       const value = this.getValue(arg)
       const name = arg.name!
       this.input[name] = value
@@ -114,17 +137,85 @@ export class Arguments {
     if (arg.name === 'PERMISSION') {
       return !!arg.boolValue
     }
-    if (arg.textValue) {
-      return arg.textValue
-    }
-    return arg.status
+    return arg.textValue
   }
 
   /** @public */
-  get<TName extends keyof ArgumentsNamed>(argument: TName): ArgumentsNamed[TName]
+  get<TName extends keyof ArgumentsNamed>(name: TName): ArgumentsNamed[TName]
   /** @public */
-  get(argument: string): Argument
-  get(argument: string) {
-    return this.input[argument]
+  get(name: string): Argument
+  get(name: string) {
+    return this.input[name]
+  }
+}
+
+export class Status {
+  /** @public */
+  list: (Api.GoogleRpcStatus | undefined)[]
+
+  /** @public */
+  input: ArgumentsStatus = {}
+
+  constructor(raw: Api.GoogleActionsV2Argument[]) {
+    this.list = raw.map((arg, i) => {
+      const name = arg.name!
+      const status = arg.status
+      this.input[name] = status
+      return status
+    })
+  }
+
+  /** @public */
+  get(name: string) {
+    return this.input[name]
+  }
+}
+
+export class Raw {
+  /** @public */
+  input: ArgumentsRaw
+
+  constructor(public list: Api.GoogleActionsV2Argument[]) {
+    this.input = list.reduce((o, arg) => {
+      o[arg.name!] = arg
+      return o
+    }, {} as ArgumentsRaw)
+  }
+
+  /** @public */
+  get(name: string) {
+    return this.input[name]
+  }
+}
+
+export class Arguments {
+  /** @public */
+  parsed: Parsed
+
+  /** @public */
+  status: Status
+
+  /** @public */
+  raw: Raw
+
+  constructor(raw: Api.GoogleActionsV2Argument[] = []) {
+    this.parsed = new Parsed(raw)
+    this.status = new Status(raw)
+    this.raw = new Raw(raw)
+  }
+
+  /** @public */
+  get<TName extends keyof ArgumentsNamed>(name: TName): ArgumentsNamed[TName]
+  /** @public */
+  get(name: string): Argument
+  get(name: string) {
+    return this.parsed.get(name)
+  }
+
+  /** @public */
+  [Symbol.iterator]() {
+    return this.raw.list[Symbol.iterator]()
+    // suppose to be Array.prototype.values(), but can't use because of bug:
+    // https://bugs.chromium.org/p/chromium/issues/detail?id=615873
   }
 }

@@ -23,7 +23,9 @@ import {
   BasicCard,
   RichResponse,
   Suggestions,
-  SimpleResponse,
+  RichResponseItem,
+  MediaObject,
+  MediaResponse,
 } from './response'
 import { Question, SoloQuestion } from './question'
 import { Arguments } from './argument'
@@ -49,7 +51,8 @@ export type Intent =
   'actions.intent.REGISTER_UPDATE' |
   'actions.intent.CONFIGURE_UPDATES' |
   'actions.intent.PLACE' |
-  'actions.intent.LINK'
+  'actions.intent.LINK' |
+  'actions.intent.MEDIA_STATUS'
 
 export type InputValueSpec =
   'type.googleapis.com/google.actions.v2.PermissionValueSpec' |
@@ -72,11 +75,10 @@ export type DialogSpec =
 /** @public */
 export type Response =
   RichResponse |
-  string |
-  SimpleResponse |
-  BasicCard |
-  Suggestions |
+  RichResponseItem |
   Image |
+  Suggestions |
+  MediaObject |
   Question<JsonObject>
 
 export interface ConversationResponse {
@@ -134,6 +136,14 @@ export class Conversation<TUserStorage> {
   /** @public */
   device: Device
 
+  /** @public */
+  id: string
+
+  /** @public */
+  type: Api.GoogleActionsV2ConversationType
+
+  raw?: JsonObject
+
   constructor(options: ConversationOptions<TUserStorage>) {
     const { request, headers, init } = options
 
@@ -142,7 +152,7 @@ export class Conversation<TUserStorage> {
 
     this.sandbox = !!this.request.isInSandbox
 
-    const { inputs = [] } = this.request
+    const { inputs = [], conversation = {} } = this.request
     const [input = {}] = inputs
     const { rawInputs = [] } = input
 
@@ -155,6 +165,15 @@ export class Conversation<TUserStorage> {
     this.arguments = new Arguments(input.arguments)
 
     this.device = new Device(this.request.device)
+
+    this.id = conversation.conversationId!
+
+    this.type = conversation.type!
+  }
+
+  /** @public */
+  json(json: JsonObject) {
+    this.raw = json
   }
 
   /** @public */
@@ -162,7 +181,7 @@ export class Conversation<TUserStorage> {
     if (this.digested) {
       throw new Error('Response has already been sent. ' +
         'Is this being used in an async call that was not ' +
-        'returned as a promise to the action/intent handler?')
+        'returned as a promise to the intent handler?')
     }
     this.responses.push(...responses)
     return this
@@ -221,6 +240,10 @@ export class Conversation<TUserStorage> {
         richResponse.add(new BasicCard({ image: response }))
         continue
       }
+      if (response instanceof MediaObject) {
+        richResponse.add(new MediaResponse(response))
+        continue
+      }
       richResponse.add(response)
     }
     const userStorage = this.user.serialize()
@@ -239,4 +262,8 @@ export interface ExceptionHandler<
 > {
   // tslint:disable-next-line:no-any allow developer to return any just detect if is promise
   (conv: TConversation, error: Error): Promise<any> | any
+}
+
+export interface Traversed {
+  [key: string]: boolean
 }

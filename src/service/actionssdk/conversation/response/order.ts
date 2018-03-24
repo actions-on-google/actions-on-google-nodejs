@@ -14,6 +14,12 @@
  * limitations under the License.
  */
 
-export * from './actionssdk'
-export * from './conv'
-export * from './conversation'
+import * as Api from '../../api/v2'
+
+/** @public */
+export interface OrderUpdate extends Api.GoogleActionsV2OrdersOrderUpdate { }
+export class OrderUpdate implements Api.GoogleActionsV2OrdersOrderUpdate {
+  constructor(options: Api.GoogleActionsV2OrdersOrderUpdate) {
+    Object.assign(this, options)
+  }
+}

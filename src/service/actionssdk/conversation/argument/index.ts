@@ -16,3 +16,4 @@
 
 export * from './argument'
 export * from './noinput'
+export * from './media'

@@ -58,12 +58,7 @@ This library supports only Actions SDK fulfillment version 2.
 To ensure that your fulfillment uses version 2, set the [`"fulfillmentApiVersion": 2`](https://github.com/actions-on-google/actionssdk-eliza-nodejs/blob/a44a1b0ef0026ce2b0e525ce38bebbf8540ce344/eliza.json#L41) property in your action package.
 
 ### Supported Features
-The alpha currently covers most features that exist in v1 with some notable exceptions:
-* Transactions support is currently not implemented for the alpha.
-* New features released in `1.10.0` are not yet implemented but will be soon which includes:
-  * Media Controls RichResponse
-  * Browse Carousel RichResponse
-  * Play Entitlements retrieval
+The Actions on Google Node.js Client Library V2 Alpha supports almost all v1 features with the major exception of incoming Dialogflow responses
 
 ### Samples
 To run the samples included with the alpha, follow the instructions in the README for each sample's folder.
@@ -73,7 +68,7 @@ To run the samples included with the alpha, follow the instructions in the READM
 * If you find any issues, please open a bug on [GitHub](https://github.com/actions-on-google/actions-on-google-nodejs).
 * Questions are answered on [StackOverflow](https://stackoverflow.com/questions/tagged/actions-on-google).
 
-Note that the Actions on Google documentation currently shows usage of v1 of the client library, as that is still the stable version. 
+Note that the Actions on Google documentation currently shows usage of v1 of the client library, as that is still the stable version.
 
 ## How to make contributions?
 Please read and follow the steps in the CONTRIBUTING.md.

@@ -16,8 +16,13 @@
 
 import * as Api from './api/v2'
 import * as ApiV1 from './api/v1'
-import { Parameters } from './dialogflow'
 import { values } from '../../common'
+
+/** @public */
+export interface Parameters {
+  /** @public */
+  [parameter: string]: string | Object | undefined
+}
 
 /** @public */
 export interface Contexts {

@@ -35,7 +35,7 @@ export interface DeepLinkOptions {
 }
 
 /** @public */
-export type DeepLinkArgument = Api.GoogleRpcStatus
+export type DeepLinkArgument = undefined
 
 /** @public */
 export class DeepLink extends Question<Api.GoogleActionsV2LinkValueSpec> {

@@ -29,7 +29,7 @@ export interface PlaceOptions {
 }
 
 /** @public */
-export type PlaceArgument = Api.GoogleActionsV2Location
+export type PlaceArgument = Api.GoogleActionsV2Location | undefined
 
 /** @public */
 export class Place extends SoloQuestion<Api.GoogleActionsV2PlaceValueSpec> {

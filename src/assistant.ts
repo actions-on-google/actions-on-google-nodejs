@@ -34,7 +34,7 @@ export interface ServiceBaseApp {
 /** @public */
 export interface Plugin<TService, TPlugin> {
   /** @public */
-  <TApp>(app: AppHandler & TService & TApp): AppHandler & TService & TApp & TPlugin
+  <TApp>(app: AppHandler & TService & TApp): (AppHandler & TService & TApp & TPlugin) | void
 }
 
 /** @public */
@@ -55,7 +55,7 @@ const create = (options?: AppOptions): BaseApp => ({
   frameworks: Object.assign({}, builtin),
   handler: () => Promise.reject(new Error('StandardHandler not set')),
   use(plugin) {
-    return plugin(this)
+    return plugin(this) || this
   },
   debug: !!(options && options.debug),
 })
@@ -64,7 +64,17 @@ export const attach = <TService>(
   service: TService,
   options?: AppOptions,
 ): AppHandler & TService => {
-  const app = Object.assign(create(options), service)
+  let app: (BaseApp & TService) | (AppHandler & TService) = Object.assign(create(options), service)
+  // tslint:disable-next-line:no-any automatically detect any inputs
+  const omni: OmniHandler = (...args: any[]) => {
+    for (const framework of values(app.frameworks)) {
+      if (framework.check(...args)) {
+        return framework.handle(app.handler)(...args)
+      }
+    }
+    return app.handler(args[0], args[1])
+  }
+  app = Object.assign(omni, app)
   const handler = app.handler.bind(app)
   const standard: StandardHandler = async (body, headers) => {
     const log = app.debug ? info : debug
@@ -76,14 +86,5 @@ export const attach = <TService>(
     return response
   }
   app.handler = standard
-  // tslint:disable-next-line:no-any automatic detect of any inputs
-  const omni: OmniHandler = (...args: any[]) => {
-    for (const framework of values(app.frameworks)) {
-      if (framework.check(...args)) {
-        return framework.handle(app.handler)(...args)
-      }
-    }
-    return app.handler(args[0], args[1])
-  }
-  return Object.assign(omni, app)
+  return app as AppHandler & TService
 }

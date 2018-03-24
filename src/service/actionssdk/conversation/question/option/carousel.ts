@@ -16,10 +16,16 @@
 
 import * as Api from '../../../api/v2'
 import { Question } from '../question'
-import { OptionArgument, OptionItems, convert } from './option'
+import { OptionArgument, OptionItems, convert, OptionItem } from './option'
 
 /** @public */
 export type CarouselArgument = OptionArgument
+
+/** @public */
+export interface CarouselOptionItem extends OptionItem {
+  /** @public */
+  description: string
+}
 
 /** @public */
 export interface CarouselOptions {
@@ -27,7 +33,7 @@ export interface CarouselOptions {
   display?: Api.GoogleActionsV2UiElementsCarouselSelectImageDisplayOptions
 
   /** @public */
-  items: OptionItems | Api.GoogleActionsV2UiElementsCarouselSelectCarouselItem[]
+  items: OptionItems<CarouselOptionItem> | Api.GoogleActionsV2UiElementsCarouselSelectCarouselItem[]
 }
 
 /** @public */

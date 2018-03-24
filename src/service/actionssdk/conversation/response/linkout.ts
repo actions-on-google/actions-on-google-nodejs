@@ -14,6 +14,23 @@
  * limitations under the License.
  */
 
-export * from './actionssdk'
-export * from './conv'
-export * from './conversation'
+import * as Api from '../../api/v2'
+
+/** @public */
+export interface LinkOutSuggestionOptions {
+  /** @public */
+  name: string
+
+  /** @public */
+  url: string
+}
+
+/** @public */
+export interface LinkOutSuggestion extends Api.GoogleActionsV2UiElementsLinkOutSuggestion { }
+export class LinkOutSuggestion implements Api.GoogleActionsV2UiElementsLinkOutSuggestion {
+  /** @public */
+  constructor(options: LinkOutSuggestionOptions) {
+    this.destinationName = options.name
+    this.url = options.url
+  }
+}

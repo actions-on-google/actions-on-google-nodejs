@@ -14,6 +14,31 @@
  * limitations under the License.
  */
 
-export * from './actionssdk'
-export * from './conv'
-export * from './conversation'
+import * as Api from '../../api/v2'
+
+/** @public */
+export interface ImageOptions {
+  /** @public */
+  url: string
+
+  /** @public */
+  alt: string
+
+  /** @public */
+  height?: number
+
+  /** @public */
+  width?: number
+}
+
+/** @public */
+export interface Image extends Api.GoogleActionsV2UiElementsImage { }
+export class Image implements Api.GoogleActionsV2UiElementsImage {
+  /** @public */
+  constructor(option: ImageOptions) {
+    this.url = option.url
+    this.accessibilityText = option.alt
+    this.height = option.height
+    this.width = option.width
+  }
+}

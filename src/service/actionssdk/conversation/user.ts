@@ -44,6 +44,15 @@ export class Name {
   }
 }
 
+export class Access {
+  /** @public */
+  token?: string
+
+  constructor(user: Api.GoogleActionsV2User) {
+    this.token = user.accessToken
+  }
+}
+
 export class User<TUserStorage> {
   /** @public */
   storage: TUserStorage
@@ -63,6 +72,12 @@ export class User<TUserStorage> {
   /** @public */
   name: Name
 
+  /** @public */
+  entitlements: Api.GoogleActionsV2PackageEntitlement[]
+
+  /** @public */
+  access: Access
+
   constructor(user: Api.GoogleActionsV2User = {}, initial?: TUserStorage) {
     const { userStorage } = user
     this.storage = userStorage ? JSON.parse(userStorage).data : (initial || {})
@@ -76,6 +91,10 @@ export class User<TUserStorage> {
 
     const profile = user.profile || {}
     this.name = new Name(profile)
+
+    this.entitlements = user.packageEntitlements || []
+
+    this.access = new Access(user)
   }
 
   serialize() {

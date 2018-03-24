@@ -19,7 +19,7 @@ import { SoloQuestion } from './question'
 import { toArray } from '../../../../common'
 
 /** @public */
-export type NewSurfaceArgument = boolean
+export type NewSurfaceArgument = Api.GoogleActionsV2NewSurfaceValue
 
 /** @public */
 export interface NewSurfaceOptions {
