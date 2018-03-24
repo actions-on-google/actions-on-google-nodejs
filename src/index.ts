@@ -139,3 +139,6 @@ export {
 } from './service/actionssdk'
 
 export * from './service/actionssdk/api/v2'
+
+export * from './service/smarthome'
+export * from './service/smarthome/api/v1'
