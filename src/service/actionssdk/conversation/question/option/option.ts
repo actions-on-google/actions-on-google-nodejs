@@ -20,22 +20,40 @@ import * as Api from '../../../api/v2'
 export type OptionArgument = string
 
 export interface OptionItems<TOptionItem = OptionItem | string> {
-  /** @public */
+  /**
+   * key: Unique string ID for this option.
+   * @public
+   */
   [key: string]: TOptionItem
 }
 
-/** @public */
+/**
+ * Option item. Used in actions.intent.OPTION intent.
+ * @public
+ */
 export interface OptionItem {
-  /** @public */
+  /**
+   * Synonyms that can be used by the user to indicate this option if they do not use the key.
+   * @public
+   */
   synonyms?: string[]
 
-  /** @public */
+  /**
+   * Name of the item.
+   * @public
+   */
   title: string
 
-  /** @public */
+  /**
+   * Optional text describing the item.
+   * @public
+   */
   description?: string
 
-  /** @public */
+  /**
+   * Square image to show for this item.
+   * @public
+   */
   image?: Api.GoogleActionsV2UiElementsImage
 }
 

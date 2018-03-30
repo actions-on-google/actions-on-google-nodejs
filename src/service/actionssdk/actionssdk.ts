@@ -29,8 +29,23 @@ export interface ActionsSdkIntentHandler<
 > {
   (
     conv: TConversation,
+    /**
+     * The user's raw input query.
+     * See {@link Input#raw|Input.raw}
+     * Same as `conv.input.raw`
+     */
     input: string,
+    /**
+     * The first argument value from the current intent.
+     * See {@link Arguments#get|Arguments.get}
+     * Same as `conv.arguments.parsed.list[0]`
+     */
     argument: TArgument,
+    /**
+     * The first argument status from the current intent.
+     * See {@link Arguments#status|Arguments.status}
+     * Same as `conv.arguments.status.list[0]`
+     */
     status: Api.GoogleRpcStatus | undefined,
     // tslint:disable-next-line:no-any allow developer to return any just detect if is promise
   ): Promise<any> | any
@@ -41,7 +56,7 @@ export interface ActionSdkIntentHandlers {
     {},
     {},
     ActionsSdkConversation<{}, {}>,
-    string | Argument
+    Argument
   > | string | undefined
 }
 
@@ -56,7 +71,7 @@ export interface ActionsSdkHandlers<
     {},
     {},
     ActionsSdkConversation<{}, {}>,
-    string | Argument
+    Argument
   > | string
 }
 
@@ -135,13 +150,25 @@ export interface ActionsSdk {
 
 /** @public */
 export interface ActionsSdkVerification {
-  /** @public */
+  /**
+   * Google Cloud Project ID for the Assistant app.
+   * @public
+   */
   project: string
 
-  /** @public */
+  /**
+   * Custom status code to return on verification error.
+   * @public
+   */
   status?: number
 
-  /** @public */
+  /**
+   * Custom error message as a string or a function that returns a string
+   * given the original error message set by the library.
+   *
+   * The message will get sent back in the JSON top level `error` property.
+   * @public
+   */
   error?: string | ((error: string) => string)
 }
 
@@ -150,13 +177,39 @@ export interface ActionsSdkOptions<TConvData, TUserStorage> extends AppOptions {
   /** @public */
   init?: () => ActionsSdkConversationOptionsInit<TConvData, TUserStorage>
 
-  /** @public */
+  /**
+   * Validates whether request is from Google through signature verification.
+   * Uses Google-Auth-Library to verify authorization token against given Google Cloud Project ID.
+   * Auth token is given in request header with key, "authorization".
+   *
+   * HTTP Code 403 will be thrown by default on verification error.
+   *
+   * @example
+   * const app = actionssdk({ verification: 'nodejs-cloud-test-project-1234' })
+   *
+   * @public
+   */
   verification?: ActionsSdkVerification | string
 }
 
 const client = new OAuth2Client()
 
-/** @public */
+/**
+ * This is the function that creates the app instance which on new requests,
+ * creates a way to interact with the conversation API directly from Assistant,
+ * providing implementation for all the methods available in the API.
+ *
+ * Only supports Actions SDK v2.
+ *
+ * @example
+ * const app = actionssdk()
+ *
+ * app.intent('actions.intent.MAIN', conv => {
+ *   conv.ask('How are you?')
+ * })
+ *
+ * @public
+ */
 export const actionssdk: ActionsSdk = <
   TConvData,
   TUserStorage,

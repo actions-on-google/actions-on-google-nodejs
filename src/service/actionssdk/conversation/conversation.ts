@@ -79,7 +79,7 @@ export type Response =
   Image |
   Suggestions |
   MediaObject |
-  Question<JsonObject>
+  Question<Intent, JsonObject>
 
 export interface ConversationResponse {
   richResponse: Api.GoogleActionsV2RichResponse
@@ -121,13 +121,24 @@ export class Conversation<TUserStorage> {
   /** @public */
   digested = false
 
-  /** @public */
+  /**
+   * True if the app is being tested in sandbox mode. Enable sandbox
+   * mode in the (Actions console)[console.actions.google.com] to test
+   * transactions.
+   * @public
+   */
   sandbox: boolean
 
   /** @public */
   input: Input
 
-  /** @public */
+  /**
+   * Gets the {@link User} object.
+   * The user object contains information about the user, including
+   * a string identifier and personal information (requires requesting permissions,
+   * see {@link Permission|conv.ask(new Permission)}).
+   * @public
+   */
   user: User<TUserStorage>
 
   /** @public */
@@ -136,7 +147,17 @@ export class Conversation<TUserStorage> {
   /** @public */
   device: Device
 
-  /** @public */
+  /**
+   * Gets the unique conversation ID. It's a new ID for the initial query,
+   * and stays the same until the end of the conversation.
+   *
+   * @example
+   * app.intent('actions.intent.MAIN', conv => {
+   *   const conversationId = conv.id
+   * })
+   *
+   * @public
+   */
   id: string
 
   /** @public */
@@ -187,13 +208,85 @@ export class Conversation<TUserStorage> {
     return this
   }
 
-  /** @public */
+  /**
+   * Asks to collect user's input. All user's queries need to be sent to the app.
+   * {@link https://developers.google.com/actions/policies/general-policies#user_experience|
+   *     The guidelines when prompting the user for a response must be followed at all times}.
+   *
+   * @example
+   * // Actions SDK
+   * const app = actionssdk()
+   *
+   * app.intent('actions.intent.MAIN', conv => {
+   *   const ssml = '<speak>Hi! <break time="1"/> ' +
+   *     'I can read out an ordinal like <say-as interpret-as="ordinal">123</say-as>. ' +
+   *     'Say a number.</speak>'
+   *   conv.ask(ssml)
+   * })
+   *
+   * app.intent('actions.intent.TEXT', (conv, input) => {
+   *   if (input === 'bye') {
+   *     return conv.close('Goodbye!')
+   *   }
+   *   const ssml = `<speak>You said, <say-as interpret-as="ordinal">${input}</say-as></speak>`
+   *   conv.ask(ssml)
+   * })
+   *
+   * // Dialogflow
+   * const app = dialogflow()
+   *
+   * app.intent('Default Welcome Intent', conv => {
+   *   conv.ask('Welcome to action snippets! Say a number.')
+   * })
+   *
+   * app.intent('Number Input', (conv, {num}) => {
+   *   conv.close(`You said ${num}`)
+   * })
+   *
+   * @param responses A response fragment for the library to construct a single complete response
+   * @public
+   */
   ask(...responses: Response[]) {
     this.expectUserResponse = true
     return this.add(...responses)
   }
 
-  /** @public */
+  /**
+   * Have Assistant render the speech response and close the mic.
+   *
+   * @example
+   * // Actions SDK
+   * const app = actionssdk()
+   *
+   * app.intent('actions.intent.MAIN', conv => {
+   *   const ssml = '<speak>Hi! <break time="1"/> ' +
+   *     'I can read out an ordinal like <say-as interpret-as="ordinal">123</say-as>. ' +
+   *     'Say a number.</speak>'
+   *   conv.ask(ssml)
+   * })
+   *
+   * app.intent('actions.intent.TEXT', (conv, input) => {
+   *   if (input === 'bye') {
+   *     return conv.close('Goodbye!')
+   *   }
+   *   const ssml = `<speak>You said, <say-as interpret-as="ordinal">${input}</say-as></speak>`
+   *   conv.ask(ssml)
+   * })
+   *
+   * // Dialogflow
+   * const app = dialogflow()
+   *
+   * app.intent('Default Welcome Intent', conv => {
+   *   conv.ask('Welcome to action snippets! Say a number.')
+   * })
+   *
+   * app.intent('Number Input', (conv, {num}) => {
+   *   conv.close(`You said ${num}`)
+   * })
+   *
+   * @param responses A response fragment for the library to construct a single complete response
+   * @public
+   */
   close(...responses: Response[]) {
     this.expectUserResponse = false
     return this.add(...responses)

@@ -18,35 +18,62 @@ import * as Api from '../../api/v2'
 
 /** @public */
 export interface BrowseCarouselOptions {
-  /** @public */
+  /**
+   * Sets the display options for the images in this carousel.
+   * @public
+   */
   display?: Api.GoogleActionsV2UiElementsCarouselBrowseImageDisplayOptions
 
-  /** @public */
+  /**
+   * List of 2-20 items to show in this carousel. Required.
+   * @public
+   */
   items: Api.GoogleActionsV2UiElementsCarouselBrowseItem[]
 }
 
 /** @public */
 export interface BrowseCarouselItemOptions {
-  /** @public */
+  /**
+   * Title of the option item. Required.
+   * @public
+   */
   title: string
 
-  /** @public */
+  /**
+   * The URL of the link opened by clicking the BrowseCarouselItem. Optional.
+   * @public
+   */
   url: string
 
-  /** @public */
+  /**
+   * Description text of the item. Optional.
+   * @public
+   */
   description?: string
 
-  /** @public */
+  /**
+   * Footer text of the item. Optional.
+   * @public
+   */
   footer?: string
 
-  /** @public */
+  /**
+   * Image to show on item. Optional.
+   * @public
+   */
   image?: Api.GoogleActionsV2UiElementsImage
 }
 
-/** @public */
+/**
+ * Class for initializing and constructing BrowseCarousel Items
+ * @public
+ */
 export interface BrowseCarouselItem extends Api.GoogleActionsV2UiElementsCarouselBrowseItem { }
 export class BrowseCarouselItem implements Api.GoogleActionsV2UiElementsCarouselBrowseItem {
-  /** @public */
+  /**
+   * @param options BrowseCarouselItem options
+   * @public
+   */
   constructor(options: BrowseCarouselItemOptions) {
     this.title = options.title
     this.openUrlAction = {
@@ -58,14 +85,26 @@ export class BrowseCarouselItem implements Api.GoogleActionsV2UiElementsCarousel
   }
 }
 
-/** @public */
+/**
+ * Class for initializing and constructing Browse Carousel.
+ * @public
+ */
 export interface BrowseCarousel extends Api.GoogleActionsV2UiElementsCarouselBrowse { }
 export class BrowseCarousel implements Api.GoogleActionsV2UiElementsCarouselBrowse {
-  /** @public */
+  /**
+   * @param options BrowseCarousel options
+   * @public
+   */
   constructor(options: BrowseCarouselOptions)
-  /** @public */
+  /**
+   * @param items BrowseCarousel items
+   * @public
+   */
   constructor(items: Api.GoogleActionsV2UiElementsCarouselBrowseItem[])
-  /** @public */
+  /**
+   * @param items BrowseCarousel items
+   * @public
+   */
   constructor(...items: Api.GoogleActionsV2UiElementsCarouselBrowseItem[])
   constructor(
     options?: BrowseCarouselOptions |

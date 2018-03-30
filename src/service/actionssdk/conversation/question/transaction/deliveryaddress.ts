@@ -20,10 +20,18 @@ import { SoloQuestion } from '../question'
 /** @public */
 export type DeliveryAddressArgument = Api.GoogleActionsV2DeliveryAddressValue
 
-/** @public */
+/**
+ * Asks user for delivery address.
+ * @public
+ */
 export class DeliveryAddress extends SoloQuestion<
+  'actions.intent.DELIVERY_ADDRESS',
   Api.GoogleActionsV2DeliveryAddressValueSpec
 > {
+  /**
+   * @param options The raw {@link GoogleActionsV2DeliveryAddressValueSpec}
+   * @public
+   */
   constructor(options?: Api.GoogleActionsV2DeliveryAddressValueSpec) {
     super('actions.intent.DELIVERY_ADDRESS')
 

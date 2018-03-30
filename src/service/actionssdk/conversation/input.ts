@@ -17,10 +17,30 @@
 import * as Api from '../api/v2'
 
 export class Input {
-  /** @public */
+  /**
+   * Gets the user's raw input query.
+   *
+   * Will also be sent via intent handler 2nd argument which is the encouraged method to retrieve.
+   *
+   * @example
+   * // Encouraged method through intent handler
+   * app.intent('actions.intent.TEXT', (conv, input) => {
+   *  conv.close(`You said ${input}`)
+   * })
+   *
+   * // Using conv.input.raw
+   * app.intent('actions.intent.TEXT', conv => {
+   *  conv.close(`You said ${conv.input.raw}`)
+   * })
+   *
+   * @public
+   */
   raw: string
 
-  /** @public */
+  /**
+   * Gets type of input used for this request.
+   * @public
+   */
   type: Api.GoogleActionsV2RawInputInputType
 
   constructor(input: Api.GoogleActionsV2RawInput = {}) {

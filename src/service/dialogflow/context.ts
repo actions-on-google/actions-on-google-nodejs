@@ -38,13 +38,42 @@ export interface OutputContexts {
 
 /** @public */
 export interface Context<TParameters extends Parameters> extends OutputContext<TParameters> {
-  /** @public */
+  /**
+   * Full name of the context.
+   * @public
+   */
   name: string
 
-  /** @public */
+  /**
+   * Remaining number of intents
+   * @public
+   */
   lifespan: number
 
-  /** @public */
+  /**
+   * The context parameters from the current intent.
+   * Context parameters include parameters collected in previous intents
+   * during the lifespan of the given context.
+   *
+   * See {@link https://dialogflow.com/docs/concept-actions#section-extracting-values-from-contexts|
+   *     here}.
+   *
+   * @example
+   * app.intent('Tell Greeting', conv => {
+   *   const context1 = conv.contexts.get('context1')
+   *   const parameters = context1.parameters
+   *   const color = parameters.color
+   *   const num = parameters.num
+   * })
+   *
+   * // Using destructuring
+   * app.intent('Tell Greeting', conv => {
+   *   const context1 = conv.contexts.get('context1')
+   *   const { color, num } = context1.parameters
+   * })
+   *
+   * @public
+   */
   parameters: TParameters
 }
 
@@ -120,12 +149,59 @@ export class ContextValues<TContexts extends Contexts> {
     })
   }
 
-  /** @public */
+  /**
+   * Returns the incoming context by name for this intent.
+   *
+   * @example
+   * const AppContexts = {
+   *   NUMBER: 'number',
+   * }
+   *
+   * const app = dialogflow()
+   *
+   * app.intent('Default Welcome Intent', conv => {
+   *   conv.contexts.set(AppContexts.NUMBER, 1)
+   *   conv.ask('Welcome to action snippets! Say a number.')
+   * })
+   *
+   * // Create intent with 'number' context as requirement
+   * app.intent('Number Input', conv => {
+   *   const context = conv.contexts.get(AppContexts.NUMBER)
+   * })
+   *
+   * @param name The name of the Context to retrieve.
+   * @return Context value matching name or undefined if no matching context.
+   * @public
+   */
   get(name: keyof TContexts) {
     return this.input[name]
   }
 
-  /** @public */
+  /**
+   * Set a new context for the current intent.
+   *
+   * @example
+   * const AppContexts = {
+   *   NUMBER: 'number',
+   * }
+   *
+   * const app = dialogflow()
+   *
+   * app.intent('Default Welcome Intent', conv => {
+   *   conv.contexts.set(AppContexts.NUMBER, 1)
+   *   conv.ask('Welcome to action snippets! Say a number.')
+   * })
+   *
+   * // Create intent with 'number' context as requirement
+   * app.intent('Number Input', conv => {
+   *   const context = conv.contexts.get(AppContexts.NUMBER)
+   * })
+   *
+   * @param name Name of the context. Dialogflow converts to lowercase.
+   * @param lifespan Context lifespan.
+   * @param parameters Context parameters.
+   * @public
+   */
   set(name: string, lifespan: number, parameters?: Parameters) {
     this.output[name] = {
       lifespan,
@@ -138,8 +214,34 @@ export class ContextValues<TContexts extends Contexts> {
     this.set(name, 0)
   }
 
-  /** @public */
+  /**
+   * Returns the incoming contexts for this intent as an iterator.
+   *
+   * @example
+   * const AppContexts = {
+   *   NUMBER: 'number',
+   * }
+   *
+   * const app = dialogflow()
+   *
+   * app.intent('Default Welcome Intent', conv => {
+   *   conv.contexts.set(AppContexts.NUMBER, 1)
+   *   conv.ask('Welcome to action snippets! Say a number.')
+   * })
+   *
+   * // Create intent with 'number' context as requirement
+   * app.intent('Number Input', conv => {
+   *   for (const context of conv.contexts) {
+   *     // do something with the contexts
+   *   }
+   * })
+   *
+   * @public
+   */
   [Symbol.iterator]() {
-    return values(this.input).values()
+    const contexts = values(this.input) as Context<Parameters>[]
+    return contexts[Symbol.iterator]()
+    // suppose to be Array.prototype.values(), but can't use because of bug:
+    // https://bugs.chromium.org/p/chromium/issues/detail?id=615873
   }
 }

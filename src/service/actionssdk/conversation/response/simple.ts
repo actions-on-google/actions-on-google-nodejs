@@ -17,37 +17,36 @@
 import * as Api from '../../api/v2'
 
 /** @public */
-export interface SimpleResponseOptionsSpeech {
-  /** @public */
+export interface SimpleResponseOptions {
+  /**
+   * Speech to be spoken to user. SSML allowed.
+   * @public
+   */
   speech: string
 
-  /** @public */
+  /**
+   * Optional text to be shown to user
+   * @public
+   */
   text?: string
 }
 
-/** @public */
-export interface SimpleResponseOptionsSSML {
-  /** @public */
-  ssml: string
-
-  /** @public */
-  text?: string
-}
-
-/** @public */
-export type SimpleResponseOptions = SimpleResponseOptionsSpeech | SimpleResponseOptionsSSML
-
-/** @public */
+/**
+ * Simple Response type.
+ * @public
+ */
 export interface SimpleResponse extends Api.GoogleActionsV2SimpleResponse { }
 export class SimpleResponse implements Api.GoogleActionsV2SimpleResponse {
-  /** @public */
+  /**
+   * @param options SimpleResponse options
+   * @public
+   */
   constructor(options: SimpleResponseOptions | string) {
     if (typeof options === 'string') {
       this.textToSpeech = options
       return
     }
-    this.textToSpeech = (options as SimpleResponseOptionsSpeech).speech
-    this.ssml = (options as SimpleResponseOptionsSSML).ssml
+    this.textToSpeech = options.speech
     this.displayText = options.text
   }
 }

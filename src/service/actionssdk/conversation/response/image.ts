@@ -18,23 +18,41 @@ import * as Api from '../../api/v2'
 
 /** @public */
 export interface ImageOptions {
-  /** @public */
+  /**
+   * Image source URL.
+   * @public
+   */
   url: string
 
-  /** @public */
+  /**
+   * Text to replace for image for accessibility.
+   * @public
+   */
   alt: string
 
-  /** @public */
+  /**
+   * Width of the image.
+   * @public
+   */
   height?: number
 
-  /** @public */
+  /**
+   * Height of the image.
+   * @public
+   */
   width?: number
 }
 
-/** @public */
+/**
+ * Image type shown on visual elements.
+ * @public
+ */
 export interface Image extends Api.GoogleActionsV2UiElementsImage { }
 export class Image implements Api.GoogleActionsV2UiElementsImage {
-  /** @public */
+  /**
+   * @param options Image options
+   * @public
+   */
   constructor(option: ImageOptions) {
     this.url = option.url
     this.accessibilityText = option.alt

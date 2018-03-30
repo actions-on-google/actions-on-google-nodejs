@@ -17,28 +17,89 @@
 import * as Api from '../../api/v2'
 import { Question } from './question'
 import { ProtoAny } from '../../../../common'
-import { DialogSpec } from '..'
+import { DialogSpec } from '../conversation'
 
 /** @public */
 export interface DeepLinkOptions {
-  /** @public */
+  /**
+   * The name of the link destination.
+   * @public
+   */
   destination: string
 
-  /** @public */
+  /**
+   * URL of Android deep link.
+   * @public
+   */
   url: string
 
-  /** @public */
+  /**
+   * Android app package name to which to link.
+   * @public
+   */
   package: string
 
-  /** @public */
+  /**
+   * The reason to transfer the user. This may be appended to a Google-specified prompt.
+   * @public
+   */
   reason?: string
 }
 
 /** @public */
 export type DeepLinkArgument = undefined
 
-/** @public */
-export class DeepLink extends Question<Api.GoogleActionsV2LinkValueSpec> {
+/**
+ * Requests the user to transfer to a linked out Android app intent. Using this feature
+ * requires verifying the linked app in the (Actions console)[console.actions.google.com].
+ *
+ * // Actions SDK
+ * const app = actionssdk()
+ *
+ * app.intent('actions.intent.MAIN', conv => {
+ *   conv.ask('Great! Looks like we can do that in the app.')
+ *   conv.ask(new DeepLink({
+ *     destination: 'Google',
+ *     url: 'example://gizmos',
+ *     package: 'com.example.gizmos',
+ *     reason: 'handle this for you',
+ *   }))
+ * })
+ *
+ * app.intent('actions.intent.LINK', (conv, input, arg, status) => {
+ *   // possibly do something with status
+ *   conv.close('Okay maybe we can take care of that another time.')
+ * })
+ *
+ * // Dialogflow
+ * const app = actionssdk()
+ *
+ * app.intent('Default Welcome Intent', conv => {
+ *   conv.ask('Great! Looks like we can do that in the app.')
+ *   conv.ask(new DeepLink({
+ *     destination: 'Google',
+ *     url: 'example://gizmos',
+ *     package: 'com.example.gizmos',
+ *     reason: 'handle this for you',
+ *   }))
+ * })
+ *
+ * // Create a Dialogflow intent with the `actions_intent_LINK` event
+ * app.intent('Get Link Status', (conv, input, arg, status) => {
+ *   // possibly do something with status
+ *   conv.close('Okay maybe we can take care of that another time.')
+ * })
+ *
+ * @public
+ */
+export class DeepLink extends Question<
+  'actions.intent.LINK',
+  Api.GoogleActionsV2LinkValueSpec
+> {
+  /**
+   * @param options DeepLink options
+   * @public
+   */
   constructor(options: DeepLinkOptions) {
     super('actions.intent.LINK')
 

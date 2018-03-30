@@ -18,26 +18,44 @@ import * as Api from '../../api/v2'
 
 /** @public */
 export interface MediaObjectOptions {
-  /** @public */
+  /**
+   * MediaObject URL.
+   * @public
+   */
   url: string
 
   /** @public */
   description?: string
 
-  /** @public */
+  /**
+   * Name of the MediaObject.
+   * @public
+   */
   name?: string
 
-  /** @public */
+  /**
+   * Icon image.
+   * @public
+   */
   icon?: Api.GoogleActionsV2UiElementsImage
 
-  /** @public */
+  /**
+   * Large image.
+   * @public
+   */
   image?: Api.GoogleActionsV2UiElementsImage
 }
 
-/** @public */
+/**
+ * Class for initializing and constructing MediaObject
+ * @public
+ */
 export interface MediaObject extends Api.GoogleActionsV2MediaObject { }
 export class MediaObject implements Api.GoogleActionsV2MediaObject {
-  /** @public */
+  /**
+   * @param options MediaObject options or just a string for the url
+   * @public
+   */
   constructor(options: MediaObjectOptions | string) {
     if (typeof options === 'string') {
       this.contentUrl = options
@@ -62,18 +80,39 @@ export type MediaObjectString = Api.GoogleActionsV2MediaObject | string
 
 /** @public */
 export interface MediaResponseOptions {
+  /**
+   * Array of MediaObject held in the MediaResponse.
+   * @public
+   */
   objects: MediaObjectString[]
+  /**
+   * Type of the media within this MediaResponse.
+   * Defaults to 'AUDIO'
+   * @public
+   */
   type?: Api.GoogleActionsV2MediaResponseMediaType
 }
 
-/** @public */
+/**
+ * Class for initializing and constructing MediaResponse.
+ * @public
+ */
 export interface MediaResponse extends Api.GoogleActionsV2MediaResponse { }
 export class MediaResponse implements Api.GoogleActionsV2MediaResponse {
-  /** @public */
+  /**
+   * @param options MediaResponse options
+   * @public
+   */
   constructor(options: MediaResponseOptions)
-  /** @public */
+  /**
+   * @param objects MediaObjects
+   * @public
+   */
   constructor(objects: MediaObjectString[])
-  /** @public */
+  /**
+   * @param objects MediaObjects
+   * @public
+   */
   constructor(...objects: MediaObjectString[])
   constructor(
     options?: MediaResponseOptions |

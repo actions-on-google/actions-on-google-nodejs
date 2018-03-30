@@ -17,7 +17,11 @@
 import * as Api from '../api/v2'
 
 export class Device {
-  /** @public */
+  /**
+   * If granted permission to device's location in previous intent, returns device's
+   * location (see {@link Permission|conv.ask(new Permission)}).
+   * @public
+   */
   location?: Api.GoogleActionsV2Location
 
   constructor(device: Api.GoogleActionsV2Device = {}) {

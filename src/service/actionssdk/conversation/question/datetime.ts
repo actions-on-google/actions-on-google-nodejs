@@ -21,24 +21,96 @@ import { SoloQuestion } from './question'
 export type DateTimeArgument = Api.GoogleActionsV2DateTime
 
 export interface DateTimeOptionsPrompts {
-  /** @public */
+  /**
+   * The initial prompt used to ask for a date and time.
+   * If not provided, Google will use a generic prompt.
+   * @public
+   */
   initial?: string
 
-  /** @public */
+  /**
+   * The prompt used to specifically ask for the date if not provided by user.
+   * If not provided, Google will use a generic prompt.
+   * @public
+   */
   date?: string
 
-  /** @public */
+  /**
+   * The prompt used to specifically ask for the time if not provided by user.
+   * If not provided, Google will use a generic prompt.
+   * @public
+   */
   time?: string
 }
 
 /** @public */
 export interface DateTimeOptions {
-  /** @public */
+  /**
+   * Prompts for the user
+   * @public
+   */
   prompts?: DateTimeOptionsPrompts
 }
 
-/** @public */
-export class DateTime extends SoloQuestion<Api.GoogleActionsV2DateTimeValueSpec> {
+/**
+ * Asks user for a timezone-agnostic date and time.
+ *
+ * @example
+ * // Actions SDK
+ * const app = actionssdk()
+ *
+ * app.intent('actions.intent.MAIN', conv => {
+ *   conv.ask(new DateTime({
+ *     prompts: {
+ *       initial: 'When do you want to come in?',
+ *       date: 'Which date works best for you?',
+ *       time: 'What time of day works best for you?',
+ *     }
+ *   }))
+ * })
+ *
+ * app.intent('actions.intent.DATETIME', (conv, input, datetime) => {
+ *   const { month, day } = datetime.date
+ *   const { hours, minutes } = datetime.time
+ *   conv.close(new SimpleResponse({
+ *     speech: 'Great see you at your appointment!',
+ *     text: `Great, we will see you on ${month}/${day} at ${hours} ${minutes || ''}`
+ *   }))
+ * })
+ *
+ * // Dialogflow
+ * const app = dialogflow()
+ *
+ * app.intent('Default Welcome Intent', conv => {
+ *   conv.ask(new DateTime({
+ *     prompts: {
+ *       initial: 'When do you want to come in?',
+ *       date: 'Which date works best for you?',
+ *       time: 'What time of day works best for you?',
+ *     }
+ *   }))
+ * })
+ *
+ * // Create a Dialogflow intent with the `actions_intent_DATETIME` event
+ * app.intent('Get Datetime', (conv, params, datetime) => {
+ *   const { month, day } = datetime.date
+ *   const { hours, minutes } = datetime.time
+ *   conv.close(new SimpleResponse({
+ *     speech: 'Great see you at your appointment!',
+ *     text: `Great, we will see you on ${month}/${day} at ${hours} ${minutes || ''}`
+ *   }))
+ * })
+ *
+ * @public
+ */
+export class DateTime extends SoloQuestion<
+  'actions.intent.DATETIME',
+  Api.GoogleActionsV2DateTimeValueSpec
+> {
+  /**
+   * @param options DateTime options
+   * @public
+   */
   constructor(options: DateTimeOptions) {
     super('actions.intent.DATETIME')
 

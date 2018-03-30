@@ -21,18 +21,82 @@ import { DialogSpec } from '../conversation'
 
 /** @public */
 export interface PlaceOptions {
-  /** @public */
-  context: string
-
-  /** @public */
+  /**
+   * This is the initial response by location sub-dialog.
+   * For example: "Where do you want to get picked up?"
+   * @public
+   */
   prompt: string
+
+  /**
+   * This is the context for seeking permissions.
+   * For example: "To find a place to pick you up"
+   * Prompt to user: "*To find a place to pick you up*, I just need to check your location.
+   *     Can I get that from Google?".
+   * @public
+   */
+  context: string
 }
 
 /** @public */
 export type PlaceArgument = Api.GoogleActionsV2Location | undefined
 
-/** @public */
-export class Place extends SoloQuestion<Api.GoogleActionsV2PlaceValueSpec> {
+/**
+ * Asks user to provide a geo-located place, possibly using contextual information,
+ * like a store near the user's location or a contact's address.
+ *
+ * Developer provides custom text prompts to tailor the request handled by Google.
+ *
+ * @example
+ * // Actions SDK
+ * const app = actionssdk()
+ *
+ * app.intent('actions.intent.MAIN', conv => {
+ *   conv.ask(new Place({
+ *     prompt: 'Where do you want to get picked up?',
+ *     context: 'To find a place to pick you up',
+ *   }))
+ * })
+ *
+ * app.intent('actions.intent.PLACE', (conv, input, place, status) => {
+ *   if (place) {
+ *     conv.close(`Ah, I see. You want to get picked up at ${place.formattedAddress}`)
+ *   } else {
+ *     // Possibly do something with status
+ *     conv.close(`Sorry, I couldn't find where you want to get picked up`)
+ *   }
+ * })
+ *
+ * // Dialogflow
+ * const app = dialogflow()
+ *
+ * app.intent('Default Welcome Intent', conv => {
+ *   conv.ask(new Place({
+ *     prompt: 'Where do you want to get picked up?',
+ *     context: 'To find a place to pick you up',
+ *   }))
+ * })
+ *
+ * // Create a Dialogflow intent with the `actions_intent_PLACE` event
+ * app.intent('Get Place', (conv, params, place, status) => {
+ *   if (place) {
+ *     conv.close(`Ah, I see. You want to get picked up at ${place.formattedAddress}`)
+ *   } else {
+ *     // Possibly do something with status
+ *     conv.close(`Sorry, I couldn't find where you want to get picked up`)
+ *   }
+ * })
+ *
+ * @public
+ */
+export class Place extends SoloQuestion<
+  'actions.intent.PLACE',
+  Api.GoogleActionsV2PlaceValueSpec
+> {
+  /**
+   * @param options Place options
+   * @public
+   */
   constructor(options: PlaceOptions) {
     super('actions.intent.PLACE')
 

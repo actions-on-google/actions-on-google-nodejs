@@ -16,9 +16,16 @@
 
 import * as Api from '../../api/v2'
 
-/** @public */
+/**
+ * Class for initializing and constructing OrderUpdate
+ * @public
+ */
 export interface OrderUpdate extends Api.GoogleActionsV2OrdersOrderUpdate { }
 export class OrderUpdate implements Api.GoogleActionsV2OrdersOrderUpdate {
+  /**
+   * @param options The raw {@link GoogleActionsV2OrdersOrderUpdate}
+   * @public
+   */
   constructor(options: Api.GoogleActionsV2OrdersOrderUpdate) {
     Object.assign(this, options)
   }

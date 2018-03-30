@@ -17,12 +17,18 @@
 import * as Api from '../../api/v2'
 import { toArray } from '../../../../common'
 
-/** @public */
+/**
+ * Suggestions to show with response.
+ * @public
+ */
 export class Suggestions {
   /** @public */
   suggestions: Api.GoogleActionsV2UiElementsSuggestion[] = []
 
-  /** @public */
+  /**
+   * @param suggestions Texts of the suggestions.
+   * @public
+   */
   constructor(...suggestions: (string[] | string)[]) {
     for (const suggestion of suggestions) {
       this.add(...toArray(suggestion))

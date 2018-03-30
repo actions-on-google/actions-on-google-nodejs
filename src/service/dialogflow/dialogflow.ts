@@ -34,7 +34,17 @@ export interface DialogflowIntentHandler<
   (
     conv: TConversation,
     params: TParameters,
+    /**
+     * The first argument value from the current intent.
+     * See {@link Arguments#get|Arguments.get}
+     * Same as `conv.arguments.parsed.list[0]`
+     */
     argument: TArgument,
+    /**
+     * The first argument status from the current intent.
+     * See {@link Arguments#status|Arguments.status}
+     * Same as `conv.arguments.status.list[0]`
+     */
     status: ActionsApi.GoogleRpcStatus | undefined,
     // tslint:disable-next-line:no-any allow developer to return any just detect if is promise
   ): Promise<any> | any
@@ -158,19 +168,34 @@ export interface DialogflowApp<
 
 /** @public */
 export interface DialogflowVerificationHeaders {
-  /** @public */
+  /**
+   * A header key value pair to check against.
+   * @public
+   */
   [key: string]: string
 }
 
 /** @public */
 export interface DialogflowVerification {
-  /** @public */
+  /**
+   * An object representing the header key to value map to check against,
+   * @public
+   */
   headers: DialogflowVerificationHeaders
 
-  /** @public */
+  /**
+   * Custom status code to return on verification error.
+   * @public
+   */
   status?: number
 
-  /** @public */
+  /**
+   * Custom error message as a string or a function that returns a string
+   * given the original error message set by the library.
+   *
+   * The message will get sent back in the JSON top level `error` property.
+   * @public
+   */
   error?: string | ((error: string) => string)
 }
 
@@ -179,7 +204,15 @@ export interface DialogflowOptions<TConvData, TUserStorage> extends AppOptions {
   /** @public */
   init?: () => DialogflowConversationOptionsInit<TConvData, TUserStorage>
 
-  /** @public */
+  /**
+   * Verifies whether the request comes from Dialogflow.
+   * Uses header keys and values to check against ones specified by the developer
+   * in the Dialogflow Fulfillment settings of the app.
+   *
+   * HTTP Code 403 will be thrown by default on verification error.
+   *
+   * @public
+   */
   verification?: DialogflowVerification | DialogflowVerificationHeaders
 }
 
@@ -226,7 +259,21 @@ const isVerification =
     verification is DialogflowVerification =>
       typeof (verification as DialogflowVerification).headers === 'object'
 
-/** @public */
+/**
+ * This is the function that creates the app instance which on new requests,
+ * creates a way to handle the communication with Dialogflow's fulfillment API.
+ *
+ * Supports Dialogflow v1 and v2.
+ *
+ * @example
+ * const app = dialogflow()
+ *
+ * app.intent('Default Welcome Intent', conv => {
+ *   conv.ask('How are you?')
+ * })
+ *
+ * @public
+ */
 export const dialogflow: Dialogflow = <
   TConvData,
   TUserStorage,

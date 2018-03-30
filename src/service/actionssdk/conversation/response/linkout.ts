@@ -18,17 +18,30 @@ import * as Api from '../../api/v2'
 
 /** @public */
 export interface LinkOutSuggestionOptions {
-  /** @public */
+  /**
+   * Text shown on the suggestion chip.
+   * @public
+   */
   name: string
 
-  /** @public */
+  /**
+   * String URL to open.
+   * @public
+   */
   url: string
 }
 
-/** @public */
+/**
+ * Link Out Suggestion.
+ * Used in rich response as a suggestion chip which, when selected, links out to external URL.
+ * @public
+ */
 export interface LinkOutSuggestion extends Api.GoogleActionsV2UiElementsLinkOutSuggestion { }
 export class LinkOutSuggestion implements Api.GoogleActionsV2UiElementsLinkOutSuggestion {
-  /** @public */
+  /**
+   * @param options LinkOutSuggestion options
+   * @public
+   */
   constructor(options: LinkOutSuggestionOptions) {
     this.destinationName = options.name
     this.url = options.url

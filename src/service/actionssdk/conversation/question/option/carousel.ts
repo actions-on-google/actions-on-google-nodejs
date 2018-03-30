@@ -23,21 +23,101 @@ export type CarouselArgument = OptionArgument
 
 /** @public */
 export interface CarouselOptionItem extends OptionItem {
-  /** @public */
+  /**
+   * Description text of the item.
+   * @public
+   */
   description: string
 }
 
 /** @public */
 export interface CarouselOptions {
-  /** @public */
+  /**
+   * Sets the display options for the images in this carousel.
+   * @public
+   */
   display?: Api.GoogleActionsV2UiElementsCarouselSelectImageDisplayOptions
 
-  /** @public */
+  /**
+   * List of 2-20 items to show in this carousel. Required.
+   * @public
+   */
   items: OptionItems<CarouselOptionItem> | Api.GoogleActionsV2UiElementsCarouselSelectCarouselItem[]
 }
 
-/** @public */
-export class Carousel extends Question<Api.GoogleActionsV2OptionValueSpec> {
+/**
+ * Asks to collect user's input with a carousel.
+ *
+ * @example
+ * // Actions SDK
+ * const app = actionssdk()
+ *
+ * app.intent('actions.intent.MAIN', conv => {
+ *   conv.ask('Which of these looks good?')
+ *   conv.ask(new Carousel({
+ *     items: {
+ *       [SELECTION_KEY_ONE]: {
+ *         title: 'Number one',
+ *         description: 'Description of number one',
+ *         synonyms: ['synonym of KEY_ONE 1', 'synonym of KEY_ONE 2'],
+ *       },
+ *       [SELECTION_KEY_TWO]: {
+ *         title: 'Number two',
+ *         description: 'Description of number one',
+ *         synonyms: ['synonym of KEY_TWO 1', 'synonym of KEY_TWO 2'],
+ *       }
+ *     }
+ *   }))
+ * })
+ *
+ * app.intent('actions.intent.OPTION', (conv, input, option) => {
+ *   if (option === SELECTION_KEY_ONE) {
+ *     conv.close('Number one is a great choice!')
+ *   } else {
+ *     conv.close('Number two is also a great choice!')
+ *   }
+ * })
+ *
+ * // Dialogflow
+ * const app = dialogflow()
+ *
+ * app.intent('Default Welcome Intent', conv => {
+ *   conv.ask('Which of these looks good?')
+ *   conv.ask(new Carousel({
+ *     items: {
+ *       [SELECTION_KEY_ONE]: {
+ *         title: 'Number one',
+ *         description: 'Description of number one',
+ *         synonyms: ['synonym of KEY_ONE 1', 'synonym of KEY_ONE 2'],
+ *       },
+ *       [SELECTION_KEY_TWO]: {
+ *         title: 'Number two',
+ *         description: 'Description of number one',
+ *         synonyms: ['synonym of KEY_TWO 1', 'synonym of KEY_TWO 2'],
+ *       }
+ *     }
+ *   }))
+ * })
+ *
+ * // Create a Dialogflow intent with the `actions_intent_OPTION` event
+ * app.intent('Get Option', (conv, input, option) => {
+ *   if (option === SELECTION_KEY_ONE) {
+ *     conv.close('Number one is a great choice!')
+ *   } else {
+ *     conv.close('Number two is also a great choice!')
+ *   }
+ * })
+ *
+ * @public
+ */
+export class Carousel extends Question<
+  'actions.intent.OPTION',
+  Api.GoogleActionsV2OptionValueSpec
+> {
+  /**
+   * @param options Carousel option
+   * @public
+   */
   constructor(options: CarouselOptions) {
     super('actions.intent.OPTION')
 

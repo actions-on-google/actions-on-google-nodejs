@@ -20,10 +20,18 @@ import { SoloQuestion } from '../question'
 /** @public */
 export type TransactionRequirementsArgument = Api.GoogleActionsV2TransactionRequirementsCheckResult
 
-/** @public */
+/**
+ * Checks whether user is in transactable state.
+ * @public
+ */
 export class TransactionRequirements extends SoloQuestion<
+  'actions.intent.TRANSACTION_REQUIREMENTS_CHECK',
   Api.GoogleActionsV2TransactionRequirementsCheckSpec
 > {
+  /**
+   * @param options The raw {@link GoogleActionsV2TransactionRequirementsCheckSpec}
+   * @public
+   */
   constructor(options?: Api.GoogleActionsV2TransactionRequirementsCheckSpec) {
     super('actions.intent.TRANSACTION_REQUIREMENTS_CHECK')
 

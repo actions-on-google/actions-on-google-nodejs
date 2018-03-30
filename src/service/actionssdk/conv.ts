@@ -42,10 +42,29 @@ export class ActionsSdkConversation<
   /** @public */
   body: Api.GoogleActionsV2AppRequest
 
-  /** @public */
+  /**
+   * Get the current Actions SDK intent.
+   *
+   * @example
+   * app.intent('actions.intent.MAIN', conv => {
+   *   const intent = conv.intent // will be 'actions.intent.MAIN'
+   * })
+   *
+   * @public
+   */
   intent: string
 
-  /** @public */
+  /**
+   * The session data in JSON format.
+   * Stored using conversationToken.
+   *
+   * @example
+   * app.intent('actions.intent.MAIN', conv => {
+   *   conv.data.someProperty = 'someValue'
+   * })
+   *
+   * @public
+   */
   data: TConvData
 
   constructor(options: ActionsSdkConversationOptions<TConvData, TUserStorage>) {

@@ -33,14 +33,20 @@ export class Surface {
 }
 
 export class Capabilities {
-  /** @public */
+  /**
+   * List of surface capabilities of user device.
+   * @public
+   */
   list: Api.GoogleActionsV2Capability[]
 
   constructor(list: Api.GoogleActionsV2Capability[] = []) {
     this.list = list
   }
 
-  /** @public */
+  /**
+   * Returns true if user device has a given surface capability.
+   * @public
+   */
   has(capability: SurfaceCapability) {
     return this.list.map(c => c.name).indexOf(capability) > -1
   }
@@ -54,7 +60,12 @@ export class AvailableSurfacesCapabilities {
     this.surfaces = surfaces
   }
 
-  /** @public */
+  /**
+   * Returns true if user has an available surface which includes all given
+   * capabilities. Available surfaces capabilities may exist on surfaces other
+   * than that used for an ongoing conversation.
+   * @public
+   */
   has(capability: SurfaceCapability) {
     return this.surfaces.findIndex(surface => surface.capabilities.has(capability)) > -1
   }

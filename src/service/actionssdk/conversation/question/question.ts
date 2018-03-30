@@ -18,11 +18,17 @@ import * as Api from '../../api/v2'
 import { Intent, InputValueSpec } from '../conversation'
 import { ProtoAny } from '../../../../common'
 
-export interface Question<TValueSpec> extends Api.GoogleActionsV2ExpectedIntent { }
-export abstract class Question<TValueSpec> implements Api.GoogleActionsV2ExpectedIntent {
+export interface Question<
+  TIntent extends Intent,
+  TValueSpec
+> extends Api.GoogleActionsV2ExpectedIntent { }
+export abstract class Question<
+  TIntent extends Intent,
+  TValueSpec
+> implements Api.GoogleActionsV2ExpectedIntent {
   inputValueData: ProtoAny<InputValueSpec, TValueSpec>
 
-  constructor(public intent: Intent) {
+  constructor(public intent: TIntent) {
   }
 
   data(type: InputValueSpec, spec?: TValueSpec) {
@@ -30,5 +36,8 @@ export abstract class Question<TValueSpec> implements Api.GoogleActionsV2Expecte
   }
 }
 
-export abstract class SoloQuestion<TValueSpec> extends Question<TValueSpec> {
+export abstract class SoloQuestion<
+  TIntent extends Intent,
+  TValueSpec
+> extends Question<TIntent, TValueSpec> {
 }

@@ -36,26 +36,47 @@ export type RichResponseItem =
 
 /** @public */
 export interface RichResponseOptions {
-  /** @public */
+  /**
+   * Ordered list of either SimpleResponse objects or BasicCard objects.
+   * First item must be SimpleResponse. There can be at most one card.
+   * @public
+   */
   items?: RichResponseItem[]
 
-  /** @public */
+  /**
+   * Ordered list of text suggestions to display. Optional.
+   * @public
+   */
   suggestions?: string[] | Suggestions
 
-  /** @public */
+  /**
+   * Link Out Suggestion chip for this rich response. Optional.
+   * @public
+   */
   link?: Api.GoogleActionsV2UiElementsLinkOutSuggestion
 }
 
-/** @public */
+/**
+ * Class for initializing and constructing Rich Responses with chainable interface.
+ * @public
+ */
 export interface RichResponse extends Api.GoogleActionsV2RichResponse { }
 export class RichResponse implements Api.GoogleActionsV2RichResponse {
-  /** @public */
+  /**
+   * @param options RichResponse options
+   * @public
+   */
   constructor(options: RichResponseOptions)
-  /** @public */
+  /**
+   * @param items RichResponse items
+   * @public
+   */
   constructor(items: RichResponseItem[])
-  /** @public */
+  /**
+   * @param items RichResponse items
+   * @public
+   */
   constructor(...items: RichResponseItem[])
-  /** @public */
   constructor(
     options?: RichResponseOptions | RichResponseItem[] | RichResponseItem,
     ...items: RichResponseItem[],
@@ -96,7 +117,10 @@ export class RichResponse implements Api.GoogleActionsV2RichResponse {
       test.suggestions instanceof Suggestions
   }
 
-  /** @public */
+  /**
+   * Add a RichResponse item
+   * @public
+   */
   add(...items: RichResponseItem[]) {
     for (const item of items) {
       if (typeof item === 'string') {
@@ -132,7 +156,10 @@ export class RichResponse implements Api.GoogleActionsV2RichResponse {
     return this
   }
 
-  /** @public */
+  /**
+   * Adds a single suggestion or list of suggestions to list of items.
+   * @public
+   */
   addSuggestion(...suggestions: (string | Suggestions)[]) {
     if (!this.suggestions) {
       this.suggestions = []

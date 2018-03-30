@@ -20,8 +20,52 @@ import { SoloQuestion } from './question'
 /** @public */
 export type ConfirmationArgument = boolean
 
-/** @public */
-export class Confirmation extends SoloQuestion<Api.GoogleActionsV2ConfirmationValueSpec> {
+/**
+ * Asks user for a confirmation.
+ *
+ * @example
+ * // Actions SDK
+ * const app = actionssdk()
+ *
+ * app.intent('actions.intent.MAIN', conv => {
+ *   conv.ask(new Confirmation('Are you sure you want to do that?'))
+ * })
+ *
+ * app.intent('actions.intent.CONFIRMATION', (conv, input, confirmation) => {
+ *   if (confirmation) {
+ *     conv.close(`Great! I'm glad you want to do it!`)
+ *   } else {
+ *     conv.close(`That's okay. Let's not do it now.`)
+ *   }
+ * })
+ *
+ * // Dialogflow
+ * const app = dialogflow()
+ *
+ * app.intent('Default Welcome Intent', conv => {
+ *   conv.ask(new Confirmation('Are you sure you want to do that?'))
+ * })
+ *
+ * // Create a Dialogflow intent with the `actions_intent_CONFIRMATION` event
+ * app.intent('Get Confirmation', (conv, input, confirmation) => {
+ *   if (confirmation) {
+ *     conv.close(`Great! I'm glad you want to do it!`)
+ *   } else {
+ *     conv.close(`That's okay. Let's not do it now.`)
+ *   }
+ * })
+ *
+ * @public
+ */
+export class Confirmation extends SoloQuestion<
+  'actions.intent.CONFIRMATION',
+  Api.GoogleActionsV2ConfirmationValueSpec
+> {
+  /**
+   * @param text The confirmation prompt presented to the user to
+   *     query for an affirmative or negative response.
+   * @public
+   */
   constructor(text: string) {
     super('actions.intent.CONFIRMATION')
 

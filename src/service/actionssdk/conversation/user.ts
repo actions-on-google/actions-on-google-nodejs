@@ -17,7 +17,11 @@
 import * as Api from '../api/v2'
 
 export class Last {
-  /** @public */
+  /**
+   * Timestamp for the last access from the user.
+   * Undefined if never seen.
+   * @public
+   */
   seen?: Date
 
   constructor(user: Api.GoogleActionsV2User) {
@@ -28,13 +32,22 @@ export class Last {
 }
 
 export class Name {
-  /** @public */
+  /**
+   * User's display name.
+   * @public
+   */
   display?: string
 
-  /** @public */
+  /**
+   * User's family name.
+   * @public
+   */
   family?: string
 
-  /** @public */
+  /**
+   * User's given name.
+   * @public
+   */
   given?: string
 
   constructor(profile: Api.GoogleActionsV2UserProfile) {
@@ -45,7 +58,10 @@ export class Name {
 }
 
 export class Access {
-  /** @public */
+  /**
+   * Unique Oauth2 token. Only available with account linking.
+   * @public
+   */
   token?: string
 
   constructor(user: Api.GoogleActionsV2User) {
@@ -54,13 +70,37 @@ export class Access {
 }
 
 export class User<TUserStorage> {
-  /** @public */
+  /**
+   * The data persistent across sessions in JSON format.
+   * It exists in the same context as `conv.user.id`
+   *
+   * @example
+   * // Actions SDK
+   * app.intent('actions.intent.MAIN', conv => {
+   *   conv.user.storage.someProperty = 'someValue'
+   * })
+   *
+   * // Dialogflow
+   * app.intent('Default Welcome Intent', conv => {
+   *   conv.user.storage.someProperty = 'someValue'
+   * })
+   *
+   * @public
+   */
   storage: TUserStorage
 
-  /** @public */
+  /**
+   * Random string ID for Google user.
+   * @public
+   */
   id: string
 
-  /** @public */
+  /**
+   * The user locale. String represents the regional language
+   * information of the user set in their Assistant settings.
+   * For example, 'en-US' represents US English.
+   * @public
+   */
   locale: string
 
   /** @public */
@@ -69,10 +109,19 @@ export class User<TUserStorage> {
   /** @public */
   permissions: Api.GoogleActionsV2UserPermissions[]
 
-  /** @public */
+  /**
+   * User's permissioned name info.
+   * Properties will be undefined if not request with {@link Permission|conv.ask(new Permission)}
+   * @public
+   */
   name: Name
 
-  /** @public */
+  /**
+   * The list of all digital goods that your user purchased from
+   * your published Android apps. To enable this feature, see the instructions
+   * in the (documentation)[https://developers.google.com/actions/identity/digital-goods].
+   * @public
+   */
   entitlements: Api.GoogleActionsV2PackageEntitlement[]
 
   /** @public */

@@ -74,22 +74,85 @@ export class DialogflowConversation<
   /** @public */
   body: Api.GoogleCloudDialogflowV2WebhookRequest | ApiV1.DialogflowV1WebhookRequest
 
-  /** @public */
+  /**
+   * Get the current Dialogflow action name.
+   *
+   * @example
+   * app.intent('Default Welcome Intent', conv => {
+   *   const action = conv.action
+   * })
+   *
+   * @public
+   */
   action: string
 
-  /** @public */
+  /**
+   * Get the current Dialogflow intent name.
+   *
+   * @example
+   * app.intent('Default Welcome Intent', conv => {
+   *   const intent = conv.intent // will be 'Default Welcome Intent'
+   * })
+   *
+   * @public
+   */
   intent: string
 
-  /** @public */
+  /**
+   * The Dialogflow parameters from the current intent.
+   * Values will only be a string, an Object, or undefined if not included.
+   *
+   * Will also be sent via intent handler 3rd argument which is the encouraged method to retrieve.
+   *
+   * @example
+   * // Encouraged method through intent handler
+   * app.intent('Tell Greeting', (conv, params) => {
+   *   const color = params.color
+   *   const num = params.num
+   * })
+   *
+   * // Encouraged method through destructuring in intent handler
+   * app.intent('Tell Greeting', (conv, { color, num }) => {
+   *   // now use color and num as variables
+   * }))
+   *
+   * // Using conv.parameters
+   * app.intent('Tell Greeting', conv => {
+   *   const parameters = conv.parameters
+   *   // or destructed
+   *   const { color, num } = conv.parameters
+   * })
+   *
+   * @public
+   */
   parameters: Parameters
 
   /** @public */
   contexts: ContextValues<TContexts>
 
-  /** @public */
+  /**
+   * The user's raw input query.
+   *
+   * @example
+   * app.intent('User Input', conv => {
+   *   conv.close(`You said ${conv.query}`)
+   * })
+   *
+   * @public
+   */
   query: string
 
-  /** @public */
+  /**
+   * The session data in JSON format.
+   * Stored using contexts.
+   *
+   * @example
+   * app.intent('Default Welcome Intent', conv => {
+   *   conv.data.someProperty = 'someValue'
+   * })
+   *
+   * @public
+   */
   data: TConvData
 
   /** @public */

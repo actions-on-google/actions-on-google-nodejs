@@ -22,18 +22,78 @@ export type RegisterUpdateArgument = Api.GoogleActionsV2RegisterUpdateValue
 
 /** @public */
 export interface RegisterUpdateOptions {
-  /** @public */
+  /**
+   * The Dialogflow/Actions SDK intent name to be triggered when the update is received.
+   * @public
+   */
   intent: string
 
-  /** @public */
+  /**
+   * The necessary arguments to fulfill the intent triggered on update.
+   * These can be retrieved using {@link Arguments#get|conv.arguments.get}.
+   * @public
+   */
   arguments: Api.GoogleActionsV2Argument[]
 
-  /** @public */
+  /**
+   * The high-level frequency of the recurring update.
+   * @public
+   */
   frequency: Api.GoogleActionsV2TriggerContextTimeContextFrequency
 }
 
-/** @public */
-export class RegisterUpdate extends SoloQuestion<Api.GoogleActionsV2RegisterUpdateValueSpec> {
+/**
+ * Requests the user to register for daily updates.
+ *
+ * @example
+ * // Actions SDK
+ * const app = actionssdk()
+ *
+ * app.intent('actions.intent.MAIN', conv => {
+ *   conv.ask(new RegisterUpdate({
+ *     frequency: 'DAILY',
+ *     intent: 'show.image',
+ *     arguments: [{
+ *       name: 'image_to_show',
+ *       textValue: 'image_type_1',
+ *     }
+ *   ))
+ * })
+ *
+ * app.intent('show.image', conv => {
+ *   const arg = conv.arguments.get('image_to_show') // will be 'image_type_1'
+ *   // do something with arg
+ * })
+ *
+ * // Dialogflow
+ * const app = dialogflow()
+ *
+ * app.intent('Default Welcome Intent', conv => {
+ *   conv.ask(new RegisterUpdate({
+ *     frequency: 'DAILY',
+ *     intent: 'Show Image',
+ *     arguments: [{
+ *       name: 'image_to_show',
+ *       textValue: 'image_type_1',
+ *     }
+ *   ))
+ * })
+ *
+ * app.intent('Show Image', conv => {
+ *   const arg = conv.arguments.get('image_to_show') // will be 'image_type_1'
+ *   // do something with arg
+ * })
+ *
+ * @public
+ */
+export class RegisterUpdate extends SoloQuestion<
+  'actions.intent.REGISTER_UPDATE',
+  Api.GoogleActionsV2RegisterUpdateValueSpec
+> {
+  /**
+   * @param options RegisterUpdate options
+   * @public
+   */
   constructor(options: RegisterUpdateOptions) {
     super('actions.intent.REGISTER_UPDATE')
 

@@ -20,10 +20,18 @@ import { SoloQuestion } from '../question'
 /** @public */
 export type TransactionDecisionArgument = Api.GoogleActionsV2TransactionDecisionValue
 
-/** @public */
+/**
+ * Asks user to confirm transaction information.
+ * @public
+ */
 export class TransactionDecision extends SoloQuestion<
+  'actions.intent.TRANSACTION_DECISION',
   Api.GoogleActionsV2TransactionDecisionValueSpec
 > {
+  /**
+   * @param options The raw {@link GoogleActionsV2TransactionDecisionValueSpec}
+   * @public
+   */
   constructor(options?: Api.GoogleActionsV2TransactionDecisionValueSpec) {
     super('actions.intent.TRANSACTION_DECISION')
 

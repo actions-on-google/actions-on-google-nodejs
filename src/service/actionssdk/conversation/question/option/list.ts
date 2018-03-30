@@ -30,8 +30,75 @@ export interface ListOptions {
   items: OptionItems | Api.GoogleActionsV2UiElementsListSelectListItem[]
 }
 
-/** @public */
-export class List extends Question<Api.GoogleActionsV2OptionValueSpec> {
+/**
+ * Asks to collect user's input with a list.
+ *
+ * @example
+ * // Actions SDK
+ * const app = actionssdk()
+ *
+ * app.intent('actions.intent.MAIN', conv => {
+ *   conv.ask('Which of these looks good?')
+ *   conv.ask(new List({
+ *     items: {
+ *       [SELECTION_KEY_ONE]: {
+ *         title: 'Number one',
+ *         synonyms: ['synonym of KEY_ONE 1', 'synonym of KEY_ONE 2'],
+ *       },
+ *       [SELECTION_KEY_TWO]: {
+ *         title: 'Number two',
+ *         synonyms: ['synonym of KEY_TWO 1', 'synonym of KEY_TWO 2'],
+ *       }
+ *     }
+ *   }))
+ * })
+ *
+ * app.intent('actions.intent.OPTION', (conv, input, option) => {
+ *   if (option === SELECTION_KEY_ONE) {
+ *     conv.close('Number one is a great choice!')
+ *   } else {
+ *     conv.close('Number two is also a great choice!')
+ *   }
+ * })
+ *
+ * // Dialogflow
+ * const app = dialogflow()
+ *
+ * app.intent('Default Welcome Intent', conv => {
+ *   conv.ask('Which of these looks good?')
+ *   conv.ask(new List({
+ *     items: {
+ *       [SELECTION_KEY_ONE]: {
+ *         title: 'Number one',
+ *         synonyms: ['synonym of KEY_ONE 1', 'synonym of KEY_ONE 2'],
+ *       },
+ *       [SELECTION_KEY_TWO]: {
+ *         title: 'Number two',
+ *         synonyms: ['synonym of KEY_TWO 1', 'synonym of KEY_TWO 2'],
+ *       }
+ *     }
+ *   }))
+ * })
+ *
+ * // Create a Dialogflow intent with the `actions_intent_OPTION` event
+ * app.intent('Get Option', (conv, input, option) => {
+ *   if (option === SELECTION_KEY_ONE) {
+ *     conv.close('Number one is a great choice!')
+ *   } else {
+ *     conv.close('Number two is also a great choice!')
+ *   }
+ * })
+ *
+ * @public
+ */
+export class List extends Question<
+  'actions.intent.OPTION',
+  Api.GoogleActionsV2OptionValueSpec
+> {
+  /**
+   * @param options List options
+   * @public
+   */
   constructor(options: ListOptions) {
     super('actions.intent.OPTION')
 

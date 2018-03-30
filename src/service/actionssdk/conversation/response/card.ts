@@ -19,20 +19,35 @@ import { toArray } from '../../../../common'
 
 /** @public */
 export interface ButtonOptions {
-  /** @public */
+  /**
+   * Text shown on the button.
+   * @public
+   */
   title: string
 
-  /** @public */
+  /**
+   * String URL to open.
+   * @public
+   */
   url?: string
 
-  /** @public */
+  /**
+   * Action to take when selected. Recommended to use the url property for simple web page url open.
+   * @public
+   */
   action?: Api.GoogleActionsV2UiElementsOpenUrlAction
 }
 
-/** @public */
+/**
+ * Basic Card Button. Shown below basic cards. Open a URL when selected.
+ * @public
+ */
 export interface Button extends Api.GoogleActionsV2UiElementsButton { }
 export class Button implements Api.GoogleActionsV2UiElementsButton {
-  /** @public */
+  /**
+   * @param options Button options
+   * @public
+   */
   constructor(options: ButtonOptions) {
     this.title = options.title
     if (options.url) {

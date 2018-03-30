@@ -34,8 +34,6 @@ export {
   Conversation,
   LinkOutSuggestionOptions,
   LinkOutSuggestion,
-  SimpleResponseOptionsSpeech,
-  SimpleResponseOptionsSSML,
   SimpleResponseOptions,
   SimpleResponse,
   ImageOptions,

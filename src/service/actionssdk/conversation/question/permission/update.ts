@@ -22,15 +22,88 @@ export type UpdatePermissionArgument = PermissionArgument
 
 /** @public */
 export interface UpdatePermissionOptions {
-  /** @public */
+  /**
+   * The Dialogflow/Actions SDK intent name to be triggered when the update is received.
+   * @public
+   */
   intent: string
 
-  /** @public */
+  /**
+   * The necessary arguments to fulfill the intent triggered on update.
+   * These can be retrieved using {@link Arguments#get|conv.arguments.get}.
+   * @public
+   */
   arguments?: Api.GoogleActionsV2Argument[]
 }
 
-/** @public */
+/**
+ * Prompts the user for permission to send proactive updates at any time.
+ *
+ * @example
+ * // Actions SDK
+ * const app = actionssdk()
+ *
+ * app.intent('actions.intent.MAIN', conv => {
+ *   conv.ask(new UpdatePermission({
+ *     intent: 'show.image',
+ *     arguments: [{
+ *       name: 'image_to_show',
+ *       textValue: 'image_type_1',
+ *     }
+ *   ))
+ * })
+ *
+ * app.intent('actions.intent.PERMISSION', conv => {
+ *   const granted = conv.arguments.get('PERMISSION')
+ *   if (granted) {
+ *     conv.close(`Great, I'll send an update whenever I notice a change`)
+ *   } else {
+ *     // Response shows that user did not grant permission
+ *     conv.close('Alright, just let me know whenever you need the weather!')
+ *   }
+ * })
+ *
+ * app.intent('show.image', conv => {
+ *   const arg = conv.arguments.get('image_to_show') // will be 'image_type_1'
+ *   // do something with arg
+ * })
+ *
+ * // Dialogflow
+ * const app = dialogflow()
+ *
+ * app.intent('Default Welcome Intent', conv => {
+ *   conv.ask(new UpdatePermission({
+ *     intent: 'Show Image',
+ *     arguments: [{
+ *       name: 'image_to_show',
+ *       textValue: 'image_type_1',
+ *     }
+ *   ))
+ * })
+ *
+ * // Create a Dialogflow intent with the `actions_intent_PERMISSION` event
+ * app.intent('Get Permission', conv => {
+ *   const granted = conv.arguments.get('PERMISSION')
+ *   if (granted) {
+ *     conv.close(`Great, I'll send an update whenever I notice a change`)
+ *   } else {
+ *     // Response shows that user did not grant permission
+ *     conv.close('Alright, just let me know whenever you need the weather!')
+ *   }
+ * })
+ *
+ * app.intent('Show Image', conv => {
+ *   const arg = conv.arguments.get('image_to_show') // will be 'image_type_1'
+ *   // do something with arg
+ * })
+ *
+ * @public
+ */
 export class UpdatePermission extends Permission {
+  /**
+   * @param options UpdatePermission options
+   * @public
+   */
   constructor(options: UpdatePermissionOptions) {
     super({
       permissions: 'UPDATE',
