@@ -15,6 +15,6 @@
   "dependencies": {
     "firebase-admin": "^4.2.1",
     "firebase-functions": "^0.5.7",
-    "actions-on-google": "2.0.0-alpha.3"
+    "actions-on-google": "2.0.0-alpha.4"
   }
 }
