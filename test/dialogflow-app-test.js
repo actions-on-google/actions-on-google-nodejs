@@ -3670,4 +3670,42 @@ describe('DialogflowApp', function () {
       expect(app.getPackageEntitlements()).to.be.null;
     });
   });
+
+  /**
+   * Describes the behavior for DialogflowApp askForUpdatePermission method in v1.
+   */
+  describe('#followUpEvents', function () {
+    let mockRequest, app;
+
+    beforeEach(function () {
+      mockRequest = new MockRequest(headerV2, dialogflowAppRequestBodyLiveSession);
+      app = new DialogflowApp({ request: mockRequest, response: mockResponse });
+    });
+
+    it('Should contain followUpEvent in root when you add an event to response', function () {
+      app.sendFollowupEvent('foo', { bar: 'foobar' });
+
+      // Validating the response object
+      const expectedResponse = {
+        'followupEvent': {
+          'data': {
+            'bar': 'foobar'
+          },
+          'name': 'foo'
+        }
+      };
+      expect(clone(mockResponse.body)).to.deep.equal(expectedResponse);
+    });
+    it('Event might have only a name', function () {
+      app.sendFollowupEvent('foo');
+
+      // Validating the response object
+      const expectedResponse = {
+        'followupEvent': {
+          'name': 'foo'
+        }
+      };
+      expect(clone(mockResponse.body)).to.deep.equal(expectedResponse);
+    });
+  });
 });
