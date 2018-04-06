@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-/* tslint:disable:no-any written like auto generated types from protobufs */
+/* tslint:disable:no-any max-line-length written like auto generated types from protobufs */
 
-import { ApiClientObjectMap } from '../../../common'
+import { ApiClientObjectMap, JsonObject } from '../../../common'
 import * as ActionsApi from '../../actionssdk/api/v2'
 
 export interface DialogflowV1OriginalRequest {
@@ -44,22 +44,121 @@ export interface DialogflowV1Metadata {
 }
 
 export interface DialogflowV1Button {
-  text: string
-  postback: string
+  text?: string
+  postback?: string
 }
 
+export interface DialogflowV1BaseMessage<TType extends number> {
+  platform?: 'facebook' | 'kik' | 'line' | 'skype' | 'slack' | 'telegram' | 'viber'
+  type?: TType
+}
 
-export interface DialogflowV1Message {
-  type?: number
+export interface DialogflowV1MessageText extends DialogflowV1BaseMessage<0> {
   speech?: string
-  title?: string
-  subtitle?: string
-  imageUrl?: string
-  platform?: string
-  buttons?: DialogflowV1Button[]
-  payload?: ApiClientObjectMap<any>
-  displayText?: string
 }
+
+export interface DialogflowV1MessageImage extends DialogflowV1BaseMessage<3> {
+  imageUrl?: string
+}
+
+export interface DialogflowV1MessageCard extends DialogflowV1BaseMessage<1> {
+  buttons?: DialogflowV1Button[]
+  imageUrl?: string
+  subtitle?: string
+  title?: string
+}
+
+export interface DialogflowV1MessageQuickReplies extends DialogflowV1BaseMessage<2> {
+  replies?: string[]
+  title?: string
+}
+
+export interface DialogflowV1MessageCustomPayload extends DialogflowV1BaseMessage<4> {
+  payload?: JsonObject
+}
+
+export interface DialogflowV1BaseGoogleMessage<TType extends string> {
+  platform: 'google'
+  type?: TType
+}
+
+export interface DialogflowV1MessageSimpleResponse extends DialogflowV1BaseGoogleMessage<'simple_response'> {
+  displayText?: string
+  textToSpeech?: string
+}
+
+export interface DialogflowV1MessageBasicCardButtonAction {
+  url?: string
+}
+
+export interface DialogflowV1MessageBasicCardButton {
+  openUrlAction?: DialogflowV1MessageBasicCardButtonAction
+  title?: string
+}
+
+export interface DialogflowV1MessageImage {
+  url?: string
+}
+
+export interface DialogflowV1MessageBasicCard extends DialogflowV1BaseGoogleMessage<'basic_card'> {
+  buttons?: DialogflowV1MessageBasicCardButton[]
+  formattedText?: string
+  image?: DialogflowV1MessageImage
+  subtitle?: string
+  title?: string
+}
+
+export interface DialogflowV1MessageOptionInfo {
+  key?: string
+  synonyms?: string[]
+}
+
+export interface DialogflowV1MessageOptionItem {
+  description?: string
+  image?: DialogflowV1MessageImage
+  optionInfo?: DialogflowV1MessageOptionInfo
+  title?: string
+}
+
+export interface DialogflowV1MessageList extends DialogflowV1BaseGoogleMessage<'list_card'> {
+  items?: DialogflowV1MessageOptionItem[]
+  title?: string
+}
+
+export interface DialogflowV1MessageSuggestion {
+  title?: string
+}
+
+export interface DialogflowV1MessageSuggestions extends DialogflowV1BaseGoogleMessage<'suggestion_chips'> {
+  suggestions?: DialogflowV1MessageSuggestion[]
+}
+
+export interface DialogflowV1MessageCarousel extends DialogflowV1BaseGoogleMessage<'carousel_card'> {
+  items?: DialogflowV1MessageOptionItem[]
+}
+
+export interface DialogflowV1MessageLinkOut extends DialogflowV1BaseGoogleMessage<'link_out_chip'> {
+  destinationName?: string
+  url?: string
+}
+
+export interface DialogflowV1MessageGooglePayload extends DialogflowV1BaseGoogleMessage<'custom_payload'> {
+  payload?: ApiClientObjectMap<any>
+}
+
+export type DialogflowV1Message =
+  DialogflowV1MessageText |
+  DialogflowV1MessageImage |
+  DialogflowV1MessageCard |
+  DialogflowV1MessageQuickReplies |
+  DialogflowV1MessageCustomPayload |
+  DialogflowV1MessageSimpleResponse |
+  DialogflowV1MessageBasicCard |
+  DialogflowV1MessageList |
+  DialogflowV1MessageSuggestions |
+  DialogflowV1MessageCarousel |
+  DialogflowV1MessageLinkOut |
+  DialogflowV1MessageGooglePayload
 
 export interface DialogflowV1Fulfillment {
   speech?: string

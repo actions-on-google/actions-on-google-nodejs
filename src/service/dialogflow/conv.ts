@@ -21,6 +21,7 @@ import { Conversation, ConversationOptionsInit } from '../actionssdk'
 import { Headers } from '../../framework'
 import { info, debug, stringify, ProtoAny, JsonObject } from '../../common'
 import { Contexts, ContextValues, Parameters } from './context'
+import { Incoming } from './incoming'
 
 const APP_DATA_CONTEXT = '_actions_on_google'
 const APP_DATA_CONTEXT_LIFESPAN = 99
@@ -130,6 +131,9 @@ export class DialogflowConversation<
   /** @public */
   contexts: ContextValues<TContexts>
 
+  /** @public */
+  incoming: Incoming
+
   /**
    * The user's raw input query.
    *
@@ -174,13 +178,21 @@ export class DialogflowConversation<
       this.version = 1
 
       const { result = {} } = this.body
-      const { action = '', parameters = {}, contexts, resolvedQuery = '', metadata = {} } = result
+      const {
+        action = '',
+        parameters = {},
+        contexts,
+        resolvedQuery = '',
+        metadata = {},
+        fulfillment,
+      } = result
       const { intentName = '' } = metadata
 
       this.action = action
       this.intent = intentName
       this.parameters = parameters
       this.contexts = new ContextValues(contexts)
+      this.incoming = new Incoming(fulfillment)
       this.query = resolvedQuery
     } else {
       this.version = 2
@@ -192,6 +204,7 @@ export class DialogflowConversation<
         outputContexts,
         intent = {},
         queryText = '',
+        fulfillmentMessages,
       } = queryResult
       const { displayName = '' } = intent
 
@@ -199,6 +212,7 @@ export class DialogflowConversation<
       this.intent = displayName
       this.parameters = parameters
       this.contexts = new ContextValues(outputContexts, this.body.session)
+      this.incoming = new Incoming(fulfillmentMessages)
       this.query = queryText
     }
 
