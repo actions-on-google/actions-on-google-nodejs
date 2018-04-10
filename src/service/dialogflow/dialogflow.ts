@@ -141,7 +141,6 @@ export interface DialogflowApp<
 
   /** @public */
   fallback(
-    intent: string,
     handler: DialogflowIntentHandler<
       TConvData,
       TUserStorage,

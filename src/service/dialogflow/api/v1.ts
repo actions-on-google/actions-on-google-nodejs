@@ -197,7 +197,7 @@ export interface DialogflowV1WebhookRequest {
 
 export interface DialogflowV1FollowupEvent {
   name?: string
-  parameters?: DialogflowV1Parameters
+  data?: DialogflowV1Parameters
 }
 
 export interface DialogflowV1WebhookResponse {

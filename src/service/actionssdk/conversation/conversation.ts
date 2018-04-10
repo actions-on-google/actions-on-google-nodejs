@@ -193,8 +193,9 @@ export class Conversation<TUserStorage> {
   }
 
   /** @public */
-  json(json: JsonObject) {
+  json<T = JsonObject>(json: T) {
     this.raw = json
+    return this
   }
 
   /** @public */

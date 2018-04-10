@@ -242,6 +242,50 @@ export class DialogflowConversation<
     }))
   }
 
+  /**
+   * Triggers an intent of your choosing by sending a followup event from the webhook.
+   *
+   * @example
+   * const app = dialogflow()
+   *
+   * // Create a Dialogflow intent with event 'apply-for-license-event'
+   *
+   * app.intent('Default Welcome Intent', conv => {
+   *   conv.followup('apply-for-license-event', {
+   *     date: new Date().toISOString(),
+   *   })
+   *   // The dialogflow intent with the 'apply-for-license-event' event
+   *   // will be triggered with the given parameters `date`
+   * })
+   *
+   * @param event Name of the event
+   * @param parameters Parameters to send with the event
+   * @param lang The language of this query.
+   *     See {@link https://dialogflow.com/docs/languages|Language Support}
+   *     for a list of the currently supported language codes.
+   *     Note that queries in the same session do not necessarily need to specify the same language.
+   *     By default, it is the languageCode sent with Dialogflow's queryResult.languageCode
+   * @public
+   */
+  followup(event: string, parameters?: Parameters, lang?: string) {
+    if (this.version === 1) {
+      return this.json<ApiV1.DialogflowV1WebhookResponse>({
+        followupEvent: {
+          name: event,
+          data: parameters,
+        },
+      })
+    }
+    const body = this.body as Api.GoogleCloudDialogflowV2WebhookRequest
+    return this.json<Api.GoogleCloudDialogflowV2WebhookResponse>({
+      followupEventInput: {
+        name: event,
+        parameters,
+        languageCode: lang || body.queryResult!.languageCode,
+      },
+    })
+  }
+
   private static isV1(
     body: Api.GoogleCloudDialogflowV2WebhookRequest | ApiV1.DialogflowV1WebhookRequest,
   ): body is ApiV1.DialogflowV1WebhookRequest {
