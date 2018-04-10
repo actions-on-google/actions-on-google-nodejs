@@ -133,7 +133,7 @@ export class MediaResponse implements Api.GoogleActionsV2MediaResponse {
     }
 
     if (this.isOptions(options)) {
-      this.mediaType = options.type
+      this.mediaType = options.type || this.mediaType
       this.mediaObjects = options.objects.map(o => MediaObject.toMediaObject(o))
       return
     }
