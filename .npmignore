@@ -1,4 +1,3 @@
-samples
 _test
 tslint.json
 tsconfig.json
@@ -9,5 +8,5 @@ CONTRIBUTING.md
 *.DS_Store
 .nyc_output
 coverage
-docs/
+docs
 script

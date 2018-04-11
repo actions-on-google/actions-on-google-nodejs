@@ -16,14 +16,9 @@
     "noImplicitAny": true,
     "strictNullChecks": true,
     "alwaysStrict": true,
-    "noUnusedLocals": true,
-    "jsx": "react",
-    "jsxFactory": "ssml.create"
+    "noUnusedLocals": true
   },
   "include": [
     "src/**/*"
-  ],
-  "exclude": [
-    "src/util/**/*"
   ]
 }
