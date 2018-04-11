@@ -165,6 +165,8 @@ export class Conversation<TUserStorage> {
 
   _raw?: JsonObject
 
+  _responded = false
+
   constructor(options: ConversationOptions<TUserStorage>) {
     const { request, headers, init } = options
 
@@ -195,6 +197,7 @@ export class Conversation<TUserStorage> {
   /** @public */
   json<T = JsonObject>(json: T) {
     this._raw = json
+    this._responded = true
     return this
   }
 
@@ -206,6 +209,7 @@ export class Conversation<TUserStorage> {
         'returned as a promise to the intent handler?')
     }
     this.responses.push(...responses)
+    this._responded = true
     return this
   }
 
@@ -295,6 +299,11 @@ export class Conversation<TUserStorage> {
 
   /** @public */
   response(): ConversationResponse {
+    if (!this._responded) {
+      throw new Error('No response has been set. ' +
+        'Is this being used in an async call that was not ' +
+        'returned as a promise to the intent handler?')
+    }
     if (this.digested) {
       throw new Error('Response has already been digested')
     }
