@@ -56,6 +56,16 @@ export interface RichResponseOptions {
   link?: Api.GoogleActionsV2UiElementsLinkOutSuggestion
 }
 
+const isOptions = (
+  options: RichResponseOptions | RichResponseItem,
+): options is RichResponseOptions => {
+  const test = options as RichResponseOptions
+  return typeof test.link === 'object' ||
+    Array.isArray(test.items) ||
+    Array.isArray(test.suggestions) ||
+    test.suggestions instanceof Suggestions
+}
+
 /**
  * Class for initializing and constructing Rich Responses with chainable interface.
  * @public
@@ -89,7 +99,7 @@ export class RichResponse implements Api.GoogleActionsV2RichResponse {
       this.add(...options)
       return
     }
-    if (this.isOptions(options)) {
+    if (isOptions(options)) {
       if (options.items) {
         this.add(...options.items)
       }
@@ -105,16 +115,6 @@ export class RichResponse implements Api.GoogleActionsV2RichResponse {
       return
     }
     this.add(options, ...items)
-  }
-
-  private isOptions(
-    options: RichResponseOptions | RichResponseItem,
-  ): options is RichResponseOptions {
-    const test = options as RichResponseOptions
-    return typeof test.link === 'object' ||
-      Array.isArray(test.items) ||
-      Array.isArray(test.suggestions) ||
-      test.suggestions instanceof Suggestions
   }
 
   /**

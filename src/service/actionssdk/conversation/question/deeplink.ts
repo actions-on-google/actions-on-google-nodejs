@@ -109,7 +109,7 @@ export class DeepLink extends Question<
       requestLinkReason: options.reason,
     }
 
-    this.data('type.googleapis.com/google.actions.v2.LinkValueSpec', {
+    this._data('type.googleapis.com/google.actions.v2.LinkValueSpec', {
       openUrlAction: {
         url: options.url,
         androidApp: {

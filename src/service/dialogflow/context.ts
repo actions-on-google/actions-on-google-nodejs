@@ -86,6 +86,11 @@ export interface OutputContext<TParameters extends Parameters> {
   parameters?: TParameters
 }
 
+const isV1 = (
+  context: Api.GoogleCloudDialogflowV2Context | ApiV1.DialogflowV1Context,
+): context is ApiV1.DialogflowV1Context =>
+  typeof (context as ApiV1.DialogflowV1Context).lifespan === 'number'
+
 export class ContextValues<TContexts extends Contexts> {
   /** @public */
   input: TContexts
@@ -95,13 +100,13 @@ export class ContextValues<TContexts extends Contexts> {
 
   constructor(
     outputContexts: Api.GoogleCloudDialogflowV2Context[] | ApiV1.DialogflowV1Context[] = [],
-    private session?: string,
+    private _session?: string,
   ) {
     this.input = {} as TContexts
     for (const context of outputContexts) {
       const name = context.name!
       const parameters = context.parameters!
-      if (this.isV1(context)) {
+      if (isV1(context)) {
         const lifespan = context.lifespan!
         this.input[name] = {
           name,
@@ -121,24 +126,18 @@ export class ContextValues<TContexts extends Contexts> {
     this.output = {}
   }
 
-  private isV1(
-    context: Api.GoogleCloudDialogflowV2Context | ApiV1.DialogflowV1Context,
-  ): context is ApiV1.DialogflowV1Context {
-    return typeof (context as ApiV1.DialogflowV1Context).lifespan === 'number'
-  }
-
-  serialize(): Api.GoogleCloudDialogflowV2Context[] {
+  _serialize(): Api.GoogleCloudDialogflowV2Context[] {
     return Object.keys(this.output).map((name): Api.GoogleCloudDialogflowV2Context => {
       const { lifespan, parameters } = this.output[name]!
       return {
-        name: `${this.session}/contexts/${name}`,
+        name: `${this._session}/contexts/${name}`,
         lifespanCount: lifespan,
         parameters,
       }
     })
   }
 
-  serializeV1(): ApiV1.DialogflowV1Context[] {
+  _serializeV1(): ApiV1.DialogflowV1Context[] {
     return Object.keys(this.output).map((name): ApiV1.DialogflowV1Context => {
       const { lifespan, parameters } = this.output[name]!
       return {

@@ -70,6 +70,6 @@ export class SignIn extends SoloQuestion<
   constructor() {
     super('actions.intent.SIGN_IN')
 
-    this.data('type.googleapis.com/google.actions.v2.SignInValueSpec')
+    this._data('type.googleapis.com/google.actions.v2.SignInValueSpec')
   }
 }

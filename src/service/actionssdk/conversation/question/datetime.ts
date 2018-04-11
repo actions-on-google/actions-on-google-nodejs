@@ -116,7 +116,7 @@ export class DateTime extends SoloQuestion<
 
     const { prompts = {} } = options
 
-    this.data('type.googleapis.com/google.actions.v2.DateTimeValueSpec', {
+    this._data('type.googleapis.com/google.actions.v2.DateTimeValueSpec', {
       dialogSpec: {
         requestDatetimeText: prompts.initial,
         requestDateText: prompts.date,

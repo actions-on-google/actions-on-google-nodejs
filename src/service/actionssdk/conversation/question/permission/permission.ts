@@ -121,7 +121,7 @@ export class Permission extends SoloQuestion<
   constructor(options: PermissionOptions) {
     super('actions.intent.PERMISSION')
 
-    this.data('type.googleapis.com/google.actions.v2.PermissionValueSpec', {
+    this._data('type.googleapis.com/google.actions.v2.PermissionValueSpec', {
       optContext: options.context,
       permissions: toArray(options.permissions),
       ...options.extra,

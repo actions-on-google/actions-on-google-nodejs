@@ -175,6 +175,20 @@ export interface ArgumentsRaw {
   [name: string]: Api.GoogleActionsV2Argument
 }
 
+const getValue = (arg: Api.GoogleActionsV2Argument): Argument => {
+  for (const key in arg) {
+    if (key === 'name' || key === 'textValue' || key === 'status') {
+      continue
+    }
+    return (arg as ArgumentsIndexable)[key]
+  }
+  // Manually handle the PERMISSION argument because of a bug not returning boolValue
+  if (arg.name === 'PERMISSION') {
+    return !!arg.boolValue
+  }
+  return arg.textValue
+}
+
 export class Parsed {
   /** @public */
   list: Argument[]
@@ -184,25 +198,11 @@ export class Parsed {
 
   constructor(raw: Api.GoogleActionsV2Argument[]) {
     this.list = raw.map((arg, i) => {
-      const value = this.getValue(arg)
+      const value = getValue(arg)
       const name = arg.name!
       this.input[name] = value
       return value
     })
-  }
-
-  private getValue(arg: Api.GoogleActionsV2Argument): Argument {
-    for (const key in arg) {
-      if (key === 'name' || key === 'textValue' || key === 'status') {
-        continue
-      }
-      return (arg as ArgumentsIndexable)[key]
-    }
-    // Manually handle the PERMISSION argument because of a bug not returning boolValue
-    if (arg.name === 'PERMISSION') {
-      return !!arg.boolValue
-    }
-    return arg.textValue
   }
 
   get<TName extends keyof ArgumentsNamed>(name: TName): ArgumentsNamed[TName]

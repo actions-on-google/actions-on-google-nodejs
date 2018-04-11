@@ -90,7 +90,7 @@ export interface ActionsSdkApp<
   TUserStorage,
   TConversation extends ActionsSdkConversation<TConvData, TUserStorage>
 > extends ServiceBaseApp {
-  handlers: ActionsSdkHandlers<TConvData, TUserStorage, TConversation>
+  _handlers: ActionsSdkHandlers<TConvData, TUserStorage, TConversation>
 
   /** @public */
   intent<TArgument extends Argument>(
@@ -112,7 +112,7 @@ export interface ActionsSdkApp<
     handler: ActionsSdkIntentHandler<TConvData, TUserStorage, TConversation, Argument> | string,
   ): this
 
-  middlewares: ActionsSdkMiddleware<ActionsSdkConversation<{}, {}>>[]
+  _middlewares: ActionsSdkMiddleware<ActionsSdkConversation<{}, {}>>[]
 
   /** @public */
   middleware<TConversationPlugin extends ActionsSdkConversation<{}, {}>>(
@@ -217,34 +217,34 @@ export const actionssdk: ActionsSdk = <
 >(
   options: ActionsSdkOptions<TConvData, TUserStorage> = {},
 ) => attach<ActionsSdkApp<TConvData, TUserStorage, TConversation>>({
-  handlers: {
+  _handlers: {
     intents: {},
     catcher: (conv, e) => {
       throw e
     },
   },
-  middlewares: [],
+  _middlewares: [],
   intent<TInput>(
     this: ActionsSdkApp<TConvData, TUserStorage, TConversation>,
     intent: Intent,
     handler: ActionsSdkIntentHandler<TConvData, TUserStorage, TConversation, TInput> | string,
   ) {
-    this.handlers.intents[intent] = handler
+    this._handlers.intents[intent] = handler
     return this
   },
   catch(this: ActionsSdkApp<TConvData, TUserStorage, TConversation>, catcher) {
-    this.handlers.catcher = catcher
+    this._handlers.catcher = catcher
     return this
   },
   fallback(this: ActionsSdkApp<TConvData, TUserStorage, TConversation>, handler) {
-    this.handlers.fallback = handler
+    this._handlers.fallback = handler
     return this
   },
   middleware(
     this: ActionsSdkApp<TConvData, TUserStorage, TConversation>,
     middleware,
   ) {
-    this.middlewares.push(middleware)
+    this._middlewares.push(middleware)
     return this
   },
   init: options.init,
@@ -283,25 +283,25 @@ export const actionssdk: ActionsSdk = <
       init: init && init(),
       debug,
     })
-    for (const middleware of this.middlewares) {
+    for (const middleware of this._middlewares) {
       conv = (middleware(conv) as ActionsSdkConversation<TConvData, TUserStorage> | void) || conv
     }
     const { intent } = conv
     const traversed: Traversed = {}
-    let handler: typeof this.handlers.intents[string] = intent
+    let handler: typeof this._handlers.intents[string] = intent
     while (typeof handler !== 'function') {
       if (typeof handler === 'undefined') {
-        if (!this.handlers.fallback) {
+        if (!this._handlers.fallback) {
           throw new Error(`Actions SDK IntentHandler not found for intent: ${intent}`)
         }
-        handler = this.handlers.fallback
+        handler = this._handlers.fallback
         continue
       }
       if (traversed[handler]) {
         throw new Error(`Circular intent map detected: "${handler}" traversed twice`)
       }
       traversed[handler] = true
-      handler = this.handlers.intents[handler]
+      handler = this._handlers.intents[handler]
     }
     try {
       await handler(
@@ -311,7 +311,7 @@ export const actionssdk: ActionsSdk = <
         conv.arguments.status.list[0],
       )
     } catch (e) {
-      await this.handlers.catcher(conv as TConversation, e)
+      await this._handlers.catcher(conv as TConversation, e)
     }
     return {
       status: 200,

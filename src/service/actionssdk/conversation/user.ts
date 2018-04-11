@@ -146,7 +146,7 @@ export class User<TUserStorage> {
     this.access = new Access(user)
   }
 
-  serialize() {
+  _serialize() {
     return JSON.stringify({ data: this.storage })
   }
 }

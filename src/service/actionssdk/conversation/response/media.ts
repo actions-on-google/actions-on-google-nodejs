@@ -46,6 +46,13 @@ export interface MediaObjectOptions {
   image?: Api.GoogleActionsV2UiElementsImage
 }
 
+const toMediaObject = (object: MediaObjectString) => {
+  if (typeof object === 'string') {
+    return new MediaObject(object)
+  }
+  return object
+}
+
 /**
  * Class for initializing and constructing MediaObject
  * @public
@@ -67,13 +74,6 @@ export class MediaObject implements Api.GoogleActionsV2MediaObject {
     this.largeImage = options.image
     this.name = options.name
   }
-
-  static toMediaObject(object: MediaObjectString) {
-    if (typeof object === 'string') {
-      return new MediaObject(object)
-    }
-    return object
-  }
 }
 
 export type MediaObjectString = Api.GoogleActionsV2MediaObject | string
@@ -91,6 +91,13 @@ export interface MediaResponseOptions {
    * @public
    */
   type?: Api.GoogleActionsV2MediaResponseMediaType
+}
+
+const isOptions = (
+  options: MediaResponseOptions | MediaObjectString,
+): options is MediaResponseOptions => {
+  const test = options as MediaResponseOptions
+  return Array.isArray(test.objects)
 }
 
 /**
@@ -128,22 +135,15 @@ export class MediaResponse implements Api.GoogleActionsV2MediaResponse {
     }
 
     if (Array.isArray(options)) {
-      this.mediaObjects = options.map(o => MediaObject.toMediaObject(o))
+      this.mediaObjects = options.map(o => toMediaObject(o))
       return
     }
 
-    if (this.isOptions(options)) {
+    if (isOptions(options)) {
       this.mediaType = options.type || this.mediaType
-      this.mediaObjects = options.objects.map(o => MediaObject.toMediaObject(o))
+      this.mediaObjects = options.objects.map(o => toMediaObject(o))
       return
     }
-    this.mediaObjects = [options].concat(objects).map(o => MediaObject.toMediaObject(o))
-  }
-
-  private isOptions(
-    options: MediaResponseOptions | MediaObjectString,
-  ): options is MediaResponseOptions {
-    const test = options as MediaResponseOptions
-    return Array.isArray(test.objects)
+    this.mediaObjects = [options].concat(objects).map(o => toMediaObject(o))
   }
 }

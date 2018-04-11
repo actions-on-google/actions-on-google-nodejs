@@ -35,6 +35,6 @@ export class DeliveryAddress extends SoloQuestion<
   constructor(options?: Api.GoogleActionsV2DeliveryAddressValueSpec) {
     super('actions.intent.DELIVERY_ADDRESS')
 
-    this.data('type.googleapis.com/google.actions.v2.DeliveryAddressValueSpec', options)
+    this._data('type.googleapis.com/google.actions.v2.DeliveryAddressValueSpec', options)
   }
 }

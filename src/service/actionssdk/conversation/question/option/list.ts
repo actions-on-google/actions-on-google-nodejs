@@ -102,7 +102,7 @@ export class List extends Question<
   constructor(options: ListOptions) {
     super('actions.intent.OPTION')
 
-    this.data('type.googleapis.com/google.actions.v2.OptionValueSpec', {
+    this._data('type.googleapis.com/google.actions.v2.OptionValueSpec', {
       listSelect: {
         title: options.title,
         items: Array.isArray(options.items) ? options.items : convert(options.items),

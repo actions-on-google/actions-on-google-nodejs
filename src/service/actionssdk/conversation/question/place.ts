@@ -106,7 +106,7 @@ export class Place extends SoloQuestion<
       requestPrompt: options.prompt,
     }
 
-    this.data('type.googleapis.com/google.actions.v2.PlaceValueSpec', {
+    this._data('type.googleapis.com/google.actions.v2.PlaceValueSpec', {
       dialogSpec: {
         extension,
       },

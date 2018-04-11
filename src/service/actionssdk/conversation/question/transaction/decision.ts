@@ -35,6 +35,6 @@ export class TransactionDecision extends SoloQuestion<
   constructor(options?: Api.GoogleActionsV2TransactionDecisionValueSpec) {
     super('actions.intent.TRANSACTION_DECISION')
 
-    this.data('type.googleapis.com/google.actions.v2.TransactionDecisionValueSpec', options)
+    this._data('type.googleapis.com/google.actions.v2.TransactionDecisionValueSpec', options)
   }
 }

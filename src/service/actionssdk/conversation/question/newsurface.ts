@@ -129,7 +129,7 @@ export class NewSurface extends SoloQuestion<
   constructor(options: NewSurfaceOptions) {
     super('actions.intent.NEW_SURFACE')
 
-    this.data('type.googleapis.com/google.actions.v2.NewSurfaceValueSpec', {
+    this._data('type.googleapis.com/google.actions.v2.NewSurfaceValueSpec', {
       capabilities: toArray(options.capabilities),
       context: options.context,
       notificationTitle: options.notification,

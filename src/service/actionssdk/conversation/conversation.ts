@@ -163,7 +163,7 @@ export class Conversation<TUserStorage> {
   /** @public */
   type: Api.GoogleActionsV2ConversationType
 
-  raw?: JsonObject
+  _raw?: JsonObject
 
   constructor(options: ConversationOptions<TUserStorage>) {
     const { request, headers, init } = options
@@ -194,7 +194,7 @@ export class Conversation<TUserStorage> {
 
   /** @public */
   json<T = JsonObject>(json: T) {
-    this.raw = json
+    this._raw = json
     return this
   }
 
@@ -340,7 +340,7 @@ export class Conversation<TUserStorage> {
       }
       richResponse.add(response)
     }
-    const userStorage = this.user.serialize()
+    const userStorage = this.user._serialize()
     return {
       expectUserResponse,
       richResponse,

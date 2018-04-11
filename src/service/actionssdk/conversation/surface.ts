@@ -74,6 +74,7 @@ export class AvailableSurfacesCapabilities {
 export class AvailableSurfaces {
   /** @public */
   list: Surface[]
+
   /** @public */
   capabilities: AvailableSurfacesCapabilities
 

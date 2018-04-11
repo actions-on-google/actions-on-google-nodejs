@@ -95,7 +95,7 @@ export interface DialogflowApp<
   TContexts extends Contexts,
   TConversation extends DialogflowConversation<TConvData, TUserStorage, TContexts>,
 > extends ServiceBaseApp {
-  handlers: DialogflowHandlers<TConvData, TUserStorage, TContexts, TConversation>
+  _handlers: DialogflowHandlers<TConvData, TUserStorage, TContexts, TConversation>
 
   /** @public */
   intent<TParameters extends Parameters>(
@@ -151,7 +151,7 @@ export interface DialogflowApp<
     > | string,
   ): this
 
-  middlewares: DialogflowMiddleware<DialogflowConversation<{}, {}, Contexts>>[]
+  _middlewares: DialogflowMiddleware<DialogflowConversation<{}, {}, Contexts>>[]
 
   /** @public */
   middleware<TConversationPlugin extends DialogflowConversation<{}, {}, Contexts>>(
@@ -281,13 +281,13 @@ export const dialogflow: Dialogflow = <
 >(
   options: DialogflowOptions<TConvData, TUserStorage> = {},
 ) => attach<DialogflowApp<TConvData, TUserStorage, TContexts, TConversation>>({
-  handlers: {
+  _handlers: {
     intents: {},
     catcher: (conv, e) => {
       throw e
     },
   },
-  middlewares: [],
+  _middlewares: [],
   intent<TParameters extends Parameters, TArgument extends Argument>(
     this: DialogflowApp<TConvData, TUserStorage, TContexts, TConversation>,
     intent: string,
@@ -300,22 +300,22 @@ export const dialogflow: Dialogflow = <
       TArgument
     >,
   ) {
-    this.handlers.intents[intent] = handler
+    this._handlers.intents[intent] = handler
     return this
   },
   catch(this: DialogflowApp<TConvData, TUserStorage, TContexts, TConversation>, catcher) {
-    this.handlers.catcher = catcher
+    this._handlers.catcher = catcher
     return this
   },
   fallback(this: DialogflowApp<TConvData, TUserStorage, TContexts, TConversation>, handler) {
-    this.handlers.fallback = handler
+    this._handlers.fallback = handler
     return this
   },
   middleware(
     this: DialogflowApp<TConvData, TUserStorage, TContexts, TConversation>,
     middleware,
   ) {
-    this.middlewares.push(middleware)
+    this._middlewares.push(middleware)
     return this
   },
   init: options.init,
@@ -363,26 +363,26 @@ export const dialogflow: Dialogflow = <
       init: init && init(),
       debug,
     })
-    for (const middleware of this.middlewares) {
+    for (const middleware of this._middlewares) {
       conv = (middleware(conv) as DialogflowConversation<TConvData, TUserStorage, TContexts> | void)
         || conv
     }
     const { intent } = conv
     const traversed: Traversed = {}
-    let handler: typeof this.handlers.intents[string] = intent
+    let handler: typeof this._handlers.intents[string] = intent
     while (typeof handler !== 'function') {
       if (typeof handler === 'undefined') {
-        if (!this.handlers.fallback) {
+        if (!this._handlers.fallback) {
           throw new Error(`Dialogflow IntentHandler not found for intent: ${intent}`)
         }
-        handler = this.handlers.fallback
+        handler = this._handlers.fallback
         continue
       }
       if (traversed[handler]) {
         throw new Error(`Circular intent map detected: "${handler}" traversed twice`)
       }
       traversed[handler] = true
-      handler = this.handlers.intents[handler]
+      handler = this._handlers.intents[handler]
     }
     try {
       await handler(
@@ -392,7 +392,7 @@ export const dialogflow: Dialogflow = <
         conv.arguments.status.list[0],
       )
     } catch (e) {
-      await this.handlers.catcher(conv as TConversation, e)
+      await this._handlers.catcher(conv as TConversation, e)
     }
     return {
       status: 200,

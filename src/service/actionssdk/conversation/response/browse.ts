@@ -85,6 +85,13 @@ export class BrowseCarouselItem implements Api.GoogleActionsV2UiElementsCarousel
   }
 }
 
+const isOptions = (
+  options: BrowseCarouselOptions | Api.GoogleActionsV2UiElementsCarouselBrowseItem,
+): options is BrowseCarouselOptions => {
+  const test = options as BrowseCarouselOptions
+  return Array.isArray(test.items)
+}
+
 /**
  * Class for initializing and constructing Browse Carousel.
  * @public
@@ -120,18 +127,11 @@ export class BrowseCarousel implements Api.GoogleActionsV2UiElementsCarouselBrow
       this.items = options
       return
     }
-    if (this.isOptions(options)) {
+    if (isOptions(options)) {
       this.imageDisplayOptions = options.display
       this.items = options.items
       return
     }
     this.items = [options].concat(items)
-  }
-
-  private isOptions(
-    options: BrowseCarouselOptions | Api.GoogleActionsV2UiElementsCarouselBrowseItem,
-  ): options is BrowseCarouselOptions {
-    const test = options as BrowseCarouselOptions
-    return Array.isArray(test.items)
   }
 }

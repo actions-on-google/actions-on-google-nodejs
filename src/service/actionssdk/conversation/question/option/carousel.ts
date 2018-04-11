@@ -121,7 +121,7 @@ export class Carousel extends Question<
   constructor(options: CarouselOptions) {
     super('actions.intent.OPTION')
 
-    this.data('type.googleapis.com/google.actions.v2.OptionValueSpec', {
+    this._data('type.googleapis.com/google.actions.v2.OptionValueSpec', {
       carouselSelect: {
         items: Array.isArray(options.items) ? options.items : convert(options.items),
         imageDisplayOptions: options.display,

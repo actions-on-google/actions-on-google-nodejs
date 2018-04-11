@@ -66,6 +66,21 @@ export interface DialogflowConversationOptions<TConvData, TUserStorage> {
   debug?: boolean
 }
 
+const isV1 = (
+  body: Api.GoogleCloudDialogflowV2WebhookRequest | ApiV1.DialogflowV1WebhookRequest,
+): body is ApiV1.DialogflowV1WebhookRequest => !!(body as ApiV1.DialogflowV1WebhookRequest).result
+
+const getRequest = (
+  body: Api.GoogleCloudDialogflowV2WebhookRequest | ApiV1.DialogflowV1WebhookRequest,
+) => {
+  if (isV1(body)) {
+    const { originalRequest = {} } = body
+    const { data = {} } = originalRequest
+    return data
+  }
+  return body.originalDetectIntentRequest!.payload!
+}
+
 /** @public */
 export class DialogflowConversation<
   TConvData = {},
@@ -165,7 +180,7 @@ export class DialogflowConversation<
   /** @public */
   constructor(options: DialogflowConversationOptions<TConvData, TUserStorage>) {
     super({
-      request: DialogflowConversation.getRequest(options.body),
+      request: getRequest(options.body),
       headers: options.headers,
       init: options.init,
     })
@@ -174,7 +189,7 @@ export class DialogflowConversation<
 
     this.body = body
 
-    if (DialogflowConversation.isV1(this.body)) {
+    if (isV1(this.body)) {
       this.version = 1
 
       const { result = {} } = this.body
@@ -286,27 +301,10 @@ export class DialogflowConversation<
     })
   }
 
-  private static isV1(
-    body: Api.GoogleCloudDialogflowV2WebhookRequest | ApiV1.DialogflowV1WebhookRequest,
-  ): body is ApiV1.DialogflowV1WebhookRequest {
-    return !!(body as ApiV1.DialogflowV1WebhookRequest).result
-  }
-
-  private static getRequest(
-    body: Api.GoogleCloudDialogflowV2WebhookRequest | ApiV1.DialogflowV1WebhookRequest,
-  ) {
-    if (this.isV1(body)) {
-      const { originalRequest = {} } = body
-      const { data = {} } = originalRequest
-      return data
-    }
-    return body.originalDetectIntentRequest!.payload!
-  }
-
   /** @public */
   serialize(): Api.GoogleCloudDialogflowV2WebhookResponse | ApiV1.DialogflowV1WebhookResponse {
-    if (this.raw) {
-      return this.raw
+    if (this._raw) {
+      return this._raw
     }
     const {
       richResponse,
@@ -330,14 +328,14 @@ export class DialogflowConversation<
       data: JSON.stringify(this.data),
     })
     if (this.version === 1) {
-      const contextOut = this.contexts.serializeV1()
+      const contextOut = this.contexts._serializeV1()
       const response: ApiV1.DialogflowV1WebhookResponse = {
         data: payload,
         contextOut,
       }
       return response
     }
-    const outputContexts = this.contexts.serialize()
+    const outputContexts = this.contexts._serialize()
     const response: Api.GoogleCloudDialogflowV2WebhookResponse = {
       payload,
       outputContexts,

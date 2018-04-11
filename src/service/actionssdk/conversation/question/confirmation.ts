@@ -69,7 +69,7 @@ export class Confirmation extends SoloQuestion<
   constructor(text: string) {
     super('actions.intent.CONFIRMATION')
 
-    this.data('type.googleapis.com/google.actions.v2.ConfirmationValueSpec', {
+    this._data('type.googleapis.com/google.actions.v2.ConfirmationValueSpec', {
       dialogSpec: {
         requestConfirmationText: text,
       },

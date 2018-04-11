@@ -21,9 +21,16 @@ import { info, debug, stringify } from '../../common'
 
 /** @public */
 export interface ActionsSdkConversationOptions<TConvData, TUserStorage> {
+  /** @public */
   body: Api.GoogleActionsV2AppRequest
+
+  /** @public */
   headers: Headers
+
+  /** @public */
   init?: ActionsSdkConversationOptionsInit<TConvData, TUserStorage>
+
+  /** @public */
   debug?: boolean
 }
 
@@ -96,9 +103,10 @@ export class ActionsSdkConversation<
     }))
   }
 
+  /** @public */
   serialize(): Api.GoogleActionsV2AppResponse {
-    if (this.raw) {
-      return this.raw
+    if (this._raw) {
+      return this._raw
     }
     const {
       richResponse,

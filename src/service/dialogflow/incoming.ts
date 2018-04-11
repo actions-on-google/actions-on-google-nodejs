@@ -39,6 +39,15 @@ export type IncomingMessage =
   Carousel |
   JsonObject
 
+const toImage = (imageUri: string | undefined) => {
+  if (imageUri) {
+    return new Image({
+      url: imageUri,
+      alt: '',
+    })
+  }
+  return undefined
+}
 
 export class Incoming {
   /** @public */
@@ -78,7 +87,7 @@ export class Incoming {
           continue
         }
         if (image) {
-          this.parsed.push(this.toImage(image.imageUri)!)
+          this.parsed.push(toImage(image.imageUri)!)
           continue
         }
         if (quickReplies) {
@@ -90,7 +99,7 @@ export class Incoming {
           this.parsed.push(new BasicCard({
             title: card.title,
             subtitle: card.subtitle,
-            image: this.toImage(card.imageUri),
+            image: toImage(card.imageUri),
             buttons: buttons ? buttons.map(b => new Button({
               title: b.text!,
               url: b.postback,
@@ -170,7 +179,7 @@ export class Incoming {
           }
           if (type === 3) {
             const assumed = message as ApiV1.DialogflowV1MessageImage
-            this.parsed.push(this.toImage(assumed.imageUrl)!)
+            this.parsed.push(toImage(assumed.imageUrl)!)
             continue
           }
           if (type === 1) {
@@ -179,7 +188,7 @@ export class Incoming {
             this.parsed.push(new BasicCard({
               title: assumed.title,
               subtitle: assumed.subtitle,
-              image: this.toImage(assumed.imageUrl),
+              image: toImage(assumed.imageUrl),
               buttons: buttons ? buttons.map(b => new Button({
                 title: b.text!,
                 url: b.postback,
@@ -212,7 +221,7 @@ export class Incoming {
               title: assumed.title,
               subtitle: assumed.subtitle,
               text: assumed.formattedText,
-              image: this.toImage(image.url),
+              image: toImage(image.url),
               buttons: buttons ? buttons.map(b => new Button({
                 title: b.title!,
                 url: b.openUrlAction!.url,
@@ -256,16 +265,6 @@ export class Incoming {
         }
       }
     }
-  }
-
-  private toImage(imageUri: string | undefined) {
-    if (imageUri) {
-      return new Image({
-        url: imageUri,
-        alt: '',
-      })
-    }
-    return undefined
   }
 
   /**

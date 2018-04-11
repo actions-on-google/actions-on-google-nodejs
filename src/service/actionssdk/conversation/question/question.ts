@@ -31,7 +31,7 @@ export abstract class Question<
   constructor(public intent: TIntent) {
   }
 
-  data(type: InputValueSpec, spec?: TValueSpec) {
+  _data(type: InputValueSpec, spec?: TValueSpec) {
     this.inputValueData = Object.assign({ '@type': type }, spec)
   }
 }

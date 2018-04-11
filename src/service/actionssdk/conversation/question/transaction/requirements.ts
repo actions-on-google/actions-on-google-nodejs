@@ -35,6 +35,6 @@ export class TransactionRequirements extends SoloQuestion<
   constructor(options?: Api.GoogleActionsV2TransactionRequirementsCheckSpec) {
     super('actions.intent.TRANSACTION_REQUIREMENTS_CHECK')
 
-    this.data('type.googleapis.com/google.actions.v2.TransactionRequirementsCheckSpec', options)
+    this._data('type.googleapis.com/google.actions.v2.TransactionRequirementsCheckSpec', options)
   }
 }

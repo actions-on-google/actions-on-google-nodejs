@@ -97,7 +97,7 @@ export class RegisterUpdate extends SoloQuestion<
   constructor(options: RegisterUpdateOptions) {
     super('actions.intent.REGISTER_UPDATE')
 
-    this.data('type.googleapis.com/google.actions.v2.RegisterUpdateValueSpec', {
+    this._data('type.googleapis.com/google.actions.v2.RegisterUpdateValueSpec', {
       intent: options.intent,
       arguments: options.arguments,
       triggerContext: {
