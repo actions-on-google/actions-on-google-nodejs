@@ -86,7 +86,7 @@ export {
   Permission,
   SignInArgument,
   SignIn,
-  UpdatePermissionArgument,
+  UpdatePermissionUserIdArgument,
   UpdatePermissionOptions,
   UpdatePermission,
   RegisterUpdateArgument,

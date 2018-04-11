@@ -15,10 +15,10 @@
  */
 
 import * as Api from '../../../api/v2'
-import { PermissionArgument, Permission } from './permission'
+import { Permission } from './permission'
 
 /** @public */
-export type UpdatePermissionArgument = PermissionArgument
+export type UpdatePermissionUserIdArgument = string
 
 /** @public */
 export interface UpdatePermissionOptions {

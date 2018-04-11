@@ -28,6 +28,7 @@ import {
   TransactionRequirementsArgument,
   DeliveryAddressArgument,
   RegisterUpdateArgument,
+  UpdatePermissionUserIdArgument,
 } from '..'
 import {
   RepromptArgument,
@@ -50,12 +51,18 @@ export interface ArgumentsNamed {
    * True if the request follows a previous request asking for
    * permission from the user and the user granted the permission(s).
    * Otherwise, false.
-   * Only use after calling {@link Permission|conv.ask(new Permission)}.
+   * Only use after calling {@link Permission|conv.ask(new Permission)}
+   * or {@link UpdatePermission|conv.ask(new UpdatePermission)}.
    * @public
    */
   PERMISSION?: PermissionArgument
 
-  /** @public */
+  /**
+   * The option key user chose from options response.
+   * Only use after calling {@link List|conv.ask(new List)}
+   * or {@link Carousel|conv.ask(new Carousel)}.
+   * @public
+   */
   OPTION?: OptionArgument
 
   /**
@@ -134,6 +141,13 @@ export interface ArgumentsNamed {
    * @public
    */
   REGISTER_UPDATE?: RegisterUpdateArgument
+
+  /**
+   * The updates user id.
+   * Only use after calling {@link UpdatePermission|conv.ask(new UpdatePermission)}.
+   * @public
+   */
+  UPDATES_USER_ID?: UpdatePermissionUserIdArgument
 
   /**
    * The user provided place.
