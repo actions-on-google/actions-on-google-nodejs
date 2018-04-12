@@ -16,15 +16,203 @@
 
 import ava, { RegisterContextual } from 'ava'
 import { attach, AppHandler } from '../assistant'
+import { JsonObject } from '../common'
+import { Headers, StandardResponse } from '../framework'
 
 const test = ava as RegisterContextual<{
   app: AppHandler,
 }>
 
 test.beforeEach(t => {
-  t.context.app = attach({}, {})
+  t.context.app = attach({})
 })
 
 test('app is a function', t => {
   t.is(typeof t.context.app, 'function')
+})
+
+test('app.frameworks is an object', t => {
+  t.is(typeof t.context.app.frameworks, 'object')
+})
+
+test('app.handler throws error by default', async t => {
+  await t.throws(t.context.app.handler({}, {}))
+})
+
+test('app.debug is false when not passed options', t => {
+  t.false(t.context.app.debug)
+})
+
+test('app.debug is false when not passed debug in options', t => {
+  const app = attach({}, {})
+  t.false(app.debug)
+})
+
+test('app.debug is true when passed true', t => {
+  const app = attach({}, { debug: true })
+  t.true(app.debug)
+})
+
+test('app.debug is false when passed false', t => {
+  const app = attach({}, { debug: false })
+  t.false(app.debug)
+})
+
+test('app.use overrides the app object when plugin returns', t => {
+  const override = {
+    prop: true,
+  }
+  const app = t.context.app.use<{}, typeof override>(app => Object.assign(app, override))
+  t.true(app.prop)
+})
+
+test('app.use returns the same app object when plugin returns void', t => {
+  t.is(t.context.app.use(() => {}), t.context.app)
+})
+
+test('app.use returns the same app object with properties when plugin returns void', t => {
+  interface TestPlugin {
+    prop?: boolean
+  }
+  const app = t.context.app.use<{}, TestPlugin>(app => {
+    (app as AppHandler & TestPlugin).prop = true
+  })
+  t.is(app, t.context.app)
+  t.true(app.prop)
+})
+
+test('app.handler can process requests', async t => {
+  const mock = {
+    key: 'value',
+  }
+  const body = {
+    body1: 'body2',
+  }
+  const headers = {
+    headers1: 'headers2',
+  }
+  const app = attach({
+    handler: async (body: JsonObject, headers: Headers): Promise<StandardResponse> => {
+      return {
+        body: {
+          body,
+          headers,
+          mock,
+        },
+        status: 123,
+      }
+    },
+  })
+  t.is(typeof app.handler, 'function')
+  const res = await app.handler(body, headers)
+  t.is(res.status, 123)
+  t.is(res.body.body, body)
+  t.is(res.body.headers, headers)
+  t.is(res.body.mock, mock)
+})
+
+test('app is callable as a StandardHandler', async t => {
+  const mock = {
+    key: 'value',
+  }
+  const body = {
+    body1: 'body2',
+  }
+  const headers = {
+    headers1: 'headers2',
+  }
+  const app = attach({
+    handler: async (body: JsonObject, headers: Headers): Promise<StandardResponse> => {
+      return {
+        body: {
+          body,
+          headers,
+          mock,
+        },
+        status: 123,
+      }
+    },
+  })
+  t.is(typeof app, 'function')
+  const res = await app(body, headers)
+  t.is(res.status, 123)
+  t.is(res.body.body, body)
+  t.is(res.body.headers, headers)
+  t.is(res.body.mock, mock)
+})
+
+test('app is callable as a StandardHandler when debug is true', async t => {
+  const mock = {
+    key: 'value',
+  }
+  const body = {
+    body1: 'body2',
+  }
+  const headers = {
+    headers1: 'headers2',
+  }
+  const app = attach({
+    handler: async (body: JsonObject, headers: Headers): Promise<StandardResponse> => {
+      return {
+        body: {
+          body,
+          headers,
+          mock,
+        },
+        status: 123,
+      }
+    },
+  }, {
+    debug: true,
+  })
+  t.is(typeof app, 'function')
+  const res = await app(body, headers)
+  t.is(res.status, 123)
+  t.is(res.body.body, body)
+  t.is(res.body.headers, headers)
+  t.is(res.body.mock, mock)
+})
+
+test('app is callable as an Express request', async t => {
+  const mock = {
+    key: 'value',
+  }
+  const body = {
+    body1: 'body2',
+  }
+  const headers = {
+    headers1: 'headers2',
+  }
+  const app = attach({
+    handler: async (body: JsonObject, headers: Headers): Promise<StandardResponse> => {
+      return {
+        body: {
+          body,
+          headers,
+          mock,
+        },
+        status: 123,
+      }
+    },
+  })
+  t.is(typeof app, 'function')
+
+  let resStatus = -1
+
+  app({
+    body,
+    headers,
+    get() {},
+  }, {
+    send(resBody: JsonObject) {
+      t.is(resStatus, 123)
+      t.is(resBody.body, body)
+      t.is(resBody.headers, headers)
+      t.is(resBody.mock, mock)
+    },
+    status(status: number) {
+      resStatus = status
+      return this
+    },
+  })
 })

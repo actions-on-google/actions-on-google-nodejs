@@ -17,7 +17,7 @@
     "build:watch": "tsc -w",
     "build:clean": "yarn clean:pack && yarn clean && yarn build",
     "package": "yarn build:clean && yarn pack",
-    "test": "yarn build:clean && ava --fail-fast",
+    "test": "yarn build:clean && nyc ava --fail-fast",
     "test:watch": "yarn build:clean && concurrently -rk \"yarn build:watch\" \"ava -w --fail-fast\""
   },
   "repository": {
@@ -37,6 +37,7 @@
   "devDependencies": {
     "ava": "^0.25.0",
     "concurrently": "^3.5.1",
+    "nyc": "^11.6.0",
     "tslint": "^5.9.1",
     "tslint-eslint-rules": "^5.1.0",
     "typescript": "^2.7.2"
