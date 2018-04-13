@@ -87,7 +87,10 @@ export class Incoming {
           continue
         }
         if (image) {
-          this.parsed.push(toImage(image.imageUri)!)
+          this.parsed.push(new Image({
+            url: image.imageUri!,
+            alt: image.accessibilityText!,
+          }))
           continue
         }
         if (quickReplies) {
@@ -321,6 +324,9 @@ export class Incoming {
    * @param type A string checking for the typeof message or a class checking for instanceof message
    * @public
    */
+  // tslint:disable-next-line:no-any allow constructors with any type of arguments
+  get<TMessage extends IncomingMessage>(type: new (...args: any[]) => TMessage): TMessage
+  get(type: 'string'): string
   // tslint:disable-next-line:no-any allow constructors with any type of arguments
   get<TMessage extends IncomingMessage>(type: 'string' | (new (...args: any[]) => TMessage)) {
     for (const message of this) {

@@ -95,7 +95,7 @@ export class ActionsSdkConversation<
 
     this.data = conversationToken ? JSON.parse(conversationToken).data : ((init && init.data) || {})
 
-    const log = debug ? info : debug
+    const log = options.debug ? info : debug
     log('Conversation', stringify(this, {
       request: null,
       headers: null,

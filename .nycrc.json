@@ -4,7 +4,8 @@
   ],
   "reporter": [
     "html",
-    "text-summary"
+    "text-summary",
+    "json-summary"
   ],
   "exclude": [
     "**/*.d.ts",

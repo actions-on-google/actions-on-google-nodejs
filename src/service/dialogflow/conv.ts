@@ -249,7 +249,7 @@ export class DialogflowConversation<
       }
     }
 
-    const log = debug ? info : debug
+    const log = options.debug ? info : debug
     log('Conversation', stringify(this, {
       request: null,
       headers: null,

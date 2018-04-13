@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 
-/** @public */
-export type RepromptArgument = string
+import test from 'ava'
+import * as module from '../noinput'
 
-/** @public */
-export type FinalRepromptArgument = boolean
+test('module is an object', t => {
+  t.is(typeof module, 'object')
+})

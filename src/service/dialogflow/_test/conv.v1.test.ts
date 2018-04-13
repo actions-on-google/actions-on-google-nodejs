@@ -14,8 +14,28 @@
  * limitations under the License.
  */
 
-/** @public */
-export type RepromptArgument = string
+import ava, { RegisterContextual } from 'ava'
+import { DialogflowConversation } from '../conv'
+import * as ApiV1 from '../api/v1'
 
-/** @public */
-export type FinalRepromptArgument = boolean
+interface AvaContext {
+  conv: DialogflowConversation
+}
+
+const test = ava as RegisterContextual<AvaContext>
+
+test.beforeEach(t => {
+  t.context.conv = new DialogflowConversation({
+    body: {
+      result: {},
+      originalRequest: {
+        data: {},
+      },
+    } as ApiV1.DialogflowV1WebhookRequest,
+    headers: {},
+  })
+})
+
+test('conv can be instantiated', t => {
+  t.true(t.context.conv instanceof DialogflowConversation)
+})

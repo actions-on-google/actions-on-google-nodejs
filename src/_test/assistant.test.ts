@@ -19,9 +19,11 @@ import { attach, AppHandler } from '../assistant'
 import { JsonObject } from '../common'
 import { Headers, StandardResponse } from '../framework'
 
-const test = ava as RegisterContextual<{
-  app: AppHandler,
-}>
+interface AvaContext {
+  app: AppHandler
+}
+
+const test = ava as RegisterContextual<AvaContext>
 
 test.beforeEach(t => {
   t.context.app = attach({})

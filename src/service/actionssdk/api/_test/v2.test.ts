@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 
-/** @public */
-export type RepromptArgument = string
+import test from 'ava'
+import * as Api from '../v2'
 
-/** @public */
-export type FinalRepromptArgument = boolean
+test('api is an object', t => {
+  t.is(typeof Api, 'object')
+})
