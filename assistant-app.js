@@ -1586,7 +1586,7 @@ class AssistantApp {
     const data = this.requestData();
 
     if (!data || !data.user) {
-      error('No user object');
+      debug('No user object');
       return null;
     }
 
