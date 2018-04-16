@@ -2,7 +2,6 @@ node_modules
 *.DS_Store
 .nyc_output
 coverage
-docs/
 *.log
 *.tgz
 dist
