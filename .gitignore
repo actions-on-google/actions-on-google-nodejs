@@ -5,3 +5,4 @@ coverage
 *.log
 *.tgz
 dist
+package
