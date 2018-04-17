@@ -1,0 +1,411 @@
+<!doctype html>
+<html class="default no-js">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>RegisterUpdate | actions-on-google</title>
+	<meta name="description" content="">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="../assets/css/main.css">
+</head>
+<body>
+<header>
+	<div class="tsd-page-toolbar">
+		<div class="container">
+			<div class="table-wrap">
+				<div class="table-cell" id="tsd-search" data-index="../assets/js/search.js" data-base="..">
+					<div class="field">
+						<label for="tsd-search-field" class="tsd-widget search no-caption">Search</label>
+						<input id="tsd-search-field" type="text" />
+					</div>
+					<ul class="results">
+						<li class="state loading">Preparing search index...</li>
+						<li class="state failure">The search index is not available</li>
+					</ul>
+					<a href="../index.html" class="title">actions-on-google</a>
+				</div>
+				<div class="table-cell" id="tsd-widgets">
+					<div id="tsd-filter">
+						<a href="#" class="tsd-widget options no-caption" data-toggle="options">Options</a>
+						<div class="tsd-filter-group">
+							<div class="tsd-select" id="tsd-filter-visibility">
+								<span class="tsd-select-label">All</span>
+								<ul class="tsd-select-list">
+									<li data-value="public">Public</li>
+									<li data-value="protected">Public/Protected</li>
+									<li data-value="private" class="selected">All</li>
+								</ul>
+							</div>
+							<input type="checkbox" id="tsd-filter-inherited" checked />
+							<label class="tsd-widget" for="tsd-filter-inherited">Inherited</label>
+							<input type="checkbox" id="tsd-filter-externals" checked />
+							<label class="tsd-widget" for="tsd-filter-externals">Externals</label>
+							<input type="checkbox" id="tsd-filter-only-exported" />
+							<label class="tsd-widget" for="tsd-filter-only-exported">Only exported</label>
+						</div>
+					</div>
+					<a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="tsd-page-title">
+		<div class="container">
+			<ul class="tsd-breadcrumb">
+				<li>
+					<a href="../globals.html">Globals</a>
+				</li>
+				<li>
+					<a href="../modules/actionssdk.html">actionssdk</a>
+				</li>
+				<li>
+					<a href="actionssdk.registerupdate.html">RegisterUpdate</a>
+				</li>
+			</ul>
+			<h1>Class RegisterUpdate</h1>
+		</div>
+	</div>
+</header>
+<div class="container container-main">
+	<div class="row">
+		<div class="col-8 col-content">
+			<section class="tsd-panel tsd-comment">
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Requests the user to register for daily updates.</p>
+					</div>
+					<dl class="tsd-comment-tags">
+						<dt>example</dt>
+						<dd><pre><code class="lang-javascript">
+<span class="hljs-comment">// Actions SDK</span>
+<span class="hljs-keyword">const</span> app = actionssdk()
+
+app.intent(<span class="hljs-string">'actions.intent.MAIN'</span>, conv =&gt; {
+  conv.ask(<span class="hljs-keyword">new</span> RegisterUpdate({
+    <span class="hljs-attr">frequency</span>: <span class="hljs-string">'DAILY'</span>,
+    <span class="hljs-attr">intent</span>: <span class="hljs-string">'show.image'</span>,
+    <span class="hljs-attr">arguments</span>: [{
+      <span class="hljs-attr">name</span>: <span class="hljs-string">'image_to_show'</span>,
+      <span class="hljs-attr">textValue</span>: <span class="hljs-string">'image_type_1'</span>,
+    }
+  ))
+})
+
+app.intent(<span class="hljs-string">'show.image'</span>, conv =&gt; {
+  <span class="hljs-keyword">const</span> arg = conv.arguments.get(<span class="hljs-string">'image_to_show'</span>) <span class="hljs-comment">// will be 'image_type_1'</span>
+  <span class="hljs-comment">// do something with arg</span>
+})
+
+<span class="hljs-comment">// Dialogflow</span>
+<span class="hljs-keyword">const</span> app = dialogflow()
+
+app.intent(<span class="hljs-string">'Default Welcome Intent'</span>, conv =&gt; {
+  conv.ask(<span class="hljs-keyword">new</span> RegisterUpdate({
+    <span class="hljs-attr">frequency</span>: <span class="hljs-string">'DAILY'</span>,
+    <span class="hljs-attr">intent</span>: <span class="hljs-string">'Show Image'</span>,
+    <span class="hljs-attr">arguments</span>: [{
+      <span class="hljs-attr">name</span>: <span class="hljs-string">'image_to_show'</span>,
+      <span class="hljs-attr">textValue</span>: <span class="hljs-string">'image_type_1'</span>,
+    }
+  ))
+})
+
+app.intent(<span class="hljs-string">'Show Image'</span>, conv =&gt; {
+  <span class="hljs-keyword">const</span> arg = conv.arguments.get(<span class="hljs-string">'image_to_show'</span>) <span class="hljs-comment">// will be 'image_type_1'</span>
+  <span class="hljs-comment">// do something with arg</span>
+})
+</code></pre>
+						</dd>
+					</dl>
+				</div>
+			</section>
+			<section class="tsd-panel tsd-hierarchy">
+				<h3>Hierarchy</h3>
+				<ul class="tsd-hierarchy">
+					<li>
+						<a href="actionssdk.soloquestion.html" class="tsd-signature-type">SoloQuestion</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">"actions.intent.REGISTER_UPDATE"</span><span class="tsd-signature-symbol">, </span><a href="../interfaces/actionssdk.googleactionsv2registerupdatevaluespec.html" class="tsd-signature-type">GoogleActionsV2RegisterUpdateValueSpec</a><span class="tsd-signature-symbol">&gt;</span>
+						<ul class="tsd-hierarchy">
+							<li>
+								<span class="target">RegisterUpdate</span>
+							</li>
+						</ul>
+					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel-group tsd-index-group">
+				<h2>Index</h2>
+				<section class="tsd-panel tsd-index-panel">
+					<div class="tsd-index-content">
+						<section class="tsd-index-section ">
+							<h3>Constructors</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-constructor tsd-parent-kind-class"><a href="actionssdk.registerupdate.html#constructor" class="tsd-kind-icon">constructor</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section tsd-is-inherited">
+							<h3>Properties</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-static"><a href="actionssdk.registerupdate.html#inputvaluedata" class="tsd-kind-icon">input<wbr>Value<wbr>Data</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-static"><a href="actionssdk.registerupdate.html#intent" class="tsd-kind-icon">intent</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-static"><a href="actionssdk.registerupdate.html#parametername" class="tsd-kind-icon">parameter<wbr>Name</a></li>
+							</ul>
+						</section>
+					</div>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Constructors</h2>
+				<section class="tsd-panel tsd-member tsd-kind-constructor tsd-parent-kind-class">
+					<a name="constructor" class="tsd-anchor"></a>
+					<h3>constructor</h3>
+					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Register<wbr>Update<span class="tsd-signature-symbol">(</span>options<span class="tsd-signature-symbol">: </span><a href="../interfaces/actionssdk.registerupdateoptions.html" class="tsd-signature-type">RegisterUpdateOptions</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="actionssdk.registerupdate.html" class="tsd-signature-type">RegisterUpdate</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in service/actionssdk/conversation/question/registerupdate.ts:95</li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>options: <a href="../interfaces/actionssdk.registerupdateoptions.html" class="tsd-signature-type">RegisterUpdateOptions</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<div class="lead">
+											<p>RegisterUpdate options</p>
+										</div>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="actionssdk.registerupdate.html" class="tsd-signature-type">RegisterUpdate</a></h4>
+						</li>
+					</ul>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group tsd-is-inherited">
+				<h2>Properties</h2>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-static">
+					<a name="inputvaluedata" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagStatic">Static</span> <span class="tsd-flag ts-flagOptional">Optional</span> input<wbr>Value<wbr>Data</h3>
+					<div class="tsd-signature tsd-kind-icon">input<wbr>Value<wbr>Data<span class="tsd-signature-symbol">:</span> <a href="../interfaces/_common_.apiclientobjectmap.html" class="tsd-signature-type">ApiClientObjectMap</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span></div>
+					<aside class="tsd-sources">
+						<p>Inherited from <a href="../interfaces/actionssdk.googleactionsv2expectedintent.html">GoogleActionsV2ExpectedIntent</a>.<a href="../interfaces/actionssdk.googleactionsv2expectedintent.html#inputvaluedata">inputValueData</a></p>
+						<ul>
+							<li>Defined in service/actionssdk/api/v2.ts:495</li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Additional configuration data required by a built-in intent. Possible
+								values for the built-in intents: <code>actions.intent.OPTION -&gt;</code>
+								[google.actions.v2.OptionValueSpec], <code>actions.intent.CONFIRMATION -&gt;</code>
+								[google.actions.v2.ConfirmationValueSpec],
+								<code>actions.intent.TRANSACTION_REQUIREMENTS_CHECK -&gt;</code>
+								[google.actions.v2.TransactionRequirementsCheckSpec],
+								<code>actions.intent.DELIVERY_ADDRESS -&gt;</code>
+								[google.actions.v2.DeliveryAddressValueSpec],
+								<code>actions.intent.TRANSACTION_DECISION -&gt;</code>
+								[google.actions.v2.TransactionDecisionValueSpec],
+								<code>actions.intent.PLACE -&gt;</code>
+								[google.actions.v2.PlaceValueSpec],
+								<code>actions.intent.Link -&gt;</code>
+							[google.actions.v2.LinkValueSpec]</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-static">
+					<a name="intent" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagStatic">Static</span> <span class="tsd-flag ts-flagOptional">Optional</span> intent</h3>
+					<div class="tsd-signature tsd-kind-icon">intent<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></div>
+					<aside class="tsd-sources">
+						<p>Inherited from <a href="../interfaces/actionssdk.googleactionsv2expectedintent.html">GoogleActionsV2ExpectedIntent</a>.<a href="../interfaces/actionssdk.googleactionsv2expectedintent.html#intent">intent</a></p>
+						<ul>
+							<li>Defined in service/actionssdk/api/v2.ts:502</li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The built-in intent name, e.g. <code>actions.intent.TEXT</code>, or intents
+								defined in the action package. If the intent specified is not a built-in
+								intent, it is only used for speech biasing and the input provided by the
+							Google Assistant will be the <code>actions.intent.TEXT</code> intent.</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-static">
+					<a name="parametername" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagStatic">Static</span> <span class="tsd-flag ts-flagOptional">Optional</span> parameter<wbr>Name</h3>
+					<div class="tsd-signature tsd-kind-icon">parameter<wbr>Name<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></div>
+					<aside class="tsd-sources">
+						<p>Inherited from <a href="../interfaces/actionssdk.googleactionsv2expectedintent.html">GoogleActionsV2ExpectedIntent</a>.<a href="../interfaces/actionssdk.googleactionsv2expectedintent.html#parametername">parameterName</a></p>
+						<ul>
+							<li>Defined in service/actionssdk/api/v2.ts:507</li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Optionally, a parameter of the intent that is being requested. Only valid
+							for requested intents. Used for speech biasing.</p>
+						</div>
+					</div>
+				</section>
+			</section>
+		</div>
+		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
+			<nav class="tsd-navigation primary">
+				<ul>
+					<li class="globals  ">
+						<a href="../globals.html"><em>Globals</em></a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="../modules/_assistant_.html">"assistant"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="../modules/_common_.html">"common"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="../modules/_framework_express_.html">"framework/express"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="../modules/_framework_framework_.html">"framework/framework"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="../modules/_framework_index_.html">"framework/index"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="../modules/_framework_lambda_.html">"framework/lambda"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="../modules/_index_.html">"index"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="../modules/_service_actionssdk_actionssdk_.html">"service/actionssdk/actionssdk"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="../modules/_service_actionssdk_conv_.html">"service/actionssdk/conv"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="../modules/_service_actionssdk_index_.html">"service/actionssdk/index"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="../modules/_service_dialogflow_context_.html">"service/dialogflow/context"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="../modules/_service_dialogflow_conv_.html">"service/dialogflow/conv"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="../modules/_service_dialogflow_dialogflow_.html">"service/dialogflow/dialogflow"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="../modules/_service_dialogflow_incoming_.html">"service/dialogflow/incoming"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="../modules/_service_dialogflow_index_.html">"service/dialogflow/index"</a>
+					</li>
+					<li class="current tsd-kind-external-module">
+						<a href="../modules/actionssdk.html">actionssdk</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="../modules/dialogflow.html">dialogflow</a>
+					</li>
+				</ul>
+			</nav>
+			<nav class="tsd-navigation secondary menu-sticky">
+				<ul class="before-current">
+				</ul>
+				<ul class="current">
+					<li class="current tsd-kind-class tsd-parent-kind-external-module">
+						<a href="actionssdk.registerupdate.html" class="tsd-kind-icon">Register<wbr>Update</a>
+						<ul>
+							<li class=" tsd-kind-constructor tsd-parent-kind-class">
+								<a href="actionssdk.registerupdate.html#constructor" class="tsd-kind-icon">constructor</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-static">
+								<a href="actionssdk.registerupdate.html#inputvaluedata" class="tsd-kind-icon">input<wbr>Value<wbr>Data</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-static">
+								<a href="actionssdk.registerupdate.html#intent" class="tsd-kind-icon">intent</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-static">
+								<a href="actionssdk.registerupdate.html#parametername" class="tsd-kind-icon">parameter<wbr>Name</a>
+							</li>
+						</ul>
+					</li>
+				</ul>
+				<ul class="after-current">
+				</ul>
+			</nav>
+		</div>
+	</div>
+</div>
+<footer class="with-border-bottom">
+	<div class="container">
+		<h2>Legend</h2>
+		<div class="tsd-legend-group">
+			<ul class="tsd-legend">
+				<li class="tsd-kind-module"><span class="tsd-kind-icon">Module</span></li>
+				<li class="tsd-kind-object-literal"><span class="tsd-kind-icon">Object literal</span></li>
+				<li class="tsd-kind-variable"><span class="tsd-kind-icon">Variable</span></li>
+				<li class="tsd-kind-function"><span class="tsd-kind-icon">Function</span></li>
+				<li class="tsd-kind-function tsd-has-type-parameter"><span class="tsd-kind-icon">Function with type parameter</span></li>
+				<li class="tsd-kind-index-signature"><span class="tsd-kind-icon">Index signature</span></li>
+				<li class="tsd-kind-type-alias"><span class="tsd-kind-icon">Type alias</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-enum"><span class="tsd-kind-icon">Enumeration</span></li>
+				<li class="tsd-kind-enum-member"><span class="tsd-kind-icon">Enumeration member</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-enum"><span class="tsd-kind-icon">Property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-enum"><span class="tsd-kind-icon">Method</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-interface"><span class="tsd-kind-icon">Interface</span></li>
+				<li class="tsd-kind-interface tsd-has-type-parameter"><span class="tsd-kind-icon">Interface with type parameter</span></li>
+				<li class="tsd-kind-constructor tsd-parent-kind-interface"><span class="tsd-kind-icon">Constructor</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-interface"><span class="tsd-kind-icon">Property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-interface"><span class="tsd-kind-icon">Method</span></li>
+				<li class="tsd-kind-index-signature tsd-parent-kind-interface"><span class="tsd-kind-icon">Index signature</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-class"><span class="tsd-kind-icon">Class</span></li>
+				<li class="tsd-kind-class tsd-has-type-parameter"><span class="tsd-kind-icon">Class with type parameter</span></li>
+				<li class="tsd-kind-constructor tsd-parent-kind-class"><span class="tsd-kind-icon">Constructor</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-class"><span class="tsd-kind-icon">Property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class"><span class="tsd-kind-icon">Method</span></li>
+				<li class="tsd-kind-accessor tsd-parent-kind-class"><span class="tsd-kind-icon">Accessor</span></li>
+				<li class="tsd-kind-index-signature tsd-parent-kind-class"><span class="tsd-kind-icon">Index signature</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-constructor tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited constructor</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited method</span></li>
+				<li class="tsd-kind-accessor tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited accessor</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected method</span></li>
+				<li class="tsd-kind-accessor tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected accessor</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private method</span></li>
+				<li class="tsd-kind-accessor tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private accessor</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-static"><span class="tsd-kind-icon">Static property</span></li>
+				<li class="tsd-kind-call-signature tsd-parent-kind-class tsd-is-static"><span class="tsd-kind-icon">Static method</span></li>
+			</ul>
+		</div>
+	</div>
+</footer>
+<div class="container tsd-generator">
+	<p>Generated using <a href="http://typedoc.org/" target="_blank">TypeDoc</a></p>
+</div>
+<div class="overlay"></div>
+<script src="../assets/js/main.js"></script>
+<script>if (location.protocol == 'file:') document.write('<script src="../assets/js/search.js"><' + '/script>');</script>
+</body>
+</html>
