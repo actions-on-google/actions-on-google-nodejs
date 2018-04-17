@@ -19,7 +19,7 @@
     "package": "yarn build:clean && yarn pack",
     "test": "yarn build:clean && nyc ava --fail-fast",
     "test:watch": "yarn build:clean && concurrently -rk \"yarn build:watch\" \"ava -w --fail-fast\"",
-    "docs": "typedoc --out docs --exclude \"**/*_test/**/*.*\" --ignoreCompilerErrors --disableOutputCheck",
+    "docs": "typedoc --options typedoc.json",
     "coverage": "yarn test && live-server coverage"
   },
   "repository": {
@@ -44,6 +44,7 @@
     "tslint": "^5.9.1",
     "tslint-eslint-rules": "^5.1.0",
     "typedoc": "^0.11.1",
+    "typedoc-plugin-external-module-map": "^0.1.0",
     "typescript": "^2.7.2"
   },
   "dependencies": {
