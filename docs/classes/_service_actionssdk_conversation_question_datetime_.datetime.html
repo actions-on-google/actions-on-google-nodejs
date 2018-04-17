@@ -76,45 +76,52 @@
 					</div>
 					<dl class="tsd-comment-tags">
 						<dt>example</dt>
-						<dd><p>// Actions SDK
-							const app = actionssdk()</p>
-							<p>app.intent(&#39;actions.intent.MAIN&#39;, conv =&gt; {
-								conv.ask(new DateTime({
-								prompts: {
-								initial: &#39;When do you want to come in?&#39;,
-								date: &#39;Which date works best for you?&#39;,
-								time: &#39;What time of day works best for you?&#39;,
-								}
-								}))
-							})</p>
-							<p>app.intent(&#39;actions.intent.DATETIME&#39;, (conv, input, datetime) =&gt; {
-								const { month, day } = datetime.date
-								const { hours, minutes } = datetime.time
-								conv.close(new SimpleResponse({
-								speech: &#39;Great see you at your appointment!&#39;,
-								text: <code>Great, we will see you on ${month}/${day} at ${hours} ${minutes || &#39;&#39;}</code>
-								}))
-							})</p>
-							<p>// Dialogflow
-							const app = dialogflow()</p>
-							<p>app.intent(&#39;Default Welcome Intent&#39;, conv =&gt; {
-								conv.ask(new DateTime({
-								prompts: {
-								initial: &#39;When do you want to come in?&#39;,
-								date: &#39;Which date works best for you?&#39;,
-								time: &#39;What time of day works best for you?&#39;,
-								}
-								}))
-							})</p>
-							<p>// Create a Dialogflow intent with the <code>actions_intent_DATETIME</code> event
-								app.intent(&#39;Get Datetime&#39;, (conv, params, datetime) =&gt; {
-								const { month, day } = datetime.date
-								const { hours, minutes } = datetime.time
-								conv.close(new SimpleResponse({
-								speech: &#39;Great see you at your appointment!&#39;,
-								text: <code>Great, we will see you on ${month}/${day} at ${hours} ${minutes || &#39;&#39;}</code>
-								}))
-							})</p>
+						<dd><pre><code class="lang-javascript">
+<span class="hljs-comment">// Actions SDK</span>
+<span class="hljs-keyword">const</span> app = actionssdk()
+
+app.intent(<span class="hljs-string">'actions.intent.MAIN'</span>, conv =&gt; {
+  conv.ask(<span class="hljs-keyword">new</span> DateTime({
+    <span class="hljs-attr">prompts</span>: {
+      <span class="hljs-attr">initial</span>: <span class="hljs-string">'When do you want to come in?'</span>,
+      <span class="hljs-attr">date</span>: <span class="hljs-string">'Which date works best for you?'</span>,
+      <span class="hljs-attr">time</span>: <span class="hljs-string">'What time of day works best for you?'</span>,
+    }
+  }))
+})
+
+app.intent(<span class="hljs-string">'actions.intent.DATETIME'</span>, (conv, input, datetime) =&gt; {
+  <span class="hljs-keyword">const</span> { month, day } = datetime.date
+  <span class="hljs-keyword">const</span> { hours, minutes } = datetime.time
+  conv.close(<span class="hljs-keyword">new</span> SimpleResponse({
+    <span class="hljs-attr">speech</span>: <span class="hljs-string">'Great see you at your appointment!'</span>,
+    <span class="hljs-attr">text</span>: <span class="hljs-string">`Great, we will see you on <span class="hljs-subst">${month}</span>/<span class="hljs-subst">${day}</span> at <span class="hljs-subst">${hours}</span> <span class="hljs-subst">${minutes || <span class="hljs-string">''</span>}</span>`</span>
+  }))
+})
+
+<span class="hljs-comment">// Dialogflow</span>
+<span class="hljs-keyword">const</span> app = dialogflow()
+
+app.intent(<span class="hljs-string">'Default Welcome Intent'</span>, conv =&gt; {
+  conv.ask(<span class="hljs-keyword">new</span> DateTime({
+    <span class="hljs-attr">prompts</span>: {
+      <span class="hljs-attr">initial</span>: <span class="hljs-string">'When do you want to come in?'</span>,
+      <span class="hljs-attr">date</span>: <span class="hljs-string">'Which date works best for you?'</span>,
+      <span class="hljs-attr">time</span>: <span class="hljs-string">'What time of day works best for you?'</span>,
+    }
+  }))
+})
+
+<span class="hljs-comment">// Create a Dialogflow intent with the `actions_intent_DATETIME` event</span>
+app.intent(<span class="hljs-string">'Get Datetime'</span>, (conv, params, datetime) =&gt; {
+  <span class="hljs-keyword">const</span> { month, day } = datetime.date
+  <span class="hljs-keyword">const</span> { hours, minutes } = datetime.time
+  conv.close(<span class="hljs-keyword">new</span> SimpleResponse({
+    <span class="hljs-attr">speech</span>: <span class="hljs-string">'Great see you at your appointment!'</span>,
+    <span class="hljs-attr">text</span>: <span class="hljs-string">`Great, we will see you on <span class="hljs-subst">${month}</span>/<span class="hljs-subst">${day}</span> at <span class="hljs-subst">${hours}</span> <span class="hljs-subst">${minutes || <span class="hljs-string">''</span>}</span>`</span>
+  }))
+})
+</code></pre>
 						</dd>
 					</dl>
 				</div>
@@ -165,7 +172,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in service/actionssdk/conversation/question/datetime.ts:109</li>
+									<li>Defined in service/actionssdk/conversation/question/datetime.ts:112</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">

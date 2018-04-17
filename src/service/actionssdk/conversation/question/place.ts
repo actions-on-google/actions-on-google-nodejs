@@ -48,6 +48,8 @@ export type PlaceArgument = Api.GoogleActionsV2Location | undefined
  * Developer provides custom text prompts to tailor the request handled by Google.
  *
  * @example
+ * ```javascript
+ *
  * // Actions SDK
  * const app = actionssdk()
  *
@@ -86,6 +88,7 @@ export type PlaceArgument = Api.GoogleActionsV2Location | undefined
  *     conv.close(`Sorry, I couldn't find where you want to get picked up`)
  *   }
  * })
+ * ```
  *
  * @public
  */

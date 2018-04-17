@@ -185,7 +185,10 @@ export interface ActionsSdkOptions<TConvData, TUserStorage> extends AppOptions {
    * HTTP Code 403 will be thrown by default on verification error.
    *
    * @example
+   * ```javascript
+   *
    * const app = actionssdk({ verification: 'nodejs-cloud-test-project-1234' })
+   * ```
    *
    * @public
    */
@@ -202,11 +205,14 @@ const client = new OAuth2Client()
  * Only supports Actions SDK v2.
  *
  * @example
+ * ```javascript
+ *
  * const app = actionssdk()
  *
  * app.intent('actions.intent.MAIN', conv => {
  *   conv.ask('How are you?')
  * })
+ * ```
  *
  * @public
  */

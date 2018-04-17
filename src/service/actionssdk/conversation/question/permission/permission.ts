@@ -69,6 +69,8 @@ export interface PermissionOptions {
  *   equivalent to just asking for `DEVICE_PRECISE_LOCATION`
  *
  * @example
+ * ```javascript
+ *
  * // Actions SDK
  * const app = actionssdk()
  *
@@ -101,6 +103,7 @@ export interface PermissionOptions {
  *   const explicit = conv.arguments.get('PERMISSION') // also retrievable w/ explicit arguments.get
  *   const name = conv.user.name
  * })
+ * ```
  *
  * Read more:
  * * {@link GoogleActionsV2PermissionValueSpecPermissions|Supported Permissions}

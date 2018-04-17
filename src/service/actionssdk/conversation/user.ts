@@ -75,6 +75,8 @@ export class User<TUserStorage> {
    * It exists in the same context as `conv.user.id`
    *
    * @example
+   * ```javascript
+   *
    * // Actions SDK
    * app.intent('actions.intent.MAIN', conv => {
    *   conv.user.storage.someProperty = 'someValue'
@@ -84,6 +86,7 @@ export class User<TUserStorage> {
    * app.intent('Default Welcome Intent', conv => {
    *   conv.user.storage.someProperty = 'someValue'
    * })
+   * ```
    *
    * @public
    */

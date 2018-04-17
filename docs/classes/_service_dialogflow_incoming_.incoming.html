@@ -156,7 +156,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in service/dialogflow/incoming.ts:366</li>
+									<li>Defined in service/dialogflow/incoming.ts:372</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -167,16 +167,19 @@
 								</div>
 								<dl class="tsd-comment-tags">
 									<dt>example</dt>
-									<dd><p>// Dialogflow
-										const app = dialogflow()</p>
-										<p>// Create messages in the Dialogflow Console Intent Responses section
-											app.intent(&#39;Default Welcome Intent&#39;, conv =&gt; {
-											const messages = [...conv.incoming]
-											// do something with the messages
-											// or just spread them out back to the user
-											conv.ask(<code>Here&#39;s what was set in the Dialogflow console</code>)
-											conv.ask(...conv.incoming)
-										}</p>
+									<dd><pre><code class="lang-javascript">
+<span class="hljs-comment">// Dialogflow</span>
+<span class="hljs-keyword">const</span> app = dialogflow()
+
+<span class="hljs-comment">// Create messages in the Dialogflow Console Intent Responses section</span>
+app.intent(<span class="hljs-string">'Default Welcome Intent'</span>, conv =&gt; {
+  <span class="hljs-keyword">const</span> messages = [...conv.incoming]
+  <span class="hljs-comment">// do something with the messages</span>
+  <span class="hljs-comment">// or just spread them out back to the user</span>
+  conv.ask(<span class="hljs-string">`Here's what was set in the Dialogflow console`</span>)
+  conv.ask(...conv.incoming)
+}
+</code></pre>
 									</dd>
 								</dl>
 							</div>
@@ -195,7 +198,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in service/dialogflow/incoming.ts:328</li>
+									<li>Defined in service/dialogflow/incoming.ts:331</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -248,15 +251,19 @@
 								</ul>
 								<dl class="tsd-comment-tags">
 									<dt>example</dt>
-									<dd><p>// Dialogflow
-										const { dialogflow, BasicCard } = require(&#39;actions-on-google&#39;)</p>
-										<p>const app = dialogflow()</p>
-										<p>// Create an Actions on Google Basic Card in the Dialogflow Console Intent Responses section
-											app.intent(&#39;Default Welcome Intent&#39;, conv =&gt; {
-											const str = conv.incoming.get(&#39;string&#39;) // get the first text response
-											const card = conv.incoming.get(BasicCard) // gets the instance of BasicCard
-											// Do something with the Basic Card
-										})</p>
+									<dd><pre><code class="lang-javascript">
+<span class="hljs-comment">// Dialogflow</span>
+<span class="hljs-keyword">const</span> { dialogflow, BasicCard } = <span class="hljs-built_in">require</span>(<span class="hljs-string">'actions-on-google'</span>)
+
+<span class="hljs-keyword">const</span> app = dialogflow()
+
+<span class="hljs-comment">// Create an Actions on Google Basic Card in the Dialogflow Console Intent Responses section</span>
+app.intent(<span class="hljs-string">'Default Welcome Intent'</span>, conv =&gt; {
+  <span class="hljs-keyword">const</span> str = conv.incoming.get(<span class="hljs-string">'string'</span>) <span class="hljs-comment">// get the first text response</span>
+  <span class="hljs-keyword">const</span> card = conv.incoming.get(BasicCard) <span class="hljs-comment">// gets the instance of BasicCard</span>
+  <span class="hljs-comment">// Do something with the Basic Card</span>
+})
+</code></pre>
 									</dd>
 								</dl>
 							</div>
@@ -282,7 +289,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in service/dialogflow/incoming.ts:329</li>
+									<li>Defined in service/dialogflow/incoming.ts:332</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>

@@ -49,6 +49,8 @@ export interface CarouselOptions {
  * Asks to collect user's input with a carousel.
  *
  * @example
+ * ```javascript
+ *
  * // Actions SDK
  * const app = actionssdk()
  *
@@ -107,6 +109,7 @@ export interface CarouselOptions {
  *     conv.close('Number two is also a great choice!')
  *   }
  * })
+ * ```
  *
  * @public
  */

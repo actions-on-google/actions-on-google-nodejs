@@ -24,6 +24,8 @@ export type ConfirmationArgument = boolean
  * Asks user for a confirmation.
  *
  * @example
+ * ```javascript
+ *
  * // Actions SDK
  * const app = actionssdk()
  *
@@ -54,6 +56,7 @@ export type ConfirmationArgument = boolean
  *     conv.close(`That's okay. Let's not do it now.`)
  *   }
  * })
+ * ```
  *
  * @public
  */

@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-import test from 'ava';
+import test from 'ava'
 
-import {actionssdk} from '../actionssdk';
-import { Conversation } from '..';
-import * as Api from '../api/v2';
+import {actionssdk} from '../actionssdk'
+import { Conversation } from '..'
+import * as Api from '../api/v2'
 
-const CONVERSATION_ID = '1234';
-const USER_ID = 'abcd';
+const CONVERSATION_ID = '1234'
+const USER_ID = 'abcd'
 
 function buildRequest(
   convType: string, intent: string, data?: {}): Api.GoogleActionsV2AppRequest {
@@ -29,115 +29,115 @@ function buildRequest(
     conversation: {
       conversationId: CONVERSATION_ID,
       type: convType,
-      conversationToken: data
+      conversationToken: data,
     },
     user: {
       userId: USER_ID,
-      locale: 'en_US'
+      locale: 'en_US',
     },
-    "inputs": [
+    inputs: [
       {
-        "intent": intent,
-        "rawInputs": [
+        intent,
+        rawInputs: [
           {
-            "inputType": "KEYBOARD",
-            "query": "Talk to my test app"
-          }
-        ]
-      }
+            inputType: 'KEYBOARD',
+            query: 'Talk to my test app',
+          },
+        ],
+      },
     ],
     surface: {
       capabilities: [
         {
-          "name": "actions.capability.SCREEN_OUTPUT"
+          name: 'actions.capability.SCREEN_OUTPUT',
         },
         {
-          "name": "actions.capability.MEDIA_RESPONSE_AUDIO"
+          name: 'actions.capability.MEDIA_RESPONSE_AUDIO',
         },
         {
-          "name": "actions.capability.WEB_BROWSER"
+          name: 'actions.capability.WEB_BROWSER',
         },
         {
-          "name": "actions.capability.AUDIO_OUTPUT"
-        }
-      ]
+          name: 'actions.capability.AUDIO_OUTPUT',
+        },
+      ],
     },
     availableSurfaces: [
       {
-        "capabilities": [
+        capabilities: [
           {
-            "name": "actions.capability.SCREEN_OUTPUT"
+            name: 'actions.capability.SCREEN_OUTPUT',
           },
           {
-            "name": "actions.capability.AUDIO_OUTPUT"
-          }
-        ]
-      }
-    ]
-  } as Api.GoogleActionsV2AppRequest;
-  return appRequest;
+            name: 'actions.capability.AUDIO_OUTPUT',
+          },
+        ],
+      },
+    ],
+  } as Api.GoogleActionsV2AppRequest
+  return appRequest
 }
 
 test('intent handler is invoked', (t) => {
-  const app = actionssdk();
-  let invoked = false;
+  const app = actionssdk()
+  let invoked = false
 
   const intentHandler = (conv: Conversation<{}>) => {
-    invoked = true;
-    return conv.ask('hello');
-  };
-  app.intent('intent.foo', intentHandler);
+    invoked = true
+    return conv.ask('hello')
+  }
+  app.intent('intent.foo', intentHandler)
 
-  const promise = app.handler(buildRequest('NEW', 'intent.foo'), {});
+  const promise = app.handler(buildRequest('NEW', 'intent.foo'), {})
 
   return promise.then((result) => {
-    t.is(result.status, 200);
-    t.true(invoked);
-  });
-});
+    t.is(result.status, 200)
+    t.true(invoked)
+  })
+})
 
 test('fallback handler is invoked', t => {
-  const app = actionssdk();
-  let intentInvoked = false;
-  let fallbackInvoked = false;
+  const app = actionssdk()
+  let intentInvoked = false
+  let fallbackInvoked = false
 
   const intentHandler = (conv: Conversation<{}>) => {
-    intentInvoked = true;
-    return conv.ask('hello');
-  };
+    intentInvoked = true
+    return conv.ask('hello')
+  }
   const fallbackHandler = (conv: Conversation<{}>) => {
-    fallbackInvoked = true;
-    return conv.ask('fallback');
-  };
+    fallbackInvoked = true
+    return conv.ask('fallback')
+  }
 
-  app.intent('intent.foo', intentHandler);
-  app.intent('intent.bar', intentHandler);
-  app.fallback(fallbackHandler);
+  app.intent('intent.foo', intentHandler)
+  app.intent('intent.bar', intentHandler)
+  app.fallback(fallbackHandler)
 
-  const promise = app.handler(buildRequest('NEW', 'some.other.intent'), {});
+  const promise = app.handler(buildRequest('NEW', 'some.other.intent'), {})
 
   return promise.then((result) => {
-    t.is(result.status, 200);
-    t.false(intentInvoked);
-    t.true(fallbackInvoked);
-  });
-});
+    t.is(result.status, 200)
+    t.false(intentInvoked)
+    t.true(fallbackInvoked)
+  })
+})
 
 test('middleware is used', t => {
-  const app = actionssdk();
-  let middlewareUsed = false;
+  const app = actionssdk()
+  let middlewareUsed = false
 
   app.intent('intent.foo', (conv) => {
-    return conv.close('hello');
-  });
+    return conv.close('hello')
+  })
   app.use(() => {
-    middlewareUsed = true;
-  });
+    middlewareUsed = true
+  })
 
-  const promise = app.handler(buildRequest('NEW', 'intent.foo'), {});
+  const promise = app.handler(buildRequest('NEW', 'intent.foo'), {})
 
   return promise.then((result) => {
-    t.is(result.status, 200);
-    t.true(middlewareUsed);
-  });
-});
+    t.is(result.status, 200)
+    t.true(middlewareUsed)
+  })
+})

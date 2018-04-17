@@ -49,6 +49,8 @@ export interface NewSurfaceOptions {
  * Works only for en-* locales.
  *
  * @example
+ * ```javascript
+ *
  * // Actions SDK
  * const app = actionssdk()
  *
@@ -115,6 +117,7 @@ export interface NewSurfaceOptions {
  *     conv.close(`Ok, I understand. You don't want to see pictures. Bye`)
  *   }
  * })
+ * ```
  *
  * @public
  */

@@ -149,7 +149,7 @@
 					<aside class="tsd-sources">
 						<p>Overrides <a href="_service_dialogflow_context_.outputcontext.html">OutputContext</a>.<a href="_service_dialogflow_context_.outputcontext.html#parameters">parameters</a></p>
 						<ul>
-							<li>Defined in service/dialogflow/context.ts:77</li>
+							<li>Defined in service/dialogflow/context.ts:80</li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -161,17 +161,20 @@
 						<p>See <a href="https://dialogflow.com/docs/concept-actions#section-extracting-values-from-contexts" class="external">     here</a>.</p>
 						<dl class="tsd-comment-tags">
 							<dt>example</dt>
-							<dd><p>app.intent(&#39;Tell Greeting&#39;, conv =&gt; {
-									const context1 = conv.contexts.get(&#39;context1&#39;)
-									const parameters = context1.parameters
-									const color = parameters.color
-									const num = parameters.num
-								})</p>
-								<p>// Using destructuring
-									app.intent(&#39;Tell Greeting&#39;, conv =&gt; {
-									const context1 = conv.contexts.get(&#39;context1&#39;)
-									const { color, num } = context1.parameters
-								})</p>
+							<dd><pre><code class="lang-javascript">
+app.intent(<span class="hljs-string">'Tell Greeting'</span>, conv =&gt; {
+  <span class="hljs-keyword">const</span> context1 = conv.contexts.get(<span class="hljs-string">'context1'</span>)
+  <span class="hljs-keyword">const</span> parameters = context1.parameters
+  <span class="hljs-keyword">const</span> color = parameters.color
+  <span class="hljs-keyword">const</span> num = parameters.num
+})
+
+<span class="hljs-comment">// Using destructuring</span>
+app.intent(<span class="hljs-string">'Tell Greeting'</span>, conv =&gt; {
+  <span class="hljs-keyword">const</span> context1 = conv.contexts.get(<span class="hljs-string">'context1'</span>)
+  <span class="hljs-keyword">const</span> { color, num } = context1.parameters
+})
+</code></pre>
 							</dd>
 						</dl>
 					</div>

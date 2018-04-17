@@ -129,7 +129,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in service/dialogflow/context.ts:99</li>
+									<li>Defined in service/dialogflow/context.ts:102</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -154,7 +154,7 @@
 					<div class="tsd-signature tsd-kind-icon">_session<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in service/dialogflow/context.ts:103</li>
+							<li>Defined in service/dialogflow/context.ts:106</li>
 						</ul>
 					</aside>
 				</section>
@@ -164,7 +164,7 @@
 					<div class="tsd-signature tsd-kind-icon">input<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">TContexts</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in service/dialogflow/context.ts:96</li>
+							<li>Defined in service/dialogflow/context.ts:99</li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -176,7 +176,7 @@
 					<div class="tsd-signature tsd-kind-icon">output<span class="tsd-signature-symbol">:</span> <a href="../interfaces/_service_dialogflow_context_.outputcontexts.html" class="tsd-signature-type">OutputContexts</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in service/dialogflow/context.ts:99</li>
+							<li>Defined in service/dialogflow/context.ts:102</li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -195,7 +195,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in service/dialogflow/context.ts:240</li>
+									<li>Defined in service/dialogflow/context.ts:252</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -204,20 +204,25 @@
 								</div>
 								<dl class="tsd-comment-tags">
 									<dt>example</dt>
-									<dd><p>const AppContexts = {
-											NUMBER: &#39;number&#39;,
-										}</p>
-										<p>const app = dialogflow()</p>
-										<p>app.intent(&#39;Default Welcome Intent&#39;, conv =&gt; {
-											conv.contexts.set(AppContexts.NUMBER, 1)
-											conv.ask(&#39;Welcome to action snippets! Say a number.&#39;)
-										})</p>
-										<p>// Create intent with &#39;number&#39; context as requirement
-											app.intent(&#39;Number Input&#39;, conv =&gt; {
-											for (const context of conv.contexts) {
-											// do something with the contexts
-											}
-										})</p>
+									<dd><pre><code class="lang-javascript">
+<span class="hljs-keyword">const</span> AppContexts = {
+  <span class="hljs-attr">NUMBER</span>: <span class="hljs-string">'number'</span>,
+}
+
+<span class="hljs-keyword">const</span> app = dialogflow()
+
+app.intent(<span class="hljs-string">'Default Welcome Intent'</span>, conv =&gt; {
+  conv.contexts.set(AppContexts.NUMBER, <span class="hljs-number">1</span>)
+  conv.ask(<span class="hljs-string">'Welcome to action snippets! Say a number.'</span>)
+})
+
+<span class="hljs-comment">// Create intent with 'number' context as requirement</span>
+app.intent(<span class="hljs-string">'Number Input'</span>, conv =&gt; {
+  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">const</span> context <span class="hljs-keyword">of</span> conv.contexts) {
+    <span class="hljs-comment">// do something with the contexts</span>
+  }
+})
+</code></pre>
 									</dd>
 								</dl>
 							</div>
@@ -235,7 +240,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in service/dialogflow/context.ts:129</li>
+									<li>Defined in service/dialogflow/context.ts:132</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="../interfaces/_service_dialogflow_api_v2_.googleclouddialogflowv2context.html" class="tsd-signature-type">GoogleCloudDialogflowV2Context</a><span class="tsd-signature-symbol">[]</span></h4>
@@ -252,7 +257,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in service/dialogflow/context.ts:140</li>
+									<li>Defined in service/dialogflow/context.ts:143</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="../interfaces/_service_dialogflow_api_v1_.dialogflowv1context.html" class="tsd-signature-type">DialogflowV1Context</a><span class="tsd-signature-symbol">[]</span></h4>
@@ -269,7 +274,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in service/dialogflow/context.ts:212</li>
+									<li>Defined in service/dialogflow/context.ts:221</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -294,7 +299,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in service/dialogflow/context.ts:175</li>
+									<li>Defined in service/dialogflow/context.ts:181</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -303,18 +308,23 @@
 								</div>
 								<dl class="tsd-comment-tags">
 									<dt>example</dt>
-									<dd><p>const AppContexts = {
-											NUMBER: &#39;number&#39;,
-										}</p>
-										<p>const app = dialogflow()</p>
-										<p>app.intent(&#39;Default Welcome Intent&#39;, conv =&gt; {
-											conv.contexts.set(AppContexts.NUMBER, 1)
-											conv.ask(&#39;Welcome to action snippets! Say a number.&#39;)
-										})</p>
-										<p>// Create intent with &#39;number&#39; context as requirement
-											app.intent(&#39;Number Input&#39;, conv =&gt; {
-											const context = conv.contexts.get(AppContexts.NUMBER)
-										})</p>
+									<dd><pre><code class="lang-javascript">
+<span class="hljs-keyword">const</span> AppContexts = {
+  <span class="hljs-attr">NUMBER</span>: <span class="hljs-string">'number'</span>,
+}
+
+<span class="hljs-keyword">const</span> app = dialogflow()
+
+app.intent(<span class="hljs-string">'Default Welcome Intent'</span>, conv =&gt; {
+  conv.contexts.set(AppContexts.NUMBER, <span class="hljs-number">1</span>)
+  conv.ask(<span class="hljs-string">'Welcome to action snippets! Say a number.'</span>)
+})
+
+<span class="hljs-comment">// Create intent with 'number' context as requirement</span>
+app.intent(<span class="hljs-string">'Number Input'</span>, conv =&gt; {
+  <span class="hljs-keyword">const</span> context = conv.contexts.get(AppContexts.NUMBER)
+})
+</code></pre>
 									</dd>
 								</dl>
 							</div>
@@ -342,7 +352,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in service/dialogflow/context.ts:204</li>
+									<li>Defined in service/dialogflow/context.ts:213</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -351,18 +361,23 @@
 								</div>
 								<dl class="tsd-comment-tags">
 									<dt>example</dt>
-									<dd><p>const AppContexts = {
-											NUMBER: &#39;number&#39;,
-										}</p>
-										<p>const app = dialogflow()</p>
-										<p>app.intent(&#39;Default Welcome Intent&#39;, conv =&gt; {
-											conv.contexts.set(AppContexts.NUMBER, 1)
-											conv.ask(&#39;Welcome to action snippets! Say a number.&#39;)
-										})</p>
-										<p>// Create intent with &#39;number&#39; context as requirement
-											app.intent(&#39;Number Input&#39;, conv =&gt; {
-											const context = conv.contexts.get(AppContexts.NUMBER)
-										})</p>
+									<dd><pre><code class="lang-javascript">
+<span class="hljs-keyword">const</span> AppContexts = {
+  <span class="hljs-attr">NUMBER</span>: <span class="hljs-string">'number'</span>,
+}
+
+<span class="hljs-keyword">const</span> app = dialogflow()
+
+app.intent(<span class="hljs-string">'Default Welcome Intent'</span>, conv =&gt; {
+  conv.contexts.set(AppContexts.NUMBER, <span class="hljs-number">1</span>)
+  conv.ask(<span class="hljs-string">'Welcome to action snippets! Say a number.'</span>)
+})
+
+<span class="hljs-comment">// Create intent with 'number' context as requirement</span>
+app.intent(<span class="hljs-string">'Number Input'</span>, conv =&gt; {
+  <span class="hljs-keyword">const</span> context = conv.contexts.get(AppContexts.NUMBER)
+})
+</code></pre>
 									</dd>
 								</dl>
 							</div>

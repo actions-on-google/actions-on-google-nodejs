@@ -182,7 +182,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in service/actionssdk/conversation/argument/argument.ts:317</li>
+									<li>Defined in service/actionssdk/conversation/argument/argument.ts:320</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -202,7 +202,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in service/actionssdk/conversation/argument/argument.ts:309</li>
+									<li>Defined in service/actionssdk/conversation/argument/argument.ts:312</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -214,15 +214,18 @@
 								</div>
 								<dl class="tsd-comment-tags">
 									<dt>example</dt>
-									<dd><p>// Actions SDK
-											app.intent(&#39;actions.intent.PERMISSION&#39;, conv =&gt; {
-											const granted = conv.arguments.get(&#39;PERMISSION&#39;) // boolean true if granted, false if not
-										})</p>
-										<p>// Dialogflow
-											// Create a Dialogflow intent with the <code>actions_intent_PERMISSION</code> event
-											app.intent(&#39;Get Permission&#39;, conv =&gt; {
-											const granted = conv.arguments.get(&#39;PERMISSION&#39;) // boolean true if granted, false if not
-										})</p>
+									<dd><pre><code class="lang-javascript">
+<span class="hljs-comment">// Actions SDK</span>
+app.intent(<span class="hljs-string">'actions.intent.PERMISSION'</span>, conv =&gt; {
+  <span class="hljs-keyword">const</span> granted = conv.arguments.get(<span class="hljs-string">'PERMISSION'</span>) <span class="hljs-comment">// boolean true if granted, false if not</span>
+})
+
+<span class="hljs-comment">// Dialogflow</span>
+<span class="hljs-comment">// Create a Dialogflow intent with the `actions_intent_PERMISSION` event</span>
+app.intent(<span class="hljs-string">'Get Permission'</span>, conv =&gt; {
+  <span class="hljs-keyword">const</span> granted = conv.arguments.get(<span class="hljs-string">'PERMISSION'</span>) <span class="hljs-comment">// boolean true if granted, false if not</span>
+})
+</code></pre>
 									</dd>
 								</dl>
 							</div>
@@ -245,7 +248,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in service/actionssdk/conversation/argument/argument.ts:311</li>
+									<li>Defined in service/actionssdk/conversation/argument/argument.ts:314</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">

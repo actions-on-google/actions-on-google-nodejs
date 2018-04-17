@@ -23,6 +23,8 @@ export class Input {
    * Will also be sent via intent handler 2nd argument which is the encouraged method to retrieve.
    *
    * @example
+   * ```javascript
+   *
    * // Encouraged method through intent handler
    * app.intent('actions.intent.TEXT', (conv, input) => {
    *  conv.close(`You said ${input}`)
@@ -32,6 +34,7 @@ export class Input {
    * app.intent('actions.intent.TEXT', conv => {
    *  conv.close(`You said ${conv.input.raw}`)
    * })
+   * ```
    *
    * @public
    */

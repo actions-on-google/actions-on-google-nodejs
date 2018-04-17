@@ -14,23 +14,23 @@
  * limitations under the License.
  */
 
-import test from 'ava';
-import * as Api from '../../../api/v2';
-import {Arguments} from '../argument';
+import test from 'ava'
+import * as Api from '../../../api/v2'
+import {Arguments} from '../argument'
 
 test('arguments array is parsed', (t) => {
   const arg1 = {
     name: 'foo',
     intValue: '1000',
-  } as Api.GoogleActionsV2Argument;
+  } as Api.GoogleActionsV2Argument
   const arg2 = {
     name: 'bar',
-    rawText: 'hello'
-  } as Api.GoogleActionsV2Argument;
+    rawText: 'hello',
+  } as Api.GoogleActionsV2Argument
 
-  const args = new Arguments([arg1, arg2]);
+  const args = new Arguments([arg1, arg2])
 
-  t.is(args.get('foo'), '1000');
-  t.is(args.get('bar'), 'hello');
-  t.falsy(args.get('some.other.name'));
-});
+  t.is(args.get('foo'), '1000')
+  t.is(args.get('bar'), 'hello')
+  t.falsy(args.get('some.other.name'))
+})

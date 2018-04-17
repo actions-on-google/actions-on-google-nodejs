@@ -309,6 +309,8 @@ export class Incoming {
    *   * `custom_payload` -> `typeof object`
    *
    * @example
+   * ```javascript
+   *
    * // Dialogflow
    * const { dialogflow, BasicCard } = require('actions-on-google')
    *
@@ -320,6 +322,7 @@ export class Incoming {
    *   const card = conv.incoming.get(BasicCard) // gets the instance of BasicCard
    *   // Do something with the Basic Card
    * })
+   * ```
    *
    * @param type A string checking for the typeof message or a class checking for instanceof message
    * @public
@@ -349,6 +352,8 @@ export class Incoming {
    * See {@link Incoming#get|conv.incoming.get} for details on how the conversion works.
    *
    * @example
+   * ```javascript
+   *
    * // Dialogflow
    * const app = dialogflow()
    *
@@ -360,6 +365,7 @@ export class Incoming {
    *   conv.ask(`Here's what was set in the Dialogflow console`)
    *   conv.ask(...conv.incoming)
    * }
+   * ```
    *
    * @public
    */

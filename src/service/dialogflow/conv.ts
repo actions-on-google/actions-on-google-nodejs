@@ -94,9 +94,12 @@ export class DialogflowConversation<
    * Get the current Dialogflow action name.
    *
    * @example
+   * ```javascript
+   *
    * app.intent('Default Welcome Intent', conv => {
    *   const action = conv.action
    * })
+   * ```
    *
    * @public
    */
@@ -106,9 +109,12 @@ export class DialogflowConversation<
    * Get the current Dialogflow intent name.
    *
    * @example
+   * ```javascript
+   *
    * app.intent('Default Welcome Intent', conv => {
    *   const intent = conv.intent // will be 'Default Welcome Intent'
    * })
+   * ```
    *
    * @public
    */
@@ -121,6 +127,8 @@ export class DialogflowConversation<
    * Will also be sent via intent handler 3rd argument which is the encouraged method to retrieve.
    *
    * @example
+   * ```javascript
+   *
    * // Encouraged method through intent handler
    * app.intent('Tell Greeting', (conv, params) => {
    *   const color = params.color
@@ -138,6 +146,7 @@ export class DialogflowConversation<
    *   // or destructed
    *   const { color, num } = conv.parameters
    * })
+   * ```
    *
    * @public
    */
@@ -153,9 +162,12 @@ export class DialogflowConversation<
    * The user's raw input query.
    *
    * @example
+   * ```javascript
+   *
    * app.intent('User Input', conv => {
    *   conv.close(`You said ${conv.query}`)
    * })
+   * ```
    *
    * @public
    */
@@ -166,9 +178,12 @@ export class DialogflowConversation<
    * Stored using contexts.
    *
    * @example
+   * ```javascript
+   *
    * app.intent('Default Welcome Intent', conv => {
    *   conv.data.someProperty = 'someValue'
    * })
+   * ```
    *
    * @public
    */
@@ -261,6 +276,8 @@ export class DialogflowConversation<
    * Triggers an intent of your choosing by sending a followup event from the webhook.
    *
    * @example
+   * ```javascript
+   *
    * const app = dialogflow()
    *
    * // Create a Dialogflow intent with event 'apply-for-license-event'
@@ -272,6 +289,7 @@ export class DialogflowConversation<
    *   // The dialogflow intent with the 'apply-for-license-event' event
    *   // will be triggered with the given parameters `date`
    * })
+   * ```
    *
    * @param event Name of the event
    * @param parameters Parameters to send with the event

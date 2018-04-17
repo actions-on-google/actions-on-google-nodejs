@@ -109,7 +109,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in service/actionssdk/conversation/input.ts:44</li>
+									<li>Defined in service/actionssdk/conversation/input.ts:47</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -131,7 +131,7 @@
 					<div class="tsd-signature tsd-kind-icon">raw<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in service/actionssdk/conversation/input.ts:38</li>
+							<li>Defined in service/actionssdk/conversation/input.ts:41</li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -141,14 +141,17 @@
 						<p>Will also be sent via intent handler 2nd argument which is the encouraged method to retrieve.</p>
 						<dl class="tsd-comment-tags">
 							<dt>example</dt>
-							<dd><p>// Encouraged method through intent handler
-									app.intent(&#39;actions.intent.TEXT&#39;, (conv, input) =&gt; {
-									conv.close(<code>You said ${input}</code>)
-								})</p>
-								<p>// Using conv.input.raw
-									app.intent(&#39;actions.intent.TEXT&#39;, conv =&gt; {
-									conv.close(<code>You said ${conv.input.raw}</code>)
-								})</p>
+							<dd><pre><code class="lang-javascript">
+<span class="hljs-comment">// Encouraged method through intent handler</span>
+app.intent(<span class="hljs-string">'actions.intent.TEXT'</span>, (conv, input) =&gt; {
+ conv.close(<span class="hljs-string">`You said <span class="hljs-subst">${input}</span>`</span>)
+})
+
+<span class="hljs-comment">// Using conv.input.raw</span>
+app.intent(<span class="hljs-string">'actions.intent.TEXT'</span>, conv =&gt; {
+ conv.close(<span class="hljs-string">`You said <span class="hljs-subst">${conv.input.raw}</span>`</span>)
+})
+</code></pre>
 							</dd>
 						</dl>
 					</div>
@@ -159,7 +162,7 @@
 					<div class="tsd-signature tsd-kind-icon">type<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Api.GoogleActionsV2RawInputInputType</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in service/actionssdk/conversation/input.ts:44</li>
+							<li>Defined in service/actionssdk/conversation/input.ts:47</li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">

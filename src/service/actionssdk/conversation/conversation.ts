@@ -152,9 +152,12 @@ export class Conversation<TUserStorage> {
    * and stays the same until the end of the conversation.
    *
    * @example
+   * ```javascript
+   *
    * app.intent('actions.intent.MAIN', conv => {
    *   const conversationId = conv.id
    * })
+   * ```
    *
    * @public
    */
@@ -219,6 +222,8 @@ export class Conversation<TUserStorage> {
    *     The guidelines when prompting the user for a response must be followed at all times}.
    *
    * @example
+   * ```javascript
+   *
    * // Actions SDK
    * const app = actionssdk()
    *
@@ -247,6 +252,7 @@ export class Conversation<TUserStorage> {
    * app.intent('Number Input', (conv, {num}) => {
    *   conv.close(`You said ${num}`)
    * })
+   * ```
    *
    * @param responses A response fragment for the library to construct a single complete response
    * @public
@@ -260,6 +266,8 @@ export class Conversation<TUserStorage> {
    * Have Assistant render the speech response and close the mic.
    *
    * @example
+   * ```javascript
+   *
    * // Actions SDK
    * const app = actionssdk()
    *
@@ -288,6 +296,7 @@ export class Conversation<TUserStorage> {
    * app.intent('Number Input', (conv, {num}) => {
    *   conv.close(`You said ${num}`)
    * })
+   * ```
    *
    * @param responses A response fragment for the library to construct a single complete response
    * @public

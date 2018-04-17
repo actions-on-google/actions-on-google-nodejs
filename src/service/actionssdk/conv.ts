@@ -53,9 +53,12 @@ export class ActionsSdkConversation<
    * Get the current Actions SDK intent.
    *
    * @example
+   * ```javascript
+   *
    * app.intent('actions.intent.MAIN', conv => {
    *   const intent = conv.intent // will be 'actions.intent.MAIN'
    * })
+   * ```
    *
    * @public
    */
@@ -66,9 +69,12 @@ export class ActionsSdkConversation<
    * Stored using conversationToken.
    *
    * @example
+   * ```javascript
+   *
    * app.intent('actions.intent.MAIN', conv => {
    *   conv.data.someProperty = 'someValue'
    * })
+   * ```
    *
    * @public
    */

@@ -76,55 +76,64 @@
 					</div>
 					<dl class="tsd-comment-tags">
 						<dt>example</dt>
-						<dd><p>// Actions SDK
-							const app = actionssdk()</p>
-							<p>app.intent(&#39;actions.intent.MAIN&#39;, conv =&gt; {
-								conv.ask(new UpdatePermission({
-								intent: &#39;show.image&#39;,
-								arguments: [{
-								name: &#39;image_to_show&#39;,
-								textValue: &#39;image_type_1&#39;,
-								}
-								))
-							})</p>
-							<p>app.intent(&#39;actions.intent.PERMISSION&#39;, conv =&gt; {
-								const granted = conv.arguments.get(&#39;PERMISSION&#39;)
-								if (granted) {
-								conv.close(<code>Great, I&#39;ll send an update whenever I notice a change</code>)
-								} else {
-								// Response shows that user did not grant permission
-								conv.close(&#39;Alright, just let me know whenever you need the weather!&#39;)
-								}
-							})</p>
-							<p>app.intent(&#39;show.image&#39;, conv =&gt; {
-								const arg = conv.arguments.get(&#39;image_to_show&#39;) // will be &#39;image_type_1&#39;
-								// do something with arg
-							})</p>
-							<p>// Dialogflow
-							const app = dialogflow()</p>
-							<p>app.intent(&#39;Default Welcome Intent&#39;, conv =&gt; {
-								conv.ask(new UpdatePermission({
-								intent: &#39;Show Image&#39;,
-								arguments: [{
-								name: &#39;image_to_show&#39;,
-								textValue: &#39;image_type_1&#39;,
-								}
-								))
-							})</p>
-							<p>// Create a Dialogflow intent with the <code>actions_intent_PERMISSION</code> event
-								app.intent(&#39;Get Permission&#39;, conv =&gt; {
-								const granted = conv.arguments.get(&#39;PERMISSION&#39;)
-								if (granted) {
-								conv.close(<code>Great, I&#39;ll send an update whenever I notice a change</code>)
-								} else {
-								// Response shows that user did not grant permission
-								conv.close(&#39;Alright, just let me know whenever you need the weather!&#39;)
-								}
-							})</p>
-							<p>app.intent(&#39;Show Image&#39;, conv =&gt; {
-								const arg = conv.arguments.get(&#39;image_to_show&#39;) // will be &#39;image_type_1&#39;
-								// do something with arg
-							})</p>
+						<dd><pre><code class="lang-javascript">
+<span class="hljs-comment">// Actions SDK</span>
+<span class="hljs-keyword">const</span> app = actionssdk()
+
+app.intent(<span class="hljs-string">'actions.intent.MAIN'</span>, conv =&gt; {
+  conv.ask(<span class="hljs-keyword">new</span> UpdatePermission({
+    <span class="hljs-attr">intent</span>: <span class="hljs-string">'show.image'</span>,
+    <span class="hljs-attr">arguments</span>: [{
+      <span class="hljs-attr">name</span>: <span class="hljs-string">'image_to_show'</span>,
+      <span class="hljs-attr">textValue</span>: <span class="hljs-string">'image_type_1'</span>,
+    }
+  ))
+})
+
+app.intent(<span class="hljs-string">'actions.intent.PERMISSION'</span>, conv =&gt; {
+  <span class="hljs-keyword">const</span> granted = conv.arguments.get(<span class="hljs-string">'PERMISSION'</span>)
+  <span class="hljs-keyword">if</span> (granted) {
+    conv.close(<span class="hljs-string">`Great, I'll send an update whenever I notice a change`</span>)
+  } <span class="hljs-keyword">else</span> {
+    <span class="hljs-comment">// Response shows that user did not grant permission</span>
+    conv.close(<span class="hljs-string">'Alright, just let me know whenever you need the weather!'</span>)
+  }
+})
+
+app.intent(<span class="hljs-string">'show.image'</span>, conv =&gt; {
+  <span class="hljs-keyword">const</span> arg = conv.arguments.get(<span class="hljs-string">'image_to_show'</span>) <span class="hljs-comment">// will be 'image_type_1'</span>
+  <span class="hljs-comment">// do something with arg</span>
+})
+
+<span class="hljs-comment">// Dialogflow</span>
+<span class="hljs-keyword">const</span> app = dialogflow()
+
+app.intent(<span class="hljs-string">'Default Welcome Intent'</span>, conv =&gt; {
+  conv.ask(<span class="hljs-keyword">new</span> UpdatePermission({
+    <span class="hljs-attr">intent</span>: <span class="hljs-string">'Show Image'</span>,
+    <span class="hljs-attr">arguments</span>: [{
+      <span class="hljs-attr">name</span>: <span class="hljs-string">'image_to_show'</span>,
+      <span class="hljs-attr">textValue</span>: <span class="hljs-string">'image_type_1'</span>,
+    }
+  ))
+})
+
+<span class="hljs-comment">// Create a Dialogflow intent with the `actions_intent_PERMISSION` event</span>
+app.intent(<span class="hljs-string">'Get Permission'</span>, conv =&gt; {
+  <span class="hljs-keyword">const</span> granted = conv.arguments.get(<span class="hljs-string">'PERMISSION'</span>)
+  <span class="hljs-keyword">if</span> (granted) {
+    conv.close(<span class="hljs-string">`Great, I'll send an update whenever I notice a change`</span>)
+  } <span class="hljs-keyword">else</span> {
+    <span class="hljs-comment">// Response shows that user did not grant permission</span>
+    conv.close(<span class="hljs-string">'Alright, just let me know whenever you need the weather!'</span>)
+  }
+})
+
+app.intent(<span class="hljs-string">'Show Image'</span>, conv =&gt; {
+  <span class="hljs-keyword">const</span> arg = conv.arguments.get(<span class="hljs-string">'image_to_show'</span>) <span class="hljs-comment">// will be 'image_type_1'</span>
+  <span class="hljs-comment">// do something with arg</span>
+})
+</code></pre>
 						</dd>
 					</dl>
 				</div>
@@ -176,7 +185,7 @@
 							<aside class="tsd-sources">
 								<p>Overrides <a href="_service_actionssdk_conversation_question_permission_permission_.permission.html">Permission</a>.<a href="_service_actionssdk_conversation_question_permission_permission_.permission.html#constructor">constructor</a></p>
 								<ul>
-									<li>Defined in service/actionssdk/conversation/question/permission/update.ts:102</li>
+									<li>Defined in service/actionssdk/conversation/question/permission/update.ts:105</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">

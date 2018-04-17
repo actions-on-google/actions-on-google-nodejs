@@ -289,6 +289,8 @@ export class Arguments {
    * If there is no other properties, return undefined.
    *
    * @example
+   * ```javascript
+   *
    * // Actions SDK
    * app.intent('actions.intent.PERMISSION', conv => {
    *   const granted = conv.arguments.get('PERMISSION') // boolean true if granted, false if not
@@ -299,6 +301,7 @@ export class Arguments {
    * app.intent('Get Permission', conv => {
    *   const granted = conv.arguments.get('PERMISSION') // boolean true if granted, false if not
    * })
+   * ```
    *
    * @param argument Name of the argument.
    * @return First property not named 'name' or 'status' with 'textValue' given last priority

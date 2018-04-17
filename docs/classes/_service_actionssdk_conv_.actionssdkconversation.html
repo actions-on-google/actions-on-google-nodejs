@@ -158,7 +158,7 @@
 							<aside class="tsd-sources">
 								<p>Overrides <a href="_service_actionssdk_conversation_conversation_.conversation.html">Conversation</a>.<a href="_service_actionssdk_conversation_conversation_.conversation.html#constructor">constructor</a></p>
 								<ul>
-									<li>Defined in service/actionssdk/conv.ts:75</li>
+									<li>Defined in service/actionssdk/conv.ts:81</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -181,7 +181,7 @@
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="_service_actionssdk_conversation_conversation_.conversation.html">Conversation</a>.<a href="_service_actionssdk_conversation_conversation_.conversation.html#_raw">_raw</a></p>
 						<ul>
-							<li>Defined in service/actionssdk/conversation/conversation.ts:166</li>
+							<li>Defined in service/actionssdk/conversation/conversation.ts:169</li>
 						</ul>
 					</aside>
 				</section>
@@ -192,7 +192,7 @@
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="_service_actionssdk_conversation_conversation_.conversation.html">Conversation</a>.<a href="_service_actionssdk_conversation_conversation_.conversation.html#_responded">_responded</a></p>
 						<ul>
-							<li>Defined in service/actionssdk/conversation/conversation.ts:168</li>
+							<li>Defined in service/actionssdk/conversation/conversation.ts:171</li>
 						</ul>
 					</aside>
 				</section>
@@ -240,7 +240,7 @@
 					<div class="tsd-signature tsd-kind-icon">data<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">TConvData</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in service/actionssdk/conv.ts:75</li>
+							<li>Defined in service/actionssdk/conv.ts:81</li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -250,9 +250,11 @@
 						</div>
 						<dl class="tsd-comment-tags">
 							<dt>example</dt>
-							<dd><p>app.intent(&#39;actions.intent.MAIN&#39;, conv =&gt; {
-									conv.data.someProperty = &#39;someValue&#39;
-								})</p>
+							<dd><pre><code class="lang-javascript">
+app.intent(<span class="hljs-string">'actions.intent.MAIN'</span>, conv =&gt; {
+  conv.data.someProperty = <span class="hljs-string">'someValue'</span>
+})
+</code></pre>
 							</dd>
 						</dl>
 					</div>
@@ -316,7 +318,7 @@
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="_service_actionssdk_conversation_conversation_.conversation.html">Conversation</a>.<a href="_service_actionssdk_conversation_conversation_.conversation.html#id">id</a></p>
 						<ul>
-							<li>Defined in service/actionssdk/conversation/conversation.ts:161</li>
+							<li>Defined in service/actionssdk/conversation/conversation.ts:164</li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -326,9 +328,11 @@
 						</div>
 						<dl class="tsd-comment-tags">
 							<dt>example</dt>
-							<dd><p>app.intent(&#39;actions.intent.MAIN&#39;, conv =&gt; {
-									const conversationId = conv.id
-								})</p>
+							<dd><pre><code class="lang-javascript">
+app.intent(<span class="hljs-string">'actions.intent.MAIN'</span>, conv =&gt; {
+  <span class="hljs-keyword">const</span> conversationId = conv.id
+})
+</code></pre>
 							</dd>
 						</dl>
 					</div>
@@ -352,7 +356,7 @@
 					<div class="tsd-signature tsd-kind-icon">intent<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in service/actionssdk/conv.ts:62</li>
+							<li>Defined in service/actionssdk/conv.ts:65</li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -361,9 +365,11 @@
 						</div>
 						<dl class="tsd-comment-tags">
 							<dt>example</dt>
-							<dd><p>app.intent(&#39;actions.intent.MAIN&#39;, conv =&gt; {
-									const intent = conv.intent // will be &#39;actions.intent.MAIN&#39;
-								})</p>
+							<dd><pre><code class="lang-javascript">
+app.intent(<span class="hljs-string">'actions.intent.MAIN'</span>, conv =&gt; {
+  <span class="hljs-keyword">const</span> intent = conv.intent <span class="hljs-comment">// will be 'actions.intent.MAIN'</span>
+})
+</code></pre>
 							</dd>
 						</dl>
 					</div>
@@ -432,7 +438,7 @@
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="_service_actionssdk_conversation_conversation_.conversation.html">Conversation</a>.<a href="_service_actionssdk_conversation_conversation_.conversation.html#type">type</a></p>
 						<ul>
-							<li>Defined in service/actionssdk/conversation/conversation.ts:164</li>
+							<li>Defined in service/actionssdk/conversation/conversation.ts:167</li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -471,7 +477,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_service_actionssdk_conversation_conversation_.conversation.html">Conversation</a>.<a href="_service_actionssdk_conversation_conversation_.conversation.html#add">add</a></p>
 								<ul>
-									<li>Defined in service/actionssdk/conversation/conversation.ts:205</li>
+									<li>Defined in service/actionssdk/conversation/conversation.ts:208</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -497,7 +503,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_service_actionssdk_conversation_conversation_.conversation.html">Conversation</a>.<a href="_service_actionssdk_conversation_conversation_.conversation.html#ask">ask</a></p>
 								<ul>
-									<li>Defined in service/actionssdk/conversation/conversation.ts:254</li>
+									<li>Defined in service/actionssdk/conversation/conversation.ts:260</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -507,29 +513,36 @@
 								</div>
 								<dl class="tsd-comment-tags">
 									<dt>example</dt>
-									<dd><p>// Actions SDK
-										const app = actionssdk()</p>
-										<p>app.intent(&#39;actions.intent.MAIN&#39;, conv =&gt; {
-											const ssml = &#39;<speak>Hi! <break time="1"/> &#39; +
-													&#39;I can read out an ordinal like <say-as interpret-as="ordinal">123</say-as>. &#39; +
-											&#39;Say a number.</speak>&#39;
-											conv.ask(ssml)
-										})</p>
-										<p>app.intent(&#39;actions.intent.TEXT&#39;, (conv, input) =&gt; {
-											if (input === &#39;bye&#39;) {
-											return conv.close(&#39;Goodbye!&#39;)
-											}
-											const ssml = <code>&lt;speak&gt;You said, &lt;say-as interpret-as=&quot;ordinal&quot;&gt;${input}&lt;/say-as&gt;&lt;/speak&gt;</code>
-											conv.ask(ssml)
-										})</p>
-										<p>// Dialogflow
-										const app = dialogflow()</p>
-										<p>app.intent(&#39;Default Welcome Intent&#39;, conv =&gt; {
-											conv.ask(&#39;Welcome to action snippets! Say a number.&#39;)
-										})</p>
-										<p>app.intent(&#39;Number Input&#39;, (conv, {num}) =&gt; {
-											conv.close(<code>You said ${num}</code>)
-										})</p>
+									<dd><pre><code class="lang-javascript">
+<span class="hljs-comment">// Actions SDK</span>
+<span class="hljs-keyword">const</span> app = actionssdk()
+
+app.intent(<span class="hljs-string">'actions.intent.MAIN'</span>, conv =&gt; {
+  <span class="hljs-keyword">const</span> ssml = <span class="hljs-string">'&lt;speak&gt;Hi! &lt;break time="1"/&gt; '</span> +
+    <span class="hljs-string">'I can read out an ordinal like &lt;say-as interpret-as="ordinal"&gt;123&lt;/say-as&gt;. '</span> +
+    <span class="hljs-string">'Say a number.&lt;/speak&gt;'</span>
+  conv.ask(ssml)
+})
+
+app.intent(<span class="hljs-string">'actions.intent.TEXT'</span>, (conv, input) =&gt; {
+  <span class="hljs-keyword">if</span> (input === <span class="hljs-string">'bye'</span>) {
+    <span class="hljs-keyword">return</span> conv.close(<span class="hljs-string">'Goodbye!'</span>)
+  }
+  <span class="hljs-keyword">const</span> ssml = <span class="hljs-string">`&lt;speak&gt;You said, &lt;say-as interpret-as="ordinal"&gt;<span class="hljs-subst">${input}</span>&lt;/say-as&gt;&lt;/speak&gt;`</span>
+  conv.ask(ssml)
+})
+
+<span class="hljs-comment">// Dialogflow</span>
+<span class="hljs-keyword">const</span> app = dialogflow()
+
+app.intent(<span class="hljs-string">'Default Welcome Intent'</span>, conv =&gt; {
+  conv.ask(<span class="hljs-string">'Welcome to action snippets! Say a number.'</span>)
+})
+
+app.intent(<span class="hljs-string">'Number Input'</span>, (conv, {num}) =&gt; {
+  conv.close(<span class="hljs-string">`You said <span class="hljs-subst">${num}</span>`</span>)
+})
+</code></pre>
 									</dd>
 								</dl>
 							</div>
@@ -557,7 +570,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_service_actionssdk_conversation_conversation_.conversation.html">Conversation</a>.<a href="_service_actionssdk_conversation_conversation_.conversation.html#close">close</a></p>
 								<ul>
-									<li>Defined in service/actionssdk/conversation/conversation.ts:295</li>
+									<li>Defined in service/actionssdk/conversation/conversation.ts:304</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -566,29 +579,36 @@
 								</div>
 								<dl class="tsd-comment-tags">
 									<dt>example</dt>
-									<dd><p>// Actions SDK
-										const app = actionssdk()</p>
-										<p>app.intent(&#39;actions.intent.MAIN&#39;, conv =&gt; {
-											const ssml = &#39;<speak>Hi! <break time="1"/> &#39; +
-													&#39;I can read out an ordinal like <say-as interpret-as="ordinal">123</say-as>. &#39; +
-											&#39;Say a number.</speak>&#39;
-											conv.ask(ssml)
-										})</p>
-										<p>app.intent(&#39;actions.intent.TEXT&#39;, (conv, input) =&gt; {
-											if (input === &#39;bye&#39;) {
-											return conv.close(&#39;Goodbye!&#39;)
-											}
-											const ssml = <code>&lt;speak&gt;You said, &lt;say-as interpret-as=&quot;ordinal&quot;&gt;${input}&lt;/say-as&gt;&lt;/speak&gt;</code>
-											conv.ask(ssml)
-										})</p>
-										<p>// Dialogflow
-										const app = dialogflow()</p>
-										<p>app.intent(&#39;Default Welcome Intent&#39;, conv =&gt; {
-											conv.ask(&#39;Welcome to action snippets! Say a number.&#39;)
-										})</p>
-										<p>app.intent(&#39;Number Input&#39;, (conv, {num}) =&gt; {
-											conv.close(<code>You said ${num}</code>)
-										})</p>
+									<dd><pre><code class="lang-javascript">
+<span class="hljs-comment">// Actions SDK</span>
+<span class="hljs-keyword">const</span> app = actionssdk()
+
+app.intent(<span class="hljs-string">'actions.intent.MAIN'</span>, conv =&gt; {
+  <span class="hljs-keyword">const</span> ssml = <span class="hljs-string">'&lt;speak&gt;Hi! &lt;break time="1"/&gt; '</span> +
+    <span class="hljs-string">'I can read out an ordinal like &lt;say-as interpret-as="ordinal"&gt;123&lt;/say-as&gt;. '</span> +
+    <span class="hljs-string">'Say a number.&lt;/speak&gt;'</span>
+  conv.ask(ssml)
+})
+
+app.intent(<span class="hljs-string">'actions.intent.TEXT'</span>, (conv, input) =&gt; {
+  <span class="hljs-keyword">if</span> (input === <span class="hljs-string">'bye'</span>) {
+    <span class="hljs-keyword">return</span> conv.close(<span class="hljs-string">'Goodbye!'</span>)
+  }
+  <span class="hljs-keyword">const</span> ssml = <span class="hljs-string">`&lt;speak&gt;You said, &lt;say-as interpret-as="ordinal"&gt;<span class="hljs-subst">${input}</span>&lt;/say-as&gt;&lt;/speak&gt;`</span>
+  conv.ask(ssml)
+})
+
+<span class="hljs-comment">// Dialogflow</span>
+<span class="hljs-keyword">const</span> app = dialogflow()
+
+app.intent(<span class="hljs-string">'Default Welcome Intent'</span>, conv =&gt; {
+  conv.ask(<span class="hljs-string">'Welcome to action snippets! Say a number.'</span>)
+})
+
+app.intent(<span class="hljs-string">'Number Input'</span>, (conv, {num}) =&gt; {
+  conv.close(<span class="hljs-string">`You said <span class="hljs-subst">${num}</span>`</span>)
+})
+</code></pre>
 									</dd>
 								</dl>
 							</div>
@@ -616,7 +636,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_service_actionssdk_conversation_conversation_.conversation.html">Conversation</a>.<a href="_service_actionssdk_conversation_conversation_.conversation.html#json">json</a></p>
 								<ul>
-									<li>Defined in service/actionssdk/conversation/conversation.ts:198</li>
+									<li>Defined in service/actionssdk/conversation/conversation.ts:201</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -648,7 +668,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_service_actionssdk_conversation_conversation_.conversation.html">Conversation</a>.<a href="_service_actionssdk_conversation_conversation_.conversation.html#response">response</a></p>
 								<ul>
-									<li>Defined in service/actionssdk/conversation/conversation.ts:301</li>
+									<li>Defined in service/actionssdk/conversation/conversation.ts:310</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -667,7 +687,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in service/actionssdk/conv.ts:107</li>
+									<li>Defined in service/actionssdk/conv.ts:113</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">

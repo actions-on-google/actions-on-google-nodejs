@@ -265,11 +265,14 @@ const isVerification =
  * Supports Dialogflow v1 and v2.
  *
  * @example
+ * ```javascript
+ *
  * const app = dialogflow()
  *
  * app.intent('Default Welcome Intent', conv => {
  *   conv.ask('How are you?')
  * })
+ * ```
  *
  * @public
  */

@@ -46,6 +46,8 @@ export interface RegisterUpdateOptions {
  * Requests the user to register for daily updates.
  *
  * @example
+ * ```javascript
+ *
  * // Actions SDK
  * const app = actionssdk()
  *
@@ -83,6 +85,7 @@ export interface RegisterUpdateOptions {
  *   const arg = conv.arguments.get('image_to_show') // will be 'image_type_1'
  *   // do something with arg
  * })
+ * ```
  *
  * @public
  */

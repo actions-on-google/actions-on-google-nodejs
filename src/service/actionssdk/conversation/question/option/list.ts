@@ -34,6 +34,8 @@ export interface ListOptions {
  * Asks to collect user's input with a list.
  *
  * @example
+ * ```javascript
+ *
  * // Actions SDK
  * const app = actionssdk()
  *
@@ -88,6 +90,7 @@ export interface ListOptions {
  *     conv.close('Number two is also a great choice!')
  *   }
  * })
+ * ```
  *
  * @public
  */

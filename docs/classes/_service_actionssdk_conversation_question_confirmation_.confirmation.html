@@ -76,31 +76,38 @@
 					</div>
 					<dl class="tsd-comment-tags">
 						<dt>example</dt>
-						<dd><p>// Actions SDK
-							const app = actionssdk()</p>
-							<p>app.intent(&#39;actions.intent.MAIN&#39;, conv =&gt; {
-								conv.ask(new Confirmation(&#39;Are you sure you want to do that?&#39;))
-							})</p>
-							<p>app.intent(&#39;actions.intent.CONFIRMATION&#39;, (conv, input, confirmation) =&gt; {
-								if (confirmation) {
-								conv.close(<code>Great! I&#39;m glad you want to do it!</code>)
-								} else {
-								conv.close(<code>That&#39;s okay. Let&#39;s not do it now.</code>)
-								}
-							})</p>
-							<p>// Dialogflow
-							const app = dialogflow()</p>
-							<p>app.intent(&#39;Default Welcome Intent&#39;, conv =&gt; {
-								conv.ask(new Confirmation(&#39;Are you sure you want to do that?&#39;))
-							})</p>
-							<p>// Create a Dialogflow intent with the <code>actions_intent_CONFIRMATION</code> event
-								app.intent(&#39;Get Confirmation&#39;, (conv, input, confirmation) =&gt; {
-								if (confirmation) {
-								conv.close(<code>Great! I&#39;m glad you want to do it!</code>)
-								} else {
-								conv.close(<code>That&#39;s okay. Let&#39;s not do it now.</code>)
-								}
-							})</p>
+						<dd><pre><code class="lang-javascript">
+<span class="hljs-comment">// Actions SDK</span>
+<span class="hljs-keyword">const</span> app = actionssdk()
+
+app.intent(<span class="hljs-string">'actions.intent.MAIN'</span>, conv =&gt; {
+  conv.ask(<span class="hljs-keyword">new</span> Confirmation(<span class="hljs-string">'Are you sure you want to do that?'</span>))
+})
+
+app.intent(<span class="hljs-string">'actions.intent.CONFIRMATION'</span>, (conv, input, confirmation) =&gt; {
+  <span class="hljs-keyword">if</span> (confirmation) {
+    conv.close(<span class="hljs-string">`Great! I'm glad you want to do it!`</span>)
+  } <span class="hljs-keyword">else</span> {
+    conv.close(<span class="hljs-string">`That's okay. Let's not do it now.`</span>)
+  }
+})
+
+<span class="hljs-comment">// Dialogflow</span>
+<span class="hljs-keyword">const</span> app = dialogflow()
+
+app.intent(<span class="hljs-string">'Default Welcome Intent'</span>, conv =&gt; {
+  conv.ask(<span class="hljs-keyword">new</span> Confirmation(<span class="hljs-string">'Are you sure you want to do that?'</span>))
+})
+
+<span class="hljs-comment">// Create a Dialogflow intent with the `actions_intent_CONFIRMATION` event</span>
+app.intent(<span class="hljs-string">'Get Confirmation'</span>, (conv, input, confirmation) =&gt; {
+  <span class="hljs-keyword">if</span> (confirmation) {
+    conv.close(<span class="hljs-string">`Great! I'm glad you want to do it!`</span>)
+  } <span class="hljs-keyword">else</span> {
+    conv.close(<span class="hljs-string">`That's okay. Let's not do it now.`</span>)
+  }
+})
+</code></pre>
 						</dd>
 					</dl>
 				</div>
@@ -151,7 +158,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in service/actionssdk/conversation/question/confirmation.ts:63</li>
+									<li>Defined in service/actionssdk/conversation/question/confirmation.ts:66</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">

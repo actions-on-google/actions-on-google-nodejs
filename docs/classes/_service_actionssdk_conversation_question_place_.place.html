@@ -78,39 +78,46 @@
 					<p>Developer provides custom text prompts to tailor the request handled by Google.</p>
 					<dl class="tsd-comment-tags">
 						<dt>example</dt>
-						<dd><p>// Actions SDK
-							const app = actionssdk()</p>
-							<p>app.intent(&#39;actions.intent.MAIN&#39;, conv =&gt; {
-								conv.ask(new Place({
-								prompt: &#39;Where do you want to get picked up?&#39;,
-								context: &#39;To find a place to pick you up&#39;,
-								}))
-							})</p>
-							<p>app.intent(&#39;actions.intent.PLACE&#39;, (conv, input, place, status) =&gt; {
-								if (place) {
-								conv.close(<code>Ah, I see. You want to get picked up at ${place.formattedAddress}</code>)
-								} else {
-								// Possibly do something with status
-								conv.close(<code>Sorry, I couldn&#39;t find where you want to get picked up</code>)
-								}
-							})</p>
-							<p>// Dialogflow
-							const app = dialogflow()</p>
-							<p>app.intent(&#39;Default Welcome Intent&#39;, conv =&gt; {
-								conv.ask(new Place({
-								prompt: &#39;Where do you want to get picked up?&#39;,
-								context: &#39;To find a place to pick you up&#39;,
-								}))
-							})</p>
-							<p>// Create a Dialogflow intent with the <code>actions_intent_PLACE</code> event
-								app.intent(&#39;Get Place&#39;, (conv, params, place, status) =&gt; {
-								if (place) {
-								conv.close(<code>Ah, I see. You want to get picked up at ${place.formattedAddress}</code>)
-								} else {
-								// Possibly do something with status
-								conv.close(<code>Sorry, I couldn&#39;t find where you want to get picked up</code>)
-								}
-							})</p>
+						<dd><pre><code class="lang-javascript">
+<span class="hljs-comment">// Actions SDK</span>
+<span class="hljs-keyword">const</span> app = actionssdk()
+
+app.intent(<span class="hljs-string">'actions.intent.MAIN'</span>, conv =&gt; {
+  conv.ask(<span class="hljs-keyword">new</span> Place({
+    <span class="hljs-attr">prompt</span>: <span class="hljs-string">'Where do you want to get picked up?'</span>,
+    <span class="hljs-attr">context</span>: <span class="hljs-string">'To find a place to pick you up'</span>,
+  }))
+})
+
+app.intent(<span class="hljs-string">'actions.intent.PLACE'</span>, (conv, input, place, status) =&gt; {
+  <span class="hljs-keyword">if</span> (place) {
+    conv.close(<span class="hljs-string">`Ah, I see. You want to get picked up at <span class="hljs-subst">${place.formattedAddress}</span>`</span>)
+  } <span class="hljs-keyword">else</span> {
+    <span class="hljs-comment">// Possibly do something with status</span>
+    conv.close(<span class="hljs-string">`Sorry, I couldn't find where you want to get picked up`</span>)
+  }
+})
+
+<span class="hljs-comment">// Dialogflow</span>
+<span class="hljs-keyword">const</span> app = dialogflow()
+
+app.intent(<span class="hljs-string">'Default Welcome Intent'</span>, conv =&gt; {
+  conv.ask(<span class="hljs-keyword">new</span> Place({
+    <span class="hljs-attr">prompt</span>: <span class="hljs-string">'Where do you want to get picked up?'</span>,
+    <span class="hljs-attr">context</span>: <span class="hljs-string">'To find a place to pick you up'</span>,
+  }))
+})
+
+<span class="hljs-comment">// Create a Dialogflow intent with the `actions_intent_PLACE` event</span>
+app.intent(<span class="hljs-string">'Get Place'</span>, (conv, params, place, status) =&gt; {
+  <span class="hljs-keyword">if</span> (place) {
+    conv.close(<span class="hljs-string">`Ah, I see. You want to get picked up at <span class="hljs-subst">${place.formattedAddress}</span>`</span>)
+  } <span class="hljs-keyword">else</span> {
+    <span class="hljs-comment">// Possibly do something with status</span>
+    conv.close(<span class="hljs-string">`Sorry, I couldn't find where you want to get picked up`</span>)
+  }
+})
+</code></pre>
 						</dd>
 					</dl>
 				</div>
@@ -161,7 +168,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in service/actionssdk/conversation/question/place.ts:95</li>
+									<li>Defined in service/actionssdk/conversation/question/place.ts:98</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">

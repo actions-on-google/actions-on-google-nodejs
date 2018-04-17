@@ -79,33 +79,40 @@
 					</div>
 					<dl class="tsd-comment-tags">
 						<dt>example</dt>
-						<dd><p>// Actions SDK
-							const app = actionssdk()</p>
-							<p>app.intent(&#39;actions.intent.MAIN&#39;, conv =&gt; {
-								conv.ask(new SignIn())
-							})</p>
-							<p>app.intent(&#39;actions.intent.SIGN_IN&#39;, (conv, input, signin) =&gt; {
-								if (signin.status === &#39;OK&#39;) {
-								const access = conv.user.access.token // possibly do something with access token
-								conv.ask(&#39;Great, thanks for signing in!&#39;)
-								} else {
-								conv.ask(<code>I won&#39;t be able to save your data, but let&#39;s continue!</code>)
-								}
-							})</p>
-							<p>// Dialogflow
-							const app = dialogflow()</p>
-							<p>app.intent(&#39;actions.intent.MAIN&#39;, conv =&gt; {
-								conv.ask(new SignIn())
-							})</p>
-							<p>// Create a Dialogflow intent with the <code>actions_intent_SIGN_IN</code> event
-								app.intent(&#39;Get Signin&#39;, (conv, params, signin) =&gt; {
-								if (signin.status === &#39;OK&#39;) {
-								const access = conv.user.access.token // possibly do something with access token
-								conv.ask(&#39;Great, thanks for signing in!&#39;)
-								} else {
-								conv.ask(<code>I won&#39;t be able to save your data, but let&#39;s continue!</code>)
-								}
-							})</p>
+						<dd><pre><code class="lang-javascript">
+<span class="hljs-comment">// Actions SDK</span>
+<span class="hljs-keyword">const</span> app = actionssdk()
+
+app.intent(<span class="hljs-string">'actions.intent.MAIN'</span>, conv =&gt; {
+  conv.ask(<span class="hljs-keyword">new</span> SignIn())
+})
+
+app.intent(<span class="hljs-string">'actions.intent.SIGN_IN'</span>, (conv, input, signin) =&gt; {
+  <span class="hljs-keyword">if</span> (signin.status === <span class="hljs-string">'OK'</span>) {
+    <span class="hljs-keyword">const</span> access = conv.user.access.token <span class="hljs-comment">// possibly do something with access token</span>
+    conv.ask(<span class="hljs-string">'Great, thanks for signing in!'</span>)
+  } <span class="hljs-keyword">else</span> {
+    conv.ask(<span class="hljs-string">`I won't be able to save your data, but let's continue!`</span>)
+  }
+})
+
+<span class="hljs-comment">// Dialogflow</span>
+<span class="hljs-keyword">const</span> app = dialogflow()
+
+app.intent(<span class="hljs-string">'actions.intent.MAIN'</span>, conv =&gt; {
+  conv.ask(<span class="hljs-keyword">new</span> SignIn())
+})
+
+<span class="hljs-comment">// Create a Dialogflow intent with the `actions_intent_SIGN_IN` event</span>
+app.intent(<span class="hljs-string">'Get Signin'</span>, (conv, params, signin) =&gt; {
+  <span class="hljs-keyword">if</span> (signin.status === <span class="hljs-string">'OK'</span>) {
+    <span class="hljs-keyword">const</span> access = conv.user.access.token <span class="hljs-comment">// possibly do something with access token</span>
+    conv.ask(<span class="hljs-string">'Great, thanks for signing in!'</span>)
+  } <span class="hljs-keyword">else</span> {
+    conv.ask(<span class="hljs-string">`I won't be able to save your data, but let's continue!`</span>)
+  }
+})
+</code></pre>
 						</dd>
 					</dl>
 				</div>
@@ -156,7 +163,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in service/actionssdk/conversation/question/signin.ts:68</li>
+									<li>Defined in service/actionssdk/conversation/question/signin.ts:71</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">

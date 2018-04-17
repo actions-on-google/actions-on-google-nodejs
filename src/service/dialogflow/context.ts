@@ -59,6 +59,8 @@ export interface Context<TParameters extends Parameters> extends OutputContext<T
    *     here}.
    *
    * @example
+   * ```javascript
+   *
    * app.intent('Tell Greeting', conv => {
    *   const context1 = conv.contexts.get('context1')
    *   const parameters = context1.parameters
@@ -71,6 +73,7 @@ export interface Context<TParameters extends Parameters> extends OutputContext<T
    *   const context1 = conv.contexts.get('context1')
    *   const { color, num } = context1.parameters
    * })
+   * ```
    *
    * @public
    */
@@ -152,6 +155,8 @@ export class ContextValues<TContexts extends Contexts> {
    * Returns the incoming context by name for this intent.
    *
    * @example
+   * ```javascript
+   *
    * const AppContexts = {
    *   NUMBER: 'number',
    * }
@@ -167,6 +172,7 @@ export class ContextValues<TContexts extends Contexts> {
    * app.intent('Number Input', conv => {
    *   const context = conv.contexts.get(AppContexts.NUMBER)
    * })
+   * ```
    *
    * @param name The name of the Context to retrieve.
    * @return Context value matching name or undefined if no matching context.
@@ -180,6 +186,8 @@ export class ContextValues<TContexts extends Contexts> {
    * Set a new context for the current intent.
    *
    * @example
+   * ```javascript
+   *
    * const AppContexts = {
    *   NUMBER: 'number',
    * }
@@ -195,6 +203,7 @@ export class ContextValues<TContexts extends Contexts> {
    * app.intent('Number Input', conv => {
    *   const context = conv.contexts.get(AppContexts.NUMBER)
    * })
+   * ```
    *
    * @param name Name of the context. Dialogflow converts to lowercase.
    * @param lifespan Context lifespan.
@@ -217,6 +226,8 @@ export class ContextValues<TContexts extends Contexts> {
    * Returns the incoming contexts for this intent as an iterator.
    *
    * @example
+   * ```javascript
+   *
    * const AppContexts = {
    *   NUMBER: 'number',
    * }
@@ -234,6 +245,7 @@ export class ContextValues<TContexts extends Contexts> {
    *     // do something with the contexts
    *   }
    * })
+   * ```
    *
    * @public
    */

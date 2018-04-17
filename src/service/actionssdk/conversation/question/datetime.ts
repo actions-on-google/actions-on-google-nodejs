@@ -56,6 +56,8 @@ export interface DateTimeOptions {
  * Asks user for a timezone-agnostic date and time.
  *
  * @example
+ * ```javascript
+ *
  * // Actions SDK
  * const app = actionssdk()
  *
@@ -100,6 +102,7 @@ export interface DateTimeOptions {
  *     text: `Great, we will see you on ${month}/${day} at ${hours} ${minutes || ''}`
  *   }))
  * })
+ * ```
  *
  * @public
  */

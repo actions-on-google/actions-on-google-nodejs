@@ -27,6 +27,8 @@ export type SignInArgument = Api.GoogleActionsV2SignInValue
  * {@link Access#token|conv.user.access.token}.
  *
  * @example
+ * ```javascript
+ *
  * // Actions SDK
  * const app = actionssdk()
  *
@@ -59,6 +61,7 @@ export type SignInArgument = Api.GoogleActionsV2SignInValue
  *     conv.ask(`I won't be able to save your data, but let's continue!`)
  *   }
  * })
+ * ```
  *
  * @public
  */

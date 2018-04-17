@@ -129,7 +129,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in service/actionssdk/conversation/user.ts:128</li>
+									<li>Defined in service/actionssdk/conversation/user.ts:131</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -154,7 +154,7 @@
 					<div class="tsd-signature tsd-kind-icon">access<span class="tsd-signature-symbol">:</span> <a href="_service_actionssdk_conversation_user_.access.html" class="tsd-signature-type">Access</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in service/actionssdk/conversation/user.ts:128</li>
+							<li>Defined in service/actionssdk/conversation/user.ts:131</li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -166,7 +166,7 @@
 					<div class="tsd-signature tsd-kind-icon">entitlements<span class="tsd-signature-symbol">:</span> <a href="../interfaces/_service_actionssdk_api_v2_.googleactionsv2packageentitlement.html" class="tsd-signature-type">GoogleActionsV2PackageEntitlement</a><span class="tsd-signature-symbol">[]</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in service/actionssdk/conversation/user.ts:125</li>
+							<li>Defined in service/actionssdk/conversation/user.ts:128</li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -183,7 +183,7 @@
 					<div class="tsd-signature tsd-kind-icon">id<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in service/actionssdk/conversation/user.ts:96</li>
+							<li>Defined in service/actionssdk/conversation/user.ts:99</li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -198,7 +198,7 @@
 					<div class="tsd-signature tsd-kind-icon">last<span class="tsd-signature-symbol">:</span> <a href="_service_actionssdk_conversation_user_.last.html" class="tsd-signature-type">Last</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in service/actionssdk/conversation/user.ts:107</li>
+							<li>Defined in service/actionssdk/conversation/user.ts:110</li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -210,7 +210,7 @@
 					<div class="tsd-signature tsd-kind-icon">locale<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in service/actionssdk/conversation/user.ts:104</li>
+							<li>Defined in service/actionssdk/conversation/user.ts:107</li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -227,7 +227,7 @@
 					<div class="tsd-signature tsd-kind-icon">name<span class="tsd-signature-symbol">:</span> <a href="_service_actionssdk_conversation_user_.name.html" class="tsd-signature-type">Name</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in service/actionssdk/conversation/user.ts:117</li>
+							<li>Defined in service/actionssdk/conversation/user.ts:120</li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -243,7 +243,7 @@
 					<div class="tsd-signature tsd-kind-icon">permissions<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Api.GoogleActionsV2UserPermissions</span><span class="tsd-signature-symbol">[]</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in service/actionssdk/conversation/user.ts:110</li>
+							<li>Defined in service/actionssdk/conversation/user.ts:113</li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -255,7 +255,7 @@
 					<div class="tsd-signature tsd-kind-icon">storage<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">TUserStorage</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in service/actionssdk/conversation/user.ts:90</li>
+							<li>Defined in service/actionssdk/conversation/user.ts:93</li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -265,14 +265,17 @@
 						</div>
 						<dl class="tsd-comment-tags">
 							<dt>example</dt>
-							<dd><p>// Actions SDK
-									app.intent(&#39;actions.intent.MAIN&#39;, conv =&gt; {
-									conv.user.storage.someProperty = &#39;someValue&#39;
-								})</p>
-								<p>// Dialogflow
-									app.intent(&#39;Default Welcome Intent&#39;, conv =&gt; {
-									conv.user.storage.someProperty = &#39;someValue&#39;
-								})</p>
+							<dd><pre><code class="lang-javascript">
+<span class="hljs-comment">// Actions SDK</span>
+app.intent(<span class="hljs-string">'actions.intent.MAIN'</span>, conv =&gt; {
+  conv.user.storage.someProperty = <span class="hljs-string">'someValue'</span>
+})
+
+<span class="hljs-comment">// Dialogflow</span>
+app.intent(<span class="hljs-string">'Default Welcome Intent'</span>, conv =&gt; {
+  conv.user.storage.someProperty = <span class="hljs-string">'someValue'</span>
+})
+</code></pre>
 							</dd>
 						</dl>
 					</div>
@@ -290,7 +293,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in service/actionssdk/conversation/user.ts:149</li>
+									<li>Defined in service/actionssdk/conversation/user.ts:152</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>

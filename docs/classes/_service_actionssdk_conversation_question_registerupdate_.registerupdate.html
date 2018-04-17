@@ -76,38 +76,45 @@
 					</div>
 					<dl class="tsd-comment-tags">
 						<dt>example</dt>
-						<dd><p>// Actions SDK
-							const app = actionssdk()</p>
-							<p>app.intent(&#39;actions.intent.MAIN&#39;, conv =&gt; {
-								conv.ask(new RegisterUpdate({
-								frequency: &#39;DAILY&#39;,
-								intent: &#39;show.image&#39;,
-								arguments: [{
-								name: &#39;image_to_show&#39;,
-								textValue: &#39;image_type_1&#39;,
-								}
-								))
-							})</p>
-							<p>app.intent(&#39;show.image&#39;, conv =&gt; {
-								const arg = conv.arguments.get(&#39;image_to_show&#39;) // will be &#39;image_type_1&#39;
-								// do something with arg
-							})</p>
-							<p>// Dialogflow
-							const app = dialogflow()</p>
-							<p>app.intent(&#39;Default Welcome Intent&#39;, conv =&gt; {
-								conv.ask(new RegisterUpdate({
-								frequency: &#39;DAILY&#39;,
-								intent: &#39;Show Image&#39;,
-								arguments: [{
-								name: &#39;image_to_show&#39;,
-								textValue: &#39;image_type_1&#39;,
-								}
-								))
-							})</p>
-							<p>app.intent(&#39;Show Image&#39;, conv =&gt; {
-								const arg = conv.arguments.get(&#39;image_to_show&#39;) // will be &#39;image_type_1&#39;
-								// do something with arg
-							})</p>
+						<dd><pre><code class="lang-javascript">
+<span class="hljs-comment">// Actions SDK</span>
+<span class="hljs-keyword">const</span> app = actionssdk()
+
+app.intent(<span class="hljs-string">'actions.intent.MAIN'</span>, conv =&gt; {
+  conv.ask(<span class="hljs-keyword">new</span> RegisterUpdate({
+    <span class="hljs-attr">frequency</span>: <span class="hljs-string">'DAILY'</span>,
+    <span class="hljs-attr">intent</span>: <span class="hljs-string">'show.image'</span>,
+    <span class="hljs-attr">arguments</span>: [{
+      <span class="hljs-attr">name</span>: <span class="hljs-string">'image_to_show'</span>,
+      <span class="hljs-attr">textValue</span>: <span class="hljs-string">'image_type_1'</span>,
+    }
+  ))
+})
+
+app.intent(<span class="hljs-string">'show.image'</span>, conv =&gt; {
+  <span class="hljs-keyword">const</span> arg = conv.arguments.get(<span class="hljs-string">'image_to_show'</span>) <span class="hljs-comment">// will be 'image_type_1'</span>
+  <span class="hljs-comment">// do something with arg</span>
+})
+
+<span class="hljs-comment">// Dialogflow</span>
+<span class="hljs-keyword">const</span> app = dialogflow()
+
+app.intent(<span class="hljs-string">'Default Welcome Intent'</span>, conv =&gt; {
+  conv.ask(<span class="hljs-keyword">new</span> RegisterUpdate({
+    <span class="hljs-attr">frequency</span>: <span class="hljs-string">'DAILY'</span>,
+    <span class="hljs-attr">intent</span>: <span class="hljs-string">'Show Image'</span>,
+    <span class="hljs-attr">arguments</span>: [{
+      <span class="hljs-attr">name</span>: <span class="hljs-string">'image_to_show'</span>,
+      <span class="hljs-attr">textValue</span>: <span class="hljs-string">'image_type_1'</span>,
+    }
+  ))
+})
+
+app.intent(<span class="hljs-string">'Show Image'</span>, conv =&gt; {
+  <span class="hljs-keyword">const</span> arg = conv.arguments.get(<span class="hljs-string">'image_to_show'</span>) <span class="hljs-comment">// will be 'image_type_1'</span>
+  <span class="hljs-comment">// do something with arg</span>
+})
+</code></pre>
 						</dd>
 					</dl>
 				</div>
@@ -158,7 +165,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in service/actionssdk/conversation/question/registerupdate.ts:92</li>
+									<li>Defined in service/actionssdk/conversation/question/registerupdate.ts:95</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
