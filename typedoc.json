@@ -1,0 +1,7 @@
+{
+  "out": "docs",
+  "exclude": "**/*_test*/**/*.*",
+  "ignoreCompilerErrors": true,
+  "disableOutputCheck": true,
+  "external-modulemap": ".*\/service\/([\\w\\-_]+)\/([\\w\\-_]+)\/"
+}
