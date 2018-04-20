@@ -68,7 +68,7 @@ export interface NewSurfaceOptions {
  *   if (conv.surface.capabilities.has(capability)) {
  *     conv.close(...imageResponses)
  *   } else {
- *     conv.ask(new Surface({
+ *     conv.ask(new NewSurface({
  *       capabilities: capability,
  *       context: 'To show you an image',
  *       notification: 'Check out this image',
@@ -101,7 +101,7 @@ export interface NewSurfaceOptions {
  *   if (conv.surface.capabilities.has(capability)) {
  *     conv.close(...imageResponses)
  *   } else {
- *     conv.ask(new Surface({
+ *     conv.ask(new NewSurface({
  *       capabilities: capability,
  *       context: 'To show you an image',
  *       notification: 'Check out this image',

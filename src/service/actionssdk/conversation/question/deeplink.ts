@@ -53,6 +53,9 @@ export type DeepLinkArgument = undefined
  * Requests the user to transfer to a linked out Android app intent. Using this feature
  * requires verifying the linked app in the (Actions console)[console.actions.google.com].
  *
+ * @example
+ * ```javascript
+ *
  * // Actions SDK
  * const app = actionssdk()
  *
@@ -89,6 +92,7 @@ export type DeepLinkArgument = undefined
  *   // possibly do something with status
  *   conv.close('Okay maybe we can take care of that another time.')
  * })
+ * ```
  *
  * @public
  */

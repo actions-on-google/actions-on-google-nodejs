@@ -93,7 +93,7 @@ app.intent(<span class="hljs-string">'actions.intent.MAIN'</span>, conv =&gt; {
   <span class="hljs-keyword">if</span> (conv.surface.capabilities.has(capability)) {
     conv.close(...imageResponses)
   } <span class="hljs-keyword">else</span> {
-    conv.ask(<span class="hljs-keyword">new</span> Surface({
+    conv.ask(<span class="hljs-keyword">new</span> NewSurface({
       <span class="hljs-attr">capabilities</span>: capability,
       <span class="hljs-attr">context</span>: <span class="hljs-string">'To show you an image'</span>,
       <span class="hljs-attr">notification</span>: <span class="hljs-string">'Check out this image'</span>,
@@ -126,7 +126,7 @@ app.intent(<span class="hljs-string">'Default Welcome Intent'</span>, conv =&gt;
   <span class="hljs-keyword">if</span> (conv.surface.capabilities.has(capability)) {
     conv.close(...imageResponses)
   } <span class="hljs-keyword">else</span> {
-    conv.ask(<span class="hljs-keyword">new</span> Surface({
+    conv.ask(<span class="hljs-keyword">new</span> NewSurface({
       <span class="hljs-attr">capabilities</span>: capability,
       <span class="hljs-attr">context</span>: <span class="hljs-string">'To show you an image'</span>,
       <span class="hljs-attr">notification</span>: <span class="hljs-string">'Check out this image'</span>,

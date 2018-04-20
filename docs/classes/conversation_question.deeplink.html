@@ -73,37 +73,48 @@
 						<p>Requests the user to transfer to a linked out Android app intent. Using this feature
 						requires verifying the linked app in the (Actions console)[console.actions.google.com].</p>
 					</div>
-					<p>// Actions SDK
-					const app = actionssdk()</p>
-					<p>app.intent(&#39;actions.intent.MAIN&#39;, conv =&gt; {
-						conv.ask(&#39;Great! Looks like we can do that in the app.&#39;)
-						conv.ask(new DeepLink({
-						destination: &#39;Google&#39;,
-						url: &#39;example://gizmos&#39;,
-						package: &#39;com.example.gizmos&#39;,
-						reason: &#39;handle this for you&#39;,
-						}))
-					})</p>
-					<p>app.intent(&#39;actions.intent.LINK&#39;, (conv, input, arg, status) =&gt; {
-						// possibly do something with status
-						conv.close(&#39;Okay maybe we can take care of that another time.&#39;)
-					})</p>
-					<p>// Dialogflow
-					const app = actionssdk()</p>
-					<p>app.intent(&#39;Default Welcome Intent&#39;, conv =&gt; {
-						conv.ask(&#39;Great! Looks like we can do that in the app.&#39;)
-						conv.ask(new DeepLink({
-						destination: &#39;Google&#39;,
-						url: &#39;example://gizmos&#39;,
-						package: &#39;com.example.gizmos&#39;,
-						reason: &#39;handle this for you&#39;,
-						}))
-					})</p>
-					<p>// Create a Dialogflow intent with the <code>actions_intent_LINK</code> event
-						app.intent(&#39;Get Link Status&#39;, (conv, input, arg, status) =&gt; {
-						// possibly do something with status
-						conv.close(&#39;Okay maybe we can take care of that another time.&#39;)
-					})</p>
+					<dl class="tsd-comment-tags">
+						<dt>example</dt>
+						<dd><pre><code class="lang-javascript">
+<span class="hljs-comment">// Actions SDK</span>
+<span class="hljs-keyword">const</span> app = actionssdk()
+
+app.intent(<span class="hljs-string">'actions.intent.MAIN'</span>, conv =&gt; {
+  conv.ask(<span class="hljs-string">'Great! Looks like we can do that in the app.'</span>)
+  conv.ask(<span class="hljs-keyword">new</span> DeepLink({
+    <span class="hljs-attr">destination</span>: <span class="hljs-string">'Google'</span>,
+    <span class="hljs-attr">url</span>: <span class="hljs-string">'example://gizmos'</span>,
+    <span class="hljs-attr">package</span>: <span class="hljs-string">'com.example.gizmos'</span>,
+    <span class="hljs-attr">reason</span>: <span class="hljs-string">'handle this for you'</span>,
+  }))
+})
+
+app.intent(<span class="hljs-string">'actions.intent.LINK'</span>, (conv, input, arg, status) =&gt; {
+  <span class="hljs-comment">// possibly do something with status</span>
+  conv.close(<span class="hljs-string">'Okay maybe we can take care of that another time.'</span>)
+})
+
+<span class="hljs-comment">// Dialogflow</span>
+<span class="hljs-keyword">const</span> app = actionssdk()
+
+app.intent(<span class="hljs-string">'Default Welcome Intent'</span>, conv =&gt; {
+  conv.ask(<span class="hljs-string">'Great! Looks like we can do that in the app.'</span>)
+  conv.ask(<span class="hljs-keyword">new</span> DeepLink({
+    <span class="hljs-attr">destination</span>: <span class="hljs-string">'Google'</span>,
+    <span class="hljs-attr">url</span>: <span class="hljs-string">'example://gizmos'</span>,
+    <span class="hljs-attr">package</span>: <span class="hljs-string">'com.example.gizmos'</span>,
+    <span class="hljs-attr">reason</span>: <span class="hljs-string">'handle this for you'</span>,
+  }))
+})
+
+<span class="hljs-comment">// Create a Dialogflow intent with the `actions_intent_LINK` event</span>
+app.intent(<span class="hljs-string">'Get Link Status'</span>, (conv, input, arg, status) =&gt; {
+  <span class="hljs-comment">// possibly do something with status</span>
+  conv.close(<span class="hljs-string">'Okay maybe we can take care of that another time.'</span>)
+})
+</code></pre>
+						</dd>
+					</dl>
 				</div>
 			</section>
 			<section class="tsd-panel tsd-hierarchy">
@@ -167,7 +178,7 @@
 							<aside class="tsd-sources">
 								<p>Overrides <a href="conversation_question.question.html">Question</a>.<a href="conversation_question.question.html#constructor">constructor</a></p>
 								<ul>
-									<li>Defined in service/actionssdk/conversation/question/deeplink.ts:98</li>
+									<li>Defined in service/actionssdk/conversation/question/deeplink.ts:102</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
