@@ -18,8 +18,23 @@ import { AppOptions, AppHandler, ServiceBaseApp, attach } from '../../assistant'
 import { JsonObject } from '../../common'
 import * as Api from './api/v1'
 import * as https from 'https'
+import { google } from 'googleapis'
 
 const encoding = 'utf8'
+
+/** @public */
+export interface SmartHomeJwt {
+  type: 'service_account',
+  project_id: string,
+  private_key_id: string,
+  private_key: string,
+  client_email: string,
+  client_id: string,
+  auth_uri: string,
+  token_uri: string,
+  auth_provider_x509_cert_url: string,
+  client_x509_cert_url: string,
+}
 
 /** @public */
 export interface SmartHomeOptions extends AppOptions {
@@ -30,6 +45,14 @@ export interface SmartHomeOptions extends AppOptions {
    * @public
    */
   key?: string
+
+  /**
+   * A JWT (JSON Web Token) that is able to access the home graph API.
+   * This is used for report state. See https://jwt.io/. A JWT can be
+   * created through the Google Cloud Console: https://console.cloud.google.com/apis/credentials
+   * @public
+   */
+  jwt?: SmartHomeJwt
 }
 
 /** @public */
@@ -171,8 +194,54 @@ export interface SmartHomeApp extends ServiceBaseApp {
    */
   requestSync(agentUserId: string): Promise<string>
 
+  /**
+   * Reports the current state of a device or set of devices to the home graph.
+   * This may be done if the state of the device was changed locally, like a
+   * light turning on through a light switch.
+   *
+   * When calling this function, a JWT (JSON Web Token) needs to be provided
+   * as an option in the constructor.
+   *
+   * @example
+   * ```javascript
+   * const app = smarthome({
+   *   jwt: require('./jwt.json');
+   * });
+   *
+   * const reportState = () => {
+   *   app.reportState({
+   *     requestId: '123ABC',
+   *     agentUserId: 'user-123',
+   *     payload: {
+   *       devices: {
+   *         states: {
+   *           "light-123": {
+   *             on: true
+   *           }
+   *         }
+   *       }
+   *     }
+   *   })
+   *   .then((res) => {
+   *     // Report state was successful
+   *   })
+   *   .catch((res) => {
+   *     // Report state failed
+   *   })
+   * };
+   * ```
+   *
+   * @param reportedState A payload containing a device or set of devices with their states
+   *
+   * @public
+   */
+  reportState(reportedState: Api.SmartHomeV1ReportStateRequest): Promise<string>
+
   /** @public */
   key?: string
+
+  /** @public */
+  jwt?: SmartHomeJwt
 }
 
 /** @public */
@@ -180,14 +249,16 @@ export interface SmartHome {
   (options?: SmartHomeOptions): AppHandler & SmartHomeApp
 }
 
-const makeApiCall = (url: string, data: JsonObject): Promise<string> => {
+const makeApiCall = (url: string, data: JsonObject, jwt?: SmartHomeJwt): Promise<string> => {
   const options = {
     hostname: 'homegraph.googleapis.com',
     port: 443,
     path: url,
     method: 'POST',
+    headers: {},
   }
-  return new Promise((resolve, reject) => {
+
+  const apiCall: Promise<string> = new Promise((resolve, reject) => {
     const buffers: Buffer[] = []
     const req = https.request(options, (res) => {
       res.on('data', (d) => {
@@ -206,6 +277,37 @@ const makeApiCall = (url: string, data: JsonObject): Promise<string> => {
     req.write(JSON.stringify(data))
     req.end()
   })
+
+  if (jwt) {
+    const jwtClient = new google.auth.JWT(
+      jwt.client_email,
+      undefined,
+      jwt.private_key,
+      ['https://www.googleapis.com/auth/homegraph'],
+      undefined,
+    )
+
+    return new Promise((resolve, reject) => {
+      // For testing, we do not need to actually authorize
+      if (jwt.client_id === 'sample-client-id') {
+        options.headers = {
+          Authorization: ` Bearer 1234`,
+        }
+        resolve(apiCall)
+        return
+      }
+      jwtClient.authorize((err: Error, tokens: JsonObject) => {
+        if (err) {
+          reject(err)
+        }
+        options.headers = {
+          Authorization: ` Bearer ${tokens.access_token}`,
+        }
+        resolve(apiCall)
+      })
+    })
+  }
+  return apiCall
 }
 
 /**
@@ -260,7 +362,16 @@ export const smarthome: SmartHome = (options = {}) => attach<SmartHomeApp>({
       agent_user_id: agentUserId,
     })
   },
+  async reportState(this: SmartHomeApp, reportedState) {
+    if (!options || !this.jwt) {
+      throw new Error(`A JWT was not specified. ` +
+        `Please visit https://console.cloud.google.com/apis/credentials`)
+    }
+    return await makeApiCall('/v1/devices:reportStateAndNotification',
+      reportedState, this.jwt)
+  },
   key: options.key,
+  jwt: options.jwt,
   async handler(
     this: SmartHomeApp,
     body: Api.SmartHomeV1Request,

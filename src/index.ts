@@ -140,5 +140,13 @@ export {
 
 export * from './service/actionssdk/api/v2'
 
-export * from './service/smarthome'
+export {
+  SmartHomeJwt,
+  SmartHomeOptions,
+  SmartHomeHandler,
+  SmartHomeApp,
+  SmartHome,
+  smarthome,
+} from './service/smarthome'
+
 export * from './service/smarthome/api/v1'

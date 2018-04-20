@@ -16,7 +16,7 @@
 
 import test from 'ava'
 
-import { smarthome } from '../smarthome'
+import { smarthome, SmartHomeJwt } from '../smarthome'
 import * as Api from '../api/v1'
 import * as Sample from './expected'
 
@@ -25,6 +25,19 @@ const sampleApiKey = '<API-KEY>'
 
 const throwError = () => {
   throw Error('')
+}
+
+const SAMPLE_JWT: SmartHomeJwt = {
+  type: 'service_account',
+  project_id: 'sample-project-id',
+  private_key_id: 'sample-private-key-id',
+  private_key: 'sample-private-key',
+  client_email: 'sample-client-email',
+  client_id: 'sample-client-id',
+  auth_uri: 'http://example.com/auth',
+  token_uri: 'http://example.com/token',
+  auth_provider_x509_cert_url: 'https://example.com/certs',
+  client_x509_cert_url: 'https://example.com/x509-certs',
 }
 
 test('sync intent handler is invoked', (t) => {
@@ -109,9 +122,35 @@ test('request sync succeeds if API key is defined', (t) => {
 
   return app.requestSync(agentUserId)
     .then(() => {
-      t.pass('The API was called')
+      t.pass('The API was called successfully')
     })
     .catch((e) => {
       t.fail('You should be able to call request with an API key')
+    })
+})
+
+test('report state fails if JWT is not defined', (t) => {
+  const app = smarthome({})
+
+  return app.reportState(Sample.REPORT_STATE_REQUEST)
+    .then(() => {
+      t.fail('You should not be able to call request without a JWT')
+    })
+    .catch((e) => {
+      t.pass('This method call properly throws an error')
+    })
+})
+
+test('report state succeeds if JWT is defined', (t) => {
+  const app = smarthome({
+    jwt: SAMPLE_JWT,
+  })
+
+  return app.reportState(Sample.REPORT_STATE_REQUEST)
+    .then(() => {
+      t.pass('The API was called successfully')
+    })
+    .catch((e) => {
+      t.fail('You should be able to call request with a JWT')
     })
 })

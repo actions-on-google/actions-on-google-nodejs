@@ -150,3 +150,13 @@ export interface SmartHomeV1ExecuteResponse {
 
 export type SmartHomeV1Response = SmartHomeV1SyncResponse | SmartHomeV1QueryResponse |
   SmartHomeV1ExecuteResponse
+
+export interface SmartHomeV1ReportStateRequest {
+  requestId: string,
+  agentUserId: string,
+  payload: {
+    devices: {
+      states: ApiClientObjectMap<any>,
+    },
+  }
+}

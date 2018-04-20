@@ -181,3 +181,32 @@ export const EXECUTE_RESPONSE: Api.SmartHomeV1ExecuteResponse = {
     }],
   },
 }
+
+export const REPORT_STATE_REQUEST: Api.SmartHomeV1ReportStateRequest = {
+  requestId: 'ff36a3cc', /* Any unique ID */
+  agentUserId: '123', /* Hardcoded user ID */
+  payload: {
+    devices: {
+      states: {
+        washer: {
+          on: true,
+          isPaused: true,
+          isRunning: true,
+          currentRunCycle: [{
+            currentCycle: 'rinse',
+            nextCycle: 'spin',
+            lang: 'en',
+          }],
+          currentTotalRemainingTime: 1212,
+          currentCycleRemainingTime: 301,
+          currentModeSettings: {
+            load: 'large',
+          },
+          currentToggleSettings: {
+            Turbo: false,
+          },
+        },
+      },
+    },
+  },
+}
