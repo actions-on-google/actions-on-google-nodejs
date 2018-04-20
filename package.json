@@ -20,7 +20,10 @@
     "test": "yarn build:clean && nyc ava --fail-fast",
     "test:watch": "yarn build:clean && concurrently -rk \"yarn build:watch\" \"ava -w --fail-fast\"",
     "docs": "typedoc --options typedoc.json",
-    "coverage": "yarn test && live-server coverage"
+    "docs:clean": "rm -rf docs && mkdir docs && touch docs/.nojekyll && yarn docs",
+    "docs:serve": "yarn docs:clean && live-server docs",
+    "coverage": "yarn coverage:serve",
+    "coverage:serve": "yarn test && live-server coverage"
   },
   "repository": {
     "type": "git",
