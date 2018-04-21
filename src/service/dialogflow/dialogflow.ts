@@ -50,6 +50,7 @@ export interface DialogflowIntentHandler<
   ): Promise<any> | any
 }
 
+/** @hidden */
 export interface DialogflowIntentHandlers {
   [event: string]: DialogflowIntentHandler<
     Contexts,
@@ -61,6 +62,7 @@ export interface DialogflowIntentHandlers {
   > | string | undefined
 }
 
+/** @hidden */
 export interface DialogflowHandlers<
   TConvData,
   TUserStorage,

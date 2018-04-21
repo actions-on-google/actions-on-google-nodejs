@@ -57,8 +57,10 @@ export interface OptionItem {
   image?: Api.GoogleActionsV2UiElementsImage
 }
 
+/** @hidden */
 export interface ApiOptionItem extends Api.GoogleActionsV2UiElementsCarouselSelectCarouselItem { }
 
+/** @hidden */
 export const convert = (items: OptionItems) => Object.keys(items).map(key => {
   const value = items[key]
   if (typeof value === 'string') {

@@ -26,6 +26,7 @@ export interface AppOptions {
   debug?: boolean
 }
 
+/** @hidden */
 export interface ServiceBaseApp {
   /** @public */
   handler: StandardHandler
@@ -51,6 +52,7 @@ export interface BaseApp extends ServiceBaseApp {
   debug: boolean
 }
 
+/** @hidden */
 const create = (options?: AppOptions): BaseApp => ({
   frameworks: Object.assign({}, builtin),
   handler: () => Promise.reject(new Error('StandardHandler not set')),
@@ -60,6 +62,7 @@ const create = (options?: AppOptions): BaseApp => ({
   debug: !!(options && options.debug),
 })
 
+/** @hidden */
 export const attach = <TService>(
   service: TService,
   options?: AppOptions,
