@@ -8,5 +8,6 @@
   "disableOutputCheck": true,
   "external-modulemap": ".*\/((?:conversation\/question)|(?:conversation\/argument)|(?:conversation\/response)|(?:framework)|(?:conversation)|(?:actionssdk\/api\/v2)|(?:dialogflow\/api\/v1)|(?:dialogflow\/api\/v2)|(?:assistant)|(?:common)|(?:dialogflow)|(?:actionssdk))",
   "excludeExternals": true,
-  "excludePrivate": true
+  "excludePrivate": true,
+  "excludeNotExported": true
 }
