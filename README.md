@@ -3,8 +3,10 @@
 This client library makes it easy to create your apps for the Google Assistant, and
 supports both Dialogflow fulfillment and the Actions SDK webhook.
 
+* [Client Library GitHub repo](https://github.com/actions-on-google/actions-on-google-nodejs)
 * [Client Library reference docs](https://actions-on-google.github.io/actions-on-google-nodejs/)
 * [Actions on Google docs](https://developers.google.com/actions/)
+* [Actions on Google samples](https://github.com/actions-on-google)
 
 [![NPM Version](https://img.shields.io/npm/v/actions-on-google.svg)](https://www.npmjs.org/package/actions-on-google)
 [![Build Status](https://travis-ci.org/actions-on-google/actions-on-google-nodejs.svg?branch=master)](https://travis-ci.org/actions-on-google/actions-on-google-nodejs)
