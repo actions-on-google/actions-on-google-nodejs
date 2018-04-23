@@ -18,7 +18,7 @@
  * @file Add built in plug and play web framework support for lambda API gateway
  */
 
-import { Framework, StandardHandler } from './framework'
+import { Framework, StandardHandler, Headers } from './framework'
 import { JsonObject, error } from '../common'
 import { Context, Callback } from 'aws-lambda'
 
@@ -30,7 +30,12 @@ export interface LambdaHandler {
 export class Lambda implements Framework<LambdaHandler> {
   handle(standard: StandardHandler) {
     return async (event: JsonObject, context: Context, callback: Callback) => {
-      const result = await standard(JSON.parse(event.body), event.headers).catch((e: Error) => {
+      // convert header keys to lowercase for case insensitive header retrieval
+      const headers = Object.keys(event.headers).reduce((o, k) => {
+        o[k.toLowerCase()] = event.headers[k]
+        return o
+      }, {} as Headers)
+      const result = await standard(JSON.parse(event.body), headers).catch((e: Error) => {
         error(e.stack || e)
         callback(e)
       })

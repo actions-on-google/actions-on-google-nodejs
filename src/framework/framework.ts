@@ -41,10 +41,16 @@ export interface OmniHandler extends StandardHandler, ExpressHandler, LambdaHand
 }
 
 export interface BuiltinFrameworks extends Frameworks {
-  /** @public */
+  /**
+   * Plug and play web framework support for express using body-parser
+   * @public
+   */
   express: Express
 
-  /** @public */
+  /**
+   * Plug and play web framework support for lambda API gateway
+   * @public
+   */
   lambda: Lambda
 }
 
