@@ -15,7 +15,7 @@
  */
 
 /**
- * @file Add built in plug and play web framework support for express
+ * @file Add built in plug and play web framework support for express using body-parser
  */
 
 import { Framework, StandardHandler } from './framework'
