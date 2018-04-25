@@ -27,6 +27,7 @@ export interface ExpressHandler {
   (request: Request, response: Response): void
 }
 
+/** @hidden */
 export class Express implements Framework<ExpressHandler> {
   handle(standard: StandardHandler) {
     return (request: Request, response: Response) => {
@@ -51,4 +52,5 @@ export class Express implements Framework<ExpressHandler> {
   }
 }
 
+/** @hidden */
 export const express = new Express()

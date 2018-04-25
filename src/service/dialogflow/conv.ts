@@ -26,11 +26,13 @@ import { Incoming } from './incoming'
 const APP_DATA_CONTEXT = '_actions_on_google'
 const APP_DATA_CONTEXT_LIFESPAN = 99
 
+/** @hidden */
 export interface SystemIntent {
   intent: string
   data: ProtoAny<string, JsonObject>
 }
 
+/** @hidden */
 export interface GoogleAssistantResponse {
   expectUserResponse: boolean
   noInputPrompts?: ActionsApi.GoogleActionsV2SimpleResponse[]
@@ -40,6 +42,7 @@ export interface GoogleAssistantResponse {
   userStorage?: string
 }
 
+/** @hidden */
 export interface PayloadGoogle {
   google: GoogleAssistantResponse
 }

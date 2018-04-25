@@ -176,6 +176,7 @@ export interface ArgumentsParsed extends ArgumentsNamed {
   [name: string]: Argument | undefined
 }
 
+/** @hidden */
 export interface ArgumentsIndexable {
   [key: string]: Argument
 }

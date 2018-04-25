@@ -27,6 +27,7 @@ export interface LambdaHandler {
   (event: JsonObject, context: Context, callback: Callback): Promise<void>
 }
 
+/** @hidden */
 export class Lambda implements Framework<LambdaHandler> {
   handle(standard: StandardHandler) {
     return async (event: JsonObject, context: Context, callback: Callback) => {
@@ -58,4 +59,5 @@ export class Lambda implements Framework<LambdaHandler> {
   }
 }
 
+/** @hidden */
 export const lambda = new Lambda()

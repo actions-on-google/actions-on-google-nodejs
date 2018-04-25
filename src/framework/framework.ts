@@ -48,6 +48,7 @@ export interface BuiltinFrameworks extends Frameworks {
   lambda: Lambda
 }
 
+/** @hidden */
 export const builtin: BuiltinFrameworks = {
   express,
   lambda,

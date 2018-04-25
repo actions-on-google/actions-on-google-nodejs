@@ -18,31 +18,44 @@ import * as Debug from 'debug'
 
 const name = 'actions-on-google'
 
+/** @hidden */
 export const debug = Debug(`${name}:debug`)
+
+/** @hidden */
 export const warn = Debug(`${name}:warn`)
 
+/** @hidden */
 export const error = console.error.bind(console) as typeof console.error
+
+/** @hidden */
 export const info = console.log.bind(console) as typeof console.log
 
 warn.log = error
 debug.log = info
 
+/** @hidden */
 export interface JsonObject {
   // tslint:disable-next-line:no-any JSON value can be anything
   [key: string]: any
 }
 
+/** @hidden */
 export const values = <T>(o: { [key: string]: T }) => Object.keys(o).map(k => o[k])
 
+/** @hidden */
 export const clone = <T>(o: T): T => JSON.parse(JSON.stringify(o))
 
+/** @hidden */
 export const stringify =
   (o: {}, override?: {}) => JSON.stringify(Object.assign(clone(o), override), null, 2)
 
+/** @hidden */
 export type ProtoAny<TType, TSpec> = { '@type': TType } & TSpec
 
+/** @hidden */
 export const toArray = <T>(a: T | T[]) => Array.isArray(a) ? a : [a]
 
+/** @hidden */
 export interface ApiClientObjectMap<TValue> {
   [key: string]: TValue
 }

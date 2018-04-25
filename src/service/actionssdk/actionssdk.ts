@@ -51,6 +51,7 @@ export interface ActionsSdkIntentHandler<
   ): Promise<any> | any
 }
 
+/** @hidden */
 export interface ActionSdkIntentHandlers {
   [intent: string]: ActionsSdkIntentHandler<
     {},
@@ -60,6 +61,7 @@ export interface ActionSdkIntentHandlers {
   > | string | undefined
 }
 
+/** @hidden */
 export interface ActionsSdkHandlers<
   TConvData,
   TUserStorage,

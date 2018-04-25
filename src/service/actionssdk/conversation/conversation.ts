@@ -81,6 +81,7 @@ export type Response =
   MediaObject |
   Question<Intent, JsonObject>
 
+/** @hidden */
 export interface ConversationResponse {
   richResponse: Api.GoogleActionsV2RichResponse
   expectUserResponse: boolean
@@ -88,10 +89,12 @@ export interface ConversationResponse {
   expectedIntent?: Api.GoogleActionsV2ExpectedIntent
 }
 
+/** @hidden */
 export interface ConversationOptionsInit<TUserStorage> {
   storage?: TUserStorage
 }
 
+/** @hidden */
 export interface ConversationOptions<TUserStorage> {
   request: Api.GoogleActionsV2AppRequest
   headers: Headers
@@ -376,6 +379,7 @@ export interface ExceptionHandler<
   (conv: TConversation, error: Error): Promise<any> | any
 }
 
+/** @hidden */
 export interface Traversed {
   [key: string]: boolean
 }
