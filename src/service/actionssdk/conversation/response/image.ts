@@ -31,13 +31,13 @@ export interface ImageOptions {
   alt: string
 
   /**
-   * Width of the image.
+   * Height of the image.
    * @public
    */
   height?: number
 
   /**
-   * Height of the image.
+   * Width of the image.
    * @public
    */
   width?: number
