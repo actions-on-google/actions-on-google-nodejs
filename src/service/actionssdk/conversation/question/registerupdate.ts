@@ -58,8 +58,8 @@ export interface RegisterUpdateOptions {
  *     arguments: [{
  *       name: 'image_to_show',
  *       textValue: 'image_type_1',
- *     }
- *   ))
+ *     }],
+ *   }))
  * })
  *
  * app.intent('show.image', conv => {
@@ -77,8 +77,8 @@ export interface RegisterUpdateOptions {
  *     arguments: [{
  *       name: 'image_to_show',
  *       textValue: 'image_type_1',
- *     }
- *   ))
+ *     }],
+ *   }))
  * })
  *
  * app.intent('Show Image', conv => {
