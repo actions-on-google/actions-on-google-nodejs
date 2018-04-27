@@ -3007,7 +3007,7 @@ AssistantApp.prototype.BuiltInArgNames = {
   /** Link request result argument. */
   LINK: 'LINK',
   /** MediaStatus value argument. */
-  MEDIA_STATUS: 'actions.intent.MEDIA_STATUS'
+  MEDIA_STATUS: 'MEDIA_STATUS'
 };
 
 /**
