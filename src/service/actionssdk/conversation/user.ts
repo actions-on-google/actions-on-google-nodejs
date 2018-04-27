@@ -24,6 +24,7 @@ export class Last {
    */
   seen?: Date
 
+  /** @hidden */
   constructor(user: Api.GoogleActionsV2User) {
     if (user.lastSeen) {
       this.seen = new Date(user.lastSeen)
@@ -50,6 +51,7 @@ export class Name {
    */
   given?: string
 
+  /** @hidden */
   constructor(profile: Api.GoogleActionsV2UserProfile) {
     this.display = profile.displayName
     this.family = profile.familyName
@@ -64,6 +66,7 @@ export class Access {
    */
   token?: string
 
+  /** @hidden */
   constructor(user: Api.GoogleActionsV2User) {
     this.token = user.accessToken
   }
@@ -130,6 +133,7 @@ export class User<TUserStorage> {
   /** @public */
   access: Access
 
+  /** @hidden */
   constructor(user: Api.GoogleActionsV2User = {}, initial?: TUserStorage) {
     const { userStorage } = user
     this.storage = userStorage ? JSON.parse(userStorage).data : (initial || {})
@@ -149,6 +153,7 @@ export class User<TUserStorage> {
     this.access = new Access(user)
   }
 
+  /** @hidden */
   _serialize() {
     return JSON.stringify({ data: this.storage })
   }

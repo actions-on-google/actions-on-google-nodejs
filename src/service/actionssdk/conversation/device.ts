@@ -24,6 +24,7 @@ export class Device {
    */
   location?: Api.GoogleActionsV2Location
 
+  /** @hidden */
   constructor(device: Api.GoogleActionsV2Device = {}) {
     this.location = device.location
   }

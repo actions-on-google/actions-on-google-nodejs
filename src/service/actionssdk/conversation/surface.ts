@@ -27,6 +27,7 @@ export class Surface {
   /** @public */
   capabilities: Capabilities
 
+  /** @hidden */
   constructor(surface: Api.GoogleActionsV2Surface = {}) {
     this.capabilities = new Capabilities(surface.capabilities)
   }
@@ -39,6 +40,7 @@ export class Capabilities {
    */
   list: Api.GoogleActionsV2Capability[]
 
+  /** @hidden */
   constructor(list: Api.GoogleActionsV2Capability[] = []) {
     this.list = list
   }
@@ -56,6 +58,7 @@ export class AvailableSurfacesCapabilities {
   /** @public */
   surfaces: Surface[]
 
+  /** @hidden */
   constructor(surfaces: Surface[]) {
     this.surfaces = surfaces
   }
@@ -78,6 +81,7 @@ export class AvailableSurfaces {
   /** @public */
   capabilities: AvailableSurfacesCapabilities
 
+  /** @hidden */
   constructor(list: Api.GoogleActionsV2Surface[]) {
     this.list = list.map(surface => new Surface(surface))
     this.capabilities = new AvailableSurfacesCapabilities(this.list)
@@ -88,6 +92,7 @@ export class Available {
   /** @public */
   surfaces: AvailableSurfaces
 
+  /** @hidden */
   constructor(surfaces: Api.GoogleActionsV2Surface[] = []) {
     this.surfaces = new AvailableSurfaces(surfaces)
   }

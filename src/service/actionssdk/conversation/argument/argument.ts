@@ -187,6 +187,7 @@ export interface ArgumentsStatus {
 }
 
 export interface ArgumentsRaw {
+  /** @public */
   [name: string]: Api.GoogleActionsV2Argument
 }
 
@@ -211,6 +212,7 @@ export class Parsed {
   /** @public */
   input: ArgumentsParsed = {}
 
+  /** @hidden */
   constructor(raw: Api.GoogleActionsV2Argument[]) {
     this.list = raw.map((arg, i) => {
       const value = getValue(arg)
@@ -220,6 +222,7 @@ export class Parsed {
     })
   }
 
+  /** @public */
   get<TName extends keyof ArgumentsNamed>(name: TName): ArgumentsNamed[TName]
   /** @public */
   get(name: string): Argument
@@ -235,6 +238,7 @@ export class Status {
   /** @public */
   input: ArgumentsStatus = {}
 
+  /** @hidden */
   constructor(raw: Api.GoogleActionsV2Argument[]) {
     this.list = raw.map((arg, i) => {
       const name = arg.name!
@@ -254,6 +258,7 @@ export class Raw {
   /** @public */
   input: ArgumentsRaw
 
+  /** @hidden */
   constructor(public list: Api.GoogleActionsV2Argument[]) {
     this.input = list.reduce((o, arg) => {
       o[arg.name!] = arg
@@ -277,6 +282,7 @@ export class Arguments {
   /** @public */
   raw: Raw
 
+  /** @hidden */
   constructor(raw: Api.GoogleActionsV2Argument[] = []) {
     this.parsed = new Parsed(raw)
     this.status = new Status(raw)

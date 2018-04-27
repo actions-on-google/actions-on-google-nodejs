@@ -54,6 +54,7 @@ export type Intent =
   'actions.intent.LINK' |
   'actions.intent.MEDIA_STATUS'
 
+/** @hidden */
 export type InputValueSpec =
   'type.googleapis.com/google.actions.v2.PermissionValueSpec' |
   'type.googleapis.com/google.actions.v2.OptionValueSpec' |
@@ -68,6 +69,7 @@ export type InputValueSpec =
   'type.googleapis.com/google.actions.v2.PlaceValueSpec' |
   'type.googleapis.com/google.actions.v2.LinkValueSpec'
 
+/** @hidden */
 export type DialogSpec =
   'type.googleapis.com/google.actions.v2.PlaceValueSpec.PlaceDialogSpec' |
   'type.googleapis.com/google.actions.v2.LinkValueSpec.LinkDialogSpec'
@@ -169,10 +171,13 @@ export class Conversation<TUserStorage> {
   /** @public */
   type: Api.GoogleActionsV2ConversationType
 
+  /** @hidden */
   _raw?: JsonObject
 
+  /** @hidden */
   _responded = false
 
+  /** @hidden */
   constructor(options: ConversationOptions<TUserStorage>) {
     const { request, headers, init } = options
 
@@ -375,7 +380,8 @@ export interface ExceptionHandler<
   TUserStorage,
   TConversation extends Conversation<TUserStorage>
 > {
-  // tslint:disable-next-line:no-any allow developer to return any just detect if is promise
+  /** @public */
+  // tslint:disable-next-line:no-any allow to return any just detect if is promise
   (conv: TConversation, error: Error): Promise<any> | any
 }
 

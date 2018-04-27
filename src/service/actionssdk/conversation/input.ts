@@ -46,6 +46,7 @@ export class Input {
    */
   type: Api.GoogleActionsV2RawInputInputType
 
+  /** @hidden */
   constructor(input: Api.GoogleActionsV2RawInput = {}) {
     this.raw = input.query!
     this.type = input.inputType!

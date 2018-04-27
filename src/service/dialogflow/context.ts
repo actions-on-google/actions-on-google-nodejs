@@ -101,6 +101,7 @@ export class ContextValues<TContexts extends Contexts> {
   /** @public */
   output: OutputContexts
 
+  /** @hidden */
   constructor(
     outputContexts: Api.GoogleCloudDialogflowV2Context[] | ApiV1.DialogflowV1Context[] = [],
     private _session?: string,
@@ -129,6 +130,7 @@ export class ContextValues<TContexts extends Contexts> {
     this.output = {}
   }
 
+  /** @hidden */
   _serialize(): Api.GoogleCloudDialogflowV2Context[] {
     return Object.keys(this.output).map((name): Api.GoogleCloudDialogflowV2Context => {
       const { lifespan, parameters } = this.output[name]!
@@ -140,6 +142,7 @@ export class ContextValues<TContexts extends Contexts> {
     })
   }
 
+  /** @hidden */
   _serializeV1(): ApiV1.DialogflowV1Context[] {
     return Object.keys(this.output).map((name): ApiV1.DialogflowV1Context => {
       const { lifespan, parameters } = this.output[name]!

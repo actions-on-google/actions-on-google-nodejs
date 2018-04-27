@@ -80,6 +80,7 @@ export class ActionsSdkConversation<
    */
   data: TConvData
 
+  /** @public */
   constructor(options: ActionsSdkConversationOptions<TConvData, TUserStorage>) {
     super({
       request: options.body,

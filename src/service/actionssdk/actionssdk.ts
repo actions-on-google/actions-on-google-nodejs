@@ -27,6 +27,7 @@ export interface ActionsSdkIntentHandler<
   TConversation extends ActionsSdkConversation<TConvData, TUserStorage>,
   TArgument extends Argument,
 > {
+  /** @public */
   (
     conv: TConversation,
     /**
@@ -81,6 +82,7 @@ export interface ActionsSdkHandlers<
 export interface ActionsSdkMiddleware<
   TConversationPlugin extends ActionsSdkConversation<{}, {}>
 > {
+  /** @public */
   (
     conv: ActionsSdkConversation<{}, {}>,
   ): (ActionsSdkConversation<{}, {}> & TConversationPlugin) | void
@@ -92,6 +94,7 @@ export interface ActionsSdkApp<
   TUserStorage,
   TConversation extends ActionsSdkConversation<TConvData, TUserStorage>
 > extends ServiceBaseApp {
+  /** @hidden */
   _handlers: ActionsSdkHandlers<TConvData, TUserStorage, TConversation>
 
   /** @public */
@@ -114,6 +117,7 @@ export interface ActionsSdkApp<
     handler: ActionsSdkIntentHandler<TConvData, TUserStorage, TConversation, Argument> | string,
   ): this
 
+  /** @hidden */
   _middlewares: ActionsSdkMiddleware<ActionsSdkConversation<{}, {}>>[]
 
   /** @public */

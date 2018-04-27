@@ -53,6 +53,7 @@ export class Incoming {
   /** @public */
   parsed: IncomingMessage[] = []
 
+  /** @hidden */
   constructor(
     fulfillment:
       Api.GoogleCloudDialogflowV2IntentMessage[] |
@@ -329,6 +330,7 @@ export class Incoming {
    */
   // tslint:disable-next-line:no-any allow constructors with any type of arguments
   get<TMessage extends IncomingMessage>(type: new (...args: any[]) => TMessage): TMessage
+  /** @public */
   get(type: 'string'): string
   // tslint:disable-next-line:no-any allow constructors with any type of arguments
   get<TMessage extends IncomingMessage>(type: 'string' | (new (...args: any[]) => TMessage)) {

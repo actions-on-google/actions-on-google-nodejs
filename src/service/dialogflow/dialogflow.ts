@@ -31,6 +31,7 @@ export interface DialogflowIntentHandler<
   TParameters extends Parameters,
   TArgument extends Argument,
 > {
+  /** @public */
   (
     conv: TConversation,
     params: TParameters,
@@ -97,6 +98,7 @@ export interface DialogflowApp<
   TContexts extends Contexts,
   TConversation extends DialogflowConversation<TConvData, TUserStorage, TContexts>,
 > extends ServiceBaseApp {
+  /** @hidden */
   _handlers: DialogflowHandlers<TConvData, TUserStorage, TContexts, TConversation>
 
   /** @public */

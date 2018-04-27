@@ -18,6 +18,7 @@ import * as Api from '../../api/v2'
 import { Intent, InputValueSpec } from '../conversation'
 import { ProtoAny } from '../../../../common'
 
+/** @hidden */
 export interface Question<
   TIntent extends Intent,
   TValueSpec
@@ -36,6 +37,7 @@ export abstract class Question<
   }
 }
 
+/** @hidden */
 export abstract class SoloQuestion<
   TIntent extends Intent,
   TValueSpec
