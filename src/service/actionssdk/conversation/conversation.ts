@@ -32,6 +32,8 @@ import { Arguments } from './argument'
 import { Device } from './device'
 import { Input } from './input'
 import { JsonObject } from '../../../common'
+import { ServiceBaseApp, AppOptions } from '../../../assistant'
+import { OAuth2Client } from 'google-auth-library'
 
 /** @public */
 export type Intent =
@@ -91,16 +93,36 @@ export interface ConversationResponse {
   expectedIntent?: Api.GoogleActionsV2ExpectedIntent
 }
 
-/** @hidden */
-export interface ConversationOptionsInit<TUserStorage> {
+export interface ConversationOptionsInit<TConvData, TUserStorage> {
+  /** @public */
+  data?: TConvData
+
+  /** @public */
   storage?: TUserStorage
 }
 
 /** @hidden */
-export interface ConversationOptions<TUserStorage> {
-  request: Api.GoogleActionsV2AppRequest
+export interface ConversationBaseOptions<TConvData, TUserStorage> {
+  /** @public */
   headers: Headers
-  init?: ConversationOptionsInit<TUserStorage>
+
+  /** @public */
+  init?: ConversationOptionsInit<TConvData, TUserStorage>
+
+  /** @public */
+  debug?: boolean
+}
+
+/** @hidden */
+export interface ConversationOptions<TUserStorage> {
+  /** @public */
+  request: Api.GoogleActionsV2AppRequest
+
+  /** @public */
+  headers: Headers
+
+  /** @public */
+  init?: ConversationOptionsInit<{}, TUserStorage>
 }
 
 /** @public */
@@ -388,4 +410,19 @@ export interface ExceptionHandler<
 /** @hidden */
 export interface Traversed {
   [key: string]: boolean
+}
+
+/** @hidden */
+export interface ConversationAppOptions<TConvData, TUserStorage> extends AppOptions {
+  /** @public */
+  init?: () => ConversationOptionsInit<TConvData, TUserStorage>
+}
+
+/** @hidden */
+export interface ConversationApp<TConvData, TUserStorage> extends ServiceBaseApp {
+  /** @public */
+  init?: () => ConversationOptionsInit<TConvData, TUserStorage>
+
+  /** @hidden */
+  _client?: OAuth2Client
 }

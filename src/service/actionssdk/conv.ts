@@ -15,30 +15,15 @@
  */
 
 import * as Api from './api/v2'
-import { Conversation, ConversationOptionsInit } from './conversation'
-import { Headers } from '../../framework'
-import { info, debug, stringify } from '../../common'
+import { Conversation, ConversationBaseOptions } from './conversation'
 
 /** @public */
-export interface ActionsSdkConversationOptions<TConvData, TUserStorage> {
+export interface ActionsSdkConversationOptions<
+  TConvData,
+  TUserStorage
+> extends ConversationBaseOptions<TConvData, TUserStorage> {
   /** @public */
   body: Api.GoogleActionsV2AppRequest
-
-  /** @public */
-  headers: Headers
-
-  /** @public */
-  init?: ActionsSdkConversationOptionsInit<TConvData, TUserStorage>
-
-  /** @public */
-  debug?: boolean
-}
-
-export interface ActionsSdkConversationOptionsInit<
-  TConvData,
-  TUserStorage,
-> extends ConversationOptionsInit<TUserStorage> {
-  data?: TConvData
 }
 
 /** @public */
@@ -101,13 +86,6 @@ export class ActionsSdkConversation<
     this.intent = intent
 
     this.data = conversationToken ? JSON.parse(conversationToken).data : ((init && init.data) || {})
-
-    const log = options.debug ? info : debug
-    log('Conversation', stringify(this, {
-      request: null,
-      headers: null,
-      body: null,
-    }))
   }
 
   /** @public */

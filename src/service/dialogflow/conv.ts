@@ -17,9 +17,8 @@
 import * as Api from './api/v2'
 import * as ApiV1 from './api/v1'
 import * as ActionsApi from '../actionssdk/api/v2'
-import { Conversation, ConversationOptionsInit } from '../actionssdk'
-import { Headers } from '../../framework'
-import { info, debug, stringify, ProtoAny, JsonObject } from '../../common'
+import { Conversation, ConversationBaseOptions } from '../actionssdk'
+import { ProtoAny, JsonObject } from '../../common'
 import { Contexts, ContextValues, Parameters } from './context'
 import { Incoming } from './incoming'
 
@@ -47,26 +46,13 @@ export interface PayloadGoogle {
   google: GoogleAssistantResponse
 }
 
-export interface DialogflowConversationOptionsInit<
+/** @public */
+export interface DialogflowConversationOptions<
   TConvData,
   TUserStorage
-> extends ConversationOptionsInit<TUserStorage> {
-  data?: TConvData
-}
-
-/** @public */
-export interface DialogflowConversationOptions<TConvData, TUserStorage> {
+> extends ConversationBaseOptions<TConvData, TUserStorage> {
   /** @public */
   body: Api.GoogleCloudDialogflowV2WebhookRequest | ApiV1.DialogflowV1WebhookRequest
-
-  /** @public */
-  headers: Headers
-
-  /** @public */
-  init?: DialogflowConversationOptionsInit<TConvData, TUserStorage>
-
-  /** @public */
-  debug?: boolean
 }
 
 const isV1 = (
@@ -266,13 +252,6 @@ export class DialogflowConversation<
         this.data = JSON.parse(data)
       }
     }
-
-    const log = options.debug ? info : debug
-    log('Conversation', stringify(this, {
-      request: null,
-      headers: null,
-      body: null,
-    }))
   }
 
   /**

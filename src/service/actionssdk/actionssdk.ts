@@ -15,10 +15,18 @@
  */
 
 import * as Api from './api/v2'
-import { ServiceBaseApp, AppOptions, AppHandler, attach } from '../../assistant'
-import { ExceptionHandler, Argument, Intent, Traversed } from './conversation'
-import { ActionsSdkConversation, ActionsSdkConversationOptionsInit } from './conv'
+import { AppHandler, attach } from '../../assistant'
+import {
+  ExceptionHandler,
+  Argument,
+  Intent,
+  Traversed,
+  ConversationAppOptions,
+  ConversationApp,
+} from './conversation'
+import { ActionsSdkConversation } from './conv'
 import { OAuth2Client } from 'google-auth-library'
+import * as common from '../../common'
 
 /** @public */
 export interface ActionsSdkIntentHandler<
@@ -93,7 +101,7 @@ export interface ActionsSdkApp<
   TConvData,
   TUserStorage,
   TConversation extends ActionsSdkConversation<TConvData, TUserStorage>
-> extends ServiceBaseApp {
+> extends ConversationApp<TConvData, TUserStorage> {
   /** @hidden */
   _handlers: ActionsSdkHandlers<TConvData, TUserStorage, TConversation>
 
@@ -124,9 +132,6 @@ export interface ActionsSdkApp<
   middleware<TConversationPlugin extends ActionsSdkConversation<{}, {}>>(
     middleware: ActionsSdkMiddleware<TConversationPlugin>,
   ): this
-
-  /** @public */
-  init?: () => ActionsSdkConversationOptionsInit<TConvData, TUserStorage>
 
   /** @public */
   verification?: ActionsSdkVerification | string
@@ -179,10 +184,10 @@ export interface ActionsSdkVerification {
 }
 
 /** @public */
-export interface ActionsSdkOptions<TConvData, TUserStorage> extends AppOptions {
-  /** @public */
-  init?: () => ActionsSdkConversationOptionsInit<TConvData, TUserStorage>
-
+export interface ActionsSdkOptions<
+  TConvData,
+  TUserStorage
+> extends ConversationAppOptions<TConvData, TUserStorage> {
   /**
    * Validates whether request is from Google through signature verification.
    * Uses Google-Auth-Library to verify authorization token against given Google Cloud Project ID.
@@ -200,8 +205,6 @@ export interface ActionsSdkOptions<TConvData, TUserStorage> extends AppOptions {
    */
   verification?: ActionsSdkVerification | string
 }
-
-const client = new OAuth2Client()
 
 /**
  * This is the function that creates the app instance which on new requests,
@@ -261,6 +264,7 @@ export const actionssdk: ActionsSdk = <
   },
   init: options.init,
   verification: options.verification,
+  _client: options.verification ? new OAuth2Client() : undefined,
   async handler(
     this: AppHandler & ActionsSdkApp<TConvData, TUserStorage, TConversation>,
     body: Api.GoogleActionsV2AppRequest,
@@ -275,7 +279,7 @@ export const actionssdk: ActionsSdk = <
       } = typeof verification === 'string' ? { project: verification } : verification
       const token = headers['authorization'] as string
       try {
-        await client.verifyIdToken({
+        await this._client!.verifyIdToken({
           idToken: token,
           audience: project,
         })
@@ -298,6 +302,12 @@ export const actionssdk: ActionsSdk = <
     for (const middleware of this._middlewares) {
       conv = (middleware(conv) as ActionsSdkConversation<TConvData, TUserStorage> | void) || conv
     }
+    const log = debug ? common.info : common.debug
+    log('Conversation', common.stringify(conv, {
+      request: null,
+      headers: null,
+      body: null,
+    }))
     const { intent } = conv
     const traversed: Traversed = {}
     let handler: typeof this._handlers.intents[string] = intent

@@ -16,11 +16,17 @@
 
 import * as Api from './api/v2'
 import * as ActionsApi from '../actionssdk/api/v2'
-import { ServiceBaseApp, AppOptions, AppHandler, attach } from '../../assistant'
-import { ExceptionHandler, Traversed, Argument } from '../actionssdk'
-import { toArray } from '../../common'
+import { AppHandler, attach } from '../../assistant'
+import {
+  ExceptionHandler,
+  Traversed,
+  Argument,
+  ConversationApp,
+  ConversationAppOptions,
+} from '../actionssdk'
+import * as common from '../../common'
 import { Contexts, Parameters } from './context'
-import { DialogflowConversation, DialogflowConversationOptionsInit } from './conv'
+import { DialogflowConversation } from './conv'
 
 /** @public */
 export interface DialogflowIntentHandler<
@@ -97,7 +103,7 @@ export interface DialogflowApp<
   TUserStorage,
   TContexts extends Contexts,
   TConversation extends DialogflowConversation<TConvData, TUserStorage, TContexts>,
-> extends ServiceBaseApp {
+> extends ConversationApp<TConvData, TUserStorage> {
   /** @hidden */
   _handlers: DialogflowHandlers<TConvData, TUserStorage, TContexts, TConversation>
 
@@ -163,9 +169,6 @@ export interface DialogflowApp<
   ): this
 
   /** @public */
-  init?: () => DialogflowConversationOptionsInit<TConvData, TUserStorage>
-
-  /** @public */
   verification?: DialogflowVerification | DialogflowVerificationHeaders
 }
 
@@ -203,10 +206,10 @@ export interface DialogflowVerification {
 }
 
 /** @public */
-export interface DialogflowOptions<TConvData, TUserStorage> extends AppOptions {
-  /** @public */
-  init?: () => DialogflowConversationOptionsInit<TConvData, TUserStorage>
-
+export interface DialogflowOptions<
+  TConvData,
+  TUserStorage
+> extends ConversationAppOptions<TConvData, TUserStorage> {
   /**
    * Verifies whether the request comes from Dialogflow.
    * Uses header keys and values to check against ones specified by the developer
@@ -352,7 +355,7 @@ export const dialogflow: Dialogflow = <
           }
         }
         const value = verificationHeaders[key]
-        const checking = toArray(check)
+        const checking = common.toArray(check)
         if (checking.indexOf(value) < 0) {
           return {
             status,
@@ -374,6 +377,12 @@ export const dialogflow: Dialogflow = <
       conv = (middleware(conv) as DialogflowConversation<TConvData, TUserStorage, TContexts> | void)
         || conv
     }
+    const log = debug ? common.info : common.debug
+    log('Conversation', common.stringify(conv, {
+      request: null,
+      headers: null,
+      body: null,
+    }))
     const { intent } = conv
     const traversed: Traversed = {}
     let handler: typeof this._handlers.intents[string] = intent
