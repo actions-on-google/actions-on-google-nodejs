@@ -46,6 +46,9 @@ export class Lambda implements Framework<LambdaHandler> {
       const { status, body } = result
       callback(null, {
         statusCode: status,
+        headers: {
+          'Content-Type': 'application/json; charset=utf-8'
+        },
         body: JSON.stringify(body),
       })
     }
