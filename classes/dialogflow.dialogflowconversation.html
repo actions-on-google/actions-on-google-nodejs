@@ -109,8 +109,6 @@
 						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><a href="dialogflow.dialogflowconversation.html#_raw" class="tsd-kind-icon">_raw</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><a href="dialogflow.dialogflowconversation.html#_responded" class="tsd-kind-icon">_responded</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="dialogflow.dialogflowconversation.html#action" class="tsd-kind-icon">action</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><a href="dialogflow.dialogflowconversation.html#arguments" class="tsd-kind-icon">arguments</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><a href="dialogflow.dialogflowconversation.html#available" class="tsd-kind-icon">available</a></li>
@@ -162,9 +160,9 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Overrides <a href="conversation.conversation-1.html">Conversation</a>.<a href="conversation.conversation-1.html#constructor">constructor</a></p>
+								<p>Overrides Conversation.__constructor</p>
 								<ul>
-									<li>Defined in service/dialogflow/conv.ts:193</li>
+									<li>Defined in service/dialogflow/conv.ts:196</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -182,35 +180,13 @@
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Properties</h2>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited">
-					<a name="_raw" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagOptional">Optional</span> _raw</h3>
-					<div class="tsd-signature tsd-kind-icon">_raw<span class="tsd-signature-symbol">:</span> <a href="../interfaces/common.jsonobject.html" class="tsd-signature-type">JsonObject</a></div>
-					<aside class="tsd-sources">
-						<p>Inherited from <a href="conversation.conversation-1.html">Conversation</a>.<a href="conversation.conversation-1.html#_raw">_raw</a></p>
-						<ul>
-							<li>Defined in service/actionssdk/conversation/conversation.ts:169</li>
-						</ul>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited">
-					<a name="_responded" class="tsd-anchor"></a>
-					<h3>_responded</h3>
-					<div class="tsd-signature tsd-kind-icon">_responded<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> =&nbsp;false</span></div>
-					<aside class="tsd-sources">
-						<p>Inherited from <a href="conversation.conversation-1.html">Conversation</a>.<a href="conversation.conversation-1.html#_responded">_responded</a></p>
-						<ul>
-							<li>Defined in service/actionssdk/conversation/conversation.ts:171</li>
-						</ul>
-					</aside>
-				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
 					<a name="action" class="tsd-anchor"></a>
 					<h3>action</h3>
 					<div class="tsd-signature tsd-kind-icon">action<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in service/dialogflow/conv.ts:106</li>
+							<li>Defined in service/dialogflow/conv.ts:109</li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -235,7 +211,7 @@ app.intent(<span class="hljs-string">'Default Welcome Intent'</span>, conv =&gt;
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="conversation.conversation-1.html">Conversation</a>.<a href="conversation.conversation-1.html#arguments">arguments</a></p>
 						<ul>
-							<li>Defined in service/actionssdk/conversation/conversation.ts:145</li>
+							<li>Defined in service/actionssdk/conversation/conversation.ts:150</li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -248,7 +224,7 @@ app.intent(<span class="hljs-string">'Default Welcome Intent'</span>, conv =&gt;
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="conversation.conversation-1.html">Conversation</a>.<a href="conversation.conversation-1.html#available">available</a></p>
 						<ul>
-							<li>Defined in service/actionssdk/conversation/conversation.ts:119</li>
+							<li>Defined in service/actionssdk/conversation/conversation.ts:124</li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -260,7 +236,7 @@ app.intent(<span class="hljs-string">'Default Welcome Intent'</span>, conv =&gt;
 					<div class="tsd-signature tsd-kind-icon">body<span class="tsd-signature-symbol">:</span> <a href="../interfaces/dialogflow_api_v2.googleclouddialogflowv2webhookrequest.html" class="tsd-signature-type">GoogleCloudDialogflowV2WebhookRequest</a><span class="tsd-signature-symbol"> | </span><a href="../interfaces/dialogflow_api_v1.dialogflowv1webhookrequest.html" class="tsd-signature-type">DialogflowV1WebhookRequest</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in service/dialogflow/conv.ts:91</li>
+							<li>Defined in service/dialogflow/conv.ts:94</li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -272,7 +248,7 @@ app.intent(<span class="hljs-string">'Default Welcome Intent'</span>, conv =&gt;
 					<div class="tsd-signature tsd-kind-icon">contexts<span class="tsd-signature-symbol">:</span> <a href="dialogflow.contextvalues.html" class="tsd-signature-type">ContextValues</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TContexts</span><span class="tsd-signature-symbol">&gt;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in service/dialogflow/conv.ts:156</li>
+							<li>Defined in service/dialogflow/conv.ts:159</li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -284,7 +260,7 @@ app.intent(<span class="hljs-string">'Default Welcome Intent'</span>, conv =&gt;
 					<div class="tsd-signature tsd-kind-icon">data<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">TConvData</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in service/dialogflow/conv.ts:190</li>
+							<li>Defined in service/dialogflow/conv.ts:193</li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -310,7 +286,7 @@ app.intent(<span class="hljs-string">'Default Welcome Intent'</span>, conv =&gt;
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="conversation.conversation-1.html">Conversation</a>.<a href="conversation.conversation-1.html#device">device</a></p>
 						<ul>
-							<li>Defined in service/actionssdk/conversation/conversation.ts:148</li>
+							<li>Defined in service/actionssdk/conversation/conversation.ts:153</li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -323,7 +299,7 @@ app.intent(<span class="hljs-string">'Default Welcome Intent'</span>, conv =&gt;
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="conversation.conversation-1.html">Conversation</a>.<a href="conversation.conversation-1.html#digested">digested</a></p>
 						<ul>
-							<li>Defined in service/actionssdk/conversation/conversation.ts:122</li>
+							<li>Defined in service/actionssdk/conversation/conversation.ts:127</li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -336,7 +312,7 @@ app.intent(<span class="hljs-string">'Default Welcome Intent'</span>, conv =&gt;
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="conversation.conversation-1.html">Conversation</a>.<a href="conversation.conversation-1.html#expectuserresponse">expectUserResponse</a></p>
 						<ul>
-							<li>Defined in service/actionssdk/conversation/conversation.ts:113</li>
+							<li>Defined in service/actionssdk/conversation/conversation.ts:118</li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -349,7 +325,7 @@ app.intent(<span class="hljs-string">'Default Welcome Intent'</span>, conv =&gt;
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="conversation.conversation-1.html">Conversation</a>.<a href="conversation.conversation-1.html#headers">headers</a></p>
 						<ul>
-							<li>Defined in service/actionssdk/conversation/conversation.ts:107</li>
+							<li>Defined in service/actionssdk/conversation/conversation.ts:112</li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -362,7 +338,7 @@ app.intent(<span class="hljs-string">'Default Welcome Intent'</span>, conv =&gt;
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="conversation.conversation-1.html">Conversation</a>.<a href="conversation.conversation-1.html#id">id</a></p>
 						<ul>
-							<li>Defined in service/actionssdk/conversation/conversation.ts:164</li>
+							<li>Defined in service/actionssdk/conversation/conversation.ts:169</li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -387,7 +363,7 @@ app.intent(<span class="hljs-string">'actions.intent.MAIN'</span>, conv =&gt; {
 					<div class="tsd-signature tsd-kind-icon">incoming<span class="tsd-signature-symbol">:</span> <a href="dialogflow.incoming.html" class="tsd-signature-type">Incoming</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in service/dialogflow/conv.ts:159</li>
+							<li>Defined in service/dialogflow/conv.ts:162</li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -400,7 +376,7 @@ app.intent(<span class="hljs-string">'actions.intent.MAIN'</span>, conv =&gt; {
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="conversation.conversation-1.html">Conversation</a>.<a href="conversation.conversation-1.html#input">input</a></p>
 						<ul>
-							<li>Defined in service/actionssdk/conversation/conversation.ts:133</li>
+							<li>Defined in service/actionssdk/conversation/conversation.ts:138</li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -412,7 +388,7 @@ app.intent(<span class="hljs-string">'actions.intent.MAIN'</span>, conv =&gt; {
 					<div class="tsd-signature tsd-kind-icon">intent<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in service/dialogflow/conv.ts:121</li>
+							<li>Defined in service/dialogflow/conv.ts:124</li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -436,7 +412,7 @@ app.intent(<span class="hljs-string">'Default Welcome Intent'</span>, conv =&gt;
 					<div class="tsd-signature tsd-kind-icon">parameters<span class="tsd-signature-symbol">:</span> <a href="../interfaces/dialogflow.parameters.html" class="tsd-signature-type">Parameters</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in service/dialogflow/conv.ts:153</li>
+							<li>Defined in service/dialogflow/conv.ts:156</li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -476,7 +452,7 @@ app.intent(<span class="hljs-string">'Tell Greeting'</span>, conv =&gt; {
 					<div class="tsd-signature tsd-kind-icon">query<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in service/dialogflow/conv.ts:174</li>
+							<li>Defined in service/dialogflow/conv.ts:177</li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -501,7 +477,7 @@ app.intent(<span class="hljs-string">'User Input'</span>, conv =&gt; {
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="conversation.conversation-1.html">Conversation</a>.<a href="conversation.conversation-1.html#request">request</a></p>
 						<ul>
-							<li>Defined in service/actionssdk/conversation/conversation.ts:104</li>
+							<li>Defined in service/actionssdk/conversation/conversation.ts:109</li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -514,7 +490,7 @@ app.intent(<span class="hljs-string">'User Input'</span>, conv =&gt; {
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="conversation.conversation-1.html">Conversation</a>.<a href="conversation.conversation-1.html#responses">responses</a></p>
 						<ul>
-							<li>Defined in service/actionssdk/conversation/conversation.ts:110</li>
+							<li>Defined in service/actionssdk/conversation/conversation.ts:115</li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -527,7 +503,7 @@ app.intent(<span class="hljs-string">'User Input'</span>, conv =&gt; {
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="conversation.conversation-1.html">Conversation</a>.<a href="conversation.conversation-1.html#sandbox">sandbox</a></p>
 						<ul>
-							<li>Defined in service/actionssdk/conversation/conversation.ts:130</li>
+							<li>Defined in service/actionssdk/conversation/conversation.ts:135</li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -545,7 +521,7 @@ app.intent(<span class="hljs-string">'User Input'</span>, conv =&gt; {
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="conversation.conversation-1.html">Conversation</a>.<a href="conversation.conversation-1.html#surface">surface</a></p>
 						<ul>
-							<li>Defined in service/actionssdk/conversation/conversation.ts:116</li>
+							<li>Defined in service/actionssdk/conversation/conversation.ts:121</li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -558,7 +534,7 @@ app.intent(<span class="hljs-string">'User Input'</span>, conv =&gt; {
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="conversation.conversation-1.html">Conversation</a>.<a href="conversation.conversation-1.html#type">type</a></p>
 						<ul>
-							<li>Defined in service/actionssdk/conversation/conversation.ts:167</li>
+							<li>Defined in service/actionssdk/conversation/conversation.ts:172</li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -571,7 +547,7 @@ app.intent(<span class="hljs-string">'User Input'</span>, conv =&gt; {
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="conversation.conversation-1.html">Conversation</a>.<a href="conversation.conversation-1.html#user">user</a></p>
 						<ul>
-							<li>Defined in service/actionssdk/conversation/conversation.ts:142</li>
+							<li>Defined in service/actionssdk/conversation/conversation.ts:147</li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -589,7 +565,7 @@ app.intent(<span class="hljs-string">'User Input'</span>, conv =&gt; {
 					<div class="tsd-signature tsd-kind-icon">version<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in service/dialogflow/conv.ts:193</li>
+							<li>Defined in service/dialogflow/conv.ts:196</li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -609,7 +585,7 @@ app.intent(<span class="hljs-string">'User Input'</span>, conv =&gt; {
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="conversation.conversation-1.html">Conversation</a>.<a href="conversation.conversation-1.html#add">add</a></p>
 								<ul>
-									<li>Defined in service/actionssdk/conversation/conversation.ts:208</li>
+									<li>Defined in service/actionssdk/conversation/conversation.ts:216</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -635,7 +611,7 @@ app.intent(<span class="hljs-string">'User Input'</span>, conv =&gt; {
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="conversation.conversation-1.html">Conversation</a>.<a href="conversation.conversation-1.html#ask">ask</a></p>
 								<ul>
-									<li>Defined in service/actionssdk/conversation/conversation.ts:260</li>
+									<li>Defined in service/actionssdk/conversation/conversation.ts:268</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -702,7 +678,7 @@ app.intent(<span class="hljs-string">'Number Input'</span>, (conv, {num}) =&gt; 
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="conversation.conversation-1.html">Conversation</a>.<a href="conversation.conversation-1.html#close">close</a></p>
 								<ul>
-									<li>Defined in service/actionssdk/conversation/conversation.ts:304</li>
+									<li>Defined in service/actionssdk/conversation/conversation.ts:312</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -767,7 +743,7 @@ app.intent(<span class="hljs-string">'Number Input'</span>, (conv, {num}) =&gt; 
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in service/dialogflow/conv.ts:303</li>
+									<li>Defined in service/dialogflow/conv.ts:306</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -832,7 +808,7 @@ app.intent(<span class="hljs-string">'Default Welcome Intent'</span>, conv =&gt;
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="conversation.conversation-1.html">Conversation</a>.<a href="conversation.conversation-1.html#json">json</a></p>
 								<ul>
-									<li>Defined in service/actionssdk/conversation/conversation.ts:201</li>
+									<li>Defined in service/actionssdk/conversation/conversation.ts:209</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -857,19 +833,19 @@ app.intent(<span class="hljs-string">'Default Welcome Intent'</span>, conv =&gt;
 					<a name="response" class="tsd-anchor"></a>
 					<h3>response</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-						<li class="tsd-signature tsd-kind-icon">response<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/conversation.conversationresponse.html" class="tsd-signature-type">ConversationResponse</a></li>
+						<li class="tsd-signature tsd-kind-icon">response<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">ConversationResponse</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="conversation.conversation-1.html">Conversation</a>.<a href="conversation.conversation-1.html#response">response</a></p>
 								<ul>
-									<li>Defined in service/actionssdk/conversation/conversation.ts:310</li>
+									<li>Defined in service/actionssdk/conversation/conversation.ts:318</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 							</div>
-							<h4 class="tsd-returns-title">Returns <a href="../interfaces/conversation.conversationresponse.html" class="tsd-signature-type">ConversationResponse</a></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">ConversationResponse</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -883,7 +859,7 @@ app.intent(<span class="hljs-string">'Default Welcome Intent'</span>, conv =&gt;
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in service/dialogflow/conv.ts:323</li>
+									<li>Defined in service/dialogflow/conv.ts:326</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -911,9 +887,6 @@ app.intent(<span class="hljs-string">'Default Welcome Intent'</span>, conv =&gt;
 					</li>
 					<li class=" tsd-kind-external-module">
 						<a href="../modules/assistant.html">assistant</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="../modules/common.html">common</a>
 					</li>
 					<li class=" tsd-kind-external-module">
 						<a href="../modules/conversation.html">conversation</a>
@@ -953,12 +926,6 @@ app.intent(<span class="hljs-string">'Default Welcome Intent'</span>, conv =&gt;
 						<ul>
 							<li class=" tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite">
 								<a href="dialogflow.dialogflowconversation.html#constructor" class="tsd-kind-icon">constructor</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited">
-								<a href="dialogflow.dialogflowconversation.html#_raw" class="tsd-kind-icon">_raw</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited">
-								<a href="dialogflow.dialogflowconversation.html#_responded" class="tsd-kind-icon">_responded</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class">
 								<a href="dialogflow.dialogflowconversation.html#action" class="tsd-kind-icon">action</a>
@@ -1076,13 +1043,7 @@ app.intent(<span class="hljs-string">'Default Welcome Intent'</span>, conv =&gt;
 						<a href="../interfaces/dialogflow.dialogflowconversationoptionsinit.html" class="tsd-kind-icon">Dialogflow<wbr>Conversation<wbr>Options<wbr>Init</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-external-module tsd-has-type-parameter">
-						<a href="../interfaces/dialogflow.dialogflowhandlers.html" class="tsd-kind-icon">Dialogflow<wbr>Handlers</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-parent-kind-external-module tsd-has-type-parameter">
 						<a href="../interfaces/dialogflow.dialogflowintenthandler.html" class="tsd-kind-icon">Dialogflow<wbr>Intent<wbr>Handler</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
-						<a href="../interfaces/dialogflow.dialogflowintenthandlers.html" class="tsd-kind-icon">Dialogflow<wbr>Intent<wbr>Handlers</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-external-module tsd-has-type-parameter">
 						<a href="../interfaces/dialogflow.dialogflowmiddleware.html" class="tsd-kind-icon">Dialogflow<wbr>Middleware</a>
@@ -1096,9 +1057,6 @@ app.intent(<span class="hljs-string">'Default Welcome Intent'</span>, conv =&gt;
 					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
 						<a href="../interfaces/dialogflow.dialogflowverificationheaders.html" class="tsd-kind-icon">Dialogflow<wbr>Verification<wbr>Headers</a>
 					</li>
-					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
-						<a href="../interfaces/dialogflow.googleassistantresponse.html" class="tsd-kind-icon">Google<wbr>Assistant<wbr>Response</a>
-					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-external-module tsd-has-type-parameter">
 						<a href="../interfaces/dialogflow.outputcontext.html" class="tsd-kind-icon">Output<wbr>Context</a>
 					</li>
@@ -1107,12 +1065,6 @@ app.intent(<span class="hljs-string">'Default Welcome Intent'</span>, conv =&gt;
 					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
 						<a href="../interfaces/dialogflow.parameters.html" class="tsd-kind-icon">Parameters</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
-						<a href="../interfaces/dialogflow.payloadgoogle.html" class="tsd-kind-icon">Payload<wbr>Google</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
-						<a href="../interfaces/dialogflow.systemintent.html" class="tsd-kind-icon">System<wbr>Intent</a>
 					</li>
 					<li class=" tsd-kind-type-alias tsd-parent-kind-external-module">
 						<a href="../modules/dialogflow.html#incomingmessage" class="tsd-kind-icon">Incoming<wbr>Message</a>
