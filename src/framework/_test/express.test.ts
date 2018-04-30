@@ -17,7 +17,7 @@
 import ava, { RegisterContextual } from 'ava'
 import { Express } from '../express'
 import { JsonObject } from '../../common'
-import { StandardResponse } from '..'
+import { StandardResponse, Headers } from '../framework'
 
 interface AvaContext {
   express: Express
@@ -133,4 +133,42 @@ test('handles error', async t => {
   await (promise as any).catch(() => {})
   t.deepEqual(receivedBody, expectedBody)
   t.is(receivedStatus, expectedStatus)
+})
+
+test('handles valid headers fine', async t => {
+  const expectedHeaders = {
+    header1: 'header2',
+  }
+  const expectedStatus = 123
+  const receivedHeaders: Headers = {}
+  let receivedStatus = -1
+  let promise: Promise<StandardResponse> | null = null
+  t.context.express.handle((body, headers) => {
+    promise = Promise.resolve({
+      body: {},
+      status: expectedStatus,
+      headers: expectedHeaders,
+    })
+    return promise
+  })({
+    body: {},
+    headers: {},
+    get() {},
+    // tslint:disable-next-line:no-any mocking request
+  } as any, {
+    status(status: number) {
+      receivedStatus = status
+      return this
+    },
+    setHeader(key: string, value: string) {
+      receivedHeaders[key] = value
+    },
+    send() {
+      return this
+    },
+    // tslint:disable-next-line:no-any mocking response
+  } as any)
+  await promise
+  t.is(receivedStatus, expectedStatus)
+  t.deepEqual(receivedHeaders, expectedHeaders)
 })

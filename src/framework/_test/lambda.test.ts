@@ -155,3 +155,35 @@ test('handles error', async t => {
   await new Promise(resolve => setTimeout(resolve))
   t.is(receivedError, expectedError)
 })
+
+test('handles valid headers fine', async t => {
+  const expectedHeaders = {
+    header1: 'header2',
+  }
+  const expectedStatus = 123
+  let receivedHeaders: Headers | null = null
+  let receivedStatus = -1
+  let promise: Promise<StandardResponse> | null = null
+  t.context.lambda.handle((body, headers) => {
+    promise = Promise.resolve({
+      body: {},
+      status: expectedStatus,
+      headers: expectedHeaders,
+    })
+    return promise
+  })({
+    body: JSON.stringify({}),
+    headers: {},
+  }, {
+    succeed() {},
+    // tslint:disable-next-line:no-any mocking context
+  } as any, (e: Error, body: JsonObject) => {
+    receivedStatus = body.statusCode
+    receivedHeaders = body.headers
+  })
+  await promise
+  await new Promise(resolve => setTimeout(resolve))
+  // tslint:disable-next-line:no-any change to string even if null
+  t.is(receivedStatus, expectedStatus)
+  t.is(receivedHeaders, expectedHeaders)
+})

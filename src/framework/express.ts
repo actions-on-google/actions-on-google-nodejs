@@ -20,7 +20,7 @@
 
 import { Framework, StandardHandler } from './framework'
 import { Request, Response } from 'express'
-import { error } from '../common'
+import * as common from '../common'
 
 export interface ExpressHandler {
   /** @public */
@@ -32,9 +32,16 @@ export class Express implements Framework<ExpressHandler> {
   handle(standard: StandardHandler) {
     return (request: Request, response: Response) => {
       standard(request.body, request.headers)
-      .then(({ status, body }) => response.status(status).send(body))
+      .then(({ status, body, headers }) => {
+        if (headers) {
+          for (const key in headers) {
+            response.setHeader(key, headers[key]!)
+          }
+        }
+        response.status(status).send(body)
+      })
       .catch((e: Error) => {
-        error(e.stack || e)
+        common.error(e.stack || e)
         response.status(500).send({ error: e.message })
       })
     }

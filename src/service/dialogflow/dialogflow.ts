@@ -412,6 +412,7 @@ export const dialogflow: Dialogflow = <
     }
     return {
       status: 200,
+      headers: {},
       body: conv.serialize(),
     }
   },
