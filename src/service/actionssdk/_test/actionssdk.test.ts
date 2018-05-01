@@ -16,8 +16,8 @@
 
 import test from 'ava'
 
-import {actionssdk} from '../actionssdk'
-import { Conversation } from '..'
+import {actionssdk, ActionsSdkIntentHandler} from '../actionssdk'
+import { Conversation, ActionsSdkConversation, Argument } from '..'
 import * as Api from '../api/v2'
 
 const CONVERSATION_ID = '1234'
@@ -140,4 +140,14 @@ test('middleware is used', t => {
     t.is(result.status, 200)
     t.true(middlewareUsed)
   })
+})
+
+test('app.intent using array sets intent handlers for each', t => {
+  const app = actionssdk()
+  const intents = ['intent1', 'intent2']
+  const handler: ActionsSdkIntentHandler<{}, {}, ActionsSdkConversation, Argument> = conv => {
+  }
+  app.intent(intents, handler)
+  t.is(app._handlers.intents[intents[0]], handler)
+  t.is(app._handlers.intents[intents[1]], handler)
 })

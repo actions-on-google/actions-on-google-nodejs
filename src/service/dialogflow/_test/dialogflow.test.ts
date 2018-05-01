@@ -16,12 +16,18 @@
 
 import ava, { RegisterContextual } from 'ava'
 import { AppHandler } from '../../../assistant'
-import { DialogflowApp, dialogflow, DialogflowMiddleware } from '../dialogflow'
-import { Contexts } from '../context'
+import {
+  dialogflow,
+  DialogflowApp,
+  DialogflowMiddleware,
+  DialogflowIntentHandler,
+} from '../dialogflow'
+import { Contexts, Parameters } from '../context'
 import { DialogflowConversation } from '../conv'
 import * as Api from '../api/v2'
 import * as ActionsApi from '../../actionssdk/api/v2'
 import { clone } from '../../../common'
+import { Argument } from '../../..'
 
 interface AvaContext {
   app: AppHandler & DialogflowApp<{}, {}, Contexts, DialogflowConversation>
@@ -377,4 +383,20 @@ test('app throws error when verification headers is not provided', async t => {
     },
   } as Api.GoogleCloudDialogflowV2WebhookRequest, {})
   t.is(res.body.error, 'A verification header key was not found')
+})
+
+test('app.intent using array sets intent handlers for each', t => {
+  const intents = ['intent1', 'intent2']
+  const handler: DialogflowIntentHandler<
+    {},
+    {},
+    Contexts,
+    DialogflowConversation,
+    Parameters,
+    Argument
+  > = conv => {
+  }
+  t.context.app.intent(intents, handler)
+  t.is(t.context.app._handlers.intents[intents[0]], handler)
+  t.is(t.context.app._handlers.intents[intents[1]], handler)
 })
