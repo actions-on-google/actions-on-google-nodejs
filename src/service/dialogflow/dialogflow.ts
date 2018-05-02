@@ -84,10 +84,21 @@ export interface DialogflowHandlers<
 
 /** @public */
 export interface DialogflowMiddleware<
-  TConversationPlugin extends DialogflowConversation<{}, {}, Contexts>
+  TConversationPlugin extends DialogflowConversation<{}, {}, Contexts>,
+  TConvData,
+  TUserStorage,
+  TContexts extends Contexts = Contexts,
+  Conversation extends DialogflowConversation<TConvData, TUserStorage, TContexts> =
+    DialogflowConversation<TConvData, TUserStorage, TContexts>,
 > {
   (
     conv: DialogflowConversation<{}, {}, Contexts>,
+    app: DialogflowApp<
+      TConvData,
+      TUserStorage,
+      TContexts,
+      Conversation
+    >
   ): (DialogflowConversation<{}, {}, Contexts> & TConversationPlugin) | void
 }
 
@@ -155,11 +166,11 @@ export interface DialogflowApp<
     > | string,
   ): this
 
-  _middlewares: DialogflowMiddleware<DialogflowConversation<{}, {}, Contexts>>[]
+  _middlewares: DialogflowMiddleware<DialogflowConversation<{}, {}, Contexts>, {}, {}, Contexts>[]
 
   /** @public */
   middleware<TConversationPlugin extends DialogflowConversation<{}, {}, Contexts>>(
-    middleware: DialogflowMiddleware<TConversationPlugin>,
+    middleware: DialogflowMiddleware<TConversationPlugin, TConvData, TUserStorage, TContexts>,
   ): this
 
   /** @public */
@@ -371,7 +382,7 @@ export const dialogflow: Dialogflow = <
       debug,
     })
     for (const middleware of this._middlewares) {
-      conv = (middleware(conv) as DialogflowConversation<TConvData, TUserStorage, TContexts> | void)
+      conv = (middleware(conv, this) as DialogflowConversation<TConvData, TUserStorage, TContexts> | void)
         || conv
     }
     const { intent } = conv

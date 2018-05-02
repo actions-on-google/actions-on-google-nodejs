@@ -255,7 +255,10 @@ test('app uses middleware', async t => {
     test(): void
   }
   const middleware: DialogflowMiddleware<
-    TestMiddleware & DialogflowConversation<{}, {}, Contexts>
+    TestMiddleware & DialogflowConversation<{}, {}, Contexts>,
+    {},
+    {},
+    Contexts
   > = conv => Object.assign(conv, {
     test() {
       conv.ask(response)
