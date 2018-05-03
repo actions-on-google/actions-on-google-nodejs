@@ -54,7 +54,7 @@ export type GoogleActionsV2OrdersLineItemType = 'UNSPECIFIED' | 'REGULAR' | 'TAX
 export type GoogleActionsV2OrdersOrderLocationType = 'UNKNOWN' | 'DELIVERY' | 'BUSINESS' | 'ORIGIN' | 'DESTINATION' | 'PICK_UP'
 
 
-export type GoogleActionsV2OrdersOrderUpdateActionType = 'UNKNOWN' | 'VIEW_DETAILS' | 'MODIFY' | 'CANCEL' | 'RETURN' | 'EXCHANGE' | 'EMAIL' | 'CALL' | 'REORDER' | 'REVIEW' | 'CUSTOMER_SERVICE'
+export type GoogleActionsV2OrdersOrderUpdateActionType = 'UNKNOWN' | 'VIEW_DETAILS' | 'MODIFY' | 'CANCEL' | 'RETURN' | 'EXCHANGE' | 'EMAIL' | 'CALL' | 'REORDER' | 'REVIEW' | 'CUSTOMER_SERVICE' | 'FIX_ISSUE'
 
 
 export type GoogleActionsV2OrdersPaymentInfoPaymentType = 'PAYMENT_TYPE_UNSPECIFIED' | 'PAYMENT_CARD' | 'BANK' | 'LOYALTY_PROGRAM' | 'ON_FULFILLMENT' | 'GIFT_CARD'
@@ -808,6 +808,10 @@ export interface GoogleActionsV2OrdersGenericExtension {
 
 export interface GoogleActionsV2OrdersGoogleProvidedPaymentOptions {
   /**
+   * If true, billing address will be returned.
+   */
+  billingAddressRequired?: boolean
+  /**
    * If true, disallow prepaid cards from being used in the transaction.
    */
   prepaidCardDisallowed?: boolean
@@ -1107,6 +1111,11 @@ export interface GoogleActionsV2OrdersPaymentInfo {
 
 export interface GoogleActionsV2OrdersPaymentInfoGoogleProvidedPaymentInstrument {
   /**
+   * If requested by integrator, billing address for the instrument in use
+   * will be included.
+   */
+  billingAddress?: GoogleTypePostalAddress
+  /**
    * Google provided payment instrument.
    */
   instrumentToken?: string
@@ -1164,6 +1173,26 @@ export interface GoogleActionsV2OrdersPaymentOptions {
    * Requirements for Google provided payment instrument.
    */
   googleProvidedOptions?: GoogleActionsV2OrdersGoogleProvidedPaymentOptions
+}
+
+export interface GoogleActionsV2OrdersPresentationOptions {
+  /**
+   * call_to_action can be one of the following values:
+   *
+   * `PLACE_ORDER`: Used for placing an order.
+   * `PAY`: Used for a payment.
+   * `BUY`: Used for a purchase.
+   * `SEND`: Used for a money transfer.
+   * `BOOK`: Used for a booking.
+   * `RESERVE`: Used for reservation.
+   * `SCHEDULE`: Used for scheduling an appointment.
+   * `SUBSCRIBE`: Used for subscription.
+   *
+   * call_to_action refers to the action verb which best describes this order.
+   * This will be used in various places like prompt, suggestion chip etc while
+   * proposing the order to the user.
+   */
+  callToAction?: string
 }
 
 export interface GoogleActionsV2OrdersPrice {
@@ -1519,6 +1548,10 @@ export interface GoogleActionsV2TransactionDecisionValueSpec {
    * is associated with the order.
    */
   paymentOptions?: GoogleActionsV2OrdersPaymentOptions
+  /**
+   * Options used to customize order presentation to the user.
+   */
+  presentationOptions?: GoogleActionsV2OrdersPresentationOptions
   /**
    * The proposed order that's ready for user to approve.
    */
