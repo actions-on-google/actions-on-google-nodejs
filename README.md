@@ -6,7 +6,7 @@ supports both Dialogflow fulfillment and the Actions SDK webhook.
 * [Client Library GitHub repo](https://github.com/actions-on-google/actions-on-google-nodejs)
 * [Client Library reference docs](https://actions-on-google.github.io/actions-on-google-nodejs/)
 * [Actions on Google docs](https://developers.google.com/actions/)
-* [Actions on Google samples](https://github.com/actions-on-google)
+* [Actions on Google samples](https://developers.google.com/actions/samples/)
 
 [![NPM Version](https://img.shields.io/npm/v/actions-on-google.svg)](https://www.npmjs.org/package/actions-on-google)
 [![Build Status](https://travis-ci.org/actions-on-google/actions-on-google-nodejs.svg?branch=master)](https://travis-ci.org/actions-on-google/actions-on-google-nodejs)
