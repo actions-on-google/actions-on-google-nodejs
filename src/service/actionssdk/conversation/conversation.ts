@@ -150,7 +150,7 @@ export class Conversation<TUserStorage> {
 
   /**
    * True if the app is being tested in sandbox mode. Enable sandbox
-   * mode in the (Actions console)[console.actions.google.com] to test
+   * mode in the [Actions console](console.actions.google.com) to test
    * transactions.
    * @public
    */
@@ -193,6 +193,13 @@ export class Conversation<TUserStorage> {
   /** @public */
   type: Api.GoogleActionsV2ConversationType
 
+  /**
+   * Shortcut for
+   * {@link Capabilities|conv.surface.capabilities.has('actions.capability.SCREEN_OUTPUT')}
+   * @public
+   */
+  screen: boolean
+
   /** @hidden */
   _raw?: JsonObject
 
@@ -225,6 +232,8 @@ export class Conversation<TUserStorage> {
     this.id = conversation.conversationId!
 
     this.type = conversation.type!
+
+    this.screen = this.surface.capabilities.has('actions.capability.SCREEN_OUTPUT')
   }
 
   /** @public */
