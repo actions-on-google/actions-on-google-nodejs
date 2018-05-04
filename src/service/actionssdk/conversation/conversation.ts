@@ -425,12 +425,31 @@ export interface Traversed {
 export interface ConversationAppOptions<TConvData, TUserStorage> extends AppOptions {
   /** @public */
   init?: () => ConversationOptionsInit<TConvData, TUserStorage>
+
+  /**
+   * Client ID for User Profile Payload Verification
+   * See {@link Profile#payload|conv.user.profile.payload}
+   * @public
+   */
+  clientId?: string
 }
 
-/** @hidden */
+export interface OAuth2ConfigClient {
+  /** @public */
+  id: string
+}
+
+export interface OAuth2Config {
+  /** @public */
+  client: OAuth2ConfigClient
+}
+
 export interface ConversationApp<TConvData, TUserStorage> extends ServiceBaseApp {
   /** @public */
   init?: () => ConversationOptionsInit<TConvData, TUserStorage>
+
+  /** @public */
+  auth?: OAuth2Config
 
   /** @hidden */
   _client?: OAuth2Client

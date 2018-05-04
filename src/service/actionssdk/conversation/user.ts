@@ -15,6 +15,8 @@
  */
 
 import * as Api from '../api/v2'
+import { OAuth2Client } from 'google-auth-library'
+import { LoginTicket, TokenPayload } from 'google-auth-library/build/src/auth/loginticket'
 
 export class Last {
   /**
@@ -69,6 +71,81 @@ export class Access {
   /** @hidden */
   constructor(user: Api.GoogleActionsV2User) {
     this.token = user.accessToken
+  }
+}
+
+export class Profile {
+  /**
+   * Gets the Profile Payload object encoded in {@link Profile#token|conv.user.profile.token}.
+   * Only retrievable with "Google Sign In" linking type set up for account linking in the console.
+   *
+   * To access just the email in the payload, you can also use {@link User#email|conv.user.email}.
+   *
+   * @example
+   * ```javascript
+   *
+   * // Dialogflow
+   * const app = dialogflow({
+   *   clientId: CLIENT_ID,
+   * })
+   *
+   * app.intent('Default Welcome Intent', conv => {
+   *   conv.ask(new SignIn('To get your account details'))
+   * })
+   *
+   * // Create a Dialogflow intent with the `actions_intent_SIGN_IN` event
+   * app.intent('Get Signin', (conv, params, signin) => {
+   *   if (signin.status === 'OK') {
+   *     const payload = conv.user.profile.payload
+   *     conv.ask(`I got your account details. What do you want to do next?`)
+   *   } else {
+   *     conv.ask(`I won't be able to save your data, but what do you want to do next?`)
+   *   }
+   * })
+   *
+   * // Actions SDK
+   * const app = actionssdk({
+   *   clientId: CLIENT_ID,
+   * })
+   *
+   * app.intent('actions.intent.MAIN', conv => {
+   *   conv.ask(new SignIn('To get your account details'))
+   * })
+   *
+   * app.intent('actions.intent.SIGN_IN', (conv, input, signin) => {
+   *   if (signin.status === 'OK') {
+   *     const payload = conv.user.profile.payload
+   *     conv.ask(`I got your account details. What do you want to do next?`)
+   *   } else {
+   *     conv.ask(`I won't be able to save your data, but what do you want to do next?`)
+   *   }
+   * })
+   * ```
+   *
+   * @public
+   */
+  payload?: TokenPayload
+
+  /**
+   * The `user.idToken` retrieved from account linking.
+   * Only retrievable with "Google Sign In" linking type set up for account linking in the console.
+   * @public
+   */
+  token?: string
+
+  /** @hidden */
+  constructor(user: Api.GoogleActionsV2User) {
+    this.token = user.idToken
+  }
+
+  /** @hidden */
+  async _verify(client: OAuth2Client, id: string) {
+    const login = await client.verifyIdToken({
+      idToken: this.token!,
+      audience: id,
+    }) as LoginTicket
+    this.payload = login.getPayload()
+    return this.payload
   }
 }
 
@@ -133,28 +210,91 @@ export class User<TUserStorage> {
   /** @public */
   access: Access
 
+  /** @public */
+  profile: Profile
+
+  /**
+   * Gets the user profile email.
+   * Only retrievable with "Google Sign In" linking type set up for account linking in the console.
+   *
+   * See {@link Profile#payload|conv.user.profile.payload} for all the payload properties.
+   *
+   * @example
+   * ```javascript
+   *
+   * // Dialogflow
+   * const app = dialogflow({
+   *   clientId: CLIENT_ID,
+   * })
+   *
+   * app.intent('Default Welcome Intent', conv => {
+   *   conv.ask(new SignIn('To get your account details'))
+   * })
+   *
+   * // Create a Dialogflow intent with the `actions_intent_SIGN_IN` event
+   * app.intent('Get Signin', (conv, params, signin) => {
+   *   if (signin.status === 'OK') {
+   *     const email = conv.user.email
+   *     conv.ask(`I got your email as ${email}. What do you want to do next?`)
+   *   } else {
+   *     conv.ask(`I won't be able to save your data, but what do you want to next?`)
+   *   }
+   * })
+   *
+   * // Actions SDK
+   * const app = actionssdk({
+   *   clientId: CLIENT_ID,
+   * })
+   *
+   * app.intent('actions.intent.MAIN', conv => {
+   *   conv.ask(new SignIn('To get your account details'))
+   * })
+   *
+   * app.intent('actions.intent.SIGN_IN', (conv, input, signin) => {
+   *   if (signin.status === 'OK') {
+   *     const email = conv.user.email
+   *     conv.ask(`I got your email as ${email}. What do you want to do next?`)
+   *   } else {
+   *     conv.ask(`I won't be able to save your data, but what do you want to next?`)
+   *   }
+   * })
+   * ```
+   *
+   * @public
+   */
+  email?: string
+
   /** @hidden */
-  constructor(user: Api.GoogleActionsV2User = {}, initial?: TUserStorage) {
-    const { userStorage } = user
+  constructor(public raw: Api.GoogleActionsV2User = {}, initial?: TUserStorage) {
+    const { userStorage } = this.raw
     this.storage = userStorage ? JSON.parse(userStorage).data : (initial || {})
 
-    this.id = user.userId!
-    this.locale = user.locale!
+    this.id = this.raw.userId!
+    this.locale = this.raw.locale!
 
-    this.permissions = user.permissions || []
+    this.permissions = this.raw.permissions || []
 
-    this.last = new Last(user)
+    this.last = new Last(this.raw)
 
-    const profile = user.profile || {}
+    const profile = this.raw.profile || {}
     this.name = new Name(profile)
 
-    this.entitlements = user.packageEntitlements || []
+    this.entitlements = this.raw.packageEntitlements || []
 
-    this.access = new Access(user)
+    this.access = new Access(this.raw)
+
+    this.profile = new Profile(this.raw)
   }
 
   /** @hidden */
   _serialize() {
     return JSON.stringify({ data: this.storage })
+  }
+
+  /** @hidden */
+  async _verifyProfile(client: OAuth2Client, id: string) {
+    const payload = await this.profile._verify(client, id)
+    this.email = payload!.email
+    return payload
   }
 }

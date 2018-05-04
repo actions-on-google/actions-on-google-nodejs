@@ -1413,7 +1413,13 @@ export interface GoogleActionsV2SignInValue {
 }
 
 export interface GoogleActionsV2SignInValueSpec {
-  }
+  /**
+   * The optional context why the app needs to ask the user to sign in, as a
+   * prefix of a prompt for user consent, e.g. \"To track your exercise\", or
+   * \"To check your account balance\".
+   */
+  optContext?: string
+}
 
 export interface GoogleActionsV2SignedData {
   /**
@@ -1813,6 +1819,12 @@ export interface GoogleActionsV2User {
    * account.
    */
   accessToken?: string
+  /**
+   * Token representing the user's identity.
+   * This is a Json web token including encoded profile. The definition is at
+   * https://developers.google.com/identity/protocols/OpenIDConnect#obtainuserinfo.
+   */
+  idToken?: string
   /**
    * The timestamp of the last interaction with this user.
    * This field will be omitted if the user has not interacted with the agent

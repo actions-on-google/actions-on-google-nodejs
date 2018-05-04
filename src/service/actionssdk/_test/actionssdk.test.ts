@@ -19,6 +19,7 @@ import test from 'ava'
 import {actionssdk, ActionsSdkIntentHandler} from '../actionssdk'
 import { Conversation, ActionsSdkConversation, Argument } from '..'
 import * as Api from '../api/v2'
+import { OAuth2Client } from 'google-auth-library'
 
 const CONVERSATION_ID = '1234'
 const USER_ID = 'abcd'
@@ -150,4 +151,19 @@ test('app.intent using array sets intent handlers for each', t => {
   app.intent(intents, handler)
   t.is(app._handlers.intents[intents[0]], handler)
   t.is(app._handlers.intents[intents[1]], handler)
+})
+
+test('auth config is set correctly with clientId', t => {
+  const id = 'test'
+  const app = actionssdk({
+    clientId: id,
+  })
+  t.true(app._client instanceof OAuth2Client)
+  t.is(app.auth!.client.id, id)
+})
+
+test('auth config is not set with no clientId', t => {
+  const app = actionssdk()
+  t.is(typeof app._client, 'undefined')
+  t.is(typeof app.auth, 'undefined')
 })

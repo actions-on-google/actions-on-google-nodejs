@@ -27,6 +27,7 @@ import {
 import * as common from '../../common'
 import { Contexts, Parameters } from './context'
 import { DialogflowConversation } from './conv'
+import { OAuth2Client } from 'google-auth-library'
 
 /** @public */
 export interface DialogflowIntentHandler<
@@ -362,6 +363,12 @@ export const dialogflow: Dialogflow = <
   },
   init: options.init,
   verification: options.verification,
+  _client: options.clientId ? new OAuth2Client(options.clientId) : undefined,
+  auth: options.clientId ? {
+    client: {
+      id: options.clientId,
+    },
+  } : undefined,
   async handler(
     this: AppHandler & DialogflowApp<TConvData, TUserStorage, TContexts, TConversation>,
     body: Api.GoogleCloudDialogflowV2WebhookRequest,
@@ -405,6 +412,9 @@ export const dialogflow: Dialogflow = <
       init: init && init(),
       debug,
     })
+    if (conv.user.profile.token) {
+      await conv.user._verifyProfile(this._client!, this.auth!.client.id)
+    }
     for (const middleware of this._middlewares) {
       conv = (middleware(conv) as DialogflowConversation<TConvData, TUserStorage, TContexts> | void)
         || conv

@@ -39,9 +39,9 @@ export type SignInArgument = Api.GoogleActionsV2SignInValue
  * app.intent('actions.intent.SIGN_IN', (conv, input, signin) => {
  *   if (signin.status === 'OK') {
  *     const access = conv.user.access.token // possibly do something with access token
- *     conv.ask('Great, thanks for signing in!')
+ *     conv.ask('Great, thanks for signing in! What do you want to do next?')
  *   } else {
- *     conv.ask(`I won't be able to save your data, but let's continue!`)
+ *     conv.ask(`I won't be able to save your data, but what do you want to do next?`)
  *   }
  * })
  *
@@ -56,9 +56,9 @@ export type SignInArgument = Api.GoogleActionsV2SignInValue
  * app.intent('Get Signin', (conv, params, signin) => {
  *   if (signin.status === 'OK') {
  *     const access = conv.user.access.token // possibly do something with access token
- *     conv.ask('Great, thanks for signing in!')
+ *     conv.ask('Great, thanks for signing in! What do you want to do next?')
  *   } else {
- *     conv.ask(`I won't be able to save your data, but let's continue!`)
+ *     conv.ask(`I won't be able to save your data, but what do you want to do next?`)
  *   }
  * })
  * ```
@@ -69,10 +69,17 @@ export class SignIn extends SoloQuestion<
   'actions.intent.SIGN_IN',
   Api.GoogleActionsV2SignInValueSpec
 > {
-  /** @public */
-  constructor() {
+  /**
+   * @param context The optional context why the app needs to ask the user to sign in, as a
+   *     prefix of a prompt for user consent, e.g. "To track your exercise", or
+   *     "To check your account balance".
+   * @public
+   */
+  constructor(context?: string) {
     super('actions.intent.SIGN_IN')
 
-    this._data('type.googleapis.com/google.actions.v2.SignInValueSpec')
+    this._data('type.googleapis.com/google.actions.v2.SignInValueSpec', {
+      optContext: context,
+    })
   }
 }
