@@ -105,15 +105,35 @@ export interface ActionsSdkApp<
   /** @hidden */
   _handlers: ActionsSdkHandlers<TConvData, TUserStorage, TConversation>
 
-  /** @public */
+  /**
+   * Sets the IntentHandler to be executed when the fulfillment is called
+   * with a given Actions SDK intent.
+   *
+   * @param intent The Actions SDK intent to match.
+   *     When given an array, sets the IntentHandler for any intent in the array.
+   * @param handler The IntentHandler to be executed when the intent is matched.
+   *     When given a string instead of a function, the intent fulfillment will be redirected
+   *     to the IntentHandler of the redirected intent.
+   * @public
+   */
   intent<TArgument extends Argument>(
-    intent: Intent,
+    intent: Intent | Intent[],
     handler: ActionsSdkIntentHandler<TConvData, TUserStorage, TConversation, TArgument> | Intent,
   ): this
 
-  /** @public */
+  /**
+   * Sets the IntentHandler to be executed when the fulfillment is called
+   * with a given Actions SDK intent.
+   *
+   * @param intent The Actions SDK intent to match.
+   *     When given an array, sets the IntentHandler for any intent in the array.
+   * @param handler The IntentHandler to be executed when the intent is matched.
+   *     When given a string instead of a function, the intent fulfillment will be redirected
+   *     to the IntentHandler of the redirected intent.
+   * @public
+   */
   intent<TArgument extends Argument>(
-    intent: string,
+    intent: string | string[],
     handler: ActionsSdkIntentHandler<TConvData, TUserStorage, TConversation, TArgument> | string,
   ): this
 
@@ -241,10 +261,12 @@ export const actionssdk: ActionsSdk = <
   _middlewares: [],
   intent<TInput>(
     this: ActionsSdkApp<TConvData, TUserStorage, TConversation>,
-    intent: Intent,
+    intents: string | string[],
     handler: ActionsSdkIntentHandler<TConvData, TUserStorage, TConversation, TInput> | string,
   ) {
-    this._handlers.intents[intent] = handler
+    for (const intent of common.toArray(intents)) {
+      this._handlers.intents[intent] = handler
+    }
     return this
   },
   catch(this: ActionsSdkApp<TConvData, TUserStorage, TConversation>, catcher) {

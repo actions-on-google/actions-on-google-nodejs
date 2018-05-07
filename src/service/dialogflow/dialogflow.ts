@@ -107,9 +107,19 @@ export interface DialogflowApp<
   /** @hidden */
   _handlers: DialogflowHandlers<TConvData, TUserStorage, TContexts, TConversation>
 
-  /** @public */
+  /**
+   * Sets the IntentHandler to be execute when the fulfillment is called
+   * with a given Dialogflow intent name.
+   *
+   * @param intent The Dialogflow intent name to match.
+   *     When given an array, sets the IntentHandler for any intent name in the array.
+   * @param handler The IntentHandler to be executed when the intent name is matched.
+   *     When given a string instead of a function, the intent fulfillment will be redirected
+   *     to the IntentHandler of the redirected intent name.
+   * @public
+   */
   intent<TParameters extends Parameters>(
-    intent: string,
+    intent: string | string[],
     handler: DialogflowIntentHandler<
       TConvData,
       TUserStorage,
@@ -120,9 +130,19 @@ export interface DialogflowApp<
     > | string,
   ): this
 
-  /** @public */
+  /**
+   * Sets the IntentHandler to be execute when the fulfillment is called
+   * with a given Dialogflow intent name.
+   *
+   * @param intent The Dialogflow intent name to match.
+   *     When given an array, sets the IntentHandler for any intent name in the array.
+   * @param handler The IntentHandler to be executed when the intent name is matched.
+   *     When given a string instead of a function, the intent fulfillment will be redirected
+   *     to the IntentHandler of the redirected intent name.
+   * @public
+   */
   intent<TArgument extends Argument>(
-    intent: string,
+    intent: string | string[],
     handler: DialogflowIntentHandler<
       TConvData,
       TUserStorage,
@@ -133,9 +153,19 @@ export interface DialogflowApp<
     > | string,
   ): this
 
-  /** @public */
+  /**
+   * Sets the IntentHandler to be execute when the fulfillment is called
+   * with a given Dialogflow intent name.
+   *
+   * @param intent The Dialogflow intent name to match.
+   *     When given an array, sets the IntentHandler for any intent name in the array.
+   * @param handler The IntentHandler to be executed when the intent name is matched.
+   *     When given a string instead of a function, the intent fulfillment will be redirected
+   *     to the IntentHandler of the redirected intent name.
+   * @public
+   */
   intent<TParameters extends Parameters, TArgument extends Argument>(
-    intent: string,
+    intent: string | string[],
     handler: DialogflowIntentHandler<
       TConvData,
       TUserStorage,
@@ -300,7 +330,7 @@ export const dialogflow: Dialogflow = <
   _middlewares: [],
   intent<TParameters extends Parameters, TArgument extends Argument>(
     this: DialogflowApp<TConvData, TUserStorage, TContexts, TConversation>,
-    intent: string,
+    intents: string | string[],
     handler: DialogflowIntentHandler<
       TConvData,
       TUserStorage,
@@ -310,7 +340,9 @@ export const dialogflow: Dialogflow = <
       TArgument
     >,
   ) {
-    this._handlers.intents[intent] = handler
+    for (const intent of common.toArray(intents)) {
+      this._handlers.intents[intent] = handler
+    }
     return this
   },
   catch(this: DialogflowApp<TConvData, TUserStorage, TContexts, TConversation>, catcher) {
