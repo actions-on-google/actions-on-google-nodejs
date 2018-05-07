@@ -67,6 +67,9 @@ export interface StandardResponse {
 
   /** @public */
   body: JsonObject
+
+  /** @public */
+  headers?: Headers
 }
 
 /** @public */

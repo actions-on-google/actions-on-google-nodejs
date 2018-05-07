@@ -15,7 +15,7 @@
  */
 
 import { OmniHandler, StandardHandler, BuiltinFrameworks, builtin } from './framework'
-import { debug, values, stringify, info } from './common'
+import * as common from './common'
 
 /** @public */
 export type AppHandler = OmniHandler & BaseApp
@@ -70,7 +70,7 @@ export const attach = <TService>(
   let app: (BaseApp & TService) | (AppHandler & TService) = Object.assign(create(options), service)
   // tslint:disable-next-line:no-any automatically detect any inputs
   const omni: OmniHandler = (...args: any[]) => {
-    for (const framework of values(app.frameworks)) {
+    for (const framework of common.values(app.frameworks)) {
       if (framework.check(...args)) {
         return framework.handle(app.handler)(...args)
       }
@@ -78,14 +78,17 @@ export const attach = <TService>(
     return app.handler(args[0], args[1])
   }
   app = Object.assign(omni, app)
-  const handler = app.handler.bind(app)
+  const handler: typeof app.handler = app.handler.bind(app)
   const standard: StandardHandler = async (body, headers) => {
-    const log = app.debug ? info : debug
-    log('Request', stringify(body))
-    log('Headers', stringify(headers))
+    const log = app.debug ? common.info : common.debug
+    log('Request', common.stringify(body))
+    log('Headers', common.stringify(headers))
     const response = await handler(body, headers)
-    log('Response', stringify(response.body))
-    log('Status', response.status)
+    if (!response.headers) {
+      response.headers = {}
+    }
+    response.headers['content-type'] = 'application/json; charset=utf-8'
+    log('Response', common.stringify(response))
     return response
   }
   app.handler = standard

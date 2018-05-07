@@ -218,3 +218,39 @@ test('app is callable as an Express request', async t => {
     },
   })
 })
+
+test('app.handler can process requests and response with response headers', async t => {
+  const expectedHeaders = {
+    headers3: 'headers4',
+  }
+  const app = attach({
+    handler: async (body: JsonObject, headers: Headers): Promise<StandardResponse> => {
+      return {
+        body: {
+        },
+        status: 123,
+        headers: expectedHeaders,
+      }
+    },
+  })
+  t.is(typeof app.handler, 'function')
+  const res = await app.handler({}, {})
+  t.is(res.status, 123)
+  t.is(res.headers!.headers3, expectedHeaders.headers3)
+})
+
+test('app.handler adds content-type headers', async t => {
+  const app = attach({
+    handler: async (body: JsonObject, headers: Headers): Promise<StandardResponse> => {
+      return {
+        body: {
+        },
+        status: 123,
+      }
+    },
+  })
+  t.is(typeof app.handler, 'function')
+  const res = await app.handler({}, {})
+  t.is(res.status, 123)
+  t.is(res.headers!['content-type'], 'application/json; charset=utf-8')
+})
