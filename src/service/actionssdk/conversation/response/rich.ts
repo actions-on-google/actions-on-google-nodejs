@@ -16,7 +16,7 @@
 
 import * as Api from '../../api/v2'
 import { SimpleResponse } from './simple'
-import { BasicCard } from './card'
+import { BasicCard, Table } from './card'
 import { BrowseCarousel } from './browse'
 import { MediaResponse } from './media'
 import { OrderUpdate } from './order'
@@ -28,6 +28,7 @@ export type RichResponseItem =
   string |
   SimpleResponse |
   BasicCard |
+  Table |
   BrowseCarousel |
   MediaResponse |
   OrderUpdate |
@@ -137,6 +138,10 @@ export class RichResponse implements Api.GoogleActionsV2RichResponse {
       }
       if (item instanceof BasicCard) {
         this.items!.push({ basicCard: item })
+        continue
+      }
+      if (item instanceof Table) {
+        this.items!.push({ tableCard: item })
         continue
       }
       if (item instanceof BrowseCarousel) {

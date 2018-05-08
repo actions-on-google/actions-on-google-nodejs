@@ -105,6 +105,9 @@ export type GoogleActionsV2UiElementsCarouselSelectImageDisplayOptions = 'DEFAUL
 export type GoogleActionsV2UiElementsOpenUrlActionUrlTypeHint = 'URL_TYPE_HINT_UNSPECIFIED' | 'AMP_CONTENT'
 
 
+export type GoogleActionsV2UiElementsTableCardColumnPropertiesHorizontalAlignment = 'LEADING' | 'CENTER' | 'TRAILING'
+
+
 export type GoogleActionsV2UserPermissions = 'UNSPECIFIED_PERMISSION' | 'NAME' | 'DEVICE_PRECISE_LOCATION' | 'DEVICE_COARSE_LOCATION' | 'UPDATE'
 
 
@@ -1403,6 +1406,10 @@ export interface GoogleActionsV2RichResponseItem {
    * Structured payload to be processed by Google.
    */
   structuredResponse?: GoogleActionsV2StructuredResponse
+  /**
+   * Table card.
+   */
+  tableCard?: GoogleActionsV2UiElementsTableCard
 }
 
 export interface GoogleActionsV2SignInValue {
@@ -1798,6 +1805,71 @@ export interface GoogleActionsV2UiElementsSuggestion {
    * Required
    */
   title?: string
+}
+
+export interface GoogleActionsV2UiElementsTableCard {
+  /**
+   * Buttons.
+   * Currently at most 1 button is supported.
+   * Optional.
+   */
+  buttons?: GoogleActionsV2UiElementsButton[]
+  /**
+   * Headers and alignment of columns.
+   */
+  columnProperties?: GoogleActionsV2UiElementsTableCardColumnProperties[]
+  /**
+   * Image associated with the table. Optional.
+   */
+  image?: GoogleActionsV2UiElementsImage
+  /**
+   * Row data of the table. The first 3 rows are guaranteed to be shown but
+   * others might be cut on certain surfaces. Please test with the simulator to
+   * see which rows will be shown for a given surface. On surfaces that support
+   * the WEB_BROWSER capability, you can point the user to
+   * a web page with more data.
+   */
+  rows?: GoogleActionsV2UiElementsTableCardRow[]
+  /**
+   * Subtitle for the table. Optional.
+   */
+  subtitle?: string
+  /**
+   * Overall title of the table. Optional but must be set if subtitle is set.
+   */
+  title?: string
+}
+
+export interface GoogleActionsV2UiElementsTableCardCell {
+  /**
+   * Text content of the cell.
+   */
+  text?: string
+}
+
+export interface GoogleActionsV2UiElementsTableCardColumnProperties {
+  /**
+   * Header text for the column.
+   */
+  header?: string
+  /**
+   * Horizontal alignment of content w.r.t column. If unspecified, content
+   * will be aligned to the leading edge.
+   */
+  horizontalAlignment?: GoogleActionsV2UiElementsTableCardColumnPropertiesHorizontalAlignment
+}
+
+export interface GoogleActionsV2UiElementsTableCardRow {
+  /**
+   * Cells in this row. The first 3 cells are guaranteed to be shown but
+   * others might be cut on certain surfaces. Please test with the simulator
+   * to see which cells will be shown for a given surface.
+   */
+  cells?: GoogleActionsV2UiElementsTableCardCell[]
+  /**
+   * Indicates whether there should be a divider after each row.
+   */
+  dividerAfter?: boolean
 }
 
 export interface GoogleActionsV2UpdatePermissionValueSpec {
