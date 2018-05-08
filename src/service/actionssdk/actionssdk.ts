@@ -286,7 +286,13 @@ export const actionssdk: ActionsSdk = <
   },
   init: options.init,
   verification: options.verification,
-  _client: options.verification ? new OAuth2Client() : undefined,
+  _client: (options.verification || options.clientId) ?
+    new OAuth2Client(options.clientId) : undefined,
+  auth: options.clientId ? {
+    client: {
+      id: options.clientId,
+    },
+  } : undefined,
   async handler(
     this: AppHandler & ActionsSdkApp<TConvData, TUserStorage, TConversation>,
     body: Api.GoogleActionsV2AppRequest,
@@ -321,6 +327,9 @@ export const actionssdk: ActionsSdk = <
       init: init && init(),
       debug,
     })
+    if (conv.user.profile.token) {
+      await conv.user._verifyProfile(this._client!, this.auth!.client.id)
+    }
     for (const middleware of this._middlewares) {
       conv = (middleware(conv) as ActionsSdkConversation<TConvData, TUserStorage> | void) || conv
     }

@@ -27,7 +27,8 @@ import { DialogflowConversation } from '../conv'
 import * as Api from '../api/v2'
 import * as ActionsApi from '../../actionssdk/api/v2'
 import { clone } from '../../../common'
-import { Argument } from '../../..'
+import { Argument } from '../../actionssdk'
+import { OAuth2Client } from 'google-auth-library'
 
 interface AvaContext {
   app: AppHandler & DialogflowApp<{}, {}, Contexts, DialogflowConversation>
@@ -399,4 +400,19 @@ test('app.intent using array sets intent handlers for each', t => {
   t.context.app.intent(intents, handler)
   t.is(t.context.app._handlers.intents[intents[0]], handler)
   t.is(t.context.app._handlers.intents[intents[1]], handler)
+})
+
+test('auth config is set correctly with clientId', t => {
+  const id = 'test'
+  const app = dialogflow({
+    clientId: id,
+  })
+  t.true(app._client instanceof OAuth2Client)
+  t.is(app.auth!.client.id, id)
+})
+
+test('auth config is not set with no clientId', t => {
+  const app = dialogflow()
+  t.is(typeof app._client, 'undefined')
+  t.is(typeof app.auth, 'undefined')
 })
