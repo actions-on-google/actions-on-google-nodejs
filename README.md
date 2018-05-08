@@ -94,6 +94,16 @@ const functions = require('firebase-functions')
 exports.fulfillment = functions.https.onRequest(app)
 ```
 
+#### Dialogflow Inline Editor
+```javascript
+const functions = require('firebase-functions')
+
+// ... app code here
+
+// name has to be `dialogflowFirebaseFulfillment`
+exports.dialogflowFirebaseFulfillment = functions.https.onRequest(app)
+```
+
 #### Self Hosted Express Server
 ```javascript
 const express = require('express')
