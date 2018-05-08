@@ -90,7 +90,7 @@ export type GoogleActionsV2TransactionDecisionValueUserDecision = 'UNKNOWN_USER_
 export type GoogleActionsV2TransactionRequirementsCheckResultResultType = 'RESULT_TYPE_UNSPECIFIED' | 'OK' | 'USER_ACTION_REQUIRED' | 'ASSISTANT_SURFACE_NOT_SUPPORTED' | 'REGION_NOT_SUPPORTED'
 
 
-export type GoogleActionsV2TriggerContextTimeContextFrequency = 'FREQUENCY_UNSPECIFIED' | 'DAILY'
+export type GoogleActionsV2TriggerContextTimeContextFrequency = 'FREQUENCY_UNSPECIFIED' | 'DAILY' | 'ROUTINES'
 
 
 export type GoogleActionsV2UiElementsBasicCardImageDisplayOptions = 'DEFAULT' | 'WHITE' | 'CROPPED'
@@ -515,6 +515,10 @@ export interface GoogleActionsV2FinalResponse {
    * Rich response when user is not required to provide an input.
    */
   richResponse?: GoogleActionsV2RichResponse
+  /**
+   * Spoken response when user is not required to provide an input.
+   */
+  speechResponse?: GoogleActionsV2SpeechResponse
 }
 
 export interface GoogleActionsV2Input {
@@ -542,6 +546,11 @@ export interface GoogleActionsV2Input {
 }
 
 export interface GoogleActionsV2InputPrompt {
+  /**
+   * Initial prompts asking user to provide an input.
+   * Only a single initial_prompt is supported.
+   */
+  initialPrompts?: GoogleActionsV2SpeechResponse[]
   /**
    * Prompt used to ask user when there is no input from user.
    */
@@ -1391,14 +1400,14 @@ export interface GoogleActionsV2RichResponse {
   /**
    * A list of UI elements which compose the response
    * The items must meet the following requirements:
-   * 1. The first item must be a google.actions.v2.SimpleResponse
-   * 2. At most two google.actions.v2.SimpleResponse
-   * 3. At most one card (e.g. google.actions.v2.ui_elements.BasicCard or
-   *  google.actions.v2.StructuredResponse or
-   *  google.actions.v2.MediaResponse
+   * 1. The first item must be a SimpleResponse
+   * 2. At most two SimpleResponse
+   * 3. At most one card (e.g. BasicCard or
+   *  StructuredResponse or
+   *  MediaResponse
    * 4. Cards may not be used if an actions.intent.OPTION intent is used
-   *  ie google.actions.v2.ui_elements.ListSelect or
-   *     google.actions.v2.ui_elements.CarouselSelect
+   *  ie ListSelect or
+   *     CarouselSelect
    */
   items?: GoogleActionsV2RichResponseItem[]
   /**
@@ -1510,6 +1519,20 @@ export interface GoogleActionsV2SimpleSelectItem {
    * Optional
    */
   title?: string
+}
+
+export interface GoogleActionsV2SpeechResponse {
+  /**
+   * Structured spoken response to the user in the SSML format, e.g.
+   * \"<speak> Say animal name after the sound.  <audio src =
+   * 'https://www.pullstring.com/moo.mps' />, what’s the animal?  </speak>\".
+   * Mutually exclusive with text_to_speech.
+   */
+  ssml?: string
+  /**
+   * Plain text of the speech output, e.g., \"where do you want to go?\"/
+   */
+  textToSpeech?: string
 }
 
 export interface GoogleActionsV2StructuredResponse {
@@ -2024,7 +2047,8 @@ export interface GoogleTypeDate {
    */
   day?: number
   /**
-   * Month of year. Must be from 1 to 12.
+   * Month of year. Must be from 1 to 12, or 0 if specifying a date without a
+   * month.
    */
   month?: number
   /**
