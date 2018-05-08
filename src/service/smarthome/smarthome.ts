@@ -381,8 +381,9 @@ export const smarthome: SmartHome = (options = {}) => attach<SmartHomeApp>({
     const handler = this._intents[intent]
 
     return {
-      body: await handler(body),
       status: 200,
+      headers: {},
+      body: await handler(body),
     }
   },
 }, options)
