@@ -13,33 +13,107 @@ supports both Dialogflow fulfillment and the Actions SDK webhook.
 
 ## Setup Instructions
 
-Install the library with either `npm i actions-on-google` or `yarn add actions-on-google` if you use yarn.
+Install the library with either `npm install actions-on-google` or `yarn add actions-on-google` if you use yarn.
 
 ### Dialogflow
- 1. Import the appropriate service:
-
 ```javascript
-const { dialogflow } = require('actions-on-google')
-```
+// Import the appropriate service and chosen wrappers
 
- 2. Create an instance:
+const {
+  dialogflow,
+  Image,
+} = require('actions-on-google')
 
-```javascript
+// Create an app instance
+
 const app = dialogflow()
+
+// Register handlers for Dialogflow intents
+
+app.intent('Default Welcome Intent', conv => {
+  conv.ask('Hi, how is it going?')
+  conv.ask(`Here's a picture of a cat`)
+  conv.ask(new Image({
+    url: 'https://developers.google.com/web/fundamentals/accessibility/semantics-builtin/imgs/160204193356-01-cat-500.jpg',
+    alt: 'A cat',
+  }))
+})
+
+// Intent in Dialogflow called `Goodbye`
+app.intent('Goodbye', conv => {
+  conv.close('See you later!')
+})
+
+app.intent('Default Fallback Intent', conv => {
+  conv.ask(`I didn't understand. Can you tell me something else?`)
+})
 ```
 
 ### Actions SDK
- 1. Import the appropriate service:
-
 ```javascript
-const { actionssdk } = require('actions-on-google')
-```
+// Import the appropriate service and chosen wrappers
 
- 2. Create an app instance:
+const {
+  actionssdk,
+  Image,
+} = require('actions-on-google')
 
-```javascript
+// Create an app instance
+
 const app = actionssdk()
+
+// Register handlers for Actions SDK intents
+
+app.intent('actions.intent.MAIN', conv => {
+  conv.ask('Hi, how is it going?')
+  conv.ask(`Here's a picture of a cat`)
+  conv.ask(new Image({
+    url: 'https://developers.google.com/web/fundamentals/accessibility/semantics-builtin/imgs/160204193356-01-cat-500.jpg',
+    alt: 'A cat',
+  }))
+})
+
+app.intent('actions.intent.TEXT', (conv, input) => {
+  if (input === 'bye' || input === 'goodbye') {
+    return conv.close('See you later!')
+  }
+  conv.ask(`I didn't understand. Can you tell me something else?`)
+})
 ```
+
+### Frameworks
+
+Export or run for your appropriate framework:
+
+#### Firebase Functions
+``` javascript
+const functions = require('firebase-functions')
+
+// ... app code here
+
+exports.fulfillment = functions.https.onRequest(app)
+```
+
+#### Self Hosted Express Server
+```javascript
+const express = require('express')
+const bodyParser = require('body-parser')
+
+// ... app code here
+
+express().use(bodyParser.json(), app).listen(3000)
+```
+
+#### AWS Lambda API Gateway
+```javascript
+// ... app code here
+
+exports.fulfillment = app
+```
+
+### Next Steps
+
+Take a look at the docs and samples linked at the top to get to know the platform and supported functionalities.
 
 ## Library Development Instructions
 This library uses `yarn` to run commands. Install yarn using instructions from https://yarnpkg.com/en/docs/install or with npm: `npm i -g yarn`.
