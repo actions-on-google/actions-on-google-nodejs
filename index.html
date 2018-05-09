@@ -67,34 +67,106 @@
 					<li><a href="https://github.com/actions-on-google/actions-on-google-nodejs">Client Library GitHub repo</a></li>
 					<li><a href="https://actions-on-google.github.io/actions-on-google-nodejs/">Client Library reference docs</a></li>
 					<li><a href="https://developers.google.com/actions/">Actions on Google docs</a></li>
-					<li><a href="https://github.com/actions-on-google">Actions on Google samples</a></li>
+					<li><a href="https://developers.google.com/actions/samples/">Actions on Google samples</a></li>
 				</ul>
 				<p><a href="https://www.npmjs.org/package/actions-on-google"><img src="https://img.shields.io/npm/v/actions-on-google.svg" alt="NPM Version"></a>
 				<a href="https://travis-ci.org/actions-on-google/actions-on-google-nodejs"><img src="https://travis-ci.org/actions-on-google/actions-on-google-nodejs.svg?branch=master" alt="Build Status"></a></p>
 				<h2 id="setup-instructions">Setup Instructions</h2>
-				<p>Install the library with either <code>npm i actions-on-google</code> or <code>yarn add actions-on-google</code> if you use yarn.</p>
+				<p>Install the library with either <code>npm install actions-on-google</code> or <code>yarn add actions-on-google</code> if you use yarn.</p>
 				<h3 id="dialogflow">Dialogflow</h3>
-				<ol>
-					<li>Import the appropriate service:</li>
-				</ol>
-				<pre><code class="lang-javascript"><span class="hljs-keyword">const</span> { dialogflow } = <span class="hljs-built_in">require</span>(<span class="hljs-string">'actions-on-google'</span>)
-</code></pre>
-				<ol start="2">
-					<li>Create an instance:</li>
-				</ol>
-				<pre><code class="lang-javascript"><span class="hljs-keyword">const</span> app = dialogflow()
+				<pre><code class="lang-javascript"><span class="hljs-comment">// Import the appropriate service and chosen wrappers</span>
+
+<span class="hljs-keyword">const</span> {
+  dialogflow,
+  Image,
+} = <span class="hljs-built_in">require</span>(<span class="hljs-string">'actions-on-google'</span>)
+
+<span class="hljs-comment">// Create an app instance</span>
+
+<span class="hljs-keyword">const</span> app = dialogflow()
+
+<span class="hljs-comment">// Register handlers for Dialogflow intents</span>
+
+app.intent(<span class="hljs-string">'Default Welcome Intent'</span>, conv =&gt; {
+  conv.ask(<span class="hljs-string">'Hi, how is it going?'</span>)
+  conv.ask(<span class="hljs-string">`Here's a picture of a cat`</span>)
+  conv.ask(<span class="hljs-keyword">new</span> Image({
+    <span class="hljs-attr">url</span>: <span class="hljs-string">'https://developers.google.com/web/fundamentals/accessibility/semantics-builtin/imgs/160204193356-01-cat-500.jpg'</span>,
+    <span class="hljs-attr">alt</span>: <span class="hljs-string">'A cat'</span>,
+  }))
+})
+
+<span class="hljs-comment">// Intent in Dialogflow called `Goodbye`</span>
+app.intent(<span class="hljs-string">'Goodbye'</span>, conv =&gt; {
+  conv.close(<span class="hljs-string">'See you later!'</span>)
+})
+
+app.intent(<span class="hljs-string">'Default Fallback Intent'</span>, conv =&gt; {
+  conv.ask(<span class="hljs-string">`I didn't understand. Can you tell me something else?`</span>)
+})
 </code></pre>
 				<h3 id="actions-sdk">Actions SDK</h3>
-				<ol>
-					<li>Import the appropriate service:</li>
-				</ol>
-				<pre><code class="lang-javascript"><span class="hljs-keyword">const</span> { actionssdk } = <span class="hljs-built_in">require</span>(<span class="hljs-string">'actions-on-google'</span>)
+				<pre><code class="lang-javascript"><span class="hljs-comment">// Import the appropriate service and chosen wrappers</span>
+
+<span class="hljs-keyword">const</span> {
+  actionssdk,
+  Image,
+} = <span class="hljs-built_in">require</span>(<span class="hljs-string">'actions-on-google'</span>)
+
+<span class="hljs-comment">// Create an app instance</span>
+
+<span class="hljs-keyword">const</span> app = actionssdk()
+
+<span class="hljs-comment">// Register handlers for Actions SDK intents</span>
+
+app.intent(<span class="hljs-string">'actions.intent.MAIN'</span>, conv =&gt; {
+  conv.ask(<span class="hljs-string">'Hi, how is it going?'</span>)
+  conv.ask(<span class="hljs-string">`Here's a picture of a cat`</span>)
+  conv.ask(<span class="hljs-keyword">new</span> Image({
+    <span class="hljs-attr">url</span>: <span class="hljs-string">'https://developers.google.com/web/fundamentals/accessibility/semantics-builtin/imgs/160204193356-01-cat-500.jpg'</span>,
+    <span class="hljs-attr">alt</span>: <span class="hljs-string">'A cat'</span>,
+  }))
+})
+
+app.intent(<span class="hljs-string">'actions.intent.TEXT'</span>, (conv, input) =&gt; {
+  <span class="hljs-keyword">if</span> (input === <span class="hljs-string">'bye'</span> || input === <span class="hljs-string">'goodbye'</span>) {
+    <span class="hljs-keyword">return</span> conv.close(<span class="hljs-string">'See you later!'</span>)
+  }
+  conv.ask(<span class="hljs-string">`I didn't understand. Can you tell me something else?`</span>)
+})
 </code></pre>
-				<ol start="2">
-					<li>Create an app instance:</li>
-				</ol>
-				<pre><code class="lang-javascript"><span class="hljs-keyword">const</span> app = actionssdk()
+				<h3 id="frameworks">Frameworks</h3>
+				<p>Export or run for your appropriate framework:</p>
+				<h4 id="firebase-functions">Firebase Functions</h4>
+				<pre><code class="lang-javascript"><span class="hljs-keyword">const</span> functions = <span class="hljs-built_in">require</span>(<span class="hljs-string">'firebase-functions'</span>)
+
+<span class="hljs-comment">// ... app code here</span>
+
+exports.fulfillment = functions.https.onRequest(app)
 </code></pre>
+				<h4 id="dialogflow-inline-editor">Dialogflow Inline Editor</h4>
+				<pre><code class="lang-javascript"><span class="hljs-keyword">const</span> functions = <span class="hljs-built_in">require</span>(<span class="hljs-string">'firebase-functions'</span>)
+
+<span class="hljs-comment">// ... app code here</span>
+
+<span class="hljs-comment">// name has to be `dialogflowFirebaseFulfillment`</span>
+exports.dialogflowFirebaseFulfillment = functions.https.onRequest(app)
+</code></pre>
+				<h4 id="self-hosted-express-server">Self Hosted Express Server</h4>
+				<pre><code class="lang-javascript"><span class="hljs-keyword">const</span> express = <span class="hljs-built_in">require</span>(<span class="hljs-string">'express'</span>)
+<span class="hljs-keyword">const</span> bodyParser = <span class="hljs-built_in">require</span>(<span class="hljs-string">'body-parser'</span>)
+
+<span class="hljs-comment">// ... app code here</span>
+
+express().use(bodyParser.json(), app).listen(<span class="hljs-number">3000</span>)
+</code></pre>
+				<h4 id="aws-lambda-api-gateway">AWS Lambda API Gateway</h4>
+				<pre><code class="lang-javascript"><span class="hljs-comment">// ... app code here</span>
+
+exports.fulfillment = app
+</code></pre>
+				<h3 id="next-steps">Next Steps</h3>
+				<p>Take a look at the docs and samples linked at the top to get to know the platform and supported functionalities.</p>
 				<h2 id="library-development-instructions">Library Development Instructions</h2>
 				<p>This library uses <code>yarn</code> to run commands. Install yarn using instructions from <a href="https://yarnpkg.com/en/docs/install">https://yarnpkg.com/en/docs/install</a> or with npm: <code>npm i -g yarn</code>.</p>
 				<p>Install the library dependencies with <code>yarn</code>. If you want to run any of the sample apps, follow the instructions in the sample README.</p>
@@ -162,6 +234,12 @@
 					</li>
 					<li class=" tsd-kind-external-module">
 						<a href="modules/framework.html">framework</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/smarthome.html">smarthome</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/smarthome_api_v1.html">smarthome/api/v1</a>
 					</li>
 				</ul>
 			</nav>

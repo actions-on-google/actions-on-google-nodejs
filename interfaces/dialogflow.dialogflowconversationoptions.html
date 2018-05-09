@@ -84,7 +84,12 @@
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="target">DialogflowConversationOptions</span>
+						<span class="tsd-signature-type">ConversationBaseOptions</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TConvData</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TUserStorage</span><span class="tsd-signature-symbol">&gt;</span>
+						<ul class="tsd-hierarchy">
+							<li>
+								<span class="target">DialogflowConversationOptions</span>
+							</li>
+						</ul>
 					</li>
 				</ul>
 			</section>
@@ -96,9 +101,9 @@
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="dialogflow.dialogflowconversationoptions.html#body" class="tsd-kind-icon">body</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="dialogflow.dialogflowconversationoptions.html#debug" class="tsd-kind-icon">debug</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="dialogflow.dialogflowconversationoptions.html#headers" class="tsd-kind-icon">headers</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="dialogflow.dialogflowconversationoptions.html#init" class="tsd-kind-icon">init</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="dialogflow.dialogflowconversationoptions.html#debug" class="tsd-kind-icon">debug</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="dialogflow.dialogflowconversationoptions.html#headers" class="tsd-kind-icon">headers</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="dialogflow.dialogflowconversationoptions.html#init" class="tsd-kind-icon">init</a></li>
 							</ul>
 						</section>
 					</div>
@@ -112,43 +117,46 @@
 					<div class="tsd-signature tsd-kind-icon">body<span class="tsd-signature-symbol">:</span> <a href="dialogflow_api_v2.googleclouddialogflowv2webhookrequest.html" class="tsd-signature-type">GoogleCloudDialogflowV2WebhookRequest</a><span class="tsd-signature-symbol"> | </span><a href="dialogflow_api_v1.dialogflowv1webhookrequest.html" class="tsd-signature-type">DialogflowV1WebhookRequest</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in service/dialogflow/conv.ts:60</li>
+							<li>Defined in <a href="https://github.com/actions-on-google/actions-on-google-nodejs/blob/d7ef56e/src/service/dialogflow/conv.ts#L55">service/dialogflow/conv.ts:55</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 					</div>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
 					<a name="debug" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagOptional">Optional</span> debug</h3>
 					<div class="tsd-signature tsd-kind-icon">debug<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span></div>
 					<aside class="tsd-sources">
+						<p>Inherited from ConversationBaseOptions.debug</p>
 						<ul>
-							<li>Defined in service/dialogflow/conv.ts:69</li>
+							<li>Defined in <a href="https://github.com/actions-on-google/actions-on-google-nodejs/blob/d7ef56e/src/service/actionssdk/conversation/conversation.ts#L113">service/actionssdk/conversation/conversation.ts:113</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 					</div>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
 					<a name="headers" class="tsd-anchor"></a>
 					<h3>headers</h3>
 					<div class="tsd-signature tsd-kind-icon">headers<span class="tsd-signature-symbol">:</span> <a href="framework.headers.html" class="tsd-signature-type">Headers</a></div>
 					<aside class="tsd-sources">
+						<p>Inherited from ConversationBaseOptions.headers</p>
 						<ul>
-							<li>Defined in service/dialogflow/conv.ts:63</li>
+							<li>Defined in <a href="https://github.com/actions-on-google/actions-on-google-nodejs/blob/d7ef56e/src/service/actionssdk/conversation/conversation.ts#L107">service/actionssdk/conversation/conversation.ts:107</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 					</div>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
 					<a name="init" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagOptional">Optional</span> init</h3>
-					<div class="tsd-signature tsd-kind-icon">init<span class="tsd-signature-symbol">:</span> <a href="dialogflow.dialogflowconversationoptionsinit.html" class="tsd-signature-type">DialogflowConversationOptionsInit</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TConvData</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TUserStorage</span><span class="tsd-signature-symbol">&gt;</span></div>
+					<div class="tsd-signature tsd-kind-icon">init<span class="tsd-signature-symbol">:</span> <a href="conversation.conversationoptionsinit.html" class="tsd-signature-type">ConversationOptionsInit</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TConvData</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TUserStorage</span><span class="tsd-signature-symbol">&gt;</span></div>
 					<aside class="tsd-sources">
+						<p>Inherited from ConversationBaseOptions.init</p>
 						<ul>
-							<li>Defined in service/dialogflow/conv.ts:66</li>
+							<li>Defined in <a href="https://github.com/actions-on-google/actions-on-google-nodejs/blob/d7ef56e/src/service/actionssdk/conversation/conversation.ts#L110">service/actionssdk/conversation/conversation.ts:110</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -195,6 +203,12 @@
 					<li class=" tsd-kind-external-module">
 						<a href="../modules/framework.html">framework</a>
 					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="../modules/smarthome.html">smarthome</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="../modules/smarthome_api_v1.html">smarthome/api/v1</a>
+					</li>
 				</ul>
 			</nav>
 			<nav class="tsd-navigation secondary menu-sticky">
@@ -228,22 +242,19 @@
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
 								<a href="dialogflow.dialogflowconversationoptions.html#body" class="tsd-kind-icon">body</a>
 							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
+							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
 								<a href="dialogflow.dialogflowconversationoptions.html#debug" class="tsd-kind-icon">debug</a>
 							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
+							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
 								<a href="dialogflow.dialogflowconversationoptions.html#headers" class="tsd-kind-icon">headers</a>
 							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
+							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
 								<a href="dialogflow.dialogflowconversationoptions.html#init" class="tsd-kind-icon">init</a>
 							</li>
 						</ul>
 					</li>
 				</ul>
 				<ul class="after-current">
-					<li class=" tsd-kind-interface tsd-parent-kind-external-module tsd-has-type-parameter">
-						<a href="dialogflow.dialogflowconversationoptionsinit.html" class="tsd-kind-icon">Dialogflow<wbr>Conversation<wbr>Options<wbr>Init</a>
-					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-external-module tsd-has-type-parameter">
 						<a href="dialogflow.dialogflowintenthandler.html" class="tsd-kind-icon">Dialogflow<wbr>Intent<wbr>Handler</a>
 					</li>

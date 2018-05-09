@@ -90,7 +90,7 @@
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="tsd-signature-type">ServiceBaseApp</span>
+						<a href="conversation.conversationapp.html" class="tsd-signature-type">ConversationApp</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TConvData</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TUserStorage</span><span class="tsd-signature-symbol">&gt;</span>
 						<ul class="tsd-hierarchy">
 							<li>
 								<span class="target">DialogflowApp</span>
@@ -107,8 +107,9 @@
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="dialogflow.dialogflowapp.html#_middlewares" class="tsd-kind-icon">_middlewares</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="dialogflow.dialogflowapp.html#auth" class="tsd-kind-icon">auth</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="dialogflow.dialogflowapp.html#handler" class="tsd-kind-icon">handler</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="dialogflow.dialogflowapp.html#init" class="tsd-kind-icon">init</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="dialogflow.dialogflowapp.html#init" class="tsd-kind-icon">init</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="dialogflow.dialogflowapp.html#verification" class="tsd-kind-icon">verification</a></li>
 							</ul>
 						</section>
@@ -132,9 +133,22 @@
 					<div class="tsd-signature tsd-kind-icon">_middlewares<span class="tsd-signature-symbol">:</span> <a href="dialogflow.dialogflowmiddleware.html" class="tsd-signature-type">DialogflowMiddleware</a><span class="tsd-signature-symbol">&lt;</span><a href="../classes/dialogflow.dialogflowconversation.html" class="tsd-signature-type">DialogflowConversation</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">__type</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">__type</span><span class="tsd-signature-symbol">, </span><a href="dialogflow.contexts.html" class="tsd-signature-type">Contexts</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">[]</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in service/dialogflow/dialogflow.ts:158</li>
+							<li>Defined in <a href="https://github.com/actions-on-google/actions-on-google-nodejs/blob/d7ef56e/src/service/dialogflow/dialogflow.ts#L195">service/dialogflow/dialogflow.ts:195</a></li>
 						</ul>
 					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+					<a name="auth" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> auth</h3>
+					<div class="tsd-signature tsd-kind-icon">auth<span class="tsd-signature-symbol">:</span> <a href="conversation.oauth2config.html" class="tsd-signature-type">OAuth2Config</a></div>
+					<aside class="tsd-sources">
+						<p>Inherited from <a href="conversation.conversationapp.html">ConversationApp</a>.<a href="conversation.conversationapp.html#auth">auth</a></p>
+						<ul>
+							<li>Defined in <a href="https://github.com/actions-on-google/actions-on-google-nodejs/blob/d7ef56e/src/service/actionssdk/conversation/conversation.ts#L452">service/actionssdk/conversation/conversation.ts:452</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
 					<a name="handler" class="tsd-anchor"></a>
@@ -143,19 +157,20 @@
 					<aside class="tsd-sources">
 						<p>Inherited from ServiceBaseApp.handler</p>
 						<ul>
-							<li>Defined in assistant.ts:32</li>
+							<li>Defined in <a href="https://github.com/actions-on-google/actions-on-google-nodejs/blob/d7ef56e/src/assistant.ts#L32">assistant.ts:32</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 					</div>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
 					<a name="init" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagOptional">Optional</span> init</h3>
 					<div class="tsd-signature tsd-kind-icon">init<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">function</span></div>
 					<aside class="tsd-sources">
+						<p>Inherited from <a href="conversation.conversationapp.html">ConversationApp</a>.<a href="conversation.conversationapp.html#init">init</a></p>
 						<ul>
-							<li>Defined in service/dialogflow/dialogflow.ts:166</li>
+							<li>Defined in <a href="https://github.com/actions-on-google/actions-on-google-nodejs/blob/d7ef56e/src/service/actionssdk/conversation/conversation.ts#L449">service/actionssdk/conversation/conversation.ts:449</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -167,7 +182,7 @@
 					<div class="tsd-signature tsd-kind-icon">verification<span class="tsd-signature-symbol">:</span> <a href="dialogflow.dialogflowverification.html" class="tsd-signature-type">DialogflowVerification</a><span class="tsd-signature-symbol"> | </span><a href="dialogflow.dialogflowverificationheaders.html" class="tsd-signature-type">DialogflowVerificationHeaders</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in service/dialogflow/dialogflow.ts:169</li>
+							<li>Defined in <a href="https://github.com/actions-on-google/actions-on-google-nodejs/blob/d7ef56e/src/service/dialogflow/dialogflow.ts#L203">service/dialogflow/dialogflow.ts:203</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -186,7 +201,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in service/dialogflow/dialogflow.ts:144</li>
+									<li>Defined in <a href="https://github.com/actions-on-google/actions-on-google-nodejs/blob/d7ef56e/src/service/dialogflow/dialogflow.ts#L181">service/dialogflow/dialogflow.ts:181</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -211,7 +226,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in service/dialogflow/dialogflow.ts:147</li>
+									<li>Defined in <a href="https://github.com/actions-on-google/actions-on-google-nodejs/blob/d7ef56e/src/service/dialogflow/dialogflow.ts#L184">service/dialogflow/dialogflow.ts:184</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -230,18 +245,22 @@
 					<a name="intent" class="tsd-anchor"></a>
 					<h3>intent</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface tsd-has-type-parameter">
-						<li class="tsd-signature tsd-kind-icon">intent&lt;TParameters&gt;<span class="tsd-signature-symbol">(</span>intent<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, handler<span class="tsd-signature-symbol">: </span><a href="dialogflow.dialogflowintenthandler.html" class="tsd-signature-type">DialogflowIntentHandler</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TConvData</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TUserStorage</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TContexts</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TConversation</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TParameters</span><span class="tsd-signature-symbol">, </span><a href="../modules/conversation_argument.html#argument" class="tsd-signature-type">Argument</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">this</span></li>
-						<li class="tsd-signature tsd-kind-icon">intent&lt;TArgument&gt;<span class="tsd-signature-symbol">(</span>intent<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, handler<span class="tsd-signature-symbol">: </span><a href="dialogflow.dialogflowintenthandler.html" class="tsd-signature-type">DialogflowIntentHandler</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TConvData</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TUserStorage</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TContexts</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TConversation</span><span class="tsd-signature-symbol">, </span><a href="dialogflow.parameters.html" class="tsd-signature-type">Parameters</a><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TArgument</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">this</span></li>
-						<li class="tsd-signature tsd-kind-icon">intent&lt;TParameters, TArgument&gt;<span class="tsd-signature-symbol">(</span>intent<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, handler<span class="tsd-signature-symbol">: </span><a href="dialogflow.dialogflowintenthandler.html" class="tsd-signature-type">DialogflowIntentHandler</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TConvData</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TUserStorage</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TContexts</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TConversation</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TParameters</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TArgument</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">this</span></li>
+						<li class="tsd-signature tsd-kind-icon">intent&lt;TParameters&gt;<span class="tsd-signature-symbol">(</span>intent<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span>, handler<span class="tsd-signature-symbol">: </span><a href="dialogflow.dialogflowintenthandler.html" class="tsd-signature-type">DialogflowIntentHandler</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TConvData</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TUserStorage</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TContexts</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TConversation</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TParameters</span><span class="tsd-signature-symbol">, </span><a href="../modules/conversation_argument.html#argument" class="tsd-signature-type">Argument</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">this</span></li>
+						<li class="tsd-signature tsd-kind-icon">intent&lt;TArgument&gt;<span class="tsd-signature-symbol">(</span>intent<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span>, handler<span class="tsd-signature-symbol">: </span><a href="dialogflow.dialogflowintenthandler.html" class="tsd-signature-type">DialogflowIntentHandler</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TConvData</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TUserStorage</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TContexts</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TConversation</span><span class="tsd-signature-symbol">, </span><a href="dialogflow.parameters.html" class="tsd-signature-type">Parameters</a><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TArgument</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">this</span></li>
+						<li class="tsd-signature tsd-kind-icon">intent&lt;TParameters, TArgument&gt;<span class="tsd-signature-symbol">(</span>intent<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span>, handler<span class="tsd-signature-symbol">: </span><a href="dialogflow.dialogflowintenthandler.html" class="tsd-signature-type">DialogflowIntentHandler</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TConvData</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TUserStorage</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TContexts</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TConversation</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TParameters</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TArgument</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">this</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in service/dialogflow/dialogflow.ts:105</li>
+									<li>Defined in <a href="https://github.com/actions-on-google/actions-on-google-nodejs/blob/d7ef56e/src/service/dialogflow/dialogflow.ts#L122">service/dialogflow/dialogflow.ts:122</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Sets the IntentHandler to be execute when the fulfillment is called
+									with a given Dialogflow intent name.</p>
+								</div>
 							</div>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
 							<ul class="tsd-type-parameters">
@@ -252,10 +271,19 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>intent: <span class="tsd-signature-type">string</span></h5>
+									<h5>intent: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The Dialogflow intent name to match.
+										When given an array, sets the IntentHandler for any intent name in the array.</p>
+									</div>
 								</li>
 								<li>
 									<h5>handler: <a href="dialogflow.dialogflowintenthandler.html" class="tsd-signature-type">DialogflowIntentHandler</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TConvData</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TUserStorage</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TContexts</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TConversation</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TParameters</span><span class="tsd-signature-symbol">, </span><a href="../modules/conversation_argument.html#argument" class="tsd-signature-type">Argument</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The IntentHandler to be executed when the intent name is matched.
+											When given a string instead of a function, the intent fulfillment will be redirected
+										to the IntentHandler of the redirected intent name.</p>
+									</div>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">this</span></h4>
@@ -263,10 +291,14 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in service/dialogflow/dialogflow.ts:118</li>
+									<li>Defined in <a href="https://github.com/actions-on-google/actions-on-google-nodejs/blob/d7ef56e/src/service/dialogflow/dialogflow.ts#L145">service/dialogflow/dialogflow.ts:145</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Sets the IntentHandler to be execute when the fulfillment is called
+									with a given Dialogflow intent name.</p>
+								</div>
 							</div>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
 							<ul class="tsd-type-parameters">
@@ -277,10 +309,19 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>intent: <span class="tsd-signature-type">string</span></h5>
+									<h5>intent: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The Dialogflow intent name to match.
+										When given an array, sets the IntentHandler for any intent name in the array.</p>
+									</div>
 								</li>
 								<li>
 									<h5>handler: <a href="dialogflow.dialogflowintenthandler.html" class="tsd-signature-type">DialogflowIntentHandler</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TConvData</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TUserStorage</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TContexts</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TConversation</span><span class="tsd-signature-symbol">, </span><a href="dialogflow.parameters.html" class="tsd-signature-type">Parameters</a><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TArgument</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The IntentHandler to be executed when the intent name is matched.
+											When given a string instead of a function, the intent fulfillment will be redirected
+										to the IntentHandler of the redirected intent name.</p>
+									</div>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">this</span></h4>
@@ -288,10 +329,14 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in service/dialogflow/dialogflow.ts:131</li>
+									<li>Defined in <a href="https://github.com/actions-on-google/actions-on-google-nodejs/blob/d7ef56e/src/service/dialogflow/dialogflow.ts#L168">service/dialogflow/dialogflow.ts:168</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Sets the IntentHandler to be execute when the fulfillment is called
+									with a given Dialogflow intent name.</p>
+								</div>
 							</div>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
 							<ul class="tsd-type-parameters">
@@ -305,10 +350,19 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>intent: <span class="tsd-signature-type">string</span></h5>
+									<h5>intent: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The Dialogflow intent name to match.
+										When given an array, sets the IntentHandler for any intent name in the array.</p>
+									</div>
 								</li>
 								<li>
 									<h5>handler: <a href="dialogflow.dialogflowintenthandler.html" class="tsd-signature-type">DialogflowIntentHandler</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TConvData</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TUserStorage</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TContexts</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TConversation</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TParameters</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TArgument</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The IntentHandler to be executed when the intent name is matched.
+											When given a string instead of a function, the intent fulfillment will be redirected
+										to the IntentHandler of the redirected intent name.</p>
+									</div>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">this</span></h4>
@@ -325,7 +379,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in service/dialogflow/dialogflow.ts:161</li>
+									<li>Defined in <a href="https://github.com/actions-on-google/actions-on-google-nodejs/blob/d7ef56e/src/service/dialogflow/dialogflow.ts#L198">service/dialogflow/dialogflow.ts:198</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -387,6 +441,12 @@
 					<li class=" tsd-kind-external-module">
 						<a href="../modules/framework.html">framework</a>
 					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="../modules/smarthome.html">smarthome</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="../modules/smarthome_api_v1.html">smarthome/api/v1</a>
+					</li>
 				</ul>
 			</nav>
 			<nav class="tsd-navigation secondary menu-sticky">
@@ -418,9 +478,12 @@
 								<a href="dialogflow.dialogflowapp.html#_middlewares" class="tsd-kind-icon">_middlewares</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+								<a href="dialogflow.dialogflowapp.html#auth" class="tsd-kind-icon">auth</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
 								<a href="dialogflow.dialogflowapp.html#handler" class="tsd-kind-icon">handler</a>
 							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
+							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
 								<a href="dialogflow.dialogflowapp.html#init" class="tsd-kind-icon">init</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
@@ -444,9 +507,6 @@
 				<ul class="after-current">
 					<li class=" tsd-kind-interface tsd-parent-kind-external-module tsd-has-type-parameter">
 						<a href="dialogflow.dialogflowconversationoptions.html" class="tsd-kind-icon">Dialogflow<wbr>Conversation<wbr>Options</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-parent-kind-external-module tsd-has-type-parameter">
-						<a href="dialogflow.dialogflowconversationoptionsinit.html" class="tsd-kind-icon">Dialogflow<wbr>Conversation<wbr>Options<wbr>Init</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-external-module tsd-has-type-parameter">
 						<a href="dialogflow.dialogflowintenthandler.html" class="tsd-kind-icon">Dialogflow<wbr>Intent<wbr>Handler</a>

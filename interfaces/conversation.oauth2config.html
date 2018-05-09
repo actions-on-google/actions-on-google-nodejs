@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>ActionsSdkConversationOptionsInit | actions-on-google</title>
+	<title>OAuth2Config | actions-on-google</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -52,40 +52,24 @@
 					<a href="../globals.html">Globals</a>
 				</li>
 				<li>
-					<a href="../modules/actionssdk.html">actionssdk</a>
+					<a href="../modules/conversation.html">conversation</a>
 				</li>
 				<li>
-					<a href="actionssdk.actionssdkconversationoptionsinit.html">ActionsSdkConversationOptionsInit</a>
+					<a href="conversation.oauth2config.html">OAuth2Config</a>
 				</li>
 			</ul>
-			<h1>Interface ActionsSdkConversationOptionsInit&lt;TConvData, TUserStorage&gt;</h1>
+			<h1>Interface OAuth2Config</h1>
 		</div>
 	</div>
 </header>
 <div class="container container-main">
 	<div class="row">
 		<div class="col-8 col-content">
-			<section class="tsd-panel tsd-type-parameters">
-				<h3>Type parameters</h3>
-				<ul class="tsd-type-parameters">
-					<li>
-						<h4>TConvData</h4>
-					</li>
-					<li>
-						<h4>TUserStorage</h4>
-					</li>
-				</ul>
-			</section>
 			<section class="tsd-panel tsd-hierarchy">
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="tsd-signature-type">ConversationOptionsInit</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TUserStorage</span><span class="tsd-signature-symbol">&gt;</span>
-						<ul class="tsd-hierarchy">
-							<li>
-								<span class="target">ActionsSdkConversationOptionsInit</span>
-							</li>
-						</ul>
+						<span class="target">OAuth2Config</span>
 					</li>
 				</ul>
 			</section>
@@ -96,8 +80,7 @@
 						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="actionssdk.actionssdkconversationoptionsinit.html#data" class="tsd-kind-icon">data</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="actionssdk.actionssdkconversationoptionsinit.html#storage" class="tsd-kind-icon">storage</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="conversation.oauth2config.html#client" class="tsd-kind-icon">client</a></li>
 							</ul>
 						</section>
 					</div>
@@ -106,25 +89,16 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Properties</h2>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="data" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagOptional">Optional</span> data</h3>
-					<div class="tsd-signature tsd-kind-icon">data<span class="tsd-signature-symbol">:</span> <a href="" class="tsd-signature-type">TConvData</a></div>
+					<a name="client" class="tsd-anchor"></a>
+					<h3>client</h3>
+					<div class="tsd-signature tsd-kind-icon">client<span class="tsd-signature-symbol">:</span> <a href="conversation.oauth2configclient.html" class="tsd-signature-type">OAuth2ConfigClient</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in service/actionssdk/conv.ts:41</li>
+							<li>Defined in <a href="https://github.com/actions-on-google/actions-on-google-nodejs/blob/d7ef56e/src/service/actionssdk/conversation/conversation.ts#L444">service/actionssdk/conversation/conversation.ts:444</a></li>
 						</ul>
 					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
-					<a name="storage" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagOptional">Optional</span> storage</h3>
-					<div class="tsd-signature tsd-kind-icon">storage<span class="tsd-signature-symbol">:</span> <a href="" class="tsd-signature-type">TUserStorage</a></div>
-					<aside class="tsd-sources">
-						<p>Inherited from ConversationOptionsInit.storage</p>
-						<ul>
-							<li>Defined in service/actionssdk/conversation/conversation.ts:96</li>
-						</ul>
-					</aside>
+					<div class="tsd-comment tsd-typography">
+					</div>
 				</section>
 			</section>
 		</div>
@@ -134,7 +108,7 @@
 					<li class="globals  ">
 						<a href="../globals.html"><em>Globals</em></a>
 					</li>
-					<li class="current tsd-kind-external-module">
+					<li class=" tsd-kind-external-module">
 						<a href="../modules/actionssdk.html">actionssdk</a>
 					</li>
 					<li class=" tsd-kind-external-module">
@@ -143,7 +117,7 @@
 					<li class=" tsd-kind-external-module">
 						<a href="../modules/assistant.html">assistant</a>
 					</li>
-					<li class=" tsd-kind-external-module">
+					<li class="current tsd-kind-external-module">
 						<a href="../modules/conversation.html">conversation</a>
 					</li>
 					<li class=" tsd-kind-external-module">
@@ -167,51 +141,87 @@
 					<li class=" tsd-kind-external-module">
 						<a href="../modules/framework.html">framework</a>
 					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="../modules/smarthome.html">smarthome</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="../modules/smarthome_api_v1.html">smarthome/api/v1</a>
+					</li>
 				</ul>
 			</nav>
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
+					<li class=" tsd-kind-class tsd-parent-kind-external-module">
+						<a href="../classes/conversation.access.html" class="tsd-kind-icon">Access</a>
+					</li>
+					<li class=" tsd-kind-class tsd-parent-kind-external-module">
+						<a href="../classes/conversation.available.html" class="tsd-kind-icon">Available</a>
+					</li>
+					<li class=" tsd-kind-class tsd-parent-kind-external-module">
+						<a href="../classes/conversation.availablesurfaces.html" class="tsd-kind-icon">Available<wbr>Surfaces</a>
+					</li>
+					<li class=" tsd-kind-class tsd-parent-kind-external-module">
+						<a href="../classes/conversation.availablesurfacescapabilities.html" class="tsd-kind-icon">Available<wbr>Surfaces<wbr>Capabilities</a>
+					</li>
+					<li class=" tsd-kind-class tsd-parent-kind-external-module">
+						<a href="../classes/conversation.capabilities.html" class="tsd-kind-icon">Capabilities</a>
+					</li>
 					<li class=" tsd-kind-class tsd-parent-kind-external-module tsd-has-type-parameter">
-						<a href="../classes/actionssdk.actionssdkconversation.html" class="tsd-kind-icon">Actions<wbr>Sdk<wbr>Conversation</a>
+						<a href="../classes/conversation.conversation-1.html" class="tsd-kind-icon">Conversation</a>
+					</li>
+					<li class=" tsd-kind-class tsd-parent-kind-external-module">
+						<a href="../classes/conversation.device.html" class="tsd-kind-icon">Device</a>
+					</li>
+					<li class=" tsd-kind-class tsd-parent-kind-external-module">
+						<a href="../classes/conversation.input.html" class="tsd-kind-icon">Input</a>
+					</li>
+					<li class=" tsd-kind-class tsd-parent-kind-external-module">
+						<a href="../classes/conversation.last.html" class="tsd-kind-icon">Last</a>
+					</li>
+					<li class=" tsd-kind-class tsd-parent-kind-external-module">
+						<a href="../classes/conversation.name.html" class="tsd-kind-icon">Name</a>
+					</li>
+					<li class=" tsd-kind-class tsd-parent-kind-external-module">
+						<a href="../classes/conversation.profile.html" class="tsd-kind-icon">Profile</a>
+					</li>
+					<li class=" tsd-kind-class tsd-parent-kind-external-module">
+						<a href="../classes/conversation.surface.html" class="tsd-kind-icon">Surface</a>
+					</li>
+					<li class=" tsd-kind-class tsd-parent-kind-external-module tsd-has-type-parameter">
+						<a href="../classes/conversation.user.html" class="tsd-kind-icon">User</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-external-module tsd-has-type-parameter">
-						<a href="actionssdk.actionssdk-1.html" class="tsd-kind-icon">Actions<wbr>Sdk</a>
+						<a href="conversation.conversationapp.html" class="tsd-kind-icon">Conversation<wbr>App</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-external-module tsd-has-type-parameter">
-						<a href="actionssdk.actionssdkapp.html" class="tsd-kind-icon">Actions<wbr>Sdk<wbr>App</a>
+						<a href="conversation.conversationoptionsinit.html" class="tsd-kind-icon">Conversation<wbr>Options<wbr>Init</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-external-module tsd-has-type-parameter">
-						<a href="actionssdk.actionssdkconversationoptions.html" class="tsd-kind-icon">Actions<wbr>Sdk<wbr>Conversation<wbr>Options</a>
+						<a href="conversation.exceptionhandler.html" class="tsd-kind-icon">Exception<wbr>Handler</a>
 					</li>
 				</ul>
 				<ul class="current">
-					<li class="current tsd-kind-interface tsd-parent-kind-external-module tsd-has-type-parameter">
-						<a href="actionssdk.actionssdkconversationoptionsinit.html" class="tsd-kind-icon">Actions<wbr>Sdk<wbr>Conversation<wbr>Options<wbr>Init</a>
+					<li class="current tsd-kind-interface tsd-parent-kind-external-module">
+						<a href="conversation.oauth2config.html" class="tsd-kind-icon">OAuth2<wbr>Config</a>
 						<ul>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="actionssdk.actionssdkconversationoptionsinit.html#data" class="tsd-kind-icon">data</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
-								<a href="actionssdk.actionssdkconversationoptionsinit.html#storage" class="tsd-kind-icon">storage</a>
+								<a href="conversation.oauth2config.html#client" class="tsd-kind-icon">client</a>
 							</li>
 						</ul>
 					</li>
 				</ul>
 				<ul class="after-current">
-					<li class=" tsd-kind-interface tsd-parent-kind-external-module tsd-has-type-parameter">
-						<a href="actionssdk.actionssdkintenthandler.html" class="tsd-kind-icon">Actions<wbr>Sdk<wbr>Intent<wbr>Handler</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-parent-kind-external-module tsd-has-type-parameter">
-						<a href="actionssdk.actionssdkmiddleware.html" class="tsd-kind-icon">Actions<wbr>Sdk<wbr>Middleware</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-parent-kind-external-module tsd-has-type-parameter">
-						<a href="actionssdk.actionssdkoptions.html" class="tsd-kind-icon">Actions<wbr>Sdk<wbr>Options</a>
-					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
-						<a href="actionssdk.actionssdkverification.html" class="tsd-kind-icon">Actions<wbr>Sdk<wbr>Verification</a>
+						<a href="conversation.oauth2configclient.html" class="tsd-kind-icon">OAuth2<wbr>Config<wbr>Client</a>
 					</li>
-					<li class=" tsd-kind-function tsd-parent-kind-external-module tsd-has-type-parameter">
-						<a href="../modules/actionssdk.html#actionssdk-2" class="tsd-kind-icon">actionssdk</a>
+					<li class=" tsd-kind-type-alias tsd-parent-kind-external-module">
+						<a href="../modules/conversation.html#intent" class="tsd-kind-icon">Intent</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-parent-kind-external-module">
+						<a href="../modules/conversation.html#response" class="tsd-kind-icon">Response</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-parent-kind-external-module">
+						<a href="../modules/conversation.html#surfacecapability" class="tsd-kind-icon">Surface<wbr>Capability</a>
 					</li>
 				</ul>
 			</nav>

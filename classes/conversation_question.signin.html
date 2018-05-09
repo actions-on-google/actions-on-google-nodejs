@@ -86,9 +86,9 @@ app.intent(<span class="hljs-string">'actions.intent.MAIN'</span>, conv =&gt; {
 app.intent(<span class="hljs-string">'actions.intent.SIGN_IN'</span>, (conv, input, signin) =&gt; {
   <span class="hljs-keyword">if</span> (signin.status === <span class="hljs-string">'OK'</span>) {
     <span class="hljs-keyword">const</span> access = conv.user.access.token <span class="hljs-comment">// possibly do something with access token</span>
-    conv.ask(<span class="hljs-string">'Great, thanks for signing in!'</span>)
+    conv.ask(<span class="hljs-string">'Great, thanks for signing in! What do you want to do next?'</span>)
   } <span class="hljs-keyword">else</span> {
-    conv.ask(<span class="hljs-string">`I won't be able to save your data, but let's continue!`</span>)
+    conv.ask(<span class="hljs-string">`I won't be able to save your data, but what do you want to do next?`</span>)
   }
 })
 
@@ -103,9 +103,9 @@ app.intent(<span class="hljs-string">'actions.intent.MAIN'</span>, conv =&gt; {
 app.intent(<span class="hljs-string">'Get Signin'</span>, (conv, params, signin) =&gt; {
   <span class="hljs-keyword">if</span> (signin.status === <span class="hljs-string">'OK'</span>) {
     <span class="hljs-keyword">const</span> access = conv.user.access.token <span class="hljs-comment">// possibly do something with access token</span>
-    conv.ask(<span class="hljs-string">'Great, thanks for signing in!'</span>)
+    conv.ask(<span class="hljs-string">'Great, thanks for signing in! What do you want to do next?'</span>)
   } <span class="hljs-keyword">else</span> {
-    conv.ask(<span class="hljs-string">`I won't be able to save your data, but let's continue!`</span>)
+    conv.ask(<span class="hljs-string">`I won't be able to save your data, but what do you want to do next?`</span>)
   }
 })
 </code></pre>
@@ -153,17 +153,30 @@ app.intent(<span class="hljs-string">'Get Signin'</span>, (conv, params, signin)
 					<a name="constructor" class="tsd-anchor"></a>
 					<h3>constructor</h3>
 					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">new <wbr>Sign<wbr>In<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="conversation_question.signin.html" class="tsd-signature-type">SignIn</a></li>
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Sign<wbr>In<span class="tsd-signature-symbol">(</span>context<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="conversation_question.signin.html" class="tsd-signature-type">SignIn</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in service/actionssdk/conversation/question/signin.ts:71</li>
+									<li>Defined in <a href="https://github.com/actions-on-google/actions-on-google-nodejs/blob/d7ef56e/src/service/actionssdk/conversation/question/signin.ts#L71">service/actionssdk/conversation/question/signin.ts:71</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> context: <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<div class="lead">
+											<p>The optional context why the app needs to ask the user to sign in, as a
+												prefix of a prompt for user consent, e.g. &quot;To track your exercise&quot;, or
+											&quot;To check your account balance&quot;.</p>
+										</div>
+									</div>
+								</li>
+							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="conversation_question.signin.html" class="tsd-signature-type">SignIn</a></h4>
 						</li>
 					</ul>
@@ -178,7 +191,7 @@ app.intent(<span class="hljs-string">'Get Signin'</span>, (conv, params, signin)
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="../interfaces/actionssdk_api_v2.googleactionsv2expectedintent.html">GoogleActionsV2ExpectedIntent</a>.<a href="../interfaces/actionssdk_api_v2.googleactionsv2expectedintent.html#inputvaluedata">inputValueData</a></p>
 						<ul>
-							<li>Defined in service/actionssdk/api/v2.ts:495</li>
+							<li>Defined in <a href="https://github.com/actions-on-google/actions-on-google-nodejs/blob/d7ef56e/src/service/actionssdk/api/v2.ts#L498">service/actionssdk/api/v2.ts:498</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -207,7 +220,7 @@ app.intent(<span class="hljs-string">'Get Signin'</span>, (conv, params, signin)
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="../interfaces/actionssdk_api_v2.googleactionsv2expectedintent.html">GoogleActionsV2ExpectedIntent</a>.<a href="../interfaces/actionssdk_api_v2.googleactionsv2expectedintent.html#intent">intent</a></p>
 						<ul>
-							<li>Defined in service/actionssdk/api/v2.ts:502</li>
+							<li>Defined in <a href="https://github.com/actions-on-google/actions-on-google-nodejs/blob/d7ef56e/src/service/actionssdk/api/v2.ts#L505">service/actionssdk/api/v2.ts:505</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -226,7 +239,7 @@ app.intent(<span class="hljs-string">'Get Signin'</span>, (conv, params, signin)
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="../interfaces/actionssdk_api_v2.googleactionsv2expectedintent.html">GoogleActionsV2ExpectedIntent</a>.<a href="../interfaces/actionssdk_api_v2.googleactionsv2expectedintent.html#parametername">parameterName</a></p>
 						<ul>
-							<li>Defined in service/actionssdk/api/v2.ts:507</li>
+							<li>Defined in <a href="https://github.com/actions-on-google/actions-on-google-nodejs/blob/d7ef56e/src/service/actionssdk/api/v2.ts#L510">service/actionssdk/api/v2.ts:510</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -276,6 +289,12 @@ app.intent(<span class="hljs-string">'Get Signin'</span>, (conv, params, signin)
 					</li>
 					<li class=" tsd-kind-external-module">
 						<a href="../modules/framework.html">framework</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="../modules/smarthome.html">smarthome</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="../modules/smarthome_api_v1.html">smarthome/api/v1</a>
 					</li>
 				</ul>
 			</nav>
