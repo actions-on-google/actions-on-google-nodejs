@@ -80,6 +80,102 @@ test('stringify parsed back is deepEqual to original', t => {
   t.deepEqual(JSON.parse(stringify(original)), original)
 })
 
+test('stringify returns pretty formatted string', t => {
+  const original = {
+    a: 1,
+    b: 2,
+    c: {
+      d: 3,
+      e: 4,
+    },
+  }
+  t.is(stringify(original), `{
+  "a": 1,
+  "b": 2,
+  "c": {
+    "d": 3,
+    "e": 4
+  }
+}`)
+})
+
+test('stringify for top level circular reference works', t => {
+  interface TestObject {
+    a: TestObject | null
+    c: { d: number }
+  }
+  const original: TestObject = {
+    a: null,
+    c: {
+      d: 3,
+    },
+  }
+  original.a = original
+  const parsed = JSON.parse(stringify(original))
+  t.is(parsed.a, '[Stringify Error] TypeError: Converting circular structure to JSON')
+  t.is(parsed.c.d, 3)
+})
+
+test('stringify for lower level circular reference works', t => {
+  interface SubObject {
+    d: SubObject | null
+  }
+  interface TestObject {
+    a: number
+    c: SubObject
+  }
+  const original: TestObject = {
+    a: 2,
+    c: {
+      d: null,
+    },
+  }
+  original.c.d = original.c
+  const parsed = JSON.parse(stringify(original))
+  t.true((parsed.c as string).startsWith('[Stringify Error] '))
+  t.is(parsed.a, 2)
+})
+
+test('stringify for exclude works', t => {
+  const original = {
+    a: 1,
+    b: 2,
+    c: {
+      d: 3,
+      e: 4,
+    },
+  }
+  const exclude = 'a'
+  const parsed = JSON.parse(stringify(original, exclude))
+  t.deepEqual(parsed, {
+    a: '[Excluded]',
+    b: 2,
+    c: {
+      d: 3,
+      e: 4,
+    },
+  })
+})
+
+test('stringify for two exclude works', t => {
+  const original = {
+    a: 1,
+    b: 2,
+    c: {
+      d: 3,
+      e: 4,
+    },
+  }
+  const exclude = 'a'
+  const exclude2 = 'c'
+  const parsed = JSON.parse(stringify(original, exclude, exclude2))
+  t.deepEqual(parsed, {
+    a: '[Excluded]',
+    b: 2,
+    c: '[Excluded]',
+  })
+})
+
 test('toArray results in same array when passed in array', t => {
   const original = [1, 2, 3]
   t.is(toArray(original), original)

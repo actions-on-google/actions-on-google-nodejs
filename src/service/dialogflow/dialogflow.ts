@@ -420,11 +420,7 @@ export const dialogflow: Dialogflow = <
         || conv
     }
     const log = debug ? common.info : common.debug
-    log('Conversation', common.stringify(conv, {
-      request: null,
-      headers: null,
-      body: null,
-    }))
+    log('Conversation', common.stringify(conv, 'request', 'headers', 'body'))
     const { intent } = conv
     const traversed: Traversed = {}
     let handler: typeof this._handlers.intents[string] = intent

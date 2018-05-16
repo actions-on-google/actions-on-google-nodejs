@@ -46,8 +46,26 @@ export const values = <T>(o: { [key: string]: T }) => Object.keys(o).map(k => o[
 export const clone = <T>(o: T): T => JSON.parse(JSON.stringify(o))
 
 /** @hidden */
-export const stringify =
-  (o: {}, override?: {}) => JSON.stringify(Object.assign(clone(o), override), null, 2)
+// tslint:disable-next-line:no-any root can by anything
+export const stringify = (root: any, ...exclude: string[]) => {
+  const excluded = new Set(exclude)
+  const filtered = Object.keys(root).reduce((o, k) => {
+    if (excluded.has(k)) {
+      o[k] = '[Excluded]'
+      return o
+    }
+    const value = root[k]
+    try {
+      JSON.stringify(value)
+      o[k] = value
+      return o
+    } catch (e) {
+      o[k] = `[Stringify Error] ${e}`
+      return o
+    }
+  }, {} as typeof root)
+  return JSON.stringify(filtered, null, 2)
+}
 
 /** @hidden */
 export type ProtoAny<TType, TSpec> = { '@type': TType } & TSpec
