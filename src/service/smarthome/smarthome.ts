@@ -60,7 +60,7 @@ export interface SmartHomeHandler<
   TRequest extends Api.SmartHomeV1Request,
   TResponse extends Api.SmartHomeV1Response,
   > {
-  (body: TRequest, headers): TResponse | Promise<TResponse>
+  (body: TRequest, headers: object): TResponse | Promise<TResponse>
 }
 
 /** @hidden */
