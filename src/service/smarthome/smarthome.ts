@@ -60,7 +60,7 @@ export interface SmartHomeHandler<
   TRequest extends Api.SmartHomeV1Request,
   TResponse extends Api.SmartHomeV1Response,
   > {
-  (body: TRequest): TResponse | Promise<TResponse>
+  (body: TRequest, headers): TResponse | Promise<TResponse>
 }
 
 /** @hidden */
@@ -383,7 +383,7 @@ export const smarthome: SmartHome = (options = {}) => attach<SmartHomeApp>({
     return {
       status: 200,
       headers: {},
-      body: await handler(body),
+      body: await handler(body, headers),
     }
   },
 }, options)
