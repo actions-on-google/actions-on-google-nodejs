@@ -16,7 +16,11 @@
 
 import test from 'ava'
 
-import {actionssdk, ActionsSdkIntentHandler} from '../actionssdk'
+import {
+  actionssdk,
+  ActionsSdkMiddleware,
+  ActionsSdkIntentHandler,
+} from '../actionssdk'
 import { Conversation, ActionsSdkConversation, Argument } from '..'
 import * as Api from '../api/v2'
 import { OAuth2Client } from 'google-auth-library'
@@ -166,4 +170,26 @@ test('auth config is not set with no clientId', t => {
   const app = actionssdk()
   t.is(typeof app._client, 'undefined')
   t.is(typeof app.auth, 'undefined')
+})
+
+test('app gives middleware framework metadata', async t => {
+  const metadata = {
+    custom: {
+      request: 'test',
+    },
+  }
+  const response = 'abcdefg1234567'
+  let called = false
+  const middleware: ActionsSdkMiddleware<ActionsSdkConversation<{}, {}>
+  > = (conv, framework) => {
+    called = true
+    t.is(framework, metadata)
+  }
+  const app = actionssdk<ActionsSdkConversation<{}, {}>>()
+  app._middlewares.push(middleware)
+  app.fallback(conv => {
+    conv.ask(response)
+  })
+  await app.handler(buildRequest('NEW', 'intent.foo'), {}, metadata)
+  t.true(called)
 })

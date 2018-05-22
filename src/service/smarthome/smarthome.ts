@@ -17,7 +17,7 @@
 import { AppOptions, AppHandler, ServiceBaseApp, attach } from '../../assistant'
 import { JsonObject } from '../../common'
 import * as common from '../../common'
-import { Headers } from '../../framework'
+import { Headers, BuiltinFrameworkMetadata } from '../../framework'
 import * as Api from './api/v1'
 import { google } from 'googleapis'
 
@@ -61,7 +61,11 @@ export interface SmartHomeHandler<
   TRequest extends Api.SmartHomeV1Request,
   TResponse extends Api.SmartHomeV1Response,
   > {
-  (body: TRequest, headers: Headers): TResponse | Promise<TResponse>
+  (
+    body: TRequest,
+    headers: Headers,
+    framework: BuiltinFrameworkMetadata,
+  ): TResponse | Promise<TResponse>
 }
 
 /** @hidden */
@@ -388,6 +392,7 @@ export const smarthome: SmartHome = (options = {}) => attach<SmartHomeApp>({
     this: SmartHomeApp,
     body: Api.SmartHomeV1Request,
     headers,
+    metadata = {},
   ) {
     const { intent } = body.inputs[0]
     const handler = this._intents[intent]
@@ -395,7 +400,7 @@ export const smarthome: SmartHome = (options = {}) => attach<SmartHomeApp>({
     return {
       status: 200,
       headers: {},
-      body: await handler(body, headers),
+      body: await handler(body, headers, metadata),
     }
   },
 }, options)

@@ -61,13 +61,15 @@ const isV1 = (
 
 const getRequest = (
   body: Api.GoogleCloudDialogflowV2WebhookRequest | ApiV1.DialogflowV1WebhookRequest,
-) => {
+): ActionsApi.GoogleActionsV2AppRequest => {
   if (isV1(body)) {
     const { originalRequest = {} } = body
     const { data = {} } = originalRequest
     return data
   }
-  return body.originalDetectIntentRequest!.payload!
+  const { originalDetectIntentRequest = {} } = body
+  const { payload = {} } = originalDetectIntentRequest
+  return payload
 }
 
 /** @public */

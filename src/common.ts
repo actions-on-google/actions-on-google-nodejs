@@ -65,7 +65,8 @@ export const stringify = (root: any, ...exclude: string[]) => {
       o[k] = value
       return o
     } catch (e) {
-      o[k] = `[Stringify Error] ${e}`
+      o[k] = e.message === 'Converting circular structure to JSON' ?
+        '[Circular]' : `[Stringify Error] ${e}`
       return o
     }
   }, {} as typeof root)

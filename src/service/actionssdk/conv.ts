@@ -70,6 +70,7 @@ export class ActionsSdkConversation<
     super({
       request: options.body,
       headers: options.headers,
+      init: options.init,
     })
 
     this.body = options.body

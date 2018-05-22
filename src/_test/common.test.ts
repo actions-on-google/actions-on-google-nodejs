@@ -112,7 +112,7 @@ test('stringify for top level circular reference works', t => {
   }
   original.a = original
   const parsed = JSON.parse(stringify(original))
-  t.is(parsed.a, '[Stringify Error] TypeError: Converting circular structure to JSON')
+  t.is(parsed.a, '[Circular]')
   t.is(parsed.c.d, 3)
 })
 
@@ -132,7 +132,7 @@ test('stringify for lower level circular reference works', t => {
   }
   original.c.d = original.c
   const parsed = JSON.parse(stringify(original))
-  t.true((parsed.c as string).startsWith('[Stringify Error] '))
+  t.is(parsed.c, '[Circular]')
   t.is(parsed.a, 2)
 })
 

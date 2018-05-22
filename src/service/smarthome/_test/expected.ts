@@ -224,3 +224,9 @@ export const SMART_HOME_HEADERS: Headers = {
   'x-forwarded-proto': 'https',
   'x-forwarded-for': '0.0.0.0',
 }
+
+export const FRAMEWORK_METADATA = {
+  custom: {
+    request: 'test',
+  },
+}

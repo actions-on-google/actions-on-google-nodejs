@@ -21,7 +21,7 @@ import * as common from '../common'
 import { JsonObject } from '../common'
 
 import { attach, AppHandler } from '../assistant'
-import { Headers, StandardResponse } from '../framework'
+import { Headers, StandardResponse, BuiltinFrameworkMetadata } from '../framework'
 
 interface AvaContext {
   app: AppHandler
@@ -196,7 +196,13 @@ test('app is callable as an Express request', async t => {
     headers1: 'headers2',
   }
   const app = attach({
-    handler: async (body: JsonObject, headers: Headers): Promise<StandardResponse> => {
+    handler: async (
+      body: JsonObject,
+      headers: Headers,
+      metadata: BuiltinFrameworkMetadata,
+    ): Promise<StandardResponse> => {
+      t.not(typeof metadata.express!.request, 'undefined')
+      t.not(typeof metadata.express!.response, 'undefined')
       return {
         body: {
           body,

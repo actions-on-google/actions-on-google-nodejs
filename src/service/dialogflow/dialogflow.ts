@@ -28,6 +28,7 @@ import * as common from '../../common'
 import { Contexts, Parameters } from './context'
 import { DialogflowConversation } from './conv'
 import { OAuth2Client } from 'google-auth-library'
+import { BuiltinFrameworkMetadata } from '../../framework'
 
 /** @public */
 export interface DialogflowIntentHandler<
@@ -94,7 +95,11 @@ export interface DialogflowMiddleware<
   TConversationPlugin extends DialogflowConversation<{}, {}, Contexts>
 > {
   (
+    /** @public */
     conv: DialogflowConversation<{}, {}, Contexts>,
+
+    /** @public */
+    framework: BuiltinFrameworkMetadata,
   ): (DialogflowConversation<{}, {}, Contexts> & TConversationPlugin) | void
 }
 
@@ -373,6 +378,7 @@ export const dialogflow: Dialogflow = <
     this: AppHandler & DialogflowApp<TConvData, TUserStorage, TContexts, TConversation>,
     body: Api.GoogleCloudDialogflowV2WebhookRequest,
     headers,
+    metadata = {},
   ) {
     const { debug, init, verification } = this
     if (verification) {
@@ -416,8 +422,9 @@ export const dialogflow: Dialogflow = <
       await conv.user._verifyProfile(this._client!, this.auth!.client.id)
     }
     for (const middleware of this._middlewares) {
-      conv = (middleware(conv) as DialogflowConversation<TConvData, TUserStorage, TContexts> | void)
-        || conv
+      conv = middleware(conv, metadata) as (
+        DialogflowConversation<TConvData, TUserStorage, TContexts> | void
+      ) || conv
     }
     const log = debug ? common.info : common.debug
     log('Conversation', common.stringify(conv, 'request', 'headers', 'body'))

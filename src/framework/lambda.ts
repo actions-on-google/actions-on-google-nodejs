@@ -28,16 +28,29 @@ export interface LambdaHandler {
   (event: JsonObject, context: Context, callback: Callback): Promise<void>
 }
 
+export interface LambdaMetadata {
+  /** @public */
+  event: JsonObject
+
+  /** @public */
+  context: Context
+}
+
 /** @hidden */
 export class Lambda implements Framework<LambdaHandler> {
   handle(standard: StandardHandler) {
     return async (event: JsonObject, context: Context, callback: Callback) => {
+      const metadata: LambdaMetadata = {
+        context,
+        event,
+      }
       // convert header keys to lowercase for case insensitive header retrieval
       const headers = Object.keys(event.headers).reduce((o, k) => {
         o[k.toLowerCase()] = event.headers[k]
         return o
       }, {} as Headers)
-      const result = await standard(JSON.parse(event.body), headers).catch((e: Error) => {
+      const result = await standard(JSON.parse(event.body), headers, { lambda: metadata })
+      .catch((e: Error) => {
         common.error(e.stack || e)
         callback(e)
       })

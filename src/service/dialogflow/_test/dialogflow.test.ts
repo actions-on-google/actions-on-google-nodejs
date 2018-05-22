@@ -312,6 +312,64 @@ test('app uses middleware', async t => {
   })
 })
 
+test('app gives middleware framework metadata', async t => {
+  const metadata = {
+    custom: {
+      request: 'test',
+    },
+  }
+  const response = 'abcdefg1234567'
+  let called = false
+  const middleware: DialogflowMiddleware<DialogflowConversation<{}, {}, Contexts>
+  > = (conv, framework) => {
+    called = true
+    t.is(framework, metadata)
+  }
+  const app = dialogflow<DialogflowConversation<{}, {}, Contexts>>()
+  app._middlewares.push(middleware)
+  const session = 'abcdefghijk'
+  app.fallback(conv => {
+    conv.ask(response)
+  })
+  const res = await app.handler({
+    session,
+    queryResult: {},
+    originalDetectIntentRequest: {
+      payload: {
+        isInSandbox: true,
+      } as ActionsApi.GoogleActionsV2AppRequest,
+    },
+  } as Api.GoogleCloudDialogflowV2WebhookRequest, {}, metadata)
+  t.true(called)
+  t.is(res.status, 200)
+  t.deepEqual(clone(res.body), {
+    payload: {
+      google: {
+        expectUserResponse: true,
+        richResponse: {
+          items: [
+            {
+              simpleResponse: {
+                textToSpeech: response,
+              },
+            },
+          ],
+        },
+        userStorage: '{"data":{}}',
+      },
+    },
+    outputContexts: [
+      {
+        name: `${session}/contexts/_actions_on_google`,
+        lifespanCount: 99,
+        parameters: {
+          data: '{}',
+        },
+      },
+    ],
+  })
+})
+
 test('app works when validation is valid headers', async t => {
   const response = 'abcdefg1234567'
   const session = 'abcdefghijk'

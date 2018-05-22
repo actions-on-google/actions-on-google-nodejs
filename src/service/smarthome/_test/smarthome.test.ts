@@ -20,7 +20,7 @@ import * as sinon from 'sinon'
 
 import { smarthome, SmartHomeJwt } from '../smarthome'
 import * as Api from '../api/v1'
-import { Headers } from '../../../framework'
+import { Headers, BuiltinFrameworkMetadata } from '../../../framework'
 import * as Sample from './expected'
 
 const agentUserId = '123'
@@ -219,11 +219,16 @@ test.serial('report state succeeds if JWT is defined', async (t) => {
   mock.restore()
 })
 
-test('verifies headers are sent along with body', (t) => {
+test('verifies headers and framework metadata are sent along with body', (t) => {
   const app = smarthome()
   let authToken = ''
 
-  const intentHandler = (body: Api.SmartHomeV1Request, headers: Headers) => {
+  const intentHandler = (
+    body: Api.SmartHomeV1Request,
+    headers: Headers,
+    framework: BuiltinFrameworkMetadata,
+  ) => {
+    t.is(framework, Sample.FRAMEWORK_METADATA)
     if (!Array.isArray(headers.authorization) && headers.authorization !== undefined) {
       authToken = headers.authorization
     }
@@ -233,7 +238,11 @@ test('verifies headers are sent along with body', (t) => {
   app.onQuery(throwError)
   app.onExecute(throwError)
 
-  const promise = app.handler(Sample.SYNC_REQUEST, Sample.SMART_HOME_HEADERS)
+  const promise = app.handler(
+    Sample.SYNC_REQUEST,
+    Sample.SMART_HOME_HEADERS,
+    Sample.FRAMEWORK_METADATA,
+  )
 
   return promise.then((result) => {
     t.is(result.status, 200)

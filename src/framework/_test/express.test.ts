@@ -179,3 +179,50 @@ test('handles valid headers fine', async t => {
   t.is(receivedStatus, expectedStatus)
   t.deepEqual(receivedHeaders, expectedHeaders)
 })
+
+test('sends back metadata', async t => {
+  const expectedBody = {
+    prop: true,
+  }
+  const expectedStatus = 123
+  const sentBody = {
+    a: '1',
+  }
+  const sentHeaders = {
+    key: 'value',
+  }
+  let receivedBody: JsonObject | null = null
+  let receivedStatus = -1
+  let promise: Promise<StandardResponse> | null = null
+  // tslint:disable-next-line:no-any mocking request
+  const request: any = {
+    body: sentBody,
+    headers: sentHeaders,
+    get() {},
+  }
+  // tslint:disable-next-line:no-any mocking response
+  const response: any = {
+    status(status: number) {
+      receivedStatus = status
+      return this
+    },
+    send(body: JsonObject) {
+      receivedBody = body
+      return this
+    },
+  }
+  t.context.express.handle((body, headers, metadata) => {
+    t.is(metadata!.express!.request, request)
+    t.is(metadata!.express!.response, response)
+    t.is(body, sentBody)
+    t.is(headers, sentHeaders)
+    promise = Promise.resolve({
+      body: expectedBody,
+      status: expectedStatus,
+    })
+    return promise
+  })(request, response)
+  await promise
+  t.is(receivedBody, expectedBody)
+  t.is(receivedStatus, expectedStatus)
+})
