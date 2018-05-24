@@ -15,9 +15,13 @@
  */
 
 import ava, { RegisterContextual } from 'ava'
-import { Lambda } from '../lambda'
+import * as sinon from 'sinon'
+
+import * as common from '../../common'
 import { JsonObject } from '../../common'
-import { StandardResponse } from '..'
+
+import { Lambda } from '../lambda'
+import { StandardResponse } from '../framework'
 
 interface AvaContext {
   lambda: Lambda
@@ -136,6 +140,7 @@ test('handles error', async t => {
   }
   let receivedError: Error | null = null
   let promise: Promise<StandardResponse> | null = null
+  const stub = sinon.stub(common, 'error')
   t.context.lambda.handle((body, headers) => {
     t.deepEqual(body, sentBody)
     t.deepEqual(headers, sentHeaders)
@@ -153,6 +158,8 @@ test('handles error', async t => {
   // tslint:disable-next-line:no-any mocking promise
   await (promise as any).catch(() => {})
   await new Promise(resolve => setTimeout(resolve))
+  t.true(stub.called)
+  stub.restore()
   t.is(receivedError, expectedError)
 })
 

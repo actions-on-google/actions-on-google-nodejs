@@ -15,8 +15,12 @@
  */
 
 import ava, { RegisterContextual } from 'ava'
-import { Express } from '../express'
+import * as sinon from 'sinon'
+
+import * as common from '../../common'
 import { JsonObject } from '../../common'
+
+import { Express } from '../express'
 import { StandardResponse, Headers } from '../framework'
 
 interface AvaContext {
@@ -108,6 +112,7 @@ test('handles error', async t => {
   let receivedStatus = -1
   let receivedBody: JsonObject | null = null
   let promise: Promise<StandardResponse> | null = null
+  const stub = sinon.stub(common, 'error')
   t.context.express.handle((body, headers) => {
     t.is(body, sentBody)
     t.is(headers, sentHeaders)
@@ -131,6 +136,8 @@ test('handles error', async t => {
   } as any)
   // tslint:disable-next-line:no-any mocking promise
   await (promise as any).catch(() => {})
+  t.true(stub.called)
+  stub.restore()
   t.deepEqual(receivedBody, expectedBody)
   t.is(receivedStatus, expectedStatus)
 })
