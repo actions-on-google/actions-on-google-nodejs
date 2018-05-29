@@ -70,6 +70,13 @@ test('app sets handler using app.intent', t => {
   t.is(t.context.app._handlers.intents[intent], handler)
 })
 
+test('app sets handlerr using app.action', t => {
+  const action = 'abc123'
+    const handler = () => {}
+    t.context.app.action(action, handler)
+    t.is(t.context.app._handlers.actions[action], handler)
+})
+
 test('app gets simple response string when using app.intent', async t => {
   const intent = 'abc123'
   const response = 'abcdefg1234567'
@@ -117,6 +124,51 @@ test('app gets simple response string when using app.intent', async t => {
   })
 })
 
+test('app gets simple response string when using app.action', async t => {
+  const action = 'abc123'
+  const response = 'abcdefg1234567'
+  const session = 'abcdefghijk'
+  t.context.app.action(action, conv => conv.ask(response))
+  const res = await t.context.app.handler({
+    session,
+    queryResult: {
+      action: action,
+    },
+    originalDetectIntentRequest: {
+      payload: {
+        isInSnadbox: true,
+      } as ActionsApi.GoogleActionsV2AppRequest,
+    },
+  } as Api.GoogleCloudDialogflowV2WebhookRequest, {})
+  t.is(res.status, 200)
+  t.deepEqual(clone(res.body), {
+    payload: {
+      google: {
+        expectUserResponse: true,
+        richResponse: {
+          items: [
+            {
+              simpleResponse: {
+                textToSpeech: response,
+              },
+            },
+          ],
+        },
+        userStorage: '{"data":{}}',
+      },
+    },
+    outputContexts: [
+      {
+        name: `${session}/contexts/_actions_on_google`,
+        lifespanCount: 99,
+        parameters: {
+          data: '{}',
+        },
+      },
+    ],
+  })
+})
+
 test('app throws error when intent handler throws error', async t => {
   const intent = 'abc123'
   const error = 'abcdefg1234567'
@@ -130,6 +182,27 @@ test('app throws error when intent handler throws error', async t => {
       intent: {
         displayName: intent,
       },
+    },
+    originalDetectIntentRequest: {
+      payload: {
+        isInSandbox: true,
+      } as ActionsApi.GoogleActionsV2AppRequest,
+    },
+  } as Api.GoogleCloudDialogflowV2WebhookRequest, {}))
+  t.is(res.message, error)
+})
+
+test('app throws error when action handler throws error', async t => {
+  const action = 'abc123'
+  const error = 'abcdefg1234567'
+  const session = 'abcdefghijk'
+  t.context.app.action(action, conv => {
+    throw new Error(error)
+  })
+  const res: Error = await t.throws(t.context.app.handler({
+    session,
+    queryResult: {
+      action: action,
     },
     originalDetectIntentRequest: {
       payload: {
@@ -200,13 +273,65 @@ test('app uses catcher when intent handler throws error', async t => {
   })
 })
 
+test('app uses catcher when action handler throws error', async t => {
+  const action = 'abc123'
+  const response = 'abcdefg1234567'
+  const session = 'abcdefghijk'
+  const error = 'abcdefg1234567abc'
+  t.context.app.action(action, conv => {
+    throw new Error(error)
+  })
+  t.context.app.catch((conv, e) => {
+    t.is(e.message, error)
+    conv.ask(response)
+  })
+  const res = await t.context.app.handler({
+    session,
+    queryResult: {
+      action: action,
+    },
+    originalDetectIntentRequest: {
+      payload: {
+        isInSandbox: true,
+      } as ActionsApi.GoogleActionsV2AppRequest,
+    },
+  } as Api.GoogleCloudDialogflowV2WebhookRequest, {})
+  t.is(res.status, 200)
+  t.deepEqual(clone(res.body), {
+    payload: {
+      google: {
+        expectUserResponse: true,
+        richResponse: {
+          items: [
+            {
+              simpleResponse: {
+                textToSpeech: response,
+              },
+            },
+          ],
+        },
+        userStorage: '{"data":{}}',
+      },
+    },
+    outputContexts: [
+      {
+        name: `${session}/contexts/_actions_on_google`,
+        lifespanCount: 99,
+        parameters: {
+          data: '{}',
+        },
+      },
+    ],
+  })
+})
+
 test('app sets fallback using app.fallback', t => {
   const fallback = () => {}
   t.context.app.fallback(fallback)
   t.is(t.context.app._handlers.fallback, fallback)
 })
 
-test('app uses fallback when no intent handler', async t => {
+test('app uses fallback when no intent and action handler', async t => {
   const response = 'abcdefg1234567'
   const session = 'abcdefghijk'
   t.context.app.fallback(conv => {

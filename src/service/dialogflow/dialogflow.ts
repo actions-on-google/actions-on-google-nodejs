@@ -78,6 +78,7 @@ export interface DialogflowHandlers<
   TConversation extends DialogflowConversation<TConvData, TUserStorage, TContexts>,
 > {
   intents: DialogflowIntentHandlers
+  actions: DialogflowIntentHandlers
   catcher: ExceptionHandler<TUserStorage, TConversation>
   fallback?: DialogflowIntentHandler<
     Contexts,
@@ -133,6 +134,26 @@ export interface DialogflowApp<
 
   /**
    * Sets the IntentHandler to be execute when the fulfillment is called
+   * with a given Dialogflow action name.
+   *
+   * @param action The Dialogflow action name to match.
+   * @param handler The IntentHandler to be executed when the action name is matched.
+   * @public
+   */
+  action<TParameters extends Parameters>(
+    action: string,
+    handler: DialogflowIntentHandler<
+      TConvData,
+      TUserStorage,
+      TContexts,
+      TConversation,
+      TParameters,
+      Argument
+      > | string,
+  ): this
+
+  /**
+   * Sets the IntentHandler to be execute when the fulfillment is called
    * with a given Dialogflow intent name.
    *
    * @param intent The Dialogflow intent name to match.
@@ -156,6 +177,26 @@ export interface DialogflowApp<
 
   /**
    * Sets the IntentHandler to be execute when the fulfillment is called
+   * with a given Dialogflow action name.
+   *
+   * @param action The Dialogflow intent name to match.
+   * @param handler The IntentHandler to be executed when the action name is matched.
+   * @public
+   */
+  action<TArgument extends Argument>(
+    action: string,
+    handler: DialogflowIntentHandler<
+      TConvData,
+      TUserStorage,
+      TContexts,
+      TConversation,
+      Parameters,
+      TArgument
+      > | string,
+  ): this
+
+  /**
+   * Sets the IntentHandler to be execute when the fulfillment is called
    * with a given Dialogflow intent name.
    *
    * @param intent The Dialogflow intent name to match.
@@ -175,6 +216,26 @@ export interface DialogflowApp<
       TParameters,
       TArgument
     > | string,
+  ): this
+
+  /**
+   * Sets the IntentHandler to be execute when the fulfillment is called
+   * with a given Dialogflow action name.
+   *
+   * @param action The Dialogflow action name to match.
+   * @param handler The IntentHandler to be executed when the action name is matched.
+   * @public
+   */
+  action<TParameters extends Parameters, TArgument extends Argument>(
+    action: string,
+    handler: DialogflowIntentHandler<
+      TConvData,
+      TUserStorage,
+      TContexts,
+      TConversation,
+      TParameters,
+      TArgument
+      > | string,
   ): this
 
   /** @public */
@@ -310,6 +371,10 @@ const isVerification =
  * app.intent('Default Welcome Intent', conv => {
  *   conv.ask('How are you?')
  * })
+ *
+ * app.action('help', conv => {
+ *   conv.ask('I provide your lucky number.')
+ * })
  * ```
  *
  * @public
@@ -324,6 +389,7 @@ export const dialogflow: Dialogflow = <
 ) => attach<DialogflowApp<TConvData, TUserStorage, TContexts, TConversation>>({
   _handlers: {
     intents: {},
+    actions: {},
     catcher: (conv, e) => {
       throw e
     },
@@ -344,6 +410,21 @@ export const dialogflow: Dialogflow = <
     for (const intent of common.toArray(intents)) {
       this._handlers.intents[intent] = handler
     }
+    return this
+  },
+  action<TParameters extends Parameters, TArgument extends Argument>(
+    this: DialogflowApp<TConvData, TUserStorage, TContexts, TConversation>,
+    action: string,
+    handler: DialogflowIntentHandler<
+      TConvData,
+      TUserStorage,
+      TContexts,
+      TConversation,
+      TParameters,
+      TArgument
+      >,
+  ) {
+    this._handlers.actions[action] = handler
     return this
   },
   catch(this: DialogflowApp<TConvData, TUserStorage, TContexts, TConversation>, catcher) {
@@ -421,16 +502,21 @@ export const dialogflow: Dialogflow = <
     }
     const log = debug ? common.info : common.debug
     log('Conversation', common.stringify(conv, 'request', 'headers', 'body'))
-    const { intent } = conv
+    const { intent, action } = conv
     const traversed: Traversed = {}
     let handler: typeof this._handlers.intents[string] = intent
     while (typeof handler !== 'function') {
       if (typeof handler === 'undefined') {
-        if (!this._handlers.fallback) {
-          throw new Error(`Dialogflow IntentHandler not found for intent: ${intent}`)
+        handler = this._handlers.actions[action]
+        if (typeof handler === 'function') {
+          continue
+        } else {
+          if (!this._handlers.fallback) {
+            throw new Error(`Dialogflow IntentHandler not found for intent: ${intent} or action: ${action}`)
+          }
+          handler = this._handlers.fallback
+          continue
         }
-        handler = this._handlers.fallback
-        continue
       }
       if (traversed[handler]) {
         throw new Error(`Circular intent map detected: "${handler}" traversed twice`)

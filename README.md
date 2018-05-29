@@ -47,6 +47,11 @@ app.intent('Goodbye', conv => {
 app.intent('Default Fallback Intent', conv => {
   conv.ask(`I didn't understand. Can you tell me something else?`)
 })
+
+// You can register handlers for Dialogflow intents by specifying action names
+app.action('action.help', conv => {
+  conv.ask('I provide your lucky number.')
+})
 ```
 
 ### Actions SDK
