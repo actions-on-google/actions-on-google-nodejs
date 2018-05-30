@@ -354,7 +354,7 @@ export const smarthome: SmartHome = (options = {}) => attach<SmartHomeApp>({
     return this._intent('action.devices.EXECUTE', handler)
   },
   async requestSync(this: SmartHomeApp, agentUserId) {
-    if (!options || !this.key) {
+    if (!this.key) {
       throw new Error(`An API key was not specified. ` +
         `Please visit https://console.cloud.google.com/apis/api/homegraph.googleapis.com/overview`)
     }
@@ -363,7 +363,7 @@ export const smarthome: SmartHome = (options = {}) => attach<SmartHomeApp>({
     })
   },
   async reportState(this: SmartHomeApp, reportedState) {
-    if (!options || !this.jwt) {
+    if (!this.jwt) {
       throw new Error(`A JWT was not specified. ` +
         `Please visit https://console.cloud.google.com/apis/credentials`)
     }
