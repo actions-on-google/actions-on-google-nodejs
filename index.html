@@ -61,8 +61,8 @@
 		<div class="col-8 col-content">
 			<div class="tsd-panel tsd-typography">
 				<h1 id="actions-on-google-client-library">Actions on Google Client Library</h1>
-				<p>This client library makes it easy to create your apps for the Google Assistant, and
-				supports both Dialogflow fulfillment and the Actions SDK webhook.</p>
+				<p>This client library makes it easy to create Actions for the Google Assistant and
+				supports Dialogflow, Actions SDK, and Smart Home fulfillment.</p>
 				<ul>
 					<li><a href="https://github.com/actions-on-google/actions-on-google-nodejs">Client Library GitHub repo</a></li>
 					<li><a href="https://actions-on-google.github.io/actions-on-google-nodejs/">Client Library reference docs</a></li>
@@ -135,6 +135,44 @@ app.intent(<span class="hljs-string">'actions.intent.TEXT'</span>, (conv, input)
   conv.ask(<span class="hljs-string">`I didn't understand. Can you tell me something else?`</span>)
 })
 </code></pre>
+				<h3 id="smart-home">Smart Home</h3>
+				<pre><code class="lang-javascript"><span class="hljs-comment">// Import the appropriate service</span>
+
+<span class="hljs-keyword">const</span> { smarthome } = <span class="hljs-built_in">require</span>(<span class="hljs-string">'actions-on-google'</span>)
+
+<span class="hljs-comment">// Create an app instance</span>
+
+<span class="hljs-keyword">const</span> app = smarthome()
+
+<span class="hljs-comment">// Register handlers for Smart Home intents</span>
+
+app.onExecute(<span class="hljs-function"><span class="hljs-params">body</span> =&gt;</span> {
+  <span class="hljs-keyword">return</span> {
+    <span class="hljs-attr">requestId</span>: <span class="hljs-string">'ff36...'</span>,
+    <span class="hljs-attr">payload</span>: {
+      <span class="hljs-comment">// ...</span>
+    },
+  }
+})
+
+app.onQuery(<span class="hljs-function"><span class="hljs-params">body</span> =&gt;</span> {
+  <span class="hljs-keyword">return</span> {
+    <span class="hljs-attr">requestId</span>: <span class="hljs-string">'ff36...'</span>,
+    <span class="hljs-attr">payload</span>: {
+      <span class="hljs-comment">// ...</span>
+    },
+  }
+})
+
+app.onSync(<span class="hljs-function"><span class="hljs-params">body</span> =&gt;</span> {
+  <span class="hljs-keyword">return</span> {
+    <span class="hljs-attr">requestId</span>: <span class="hljs-string">'ff36...'</span>,
+    <span class="hljs-attr">payload</span>: {
+      <span class="hljs-comment">// ...</span>
+    },
+  }
+})
+</code></pre>
 				<h3 id="frameworks">Frameworks</h3>
 				<p>Export or run for your appropriate framework:</p>
 				<h4 id="firebase-functions">Firebase Functions</h4>
@@ -174,8 +212,9 @@ exports.fulfillment = app
 				<p>Public interfaces, classes, functions, objects, and properties are labeled with the JSDoc <code>@public</code> tag and exported at the top level. Everything else that is not labeled <code>@public</code> and exported at the top level is considered internal and may be changed.</p>
 				<p>This library supports the following Services:</p>
 				<ul>
-					<li>Dialogflow v1 and v2</li>
-					<li>Actions SDK <strong>v2 only</strong></li>
+					<li><a href="https://dialogflow.com/docs/fulfillment">Dialogflow</a> v1 and v2</li>
+					<li><a href="https://developers.google.com/actions/sdk/fulfillment">Actions SDK</a> <strong>v2 only</strong></li>
+					<li><a href="https://developers.google.com/actions/smarthome/create-app#provide-fulfillment">Smart Home</a></li>
 				</ul>
 				<h3 id="actions-sdk">Actions SDK</h3>
 				<p>This library supports only Actions SDK fulfillment version 2.</p>
