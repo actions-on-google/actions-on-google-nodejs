@@ -17,6 +17,7 @@
 import * as Api from '../api/v2'
 import { OAuth2Client } from 'google-auth-library'
 import { LoginTicket, TokenPayload } from 'google-auth-library/build/src/auth/loginticket'
+import * as common from '../../../common'
 
 export class Last {
   /**
@@ -173,12 +174,6 @@ export class User<TUserStorage> {
   storage: TUserStorage
 
   /**
-   * Random string ID for Google user.
-   * @public
-   */
-  id: string
-
-  /**
    * The user locale. String represents the regional language
    * information of the user set in their Assistant settings.
    * For example, 'en-US' represents US English.
@@ -202,7 +197,7 @@ export class User<TUserStorage> {
   /**
    * The list of all digital goods that your user purchased from
    * your published Android apps. To enable this feature, see the instructions
-   * in the (documentation)[https://developers.google.com/actions/identity/digital-goods].
+   * in the {@link https://developers.google.com/actions/identity/digital-goods|documentation}.
    * @public
    */
   entitlements: Api.GoogleActionsV2PackageEntitlement[]
@@ -212,6 +207,9 @@ export class User<TUserStorage> {
 
   /** @public */
   profile: Profile
+
+  /** @hidden */
+   _id: string
 
   /**
    * Gets the user profile email.
@@ -296,5 +294,19 @@ export class User<TUserStorage> {
     const payload = await this.profile._verify(client, id)
     this.email = payload!.email
     return payload
+  }
+
+  /**
+   * Random string ID for Google user.
+   * @deprecated Use {@link User#storage|conv.user.storage} instead.
+   * @public
+   */
+  get id() {
+    common.deprecate('conv.user.id', 'Use conv.user.storage to store data instead')
+    return this._id
+  }
+
+  set id(value) {
+    this._id = value
   }
 }
