@@ -18,6 +18,7 @@ import test from 'ava'
 
 import { smarthome, SmartHomeJwt } from '../smarthome'
 import * as Api from '../api/v1'
+import { Headers } from '../../../framework'
 import * as Sample from './expected'
 
 const agentUserId = '123'
@@ -130,7 +131,7 @@ test('request sync succeeds if API key is defined', (t) => {
 })
 
 test('report state fails if JWT is not defined', (t) => {
-  const app = smarthome({})
+  const app = smarthome()
 
   return app.reportState(Sample.REPORT_STATE_REQUEST)
     .then(() => {
@@ -153,4 +154,26 @@ test('report state succeeds if JWT is defined', (t) => {
     .catch((e) => {
       t.fail('You should be able to call request with a JWT')
     })
+})
+
+test('verifies headers are sent along with body', (t) => {
+  const app = smarthome()
+  let authToken = ''
+
+  const intentHandler = (body: Api.SmartHomeV1Request, headers: Headers) => {
+    if (!Array.isArray(headers.authorization) && headers.authorization !== undefined) {
+      authToken = headers.authorization
+    }
+    return Sample.SYNC_RESPONSE
+  }
+  app.onSync(intentHandler)
+  app.onQuery(throwError)
+  app.onExecute(throwError)
+
+  const promise = app.handler(Sample.SYNC_REQUEST, Sample.SMART_HOME_HEADERS)
+
+  return promise.then((result) => {
+    t.is(result.status, 200)
+    t.is(authToken, 'Bearer TOKEN')
+  })
 })

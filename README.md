@@ -93,7 +93,7 @@ const app = smarthome()
 
 // Register handlers for Smart Home intents
 
-app.onExecute(body => {
+app.onExecute((body, headers) => {
   return {
     requestId: 'ff36...',
     payload: {
@@ -102,7 +102,7 @@ app.onExecute(body => {
   }
 })
 
-app.onQuery(body => {
+app.onQuery((body, headers) => {
   return {
     requestId: 'ff36...',
     payload: {
@@ -111,7 +111,7 @@ app.onQuery(body => {
   }
 })
 
-app.onSync(body => {
+app.onSync((body, headers) => {
   return {
     requestId: 'ff36...',
     payload: {

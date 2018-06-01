@@ -16,6 +16,7 @@
 
 import { AppOptions, AppHandler, ServiceBaseApp, attach } from '../../assistant'
 import { JsonObject } from '../../common'
+import { Headers } from '../../framework'
 import * as Api from './api/v1'
 import * as https from 'https'
 import { google } from 'googleapis'
@@ -60,7 +61,7 @@ export interface SmartHomeHandler<
   TRequest extends Api.SmartHomeV1Request,
   TResponse extends Api.SmartHomeV1Response,
   > {
-  (body: TRequest): TResponse | Promise<TResponse>
+  (body: TRequest, headers: Headers): TResponse | Promise<TResponse>
 }
 
 /** @hidden */
@@ -85,8 +86,8 @@ export interface SmartHomeApp extends ServiceBaseApp {
    * @example
    * ```javascript
    *
-   * const app = smarthome({});
-   * app.onSync(body => {
+   * const app = smarthome();
+   * app.onSync((body, headers) => {
    *   return {
    *     requestId: 'ff36...',
    *     payload: {
@@ -111,8 +112,8 @@ export interface SmartHomeApp extends ServiceBaseApp {
    * @example
    * ```javascript
    *
-   * const app = smarthome({});
-   * app.onQuery(body => {
+   * const app = smarthome();
+   * app.onQuery((body, headers) => {
    *   return {
    *     requestId: 'ff36...',
    *     payload: {
@@ -137,8 +138,8 @@ export interface SmartHomeApp extends ServiceBaseApp {
    * @example
    * ```javascript
    *
-   * const app = smarthome({});
-   * app.onExecute(body => {
+   * const app = smarthome();
+   * app.onExecute((body, headers) => {
    *   return {
    *     requestId: 'ff36...',
    *     payload: {
@@ -168,7 +169,7 @@ export interface SmartHomeApp extends ServiceBaseApp {
    * ```javascript
    *
    * const app = smarthome({
-   *   apiKey: "123ABC"
+   *   key: "123ABC"
    * });
    *
    * const addNewDevice = () => {
@@ -317,18 +318,19 @@ const makeApiCall = (url: string, data: JsonObject, jwt?: SmartHomeJwt): Promise
  *
  * const app = smarthome({
  *   debug: true,
- *   API_KEY: '<api-key>',
+ *   key: '<api-key>',
+ *   jwt: require('./key.json')
  * });
  *
- * app.onSync(() => {
+ * app.onSync((body, headers) => {
  *   return { ... }
  * });
  *
- * app.onQuery(() => {
+ * app.onQuery((body, headers) => {
  *   return { ... }
  * });
  *
- * app.onExecute(() => {
+ * app.onExecute((body, headers) => {
  *   return { ... }
  * });
  *
@@ -383,7 +385,7 @@ export const smarthome: SmartHome = (options = {}) => attach<SmartHomeApp>({
     return {
       status: 200,
       headers: {},
-      body: await handler(body),
+      body: await handler(body, headers),
     }
   },
 }, options)

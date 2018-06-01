@@ -18,6 +18,7 @@
 // https://developers.google.com/actions/smarthome/create-app
 
 import * as Api from '../api/v1'
+import { Headers } from '../../../framework'
 
 export const SYNC_REQUEST: Api.SmartHomeV1SyncRequest = {
   requestId: 'ff36a3cc-ec34-11e6-b1a0-64510650abcf',
@@ -209,4 +210,17 @@ export const REPORT_STATE_REQUEST: Api.SmartHomeV1ReportStateRequest = {
       },
     },
   },
+}
+
+export const SMART_HOME_HEADERS: Headers = {
+  'content-type': 'application/json;charset=UTF-8',
+  'google-assistant-api-version': 'v1',
+  authorization: 'Bearer TOKEN',
+  host: 'example.com',
+  'content-length': '283',
+  'user-agent': 'Mozilla/5.0 (compatible; Google-Cloud-Functions/2.1; ' +
+    '+http://www.google.com/bot.html)',
+  'accept-encoding': 'gzip,deflate,br',
+  'x-forwarded-proto': 'https',
+  'x-forwarded-for': '0.0.0.0',
 }
