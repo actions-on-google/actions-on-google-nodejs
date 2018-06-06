@@ -15,17 +15,17 @@ supports Dialogflow, Actions SDK, and Smart Home fulfillment.
 
 Install the library with either `npm install actions-on-google` or `yarn add actions-on-google` if you use yarn.
 
-### Dialogflow
+### Conversational Services
+
+#### Dialogflow
 ```javascript
 // Import the appropriate service and chosen wrappers
-
 const {
   dialogflow,
   Image,
 } = require('actions-on-google')
 
 // Create an app instance
-
 const app = dialogflow()
 
 // Register handlers for Dialogflow intents
@@ -49,17 +49,15 @@ app.intent('Default Fallback Intent', conv => {
 })
 ```
 
-### Actions SDK
+#### Actions SDK
 ```javascript
 // Import the appropriate service and chosen wrappers
-
 const {
   actionssdk,
   Image,
 } = require('actions-on-google')
 
 // Create an app instance
-
 const app = actionssdk()
 
 // Register handlers for Actions SDK intents
@@ -81,14 +79,27 @@ app.intent('actions.intent.TEXT', (conv, input) => {
 })
 ```
 
+#### Notes about the code snippet
+* [`conv.ask`](https://actions-on-google.github.io/actions-on-google-nodejs/classes/conversation.conversation-1.html#ask)/[`conv.close`](https://actions-on-google.github.io/actions-on-google-nodejs/classes/conversation.conversation-1.html#close)
+can be called with any of the [`Response`](https://actions-on-google.github.io/actions-on-google-nodejs/modules/conversation.html#response) types.
+* All [`Question`](https://actions-on-google.github.io/actions-on-google-nodejs/modules/conversation_question.html) classes are of the `Response` type.
+
+##### Dialogflow
+* `app` is an instance of type [`DialogflowApp`](https://actions-on-google.github.io/actions-on-google-nodejs/interfaces/dialogflow.dialogflowapp.html#catch).
+* `app` accepts options of type [`DialogflowOptions`](https://actions-on-google.github.io/actions-on-google-nodejs/interfaces/dialogflow.dialogflowoptions.html#clientid).
+* `conv` is an instance of type [`DialogflowConversation`](https://actions-on-google.github.io/actions-on-google-nodejs/classes/dialogflow.dialogflowconversation.html).
+
+##### Actions SDK
+* `app` is an instance of type [`ActionsSdkApp`](https://actions-on-google.github.io/actions-on-google-nodejs/interfaces/actionssdk.actionssdkapp.html#catch).
+* `app` accepts options of type [`ActionsSdkOptions`](https://actions-on-google.github.io/actions-on-google-nodejs/interfaces/actionssdk.actionssdkoptions.html#clientid).
+* `conv` is an instance of type [`ActionsSdkConversation`](https://actions-on-google.github.io/actions-on-google-nodejs/classes/actionssdk.actionssdkconversation.html).
+
 ### Smart Home
 ```javascript
 // Import the appropriate service
-
 const { smarthome } = require('actions-on-google')
 
 // Create an app instance
-
 const app = smarthome()
 
 // Register handlers for Smart Home intents
@@ -120,6 +131,10 @@ app.onSync((body, headers) => {
   }
 })
 ```
+
+#### Notes about the code snippet
+* `app` is an instance of type [`SmartHomeApp`](https://actions-on-google.github.io/actions-on-google-nodejs/interfaces/smarthome.smarthomeapp.html#onexecute).
+* `app` accepts options of type [`SmartHomeOptions`](https://actions-on-google.github.io/actions-on-google-nodejs/interfaces/smarthome.smarthomeoptions.html#debug).
 
 ### Frameworks
 
