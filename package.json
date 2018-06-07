@@ -45,7 +45,7 @@
     "concurrently": "^3.5.1",
     "live-server": "^1.2.0",
     "nyc": "^11.6.0",
-    "sinon": "^5.0.8",
+    "sinon": "^6.0.0",
     "tslint": "^5.9.1",
     "tslint-eslint-rules": "^5.1.0",
     "typedoc": "^0.11.1",

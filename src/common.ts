@@ -15,6 +15,7 @@
  */
 
 import * as Debug from 'debug'
+import * as https from 'https'
 
 const name = 'actions-on-google'
 
@@ -81,3 +82,7 @@ export const toArray = <T>(a: T | T[]) => Array.isArray(a) ? a : [a]
 export interface ApiClientObjectMap<TValue> {
   [key: string]: TValue
 }
+
+// Bind this to https to ensure its not implementation dependent
+/** @hidden */
+export const request: typeof https.request = https.request.bind(https)
