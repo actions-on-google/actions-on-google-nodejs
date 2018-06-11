@@ -24,6 +24,7 @@ import {
 import { Conversation, ActionsSdkConversation, Argument } from '..'
 import * as Api from '../api/v2'
 import { OAuth2Client } from 'google-auth-library'
+import { clone } from '../../../common'
 
 const CONVERSATION_ID = '1234'
 const USER_ID = 'abcd'
@@ -192,4 +193,141 @@ test('app gives middleware framework metadata', async t => {
   })
   await app.handler(buildRequest('NEW', 'intent.foo'), {}, metadata)
   t.true(called)
+})
+
+test('app uses async middleware using Object.assign', async t => {
+  const response = 'abcdefg1234567'
+  interface TestMiddleware {
+    test(): void
+  }
+  const middleware: ActionsSdkMiddleware<
+    TestMiddleware & ActionsSdkConversation<{}, {}>
+  > = async conv => Object.assign(conv, {
+    test() {
+      conv.ask(response)
+    },
+  })
+  const app = actionssdk<TestMiddleware & ActionsSdkConversation<{}, {}>>()
+  app._middlewares.push(middleware)
+  app.fallback(conv => {
+    conv.test()
+  })
+  const res = await app.handler({}, {})
+  t.is(res.status, 200)
+  t.deepEqual(clone(res.body), {
+    expectUserResponse: true,
+    expectedInputs: [
+      {
+        inputPrompt: {
+          richInitialPrompt: {
+            items: [
+              {
+                simpleResponse: {
+                  textToSpeech: response,
+                },
+              },
+            ],
+          },
+        },
+        possibleIntents: [
+          {
+            intent: 'actions.intent.TEXT',
+          },
+        ],
+      },
+    ],
+    conversationToken: '{"data":{}}',
+    userStorage: '{"data":{}}',
+  })
+})
+
+test('app uses async middleware returning void', async t => {
+  const response = 'abcdefg1234567'
+  interface TestMiddleware {
+    test(): void
+  }
+  const middleware: ActionsSdkMiddleware<
+    TestMiddleware & ActionsSdkConversation<{}, {}>
+  > = async conv => {
+    (conv as TestMiddleware & TestMiddleware & ActionsSdkConversation<{}, {}>)
+      .test = () => conv.ask(response)
+  }
+  const app = actionssdk<TestMiddleware & ActionsSdkConversation<{}, {}>>()
+  app._middlewares.push(middleware)
+  app.fallback(conv => {
+    conv.test()
+  })
+  const res = await app.handler({}, {})
+  t.is(res.status, 200)
+  t.deepEqual(clone(res.body), {
+    expectUserResponse: true,
+    expectedInputs: [
+      {
+        inputPrompt: {
+          richInitialPrompt: {
+            items: [
+              {
+                simpleResponse: {
+                  textToSpeech: response,
+                },
+              },
+            ],
+          },
+        },
+        possibleIntents: [
+          {
+            intent: 'actions.intent.TEXT',
+          },
+        ],
+      },
+    ],
+    conversationToken: '{"data":{}}',
+    userStorage: '{"data":{}}',
+  })
+})
+
+test('app uses async middleware returning promise', async t => {
+  const response = 'abcdefg1234567'
+  interface TestMiddleware {
+    test(): void
+  }
+  const middleware: ActionsSdkMiddleware<
+    TestMiddleware & ActionsSdkConversation<{}, {}>
+  > = conv => Promise.resolve(Object.assign(conv, {
+    test() {
+      conv.ask(response)
+    },
+  }))
+  const app = actionssdk<TestMiddleware & ActionsSdkConversation<{}, {}>>()
+  app._middlewares.push(middleware)
+  app.fallback(conv => {
+    conv.test()
+  })
+  const res = await app.handler({}, {})
+  t.is(res.status, 200)
+  t.deepEqual(clone(res.body), {
+    expectUserResponse: true,
+    expectedInputs: [
+      {
+        inputPrompt: {
+          richInitialPrompt: {
+            items: [
+              {
+                simpleResponse: {
+                  textToSpeech: response,
+                },
+              },
+            ],
+          },
+        },
+        possibleIntents: [
+          {
+            intent: 'actions.intent.TEXT',
+          },
+        ],
+      },
+    ],
+    conversationToken: '{"data":{}}',
+    userStorage: '{"data":{}}',
+  })
 })

@@ -100,7 +100,10 @@ export interface DialogflowMiddleware<
 
     /** @public */
     framework: BuiltinFrameworkMetadata,
-  ): (DialogflowConversation<{}, {}, Contexts> & TConversationPlugin) | void
+  ): (DialogflowConversation<{}, {}, Contexts> & TConversationPlugin) |
+    void |
+    Promise<DialogflowConversation<{}, {}, Contexts> & TConversationPlugin> |
+    Promise<void>
 }
 
 /** @public */
@@ -422,9 +425,10 @@ export const dialogflow: Dialogflow = <
       await conv.user._verifyProfile(this._client!, this.auth!.client.id)
     }
     for (const middleware of this._middlewares) {
-      conv = middleware(conv, metadata) as (
-        DialogflowConversation<TConvData, TUserStorage, TContexts> | void
-      ) || conv
+      const result = middleware(conv, metadata)
+      conv = (result instanceof DialogflowConversation ? result : ((await result) || conv)) as (
+        DialogflowConversation<TConvData, TUserStorage, TContexts>
+      )
     }
     const log = debug ? common.info : common.debug
     log('Conversation', common.stringify(conv, 'request', 'headers', 'body'))
