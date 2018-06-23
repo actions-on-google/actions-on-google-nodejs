@@ -200,6 +200,7 @@ export interface DialogflowApp<
     > | string,
   ): this
 
+  /** @hidden */
   _middlewares: DialogflowMiddleware<DialogflowConversation<{}, {}, Contexts>>[]
 
   /** @public */
