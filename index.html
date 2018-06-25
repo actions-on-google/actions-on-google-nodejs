@@ -146,7 +146,7 @@ app.intent(<span class="hljs-string">'actions.intent.TEXT'</span>, (conv, input)
 
 <span class="hljs-comment">// Register handlers for Smart Home intents</span>
 
-app.onExecute(<span class="hljs-function"><span class="hljs-params">body</span> =&gt;</span> {
+app.onExecute(<span class="hljs-function">(<span class="hljs-params">body, headers</span>) =&gt;</span> {
   <span class="hljs-keyword">return</span> {
     <span class="hljs-attr">requestId</span>: <span class="hljs-string">'ff36...'</span>,
     <span class="hljs-attr">payload</span>: {
@@ -155,7 +155,7 @@ app.onExecute(<span class="hljs-function"><span class="hljs-params">body</span> 
   }
 })
 
-app.onQuery(<span class="hljs-function"><span class="hljs-params">body</span> =&gt;</span> {
+app.onQuery(<span class="hljs-function">(<span class="hljs-params">body, headers</span>) =&gt;</span> {
   <span class="hljs-keyword">return</span> {
     <span class="hljs-attr">requestId</span>: <span class="hljs-string">'ff36...'</span>,
     <span class="hljs-attr">payload</span>: {
@@ -164,7 +164,7 @@ app.onQuery(<span class="hljs-function"><span class="hljs-params">body</span> =&
   }
 })
 
-app.onSync(<span class="hljs-function"><span class="hljs-params">body</span> =&gt;</span> {
+app.onSync(<span class="hljs-function">(<span class="hljs-params">body, headers</span>) =&gt;</span> {
   <span class="hljs-keyword">return</span> {
     <span class="hljs-attr">requestId</span>: <span class="hljs-string">'ff36...'</span>,
     <span class="hljs-attr">payload</span>: {

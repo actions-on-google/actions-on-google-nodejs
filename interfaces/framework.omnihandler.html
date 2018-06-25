@@ -92,7 +92,7 @@
 				<h3 class="tsd-before-signature">Callable</h3>
 				<ul class="tsd-signatures tsd-kind-interface tsd-parent-kind-external-module">
 					<li class="tsd-signature tsd-kind-icon">__call<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">...</span>args<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span></li>
-					<li class="tsd-signature tsd-kind-icon">__call<span class="tsd-signature-symbol">(</span>body<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">JsonObject</span>, headers<span class="tsd-signature-symbol">: </span><a href="framework.headers.html" class="tsd-signature-type">Headers</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="framework.standardresponse.html" class="tsd-signature-type">StandardResponse</a><span class="tsd-signature-symbol">&gt;</span></li>
+					<li class="tsd-signature tsd-kind-icon">__call<span class="tsd-signature-symbol">(</span>body<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">JsonObject</span>, headers<span class="tsd-signature-symbol">: </span><a href="framework.headers.html" class="tsd-signature-type">Headers</a>, metadata<span class="tsd-signature-symbol">?: </span><a href="framework.builtinframeworkmetadata.html" class="tsd-signature-type">BuiltinFrameworkMetadata</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="framework.standardresponse.html" class="tsd-signature-type">StandardResponse</a><span class="tsd-signature-symbol">&gt;</span></li>
 					<li class="tsd-signature tsd-kind-icon">__call<span class="tsd-signature-symbol">(</span>request<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Request</span>, response<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Response</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 					<li class="tsd-signature tsd-kind-icon">__call<span class="tsd-signature-symbol">(</span>event<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">JsonObject</span>, context<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Context</span>, callback<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Callback</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
 				</ul>
@@ -116,7 +116,7 @@
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in framework/framework.ts:82</li>
+								<li>Defined in framework/framework.ts:96</li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -128,6 +128,9 @@
 							</li>
 							<li>
 								<h5>headers: <a href="framework.headers.html" class="tsd-signature-type">Headers</a></h5>
+							</li>
+							<li>
+								<h5><span class="tsd-flag ts-flagOptional">Optional</span> metadata: <a href="framework.builtinframeworkmetadata.html" class="tsd-signature-type">BuiltinFrameworkMetadata</a></h5>
 							</li>
 						</ul>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="framework.standardresponse.html" class="tsd-signature-type">StandardResponse</a><span class="tsd-signature-symbol">&gt;</span></h4>
@@ -226,13 +229,22 @@
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
 					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
+						<a href="framework.builtinframeworkmetadata.html" class="tsd-kind-icon">Builtin<wbr>Framework<wbr>Metadata</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
 						<a href="framework.builtinframeworks.html" class="tsd-kind-icon">Builtin<wbr>Frameworks</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
 						<a href="framework.expresshandler.html" class="tsd-kind-icon">Express<wbr>Handler</a>
 					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
+						<a href="framework.expressmetadata.html" class="tsd-kind-icon">Express<wbr>Metadata</a>
+					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-external-module tsd-has-type-parameter">
 						<a href="framework.framework-1.html" class="tsd-kind-icon">Framework</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
+						<a href="framework.frameworkmetadata.html" class="tsd-kind-icon">Framework<wbr>Metadata</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
 						<a href="framework.frameworks.html" class="tsd-kind-icon">Frameworks</a>
@@ -242,6 +254,9 @@
 					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
 						<a href="framework.lambdahandler.html" class="tsd-kind-icon">Lambda<wbr>Handler</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
+						<a href="framework.lambdametadata.html" class="tsd-kind-icon">Lambda<wbr>Metadata</a>
 					</li>
 				</ul>
 				<ul class="current">

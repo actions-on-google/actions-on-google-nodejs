@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>DialogflowIntentHandler | actions-on-google</title>
+	<title>FrameworkMetadata | actions-on-google</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -52,89 +52,37 @@
 					<a href="../globals.html">Globals</a>
 				</li>
 				<li>
-					<a href="../modules/dialogflow.html">dialogflow</a>
+					<a href="../modules/framework.html">framework</a>
 				</li>
 				<li>
-					<a href="dialogflow.dialogflowintenthandler.html">DialogflowIntentHandler</a>
+					<a href="framework.frameworkmetadata.html">FrameworkMetadata</a>
 				</li>
 			</ul>
-			<h1>Interface DialogflowIntentHandler&lt;TConvData, TUserStorage, TContexts, TConversation, TParameters, TArgument&gt;</h1>
+			<h1>Interface FrameworkMetadata</h1>
 		</div>
 	</div>
 </header>
 <div class="container container-main">
 	<div class="row">
 		<div class="col-8 col-content">
-			<section class="tsd-panel tsd-comment">
-				<div class="tsd-comment tsd-typography">
-				</div>
-			</section>
-			<section class="tsd-panel tsd-type-parameters">
-				<h3>Type parameters</h3>
-				<ul class="tsd-type-parameters">
-					<li>
-						<h4>TConvData</h4>
-					</li>
-					<li>
-						<h4>TUserStorage</h4>
-					</li>
-					<li>
-						<h4>TContexts<span class="tsd-signature-symbol">: </span><a href="dialogflow.contexts.html" class="tsd-signature-type">Contexts</a></h4>
-					</li>
-					<li>
-						<h4>TConversation<span class="tsd-signature-symbol">: </span><a href="../classes/dialogflow.dialogflowconversation.html" class="tsd-signature-type">DialogflowConversation</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TConvData</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TUserStorage</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TContexts</span><span class="tsd-signature-symbol">&gt;</span></h4>
-					</li>
-					<li>
-						<h4>TParameters<span class="tsd-signature-symbol">: </span><a href="dialogflow.parameters.html" class="tsd-signature-type">Parameters</a></h4>
-					</li>
-					<li>
-						<h4>TArgument<span class="tsd-signature-symbol">: </span><a href="../modules/conversation_argument.html#argument" class="tsd-signature-type">Argument</a></h4>
-					</li>
-				</ul>
-			</section>
 			<section class="tsd-panel tsd-hierarchy">
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="target">DialogflowIntentHandler</span>
+						<span class="target">FrameworkMetadata</span>
+						<ul class="tsd-hierarchy">
+							<li>
+								<a href="framework.builtinframeworkmetadata.html" class="tsd-signature-type">BuiltinFrameworkMetadata</a>
+							</li>
+						</ul>
 					</li>
 				</ul>
 			</section>
-			<section class="tsd-panel">
-				<h3 class="tsd-before-signature">Callable</h3>
-				<ul class="tsd-signatures tsd-kind-interface tsd-parent-kind-external-module tsd-has-type-parameter">
-					<li class="tsd-signature tsd-kind-icon">__call<span class="tsd-signature-symbol">(</span>conv<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">TConversation</span>, params<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">TParameters</span>, argument<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">TArgument</span>, status<span class="tsd-signature-symbol">: </span><a href="actionssdk_api_v2.googlerpcstatus.html" class="tsd-signature-type">GoogleRpcStatus</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">any</span></li>
-				</ul>
-				<ul class="tsd-descriptions">
-					<li class="tsd-description">
-						<aside class="tsd-sources">
-							<ul>
-								<li>Defined in service/dialogflow/dialogflow.ts:41</li>
-							</ul>
-						</aside>
-						<div class="tsd-comment tsd-typography">
-						</div>
-						<h4 class="tsd-parameters-title">Parameters</h4>
-						<ul class="tsd-parameters">
-							<li>
-								<h5>conv: <span class="tsd-signature-type">TConversation</span></h5>
-							</li>
-							<li>
-								<h5>params: <span class="tsd-signature-type">TParameters</span></h5>
-							</li>
-							<li>
-								<h5>argument: <span class="tsd-signature-type">TArgument</span></h5>
-							</li>
-							<li>
-								<h5>status: <a href="actionssdk_api_v2.googlerpcstatus.html" class="tsd-signature-type">GoogleRpcStatus</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">undefined</span></h5>
-							</li>
-						</ul>
-						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span>
-							<span class="tsd-signature-symbol"> | </span>
-							<span class="tsd-signature-type">any</span>
-						</h4>
-					</li>
-				</ul>
+			<section class="tsd-panel tsd-kind-interface tsd-parent-kind-external-module">
+				<h3 class="tsd-before-signature">Indexable</h3>
+				<div class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">[</span>name: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">]: </span><span class="tsd-signature-type">any</span></div>
+				<div class="tsd-comment tsd-typography">
+				</div>
 			</section>
 		</div>
 		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
@@ -164,7 +112,7 @@
 					<li class=" tsd-kind-external-module">
 						<a href="../modules/conversation_response.html">conversation/response</a>
 					</li>
-					<li class="current tsd-kind-external-module">
+					<li class=" tsd-kind-external-module">
 						<a href="../modules/dialogflow.html">dialogflow</a>
 					</li>
 					<li class=" tsd-kind-external-module">
@@ -173,7 +121,7 @@
 					<li class=" tsd-kind-external-module">
 						<a href="../modules/dialogflow_api_v2.html">dialogflow/api/v2</a>
 					</li>
-					<li class=" tsd-kind-external-module">
+					<li class="current tsd-kind-external-module">
 						<a href="../modules/framework.html">framework</a>
 					</li>
 					<li class=" tsd-kind-external-module">
@@ -186,63 +134,48 @@
 			</nav>
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
-					<li class=" tsd-kind-class tsd-parent-kind-external-module tsd-has-type-parameter">
-						<a href="../classes/dialogflow.contextvalues.html" class="tsd-kind-icon">Context<wbr>Values</a>
-					</li>
-					<li class=" tsd-kind-class tsd-parent-kind-external-module tsd-has-type-parameter">
-						<a href="../classes/dialogflow.dialogflowconversation.html" class="tsd-kind-icon">Dialogflow<wbr>Conversation</a>
-					</li>
-					<li class=" tsd-kind-class tsd-parent-kind-external-module">
-						<a href="../classes/dialogflow.incoming.html" class="tsd-kind-icon">Incoming</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-parent-kind-external-module tsd-has-type-parameter">
-						<a href="dialogflow.context.html" class="tsd-kind-icon">Context</a>
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
+						<a href="framework.builtinframeworkmetadata.html" class="tsd-kind-icon">Builtin<wbr>Framework<wbr>Metadata</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
-						<a href="dialogflow.contexts.html" class="tsd-kind-icon">Contexts</a>
+						<a href="framework.builtinframeworks.html" class="tsd-kind-icon">Builtin<wbr>Frameworks</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
+						<a href="framework.expresshandler.html" class="tsd-kind-icon">Express<wbr>Handler</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
+						<a href="framework.expressmetadata.html" class="tsd-kind-icon">Express<wbr>Metadata</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-external-module tsd-has-type-parameter">
-						<a href="dialogflow.dialogflow-1.html" class="tsd-kind-icon">Dialogflow</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-parent-kind-external-module tsd-has-type-parameter">
-						<a href="dialogflow.dialogflowapp.html" class="tsd-kind-icon">Dialogflow<wbr>App</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-parent-kind-external-module tsd-has-type-parameter">
-						<a href="dialogflow.dialogflowconversationoptions.html" class="tsd-kind-icon">Dialogflow<wbr>Conversation<wbr>Options</a>
+						<a href="framework.framework-1.html" class="tsd-kind-icon">Framework</a>
 					</li>
 				</ul>
 				<ul class="current">
-					<li class="current tsd-kind-interface tsd-parent-kind-external-module tsd-has-type-parameter">
-						<a href="dialogflow.dialogflowintenthandler.html" class="tsd-kind-icon">Dialogflow<wbr>Intent<wbr>Handler</a>
+					<li class="current tsd-kind-interface tsd-parent-kind-external-module">
+						<a href="framework.frameworkmetadata.html" class="tsd-kind-icon">Framework<wbr>Metadata</a>
 					</li>
 				</ul>
 				<ul class="after-current">
-					<li class=" tsd-kind-interface tsd-parent-kind-external-module tsd-has-type-parameter">
-						<a href="dialogflow.dialogflowmiddleware.html" class="tsd-kind-icon">Dialogflow<wbr>Middleware</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-parent-kind-external-module tsd-has-type-parameter">
-						<a href="dialogflow.dialogflowoptions.html" class="tsd-kind-icon">Dialogflow<wbr>Options</a>
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
+						<a href="framework.frameworks.html" class="tsd-kind-icon">Frameworks</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
-						<a href="dialogflow.dialogflowverification.html" class="tsd-kind-icon">Dialogflow<wbr>Verification</a>
+						<a href="framework.headers.html" class="tsd-kind-icon">Headers</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
-						<a href="dialogflow.dialogflowverificationheaders.html" class="tsd-kind-icon">Dialogflow<wbr>Verification<wbr>Headers</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-parent-kind-external-module tsd-has-type-parameter">
-						<a href="dialogflow.outputcontext.html" class="tsd-kind-icon">Output<wbr>Context</a>
+						<a href="framework.lambdahandler.html" class="tsd-kind-icon">Lambda<wbr>Handler</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
-						<a href="dialogflow.outputcontexts.html" class="tsd-kind-icon">Output<wbr>Contexts</a>
+						<a href="framework.lambdametadata.html" class="tsd-kind-icon">Lambda<wbr>Metadata</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
-						<a href="dialogflow.parameters.html" class="tsd-kind-icon">Parameters</a>
+						<a href="framework.omnihandler.html" class="tsd-kind-icon">Omni<wbr>Handler</a>
 					</li>
-					<li class=" tsd-kind-type-alias tsd-parent-kind-external-module">
-						<a href="../modules/dialogflow.html#incomingmessage" class="tsd-kind-icon">Incoming<wbr>Message</a>
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
+						<a href="framework.standardhandler.html" class="tsd-kind-icon">Standard<wbr>Handler</a>
 					</li>
-					<li class=" tsd-kind-function tsd-parent-kind-external-module tsd-has-type-parameter">
-						<a href="../modules/dialogflow.html#dialogflow-2" class="tsd-kind-icon">dialogflow</a>
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
+						<a href="framework.standardresponse.html" class="tsd-kind-icon">Standard<wbr>Response</a>
 					</li>
 				</ul>
 			</nav>

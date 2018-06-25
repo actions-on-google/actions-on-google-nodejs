@@ -128,7 +128,7 @@
 					<div class="tsd-signature tsd-kind-icon">jwt<span class="tsd-signature-symbol">:</span> <a href="smarthome.smarthomejwt.html" class="tsd-signature-type">SmartHomeJwt</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in service/smarthome/smarthome.ts:244</li>
+							<li>Defined in service/smarthome/smarthome.ts:249</li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -140,7 +140,7 @@
 					<div class="tsd-signature tsd-kind-icon">key<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in service/smarthome/smarthome.ts:241</li>
+							<li>Defined in service/smarthome/smarthome.ts:246</li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -159,7 +159,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in service/smarthome/smarthome.ts:155</li>
+									<li>Defined in service/smarthome/smarthome.ts:160</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -169,8 +169,8 @@
 								<dl class="tsd-comment-tags">
 									<dt>example</dt>
 									<dd><pre><code class="lang-javascript">
-<span class="hljs-keyword">const</span> app = smarthome({});
-app.onExecute(<span class="hljs-function"><span class="hljs-params">body</span> =&gt;</span> {
+<span class="hljs-keyword">const</span> app = smarthome();
+app.onExecute(<span class="hljs-function">(<span class="hljs-params">body, headers</span>) =&gt;</span> {
   <span class="hljs-keyword">return</span> {
     <span class="hljs-attr">requestId</span>: <span class="hljs-string">'ff36...'</span>,
     <span class="hljs-attr">payload</span>: {
@@ -206,7 +206,7 @@ app.onExecute(<span class="hljs-function"><span class="hljs-params">body</span> 
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in service/smarthome/smarthome.ts:130</li>
+									<li>Defined in service/smarthome/smarthome.ts:135</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -216,8 +216,8 @@ app.onExecute(<span class="hljs-function"><span class="hljs-params">body</span> 
 								<dl class="tsd-comment-tags">
 									<dt>example</dt>
 									<dd><pre><code class="lang-javascript">
-<span class="hljs-keyword">const</span> app = smarthome({});
-app.onQuery(<span class="hljs-function"><span class="hljs-params">body</span> =&gt;</span> {
+<span class="hljs-keyword">const</span> app = smarthome();
+app.onQuery(<span class="hljs-function">(<span class="hljs-params">body, headers</span>) =&gt;</span> {
   <span class="hljs-keyword">return</span> {
     <span class="hljs-attr">requestId</span>: <span class="hljs-string">'ff36...'</span>,
     <span class="hljs-attr">payload</span>: {
@@ -253,7 +253,7 @@ app.onQuery(<span class="hljs-function"><span class="hljs-params">body</span> =&
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in service/smarthome/smarthome.ts:104</li>
+									<li>Defined in service/smarthome/smarthome.ts:109</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -263,8 +263,8 @@ app.onQuery(<span class="hljs-function"><span class="hljs-params">body</span> =&
 								<dl class="tsd-comment-tags">
 									<dt>example</dt>
 									<dd><pre><code class="lang-javascript">
-<span class="hljs-keyword">const</span> app = smarthome({});
-app.onSync(<span class="hljs-function"><span class="hljs-params">body</span> =&gt;</span> {
+<span class="hljs-keyword">const</span> app = smarthome();
+app.onSync(<span class="hljs-function">(<span class="hljs-params">body, headers</span>) =&gt;</span> {
   <span class="hljs-keyword">return</span> {
     <span class="hljs-attr">requestId</span>: <span class="hljs-string">'ff36...'</span>,
     <span class="hljs-attr">payload</span>: {
@@ -300,7 +300,7 @@ app.onSync(<span class="hljs-function"><span class="hljs-params">body</span> =&g
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in service/smarthome/smarthome.ts:238</li>
+									<li>Defined in service/smarthome/smarthome.ts:243</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -365,7 +365,7 @@ app.onSync(<span class="hljs-function"><span class="hljs-params">body</span> =&g
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in service/smarthome/smarthome.ts:195</li>
+									<li>Defined in service/smarthome/smarthome.ts:200</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -380,7 +380,7 @@ app.onSync(<span class="hljs-function"><span class="hljs-params">body</span> =&g
 									<dt>example</dt>
 									<dd><pre><code class="lang-javascript">
 <span class="hljs-keyword">const</span> app = smarthome({
-  <span class="hljs-attr">apiKey</span>: <span class="hljs-string">"123ABC"</span>
+  <span class="hljs-attr">key</span>: <span class="hljs-string">"123ABC"</span>
 });
 
 <span class="hljs-keyword">const</span> addNewDevice = <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
