@@ -311,6 +311,7 @@ export class DialogflowConversation<
       expectUserResponse,
       userStorage,
       expectedIntent,
+      noInputPrompts,
     } = this.response()
     const google: GoogleAssistantResponse = {
       expectUserResponse,
@@ -320,6 +321,7 @@ export class DialogflowConversation<
         intent: expectedIntent.intent!,
         data: expectedIntent.inputValueData as ProtoAny<string, JsonObject>,
       },
+      noInputPrompts,
     }
     const payload: PayloadGoogle = {
       google,

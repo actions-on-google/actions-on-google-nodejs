@@ -26,6 +26,7 @@ import {
   RichResponseItem,
   MediaObject,
   MediaResponse,
+  SimpleResponse,
 } from './response'
 import { Question, SoloQuestion } from './question'
 import { Arguments } from './argument'
@@ -91,6 +92,7 @@ export interface ConversationResponse {
   expectUserResponse: boolean
   userStorage: string
   expectedIntent?: Api.GoogleActionsV2ExpectedIntent
+  noInputPrompts?: Api.GoogleActionsV2SimpleResponse[]
 }
 
 export interface ConversationOptionsInit<TConvData, TUserStorage> {
@@ -199,6 +201,12 @@ export class Conversation<TUserStorage> {
    * @public
    */
   screen: boolean
+
+  /**
+   * Reprompts when no input.
+   * @public
+   */
+  noInputs: (string | SimpleResponse)[] = []
 
   /** @hidden */
   _raw?: JsonObject
@@ -398,11 +406,18 @@ export class Conversation<TUserStorage> {
       richResponse.add(response)
     }
     const userStorage = this.user._serialize()
+    let noInputPrompts: Api.GoogleActionsV2SimpleResponse[] | undefined
+    if (this.noInputs.length > 0) {
+      noInputPrompts = this.noInputs.map(prompt => {
+        return (typeof prompt === 'string') ? new SimpleResponse(prompt) : prompt
+      })
+    }
     return {
       expectUserResponse,
       richResponse,
       userStorage,
       expectedIntent,
+      noInputPrompts,
     }
   }
 }
