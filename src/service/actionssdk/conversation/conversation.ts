@@ -203,7 +203,23 @@ export class Conversation<TUserStorage> {
   screen: boolean
 
   /**
-   * Reprompts when no input.
+   * Set reprompts when users don't provide input to this action (no-input errors).
+   * Each reprompt represents as the {@link SimpleResponse}, but raw strings also can be specified
+   * for convenience (they're passed to the constructor of {@link SimpleResponse}).
+   *
+   * @example
+   * ```javascript
+   *
+   * app.intent('actions.intent.MAIN', conv => {
+   *   conv.noInputs = [
+   *     'Are you still there?',
+   *     new SimpleResponse('Hello?'),
+   *     'Talk to you later. Bye!'
+   *   ]
+   *   conv.ask('What's your favorite color?')
+   * })
+   * ```
+   *
    * @public
    */
   noInputs: (string | SimpleResponse)[] = []
