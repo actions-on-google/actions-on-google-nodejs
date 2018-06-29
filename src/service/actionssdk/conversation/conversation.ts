@@ -206,6 +206,8 @@ export class Conversation<TUserStorage> {
    * Set reprompts when users don't provide input to this action (no-input errors).
    * Each reprompt represents as the {@link SimpleResponse}, but raw strings also can be specified
    * for convenience (they're passed to the constructor of {@link SimpleResponse}).
+   * Notice that this value is not kept over conversations. Thus, it is necessary to set
+   * the reprompts per each conversation response.
    *
    * @example
    * ```javascript
@@ -213,8 +215,11 @@ export class Conversation<TUserStorage> {
    * app.intent('actions.intent.MAIN', conv => {
    *   conv.noInputs = [
    *     'Are you still there?',
-   *     new SimpleResponse('Hello?'),
-   *     'Talk to you later. Bye!'
+   *     'Hello?',
+   *     new SimpleResponse({
+   *       text: 'Talk to you later. Bye!',
+   *       speech: '<speak>Talk to you later. Bye!</speak>'
+   *     })
    *   ]
    *   conv.ask('What's your favorite color?')
    * })
