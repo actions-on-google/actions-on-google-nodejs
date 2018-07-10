@@ -25,7 +25,7 @@ import {
   ActionsSdkConversationOptions,
   ActionsSdkConversation,
 } from '../conv'
-import { BasicCard, Button, Suggestions } from '..'
+import { BasicCard, Button, Suggestions, SimpleResponse } from '..'
 
 const CONVERSATION_ID = '1234'
 const USER_ID = 'abcd'
@@ -241,6 +241,27 @@ test('basic card with suggestions conversation response', t => {
   t.deepEqual(response.richResponse.items![1].basicCard!.formattedText,
     'This is a sample text')
   t.deepEqual(response.richResponse.suggestions![0].title, 'suggestion one')
+  t.true(response.expectUserResponse)
+  t.true(conv.digested)
+  t.true(conv._responded)
+})
+
+test('basic conversation response with reprompts', t => {
+  const appRequest = buildRequest('ACTIVE', 'example.foo')
+  const options = {
+    body: appRequest,
+  } as ActionsSdkConversationOptions<{}, {}>
+  const conv = new ActionsSdkConversation(options)
+
+  conv.ask('hello')
+  conv.noInputs = ['reprompt1', new SimpleResponse('reprompt2')]
+  const response = conv.response()
+
+  t.is(response.richResponse.items!.length, 1)
+  t.deepEqual(response.richResponse.items![0].simpleResponse!.textToSpeech,
+    'hello')
+  t.deepEqual(response.noInputPrompts![0].textToSpeech, 'reprompt1')
+  t.deepEqual(response.noInputPrompts![1].textToSpeech, 'reprompt2')
   t.true(response.expectUserResponse)
   t.true(conv.digested)
   t.true(conv._responded)

@@ -99,9 +99,11 @@ export class ActionsSdkConversation<
       expectUserResponse,
       userStorage,
       expectedIntent,
+      noInputPrompts,
     } = this.response()
     const inputPrompt: Api.GoogleActionsV2InputPrompt = {
       richInitialPrompt: richResponse,
+      noInputPrompts,
     }
     const possibleIntents: Api.GoogleActionsV2ExpectedIntent[] = [expectedIntent || {
       intent: 'actions.intent.TEXT',

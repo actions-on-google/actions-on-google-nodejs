@@ -26,6 +26,7 @@ import {
   RichResponseItem,
   MediaObject,
   MediaResponse,
+  SimpleResponse,
 } from './response'
 import { Question, SoloQuestion } from './question'
 import { Arguments } from './argument'
@@ -91,6 +92,7 @@ export interface ConversationResponse {
   expectUserResponse: boolean
   userStorage: string
   expectedIntent?: Api.GoogleActionsV2ExpectedIntent
+  noInputPrompts?: Api.GoogleActionsV2SimpleResponse[]
 }
 
 export interface ConversationOptionsInit<TConvData, TUserStorage> {
@@ -199,6 +201,33 @@ export class Conversation<TUserStorage> {
    * @public
    */
   screen: boolean
+
+  /**
+   * Set reprompts when users don't provide input to this action (no-input errors).
+   * Each reprompt represents as the {@link SimpleResponse}, but raw strings also can be specified
+   * for convenience (they're passed to the constructor of {@link SimpleResponse}).
+   * Notice that this value is not kept over conversations. Thus, it is necessary to set
+   * the reprompts per each conversation response.
+   *
+   * @example
+   * ```javascript
+   *
+   * app.intent('actions.intent.MAIN', conv => {
+   *   conv.noInputs = [
+   *     'Are you still there?',
+   *     'Hello?',
+   *     new SimpleResponse({
+   *       text: 'Talk to you later. Bye!',
+   *       speech: '<speak>Talk to you later. Bye!</speak>'
+   *     })
+   *   ]
+   *   conv.ask('What's your favorite color?')
+   * })
+   * ```
+   *
+   * @public
+   */
+  noInputs: (string | SimpleResponse)[] = []
 
   /** @hidden */
   _raw?: JsonObject
@@ -398,11 +427,18 @@ export class Conversation<TUserStorage> {
       richResponse.add(response)
     }
     const userStorage = this.user._serialize()
+    let noInputPrompts: Api.GoogleActionsV2SimpleResponse[] | undefined
+    if (this.noInputs.length > 0) {
+      noInputPrompts = this.noInputs.map(prompt => {
+        return (typeof prompt === 'string') ? new SimpleResponse(prompt) : prompt
+      })
+    }
     return {
       expectUserResponse,
       richResponse,
       userStorage,
       expectedIntent,
+      noInputPrompts,
     }
   }
 }

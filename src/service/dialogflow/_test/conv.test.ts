@@ -21,7 +21,7 @@ import * as ActionsApi from '../../actionssdk/api/v2'
 import { ContextValues } from '../context'
 import { Incoming } from '../incoming'
 import { clone } from '../../../common'
-import { Permission } from '../../actionssdk'
+import { Permission, SimpleResponse } from '../../actionssdk'
 
 interface AvaContext {
   conv: DialogflowConversation
@@ -395,6 +395,58 @@ test('conv.serialize returns the correct response with permission response', t =
     outputContexts: [
       {
         name: 'abcdefg1234567/contexts/_actions_on_google',
+        lifespanCount: 99,
+        parameters: {
+          data: '{}',
+        },
+      },
+    ],
+  })
+})
+
+test('conv.serialize returns the correct response with simple response string and reprompts', t => {
+  const response = 'abc123'
+  const reprompt1 = 'repromt123'
+  const reprompt2 = 'repromt456'
+  const session = 'abcdefg1234567'
+  const conv = new DialogflowConversation({
+    body: {
+      session,
+      originalDetectIntentRequest: {
+        payload: {},
+      },
+    } as Api.GoogleCloudDialogflowV2WebhookRequest,
+    headers: {},
+  })
+  conv.add(response)
+  conv.noInputs = [reprompt1, new SimpleResponse(reprompt2)]
+  t.deepEqual(clone(conv.serialize()), {
+    payload: {
+      google: {
+        expectUserResponse: true,
+        richResponse: {
+          items: [
+            {
+              simpleResponse: {
+                textToSpeech: 'abc123',
+              },
+            },
+          ],
+        },
+        noInputPrompts: [
+          {
+            textToSpeech: reprompt1,
+          },
+          {
+            textToSpeech: reprompt2,
+          },
+        ],
+        userStorage: '{"data":{}}',
+      },
+    },
+    outputContexts: [
+      {
+        name: `${session}/contexts/_actions_on_google`,
         lifespanCount: 99,
         parameters: {
           data: '{}',
