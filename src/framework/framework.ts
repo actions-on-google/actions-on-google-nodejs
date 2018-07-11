@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import { ExpressHandler, Express, express } from './express'
-import { LambdaHandler, Lambda, lambda } from './lambda'
+import { ExpressHandler, Express, ExpressMetadata, express } from './express'
+import { LambdaHandler, Lambda, LambdaMetadata, lambda } from './lambda'
 import { JsonObject } from '../common'
 
 export interface Frameworks {
@@ -38,6 +38,20 @@ export interface OmniHandler extends StandardHandler, ExpressHandler, LambdaHand
   /** @public */
   // tslint:disable-next-line:no-any allow any inputs and outputs depending on framework
   (...args: any[]): any
+}
+
+export interface FrameworkMetadata {
+  /** @public */
+  // tslint:disable-next-line:no-any allow any framework metadata
+  [name: string]: any
+}
+
+export interface BuiltinFrameworkMetadata extends FrameworkMetadata {
+  /** @public */
+  express?: ExpressMetadata
+
+  /** @public */
+  lambda?: LambdaMetadata
 }
 
 export interface BuiltinFrameworks extends Frameworks {
@@ -81,5 +95,14 @@ export interface Headers {
 /** @public */
 export interface StandardHandler {
   /** @public */
-  (body: JsonObject, headers: Headers): Promise<StandardResponse>
+  (
+    /** @public */
+    body: JsonObject,
+
+    /** @public */
+    headers: Headers,
+
+    /** @public */
+    metadata?: BuiltinFrameworkMetadata,
+  ): Promise<StandardResponse>
 }

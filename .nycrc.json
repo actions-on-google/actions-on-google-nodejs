@@ -12,6 +12,7 @@
     "coverage",
     "script",
     "docs",
+    "package",
     "**/_test",
     "**/index.js"
   ],

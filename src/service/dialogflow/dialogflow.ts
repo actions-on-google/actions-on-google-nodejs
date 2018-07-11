@@ -28,6 +28,7 @@ import * as common from '../../common'
 import { Contexts, Parameters } from './context'
 import { DialogflowConversation } from './conv'
 import { OAuth2Client } from 'google-auth-library'
+import { BuiltinFrameworkMetadata } from '../../framework'
 
 /** @public */
 export interface DialogflowIntentHandler<
@@ -95,8 +96,15 @@ export interface DialogflowMiddleware<
   TConversationPlugin extends DialogflowConversation<{}, {}, Contexts>
 > {
   (
+    /** @public */
     conv: DialogflowConversation<{}, {}, Contexts>,
-  ): (DialogflowConversation<{}, {}, Contexts> & TConversationPlugin) | void
+
+    /** @public */
+    framework: BuiltinFrameworkMetadata,
+  ): (DialogflowConversation<{}, {}, Contexts> & TConversationPlugin) |
+    void |
+    Promise<DialogflowConversation<{}, {}, Contexts> & TConversationPlugin> |
+    Promise<void>
 }
 
 /** @public */
@@ -253,6 +261,7 @@ export interface DialogflowApp<
     > | string,
   ): this
 
+  /** @hidden */
   _middlewares: DialogflowMiddleware<DialogflowConversation<{}, {}, Contexts>>[]
 
   /** @public */
@@ -454,6 +463,7 @@ export const dialogflow: Dialogflow = <
     this: AppHandler & DialogflowApp<TConvData, TUserStorage, TContexts, TConversation>,
     body: Api.GoogleCloudDialogflowV2WebhookRequest,
     headers,
+    metadata = {},
   ) {
     const { debug, init, verification } = this
     if (verification) {
@@ -497,8 +507,10 @@ export const dialogflow: Dialogflow = <
       await conv.user._verifyProfile(this._client!, this.auth!.client.id)
     }
     for (const middleware of this._middlewares) {
-      conv = (middleware(conv) as DialogflowConversation<TConvData, TUserStorage, TContexts> | void)
-        || conv
+      const result = middleware(conv, metadata)
+      conv = (result instanceof DialogflowConversation ? result : ((await result) || conv)) as (
+        DialogflowConversation<TConvData, TUserStorage, TContexts>
+      )
     }
     const log = debug ? common.info : common.debug
     log('Conversation', common.stringify(conv, 'request', 'headers', 'body'))
@@ -512,7 +524,8 @@ export const dialogflow: Dialogflow = <
           continue
         } else {
           if (!this._handlers.fallback) {
-            throw new Error(`Dialogflow IntentHandler not found for intent: ${intent} or action: ${action}`)
+            throw new Error(
+              `Dialogflow IntentHandler not found for intent: ${intent} or action: ${action}`)
           }
           handler = this._handlers.fallback
           continue

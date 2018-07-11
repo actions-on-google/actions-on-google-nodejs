@@ -79,11 +79,11 @@ export const attach = <TService>(
   }
   app = Object.assign(omni, app)
   const handler: typeof app.handler = app.handler.bind(app)
-  const standard: StandardHandler = async (body, headers) => {
+  const standard: StandardHandler = async (body, headers, metadata) => {
     const log = app.debug ? common.info : common.debug
     log('Request', common.stringify(body))
     log('Headers', common.stringify(headers))
-    const response = await handler(body, headers)
+    const response = await handler(body, headers, metadata)
     if (!response.headers) {
       response.headers = {}
     }

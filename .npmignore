@@ -12,3 +12,4 @@ docs
 script
 package
 .nycrc.json
+typedoc.json

@@ -15,6 +15,7 @@
  */
 
 import * as Debug from 'debug'
+import * as https from 'https'
 
 const name = 'actions-on-google'
 
@@ -32,6 +33,10 @@ export const info = console.log.bind(console) as typeof console.log
 
 warn.log = error
 debug.log = info
+
+/** @hidden */
+export const deprecate = (feature: string, alternative: string) =>
+  info(`${feature} is *DEPRECATED*: ${alternative}`)
 
 /** @hidden */
 export interface JsonObject {
@@ -60,7 +65,8 @@ export const stringify = (root: any, ...exclude: string[]) => {
       o[k] = value
       return o
     } catch (e) {
-      o[k] = `[Stringify Error] ${e}`
+      o[k] = e.message === 'Converting circular structure to JSON' ?
+        '[Circular]' : `[Stringify Error] ${e}`
       return o
     }
   }, {} as typeof root)
@@ -77,3 +83,7 @@ export const toArray = <T>(a: T | T[]) => Array.isArray(a) ? a : [a]
 export interface ApiClientObjectMap<TValue> {
   [key: string]: TValue
 }
+
+// Bind this to https to ensure its not implementation dependent
+/** @hidden */
+export const request: typeof https.request = https.request.bind(https)

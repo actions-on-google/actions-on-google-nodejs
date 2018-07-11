@@ -15,16 +15,39 @@
  */
 
 import test from 'ava'
+import * as common from '../../../common'
+import * as sinon from 'sinon'
 
 import { smarthome, SmartHomeJwt } from '../smarthome'
 import * as Api from '../api/v1'
+import { Headers, BuiltinFrameworkMetadata } from '../../../framework'
 import * as Sample from './expected'
 
 const agentUserId = '123'
-const sampleApiKey = '<API-KEY>'
+const sampleApiKey = 'API-KEY'
 
 const throwError = () => {
   throw Error('')
+}
+
+const httpsResponse = (callback: Function) => {
+  let onData: ((d?: string | Buffer) => void) | null = null
+  let onEnd: ((d?: string | Buffer) => void) | null = null
+  callback({
+    on(event: string, call: (d?: string | Buffer) => void) {
+      if (event === 'data') {
+        onData = call
+        return
+      }
+      if (event === 'end') {
+        onEnd = call
+        return
+      }
+    },
+  })
+  const buffer = new Buffer('test', 'utf8')
+  onData!(buffer)
+  onEnd!()
 }
 
 const SAMPLE_JWT: SmartHomeJwt = {
@@ -103,54 +126,126 @@ test('execute intent handler is invoked', (t) => {
   })
 })
 
-test('request sync fails if no API key is defined', (t) => {
+// Run test serially to not interfere with sinon stubs
+test.serial('request sync fails if no API key is defined', async (t) => {
+  const mock = sinon.stub(common, 'request')
+  mock.callsFake((options, callback) => {
+    t.fail(JSON.stringify(options))
+    t.is(options.hostname, 'homegraph.googleapis.com')
+    t.is(options.path, '/v1/devices:requestSync?key=API-KEY')
+    t.is(options.method, 'POST')
+    t.is(options.headers, {})
+    httpsResponse(callback)
+  })
+
   const app = smarthome()
 
-  return app.requestSync(agentUserId)
-    .then(() => {
-      t.fail('You should not be able to call request without an API key')
-    })
-    .catch(() => {
-      t.pass('This method call properly throws an error')
-    })
+  try {
+    await app.requestSync(agentUserId)
+    t.fail('You should not be able to call request without an API key')
+  } catch (e) {
+    t.pass('This method call properly throws an error')
+  }
+  mock.restore()
 })
 
-test('request sync succeeds if API key is defined', (t) => {
+// Run test serially to not interfere with sinon stubs
+test.serial('request sync succeeds if API key is defined', async (t) => {
+  const mock = sinon.stub(common, 'request')
+  mock.callsFake((options, callback) => {
+    t.is(options.hostname, 'homegraph.googleapis.com')
+    t.is(options.path, '/v1/devices:requestSync?key=API-KEY')
+    t.is(options.method, 'POST')
+    t.deepEqual(options.headers, {})
+    httpsResponse(callback)
+  })
+
   const app = smarthome({
     key: sampleApiKey,
   })
 
-  return app.requestSync(agentUserId)
-    .then(() => {
-      t.pass('The API was called successfully')
-    })
-    .catch((e) => {
-      t.fail('You should be able to call request with an API key')
-    })
+  try {
+    await app.requestSync(agentUserId)
+    t.pass('You should be able to call request with an API key')
+  } catch (e) {
+    t.fail('The API was not called successfully')
+  }
+  mock.restore()
 })
 
-test('report state fails if JWT is not defined', (t) => {
-  const app = smarthome({})
+// Run test serially to not interfere with sinon stubs
+test.serial('report state fails if JWT is not defined', async (t) => {
+  const mock = sinon.stub(common, 'request')
+  mock.callsFake((options, callback) => {
+    t.is(options.hostname, 'homegraph.googleapis.com')
+    t.is(options.path, '/v1/devices:reportStateAndNotification')
+    t.is(options.method, 'POST')
+    t.is(options.headers.Authorization, ' Bearer 1234')
+    httpsResponse(callback)
+  })
 
-  return app.reportState(Sample.REPORT_STATE_REQUEST)
-    .then(() => {
-      t.fail('You should not be able to call request without a JWT')
-    })
-    .catch((e) => {
-      t.pass('This method call properly throws an error')
-    })
+  const app = smarthome()
+
+  try {
+    await app.reportState(Sample.REPORT_STATE_REQUEST)
+    t.fail('You should not be able to call request without a JWT')
+  } catch (e) {
+    t.pass('This method call properly throws an error')
+  }
+  mock.restore()
 })
 
-test('report state succeeds if JWT is defined', (t) => {
+// Run test serially to not interfere with sinon stubs
+test.serial('report state succeeds if JWT is defined', async (t) => {
+  const mock = sinon.stub(common, 'request')
+  mock.callsFake((options, callback) => {
+    t.is(options.hostname, 'homegraph.googleapis.com')
+    t.is(options.path, '/v1/devices:reportStateAndNotification')
+    t.is(options.method, 'POST')
+    t.is(options.headers.Authorization, ' Bearer 1234')
+    httpsResponse(callback)
+  })
+
   const app = smarthome({
     jwt: SAMPLE_JWT,
   })
 
-  return app.reportState(Sample.REPORT_STATE_REQUEST)
-    .then(() => {
-      t.pass('The API was called successfully')
-    })
-    .catch((e) => {
-      t.fail('You should be able to call request with a JWT')
-    })
+  try {
+    await app.reportState(Sample.REPORT_STATE_REQUEST)
+    t.pass('The API was called successfully')
+  } catch (e) {
+    t.fail('You should be able to call request with a JWT: ' + e)
+  }
+  mock.restore()
+})
+
+test('verifies headers and framework metadata are sent along with body', (t) => {
+  const app = smarthome()
+  let authToken = ''
+
+  const intentHandler = (
+    body: Api.SmartHomeV1Request,
+    headers: Headers,
+    framework: BuiltinFrameworkMetadata,
+  ) => {
+    t.is(framework, Sample.FRAMEWORK_METADATA)
+    if (!Array.isArray(headers.authorization) && headers.authorization !== undefined) {
+      authToken = headers.authorization
+    }
+    return Sample.SYNC_RESPONSE
+  }
+  app.onSync(intentHandler)
+  app.onQuery(throwError)
+  app.onExecute(throwError)
+
+  const promise = app.handler(
+    Sample.SYNC_REQUEST,
+    Sample.SMART_HOME_HEADERS,
+    Sample.FRAMEWORK_METADATA,
+  )
+
+  return promise.then((result) => {
+    t.is(result.status, 200)
+    t.is(authToken, 'Bearer TOKEN')
+  })
 })

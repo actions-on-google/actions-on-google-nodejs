@@ -27,11 +27,23 @@ export interface ExpressHandler {
   (request: Request, response: Response): void
 }
 
+export interface ExpressMetadata {
+  /** @public */
+  request: Request
+
+  /** @public */
+  response: Response
+}
+
 /** @hidden */
 export class Express implements Framework<ExpressHandler> {
   handle(standard: StandardHandler) {
     return (request: Request, response: Response) => {
-      standard(request.body, request.headers)
+      const metadata: ExpressMetadata = {
+        request,
+        response,
+      }
+      standard(request.body, request.headers, { express: metadata })
       .then(({ status, body, headers }) => {
         if (headers) {
           for (const key in headers) {

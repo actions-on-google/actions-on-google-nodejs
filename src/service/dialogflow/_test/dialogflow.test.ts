@@ -29,6 +29,7 @@ import * as ActionsApi from '../../actionssdk/api/v2'
 import { clone } from '../../../common'
 import { Argument } from '../../actionssdk'
 import { OAuth2Client } from 'google-auth-library'
+import { SimpleResponse } from '../../actionssdk'
 
 interface AvaContext {
   app: AppHandler & DialogflowApp<{}, {}, Contexts, DialogflowConversation>
@@ -124,6 +125,66 @@ test('app gets simple response string when using app.intent', async t => {
   })
 })
 
+test('app gets simple response string with reprompts when using app.intent', async t => {
+  const intent = 'abc123'
+  const response = 'abcdefg1234567'
+  const reprompt1 = 'reprompt1234567'
+  const reprompt2 = 'reprompt7654321'
+  const session = 'abcdefghijk'
+  t.context.app.intent(intent, conv => {
+    conv.ask(response)
+    conv.noInputs = [reprompt1, new SimpleResponse(reprompt2)]
+  })
+  const res = await t.context.app.handler({
+    session,
+    queryResult: {
+      intent: {
+        displayName: intent,
+      },
+    },
+    originalDetectIntentRequest: {
+      payload: {
+        isInSandbox: true,
+      } as ActionsApi.GoogleActionsV2AppRequest,
+    },
+  } as Api.GoogleCloudDialogflowV2WebhookRequest, {})
+  t.is(res.status, 200)
+  t.deepEqual(clone(res.body), {
+    payload: {
+      google: {
+        expectUserResponse: true,
+        richResponse: {
+          items: [
+            {
+              simpleResponse: {
+                textToSpeech: response,
+              },
+            },
+          ],
+        },
+        noInputPrompts: [
+          {
+            textToSpeech: reprompt1,
+          },
+          {
+            textToSpeech: reprompt2,
+          },
+        ],
+        userStorage: '{"data":{}}',
+      },
+    },
+    outputContexts: [
+      {
+        name: `${session}/contexts/_actions_on_google`,
+        lifespanCount: 99,
+        parameters: {
+          data: '{}',
+        },
+      },
+    ],
+  })
+})
+
 test('app gets simple response string when using app.action', async t => {
   const action = 'abc123'
   const response = 'abcdefg1234567'
@@ -132,7 +193,7 @@ test('app gets simple response string when using app.action', async t => {
   const res = await t.context.app.handler({
     session,
     queryResult: {
-      action: action,
+      action,
     },
     originalDetectIntentRequest: {
       payload: {
@@ -202,7 +263,7 @@ test('app throws error when action handler throws error', async t => {
   const res: Error = await t.throws(t.context.app.handler({
     session,
     queryResult: {
-      action: action,
+      action,
     },
     originalDetectIntentRequest: {
       payload: {
@@ -288,7 +349,7 @@ test('app uses catcher when action handler throws error', async t => {
   const res = await t.context.app.handler({
     session,
     queryResult: {
-      action: action,
+      action,
     },
     originalDetectIntentRequest: {
       payload: {
@@ -381,7 +442,7 @@ test('app adds middleware using app.middleware', t => {
   t.deepEqual(t.context.app._middlewares, [middleware])
 })
 
-test('app uses middleware', async t => {
+test('app uses middleware using Object.assign', async t => {
   const response = 'abcdefg1234567'
   interface TestMiddleware {
     test(): void
@@ -408,6 +469,207 @@ test('app uses middleware', async t => {
       } as ActionsApi.GoogleActionsV2AppRequest,
     },
   } as Api.GoogleCloudDialogflowV2WebhookRequest, {})
+  t.is(res.status, 200)
+  t.deepEqual(clone(res.body), {
+    payload: {
+      google: {
+        expectUserResponse: true,
+        richResponse: {
+          items: [
+            {
+              simpleResponse: {
+                textToSpeech: response,
+              },
+            },
+          ],
+        },
+        userStorage: '{"data":{}}',
+      },
+    },
+    outputContexts: [
+      {
+        name: `${session}/contexts/_actions_on_google`,
+        lifespanCount: 99,
+        parameters: {
+          data: '{}',
+        },
+      },
+    ],
+  })
+})
+
+test('app uses async middleware using Object.assign', async t => {
+  const response = 'abcdefg1234567'
+  interface TestMiddleware {
+    test(): void
+  }
+  const middleware: DialogflowMiddleware<
+    TestMiddleware & DialogflowConversation<{}, {}, Contexts>
+  > = async conv => Object.assign(conv, {
+    test() {
+      conv.ask(response)
+    },
+  })
+  const app = dialogflow<TestMiddleware & DialogflowConversation<{}, {}, Contexts>>()
+  app._middlewares.push(middleware)
+  const session = 'abcdefghijk'
+  app.fallback(conv => {
+    conv.test()
+  })
+  const res = await app.handler({ session } as Api.GoogleCloudDialogflowV2WebhookRequest, {})
+  t.is(res.status, 200)
+  t.deepEqual(clone(res.body), {
+    payload: {
+      google: {
+        expectUserResponse: true,
+        richResponse: {
+          items: [
+            {
+              simpleResponse: {
+                textToSpeech: response,
+              },
+            },
+          ],
+        },
+        userStorage: '{"data":{}}',
+      },
+    },
+    outputContexts: [
+      {
+        name: `${session}/contexts/_actions_on_google`,
+        lifespanCount: 99,
+        parameters: {
+          data: '{}',
+        },
+      },
+    ],
+  })
+})
+
+test('app uses async middleware returning void', async t => {
+  const response = 'abcdefg1234567'
+  interface TestMiddleware {
+    test(): void
+  }
+  const middleware: DialogflowMiddleware<
+    TestMiddleware & DialogflowConversation<{}, {}, Contexts>
+  > = async conv => {
+    (conv as TestMiddleware & DialogflowConversation<{}, {}, Contexts>)
+      .test = () => conv.ask(response)
+  }
+  const app = dialogflow<TestMiddleware & DialogflowConversation<{}, {}, Contexts>>()
+  app._middlewares.push(middleware)
+  const session = 'abcdefghijk'
+  app.fallback(conv => {
+    conv.test()
+  })
+  const res = await app.handler({ session } as Api.GoogleCloudDialogflowV2WebhookRequest, {})
+  t.is(res.status, 200)
+  t.deepEqual(clone(res.body), {
+    payload: {
+      google: {
+        expectUserResponse: true,
+        richResponse: {
+          items: [
+            {
+              simpleResponse: {
+                textToSpeech: response,
+              },
+            },
+          ],
+        },
+        userStorage: '{"data":{}}',
+      },
+    },
+    outputContexts: [
+      {
+        name: `${session}/contexts/_actions_on_google`,
+        lifespanCount: 99,
+        parameters: {
+          data: '{}',
+        },
+      },
+    ],
+  })
+})
+
+test('app uses async middleware returning promise', async t => {
+  const response = 'abcdefg1234567'
+  interface TestMiddleware {
+    test(): void
+  }
+  const middleware: DialogflowMiddleware<
+    TestMiddleware & DialogflowConversation<{}, {}, Contexts>
+  > = conv => Promise.resolve(Object.assign(conv, {
+    test() {
+      conv.ask(response)
+    },
+  }))
+  const app = dialogflow<TestMiddleware & DialogflowConversation<{}, {}, Contexts>>()
+  app._middlewares.push(middleware)
+  const session = 'abcdefghijk'
+  app.fallback(conv => {
+    conv.test()
+  })
+  const res = await app.handler({ session } as Api.GoogleCloudDialogflowV2WebhookRequest, {})
+  t.is(res.status, 200)
+  t.deepEqual(clone(res.body), {
+    payload: {
+      google: {
+        expectUserResponse: true,
+        richResponse: {
+          items: [
+            {
+              simpleResponse: {
+                textToSpeech: response,
+              },
+            },
+          ],
+        },
+        userStorage: '{"data":{}}',
+      },
+    },
+    outputContexts: [
+      {
+        name: `${session}/contexts/_actions_on_google`,
+        lifespanCount: 99,
+        parameters: {
+          data: '{}',
+        },
+      },
+    ],
+  })
+})
+
+test('app gives middleware framework metadata', async t => {
+  const metadata = {
+    custom: {
+      request: 'test',
+    },
+  }
+  const response = 'abcdefg1234567'
+  let called = false
+  const middleware: DialogflowMiddleware<DialogflowConversation<{}, {}, Contexts>
+  > = (conv, framework) => {
+    called = true
+    t.is(framework, metadata)
+  }
+  const app = dialogflow<DialogflowConversation<{}, {}, Contexts>>()
+  app._middlewares.push(middleware)
+  const session = 'abcdefghijk'
+  app.fallback(conv => {
+    conv.ask(response)
+  })
+  const res = await app.handler({
+    session,
+    queryResult: {},
+    originalDetectIntentRequest: {
+      payload: {
+        isInSandbox: true,
+      } as ActionsApi.GoogleActionsV2AppRequest,
+    },
+  } as Api.GoogleCloudDialogflowV2WebhookRequest, {}, metadata)
+  t.true(called)
   t.is(res.status, 200)
   t.deepEqual(clone(res.body), {
     payload: {

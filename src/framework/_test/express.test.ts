@@ -15,8 +15,12 @@
  */
 
 import ava, { RegisterContextual } from 'ava'
-import { Express } from '../express'
+import * as sinon from 'sinon'
+
+import * as common from '../../common'
 import { JsonObject } from '../../common'
+
+import { Express } from '../express'
 import { StandardResponse, Headers } from '../framework'
 
 interface AvaContext {
@@ -108,6 +112,7 @@ test('handles error', async t => {
   let receivedStatus = -1
   let receivedBody: JsonObject | null = null
   let promise: Promise<StandardResponse> | null = null
+  const stub = sinon.stub(common, 'error')
   t.context.express.handle((body, headers) => {
     t.is(body, sentBody)
     t.is(headers, sentHeaders)
@@ -131,6 +136,8 @@ test('handles error', async t => {
   } as any)
   // tslint:disable-next-line:no-any mocking promise
   await (promise as any).catch(() => {})
+  t.true(stub.called)
+  stub.restore()
   t.deepEqual(receivedBody, expectedBody)
   t.is(receivedStatus, expectedStatus)
 })
@@ -171,4 +178,51 @@ test('handles valid headers fine', async t => {
   await promise
   t.is(receivedStatus, expectedStatus)
   t.deepEqual(receivedHeaders, expectedHeaders)
+})
+
+test('sends back metadata', async t => {
+  const expectedBody = {
+    prop: true,
+  }
+  const expectedStatus = 123
+  const sentBody = {
+    a: '1',
+  }
+  const sentHeaders = {
+    key: 'value',
+  }
+  let receivedBody: JsonObject | null = null
+  let receivedStatus = -1
+  let promise: Promise<StandardResponse> | null = null
+  // tslint:disable-next-line:no-any mocking request
+  const request: any = {
+    body: sentBody,
+    headers: sentHeaders,
+    get() {},
+  }
+  // tslint:disable-next-line:no-any mocking response
+  const response: any = {
+    status(status: number) {
+      receivedStatus = status
+      return this
+    },
+    send(body: JsonObject) {
+      receivedBody = body
+      return this
+    },
+  }
+  t.context.express.handle((body, headers, metadata) => {
+    t.is(metadata!.express!.request, request)
+    t.is(metadata!.express!.response, response)
+    t.is(body, sentBody)
+    t.is(headers, sentHeaders)
+    promise = Promise.resolve({
+      body: expectedBody,
+      status: expectedStatus,
+    })
+    return promise
+  })(request, response)
+  await promise
+  t.is(receivedBody, expectedBody)
+  t.is(receivedStatus, expectedStatus)
 })

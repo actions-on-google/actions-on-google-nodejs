@@ -70,6 +70,7 @@ export class ActionsSdkConversation<
     super({
       request: options.body,
       headers: options.headers,
+      init: options.init,
     })
 
     this.body = options.body
@@ -98,9 +99,11 @@ export class ActionsSdkConversation<
       expectUserResponse,
       userStorage,
       expectedIntent,
+      noInputPrompts,
     } = this.response()
     const inputPrompt: Api.GoogleActionsV2InputPrompt = {
       richInitialPrompt: richResponse,
+      noInputPrompts,
     }
     const possibleIntents: Api.GoogleActionsV2ExpectedIntent[] = [expectedIntent || {
       intent: 'actions.intent.TEXT',

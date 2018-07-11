@@ -1,7 +1,7 @@
 # Actions on Google Client Library
 
-This client library makes it easy to create your apps for the Google Assistant, and
-supports both Dialogflow fulfillment and the Actions SDK webhook.
+This client library makes it easy to create Actions for the Google Assistant and
+supports Dialogflow, Actions SDK, and Smart Home fulfillment.
 
 * [Client Library GitHub repo](https://github.com/actions-on-google/actions-on-google-nodejs)
 * [Client Library reference docs](https://actions-on-google.github.io/actions-on-google-nodejs/)
@@ -86,6 +86,46 @@ app.intent('actions.intent.TEXT', (conv, input) => {
 })
 ```
 
+### Smart Home
+```javascript
+// Import the appropriate service
+
+const { smarthome } = require('actions-on-google')
+
+// Create an app instance
+
+const app = smarthome()
+
+// Register handlers for Smart Home intents
+
+app.onExecute((body, headers) => {
+  return {
+    requestId: 'ff36...',
+    payload: {
+      // ...
+    },
+  }
+})
+
+app.onQuery((body, headers) => {
+  return {
+    requestId: 'ff36...',
+    payload: {
+      // ...
+    },
+  }
+})
+
+app.onSync((body, headers) => {
+  return {
+    requestId: 'ff36...',
+    payload: {
+      // ...
+    },
+  }
+})
+```
+
 ### Frameworks
 
 Export or run for your appropriate framework:
@@ -140,8 +180,9 @@ Install the library dependencies with `yarn`. If you want to run any of the samp
 Public interfaces, classes, functions, objects, and properties are labeled with the JSDoc `@public` tag and exported at the top level. Everything else that is not labeled `@public` and exported at the top level is considered internal and may be changed.
 
 This library supports the following Services:
-* Dialogflow v1 and v2
-* Actions SDK **v2 only**
+* [Dialogflow](https://dialogflow.com/docs/fulfillment) v1 and v2
+* [Actions SDK](https://developers.google.com/actions/sdk/fulfillment) **v2 only**
+* [Smart Home](https://developers.google.com/actions/smarthome/create-app#provide-fulfillment)
 
 ### Actions SDK
 This library supports only Actions SDK fulfillment version 2.

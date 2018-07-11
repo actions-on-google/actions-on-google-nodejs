@@ -15,9 +15,13 @@
  */
 
 import ava, { RegisterContextual } from 'ava'
-import { Lambda } from '../lambda'
+import * as sinon from 'sinon'
+
+import * as common from '../../common'
 import { JsonObject } from '../../common'
-import { StandardResponse } from '..'
+
+import { Lambda } from '../lambda'
+import { StandardResponse } from '../framework'
 
 interface AvaContext {
   lambda: Lambda
@@ -136,6 +140,7 @@ test('handles error', async t => {
   }
   let receivedError: Error | null = null
   let promise: Promise<StandardResponse> | null = null
+  const stub = sinon.stub(common, 'error')
   t.context.lambda.handle((body, headers) => {
     t.deepEqual(body, sentBody)
     t.deepEqual(headers, sentHeaders)
@@ -153,6 +158,8 @@ test('handles error', async t => {
   // tslint:disable-next-line:no-any mocking promise
   await (promise as any).catch(() => {})
   await new Promise(resolve => setTimeout(resolve))
+  t.true(stub.called)
+  stub.restore()
   t.is(receivedError, expectedError)
 })
 
@@ -186,4 +193,47 @@ test('handles valid headers fine', async t => {
   // tslint:disable-next-line:no-any change to string even if null
   t.is(receivedStatus, expectedStatus)
   t.is(receivedHeaders, expectedHeaders)
+})
+
+test('sends back metadata', async t => {
+  const expectedBody = {
+    prop: true,
+  }
+  const expectedStatus = 123
+  const sentBody = {
+    a: '1',
+  }
+  const sentHeaders = {
+    key: 'value',
+  }
+  let receivedBody: string | null = null
+  let receivedStatus = -1
+  let promise: Promise<StandardResponse> | null = null
+  const event = {
+    body: JSON.stringify(sentBody),
+    headers: sentHeaders,
+  }
+  // tslint:disable-next-line:no-any mocking context
+  const context: any = {
+    succeed() {},
+  }
+  t.context.lambda.handle((body, headers, metadata) => {
+    t.deepEqual(body, sentBody)
+    t.deepEqual(headers, sentHeaders)
+    t.is(metadata!.lambda!.event, event)
+    t.is(metadata!.lambda!.context, context)
+    promise = Promise.resolve({
+      body: expectedBody,
+      status: expectedStatus,
+    })
+    return promise
+  })(event, context, (e: Error, body: JsonObject) => {
+    receivedStatus = body.statusCode
+    receivedBody = body.body
+  })
+  await promise
+  await new Promise(resolve => setTimeout(resolve))
+  // tslint:disable-next-line:no-any change to string even if null
+  t.deepEqual(JSON.parse(receivedBody as any), expectedBody)
+  t.is(receivedStatus, expectedStatus)
 })

@@ -1265,6 +1265,9 @@ export interface GoogleActionsV2OrdersReceipt {
    * Confirmed order id when order has been received by the integrator. This is
    * the canonical order id used in integrator's system referencing the order
    * and may subsequently be used to identify the order as `action_order_id`.
+   *
+   * Note that this field is deprecated. Please pass the field through
+   * OrderUpdate.action_order_id instead.
    */
   confirmedActionOrderId?: string
   /**

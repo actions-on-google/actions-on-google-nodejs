@@ -15,9 +15,13 @@
  */
 
 import ava, { RegisterContextual } from 'ava'
-import { attach, AppHandler } from '../assistant'
+import * as sinon from 'sinon'
+
+import * as common from '../common'
 import { JsonObject } from '../common'
-import { Headers, StandardResponse } from '../framework'
+
+import { attach, AppHandler } from '../assistant'
+import { Headers, StandardResponse, BuiltinFrameworkMetadata } from '../framework'
 
 interface AvaContext {
   app: AppHandler
@@ -38,7 +42,10 @@ test('app.frameworks is an object', t => {
 })
 
 test('app.handler throws error by default', async t => {
+  const stub = sinon.stub(common, 'error')
   await t.throws(t.context.app.handler({}, {}))
+  t.true(stub.called)
+  stub.restore()
 })
 
 test('app.debug is false when not passed options', t => {
@@ -168,7 +175,10 @@ test('app is callable as a StandardHandler when debug is true', async t => {
     debug: true,
   })
   t.is(typeof app, 'function')
+  const stub = sinon.stub(common, 'info')
   const res = await app(body, headers)
+  t.true(stub.called)
+  stub.restore()
   t.is(res.status, 123)
   t.is(res.body.body, body)
   t.is(res.body.headers, headers)
@@ -186,7 +196,13 @@ test('app is callable as an Express request', async t => {
     headers1: 'headers2',
   }
   const app = attach({
-    handler: async (body: JsonObject, headers: Headers): Promise<StandardResponse> => {
+    handler: async (
+      body: JsonObject,
+      headers: Headers,
+      metadata: BuiltinFrameworkMetadata,
+    ): Promise<StandardResponse> => {
+      t.not(typeof metadata.express!.request, 'undefined')
+      t.not(typeof metadata.express!.response, 'undefined')
       return {
         body: {
           body,

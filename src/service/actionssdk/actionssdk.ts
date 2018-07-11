@@ -27,6 +27,7 @@ import {
 import { ActionsSdkConversation } from './conv'
 import { OAuth2Client } from 'google-auth-library'
 import * as common from '../../common'
+import { BuiltinFrameworkMetadata } from '../../framework'
 
 /** @public */
 export interface ActionsSdkIntentHandler<
@@ -92,8 +93,15 @@ export interface ActionsSdkMiddleware<
 > {
   /** @public */
   (
+    /** @public */
     conv: ActionsSdkConversation<{}, {}>,
-  ): (ActionsSdkConversation<{}, {}> & TConversationPlugin) | void
+
+    /** @public */
+    framework: BuiltinFrameworkMetadata,
+  ): (ActionsSdkConversation<{}, {}> & TConversationPlugin) |
+    void |
+    Promise<ActionsSdkConversation<{}, {}> & TConversationPlugin> |
+    Promise<void>
 }
 
 /** @public */
@@ -297,6 +305,7 @@ export const actionssdk: ActionsSdk = <
     this: AppHandler & ActionsSdkApp<TConvData, TUserStorage, TConversation>,
     body: Api.GoogleActionsV2AppRequest,
     headers,
+    metadata = {},
   ) {
     const { debug, init, verification } = this
     if (verification) {
@@ -331,7 +340,10 @@ export const actionssdk: ActionsSdk = <
       await conv.user._verifyProfile(this._client!, this.auth!.client.id)
     }
     for (const middleware of this._middlewares) {
-      conv = (middleware(conv) as ActionsSdkConversation<TConvData, TUserStorage> | void) || conv
+      const result = middleware(conv, metadata)
+      conv = (result instanceof ActionsSdkConversation ? result : ((await result) || conv)) as (
+        ActionsSdkConversation<TConvData, TUserStorage>
+      )
     }
     const log = debug ? common.info : common.debug
     log('Conversation', common.stringify(conv, 'request', 'headers', 'body'))

@@ -61,13 +61,15 @@ const isV1 = (
 
 const getRequest = (
   body: Api.GoogleCloudDialogflowV2WebhookRequest | ApiV1.DialogflowV1WebhookRequest,
-) => {
+): ActionsApi.GoogleActionsV2AppRequest => {
   if (isV1(body)) {
     const { originalRequest = {} } = body
     const { data = {} } = originalRequest
     return data
   }
-  return body.originalDetectIntentRequest!.payload!
+  const { originalDetectIntentRequest = {} } = body
+  const { payload = {} } = originalDetectIntentRequest
+  return payload
 }
 
 /** @public */
@@ -311,6 +313,7 @@ export class DialogflowConversation<
       expectUserResponse,
       userStorage,
       expectedIntent,
+      noInputPrompts,
     } = this.response()
     const google: GoogleAssistantResponse = {
       expectUserResponse,
@@ -320,6 +323,7 @@ export class DialogflowConversation<
         intent: expectedIntent.intent!,
         data: expectedIntent.inputValueData as ProtoAny<string, JsonObject>,
       },
+      noInputPrompts,
     }
     const payload: PayloadGoogle = {
       google,
