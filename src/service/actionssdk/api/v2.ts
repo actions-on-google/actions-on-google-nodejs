@@ -75,7 +75,7 @@ export type GoogleActionsV2OrdersTimeType = 'UNKNOWN' | 'DELIVERY_DATE' | 'ETA' 
 export type GoogleActionsV2PermissionValueSpecPermissions = 'UNSPECIFIED_PERMISSION' | 'NAME' | 'DEVICE_PRECISE_LOCATION' | 'DEVICE_COARSE_LOCATION' | 'UPDATE'
 
 
-export type GoogleActionsV2RawInputInputType = 'UNSPECIFIED_INPUT_TYPE' | 'TOUCH' | 'VOICE' | 'KEYBOARD'
+export type GoogleActionsV2RawInputInputType = 'UNSPECIFIED_INPUT_TYPE' | 'TOUCH' | 'VOICE' | 'KEYBOARD' | 'URL'
 
 
 export type GoogleActionsV2RegisterUpdateValueStatus = 'REGISTER_UPDATE_STATUS_UNSPECIFIED' | 'OK' | 'CANCELLED'
