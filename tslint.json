@@ -132,6 +132,7 @@
     "max-line-length": [
       true,
       100
-    ]
+    ],
+    "eofline": true
   }
 }
