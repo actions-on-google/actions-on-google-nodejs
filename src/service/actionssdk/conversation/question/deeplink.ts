@@ -75,7 +75,7 @@ export type DeepLinkArgument = undefined
  * })
  *
  * // Dialogflow
- * const app = actionssdk()
+ * const app = dialogflow()
  *
  * app.intent('Default Welcome Intent', conv => {
  *   conv.ask('Great! Looks like we can do that in the app.')
