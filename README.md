@@ -151,7 +151,11 @@ const bodyParser = require('body-parser')
 
 // ... app code here
 
-express().use(bodyParser.json(), app).listen(3000)
+const expressApp = express().use(bodyParser.json())
+
+expressApp.post('/fulfillment', app)
+
+expressApp.listen(3000)
 ```
 
 #### AWS Lambda API Gateway
