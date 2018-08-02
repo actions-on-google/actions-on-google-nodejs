@@ -183,6 +183,15 @@ export const EXECUTE_RESPONSE: Api.SmartHomeV1ExecuteResponse = {
   },
 }
 
+export const DISCONNECT_REQUEST: Api.SmartHomeV1DisconnectRequest = {
+  requestId: 'ff36a3cc-ec34-11e6-b1a0-64510650abcf', /* Any unique ID */
+  inputs: [{
+    intent: 'action.devices.DISCONNECT',
+  }],
+}
+
+export const DISCONNECT_RESPONSE: Api.SmartHomeV1DisconnectResponse = {}
+
 export const REPORT_STATE_REQUEST: Api.SmartHomeV1ReportStateRequest = {
   requestId: 'ff36a3cc', /* Any unique ID */
   agentUserId: '123', /* Hardcoded user ID */
