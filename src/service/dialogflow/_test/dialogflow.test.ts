@@ -29,6 +29,7 @@ import * as ActionsApi from '../../actionssdk/api/v2'
 import { clone } from '../../../common'
 import { Argument } from '../../actionssdk'
 import { OAuth2Client } from 'google-auth-library'
+import { SimpleResponse } from '../../actionssdk'
 
 interface AvaContext {
   app: AppHandler & DialogflowApp<{}, {}, Contexts, DialogflowConversation>
@@ -102,6 +103,66 @@ test('app gets simple response string when using app.intent', async t => {
             },
           ],
         },
+        userStorage: '{"data":{}}',
+      },
+    },
+    outputContexts: [
+      {
+        name: `${session}/contexts/_actions_on_google`,
+        lifespanCount: 99,
+        parameters: {
+          data: '{}',
+        },
+      },
+    ],
+  })
+})
+
+test('app gets simple response string with reprompts when using app.intent', async t => {
+  const intent = 'abc123'
+  const response = 'abcdefg1234567'
+  const reprompt1 = 'reprompt1234567'
+  const reprompt2 = 'reprompt7654321'
+  const session = 'abcdefghijk'
+  t.context.app.intent(intent, conv => {
+    conv.ask(response)
+    conv.noInputs = [reprompt1, new SimpleResponse(reprompt2)]
+  })
+  const res = await t.context.app.handler({
+    session,
+    queryResult: {
+      intent: {
+        displayName: intent,
+      },
+    },
+    originalDetectIntentRequest: {
+      payload: {
+        isInSandbox: true,
+      } as ActionsApi.GoogleActionsV2AppRequest,
+    },
+  } as Api.GoogleCloudDialogflowV2WebhookRequest, {})
+  t.is(res.status, 200)
+  t.deepEqual(clone(res.body), {
+    payload: {
+      google: {
+        expectUserResponse: true,
+        richResponse: {
+          items: [
+            {
+              simpleResponse: {
+                textToSpeech: response,
+              },
+            },
+          ],
+        },
+        noInputPrompts: [
+          {
+            textToSpeech: reprompt1,
+          },
+          {
+            textToSpeech: reprompt2,
+          },
+        ],
         userStorage: '{"data":{}}',
       },
     },
