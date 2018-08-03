@@ -196,7 +196,11 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest(app)
 
 <span class="hljs-comment">// ... app code here</span>
 
-express().use(bodyParser.json(), app).listen(<span class="hljs-number">3000</span>)
+<span class="hljs-keyword">const</span> expressApp = express().use(bodyParser.json())
+
+expressApp.post(<span class="hljs-string">'/fulfillment'</span>, app)
+
+expressApp.listen(<span class="hljs-number">3000</span>)
 </code></pre>
 				<h4 id="aws-lambda-api-gateway">AWS Lambda API Gateway</h4>
 				<pre><code class="lang-javascript"><span class="hljs-comment">// ... app code here</span>

@@ -97,6 +97,7 @@
 						<section class="tsd-index-section ">
 							<h3>Methods</h3>
 							<ul class="tsd-index-list">
+								<li class="tsd-kind-method tsd-parent-kind-interface"><a href="smarthome.smarthomeapp.html#ondisconnect" class="tsd-kind-icon">on<wbr>Disconnect</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-interface"><a href="smarthome.smarthomeapp.html#onexecute" class="tsd-kind-icon">on<wbr>Execute</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-interface"><a href="smarthome.smarthomeapp.html#onquery" class="tsd-kind-icon">on<wbr>Query</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-interface"><a href="smarthome.smarthomeapp.html#onsync" class="tsd-kind-icon">on<wbr>Sync</a></li>
@@ -128,7 +129,7 @@
 					<div class="tsd-signature tsd-kind-icon">jwt<span class="tsd-signature-symbol">:</span> <a href="smarthome.smarthomejwt.html" class="tsd-signature-type">SmartHomeJwt</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in service/smarthome/smarthome.ts:249</li>
+							<li>Defined in service/smarthome/smarthome.ts:270</li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -140,7 +141,7 @@
 					<div class="tsd-signature tsd-kind-icon">key<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in service/smarthome/smarthome.ts:246</li>
+							<li>Defined in service/smarthome/smarthome.ts:267</li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -149,6 +150,49 @@
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Methods</h2>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface">
+					<a name="ondisconnect" class="tsd-anchor"></a>
+					<h3>on<wbr>Disconnect</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
+						<li class="tsd-signature tsd-kind-icon">on<wbr>Disconnect<span class="tsd-signature-symbol">(</span>handler<span class="tsd-signature-symbol">: </span><a href="smarthome.smarthomehandler.html" class="tsd-signature-type">SmartHomeHandler</a><span class="tsd-signature-symbol">&lt;</span><a href="smarthome_api_v1.smarthomev1disconnectrequest.html" class="tsd-signature-type">SmartHomeV1DisconnectRequest</a><span class="tsd-signature-symbol">, </span><a href="smarthome_api_v1.smarthomev1disconnectresponse.html" class="tsd-signature-type">SmartHomeV1DisconnectResponse</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">this</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in service/smarthome/smarthome.ts:181</li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Defines a function that will run when a DISCONNECT request is received.</p>
+								</div>
+								<dl class="tsd-comment-tags">
+									<dt>example</dt>
+									<dd><pre><code class="lang-javascript">
+<span class="hljs-keyword">const</span> app = smarthome();
+app.onDisconnect(<span class="hljs-function">(<span class="hljs-params">body, headers</span>) =&gt;</span> {
+  <span class="hljs-comment">// User unlinked their account, stop reporting state for user</span>
+  <span class="hljs-keyword">return</span> {}
+})
+</code></pre>
+									</dd>
+								</dl>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>handler: <a href="smarthome.smarthomehandler.html" class="tsd-signature-type">SmartHomeHandler</a><span class="tsd-signature-symbol">&lt;</span><a href="smarthome_api_v1.smarthomev1disconnectrequest.html" class="tsd-signature-type">SmartHomeV1DisconnectRequest</a><span class="tsd-signature-symbol">, </span><a href="smarthome_api_v1.smarthomev1disconnectresponse.html" class="tsd-signature-type">SmartHomeV1DisconnectResponse</a><span class="tsd-signature-symbol">&gt;</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The function that will run for an EXECUTE request. It should
+										return a valid response or a Promise that resolves to valid response.</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">this</span></h4>
+						</li>
+					</ul>
+				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface">
 					<a name="onexecute" class="tsd-anchor"></a>
 					<h3>on<wbr>Execute</h3>
@@ -300,7 +344,7 @@ app.onSync(<span class="hljs-function">(<span class="hljs-params">body, headers<
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in service/smarthome/smarthome.ts:243</li>
+									<li>Defined in service/smarthome/smarthome.ts:264</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -365,7 +409,7 @@ app.onSync(<span class="hljs-function">(<span class="hljs-params">body, headers<
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in service/smarthome/smarthome.ts:200</li>
+									<li>Defined in service/smarthome/smarthome.ts:221</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -482,6 +526,9 @@ app.onSync(<span class="hljs-function"><span class="hljs-params">body</span> =&g
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
 								<a href="smarthome.smarthomeapp.html#key" class="tsd-kind-icon">key</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-interface">
+								<a href="smarthome.smarthomeapp.html#ondisconnect" class="tsd-kind-icon">on<wbr>Disconnect</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-interface">
 								<a href="smarthome.smarthomeapp.html#onexecute" class="tsd-kind-icon">on<wbr>Execute</a>
