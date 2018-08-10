@@ -73,16 +73,15 @@
 				<a href="https://travis-ci.org/actions-on-google/actions-on-google-nodejs"><img src="https://travis-ci.org/actions-on-google/actions-on-google-nodejs.svg?branch=master" alt="Build Status"></a></p>
 				<h2 id="setup-instructions">Setup Instructions</h2>
 				<p>Install the library with either <code>npm install actions-on-google</code> or <code>yarn add actions-on-google</code> if you use yarn.</p>
-				<h3 id="dialogflow">Dialogflow</h3>
+				<h3 id="conversational-services">Conversational Services</h3>
+				<h4 id="dialogflow">Dialogflow</h4>
 				<pre><code class="lang-javascript"><span class="hljs-comment">// Import the appropriate service and chosen wrappers</span>
-
 <span class="hljs-keyword">const</span> {
   dialogflow,
   Image,
 } = <span class="hljs-built_in">require</span>(<span class="hljs-string">'actions-on-google'</span>)
 
 <span class="hljs-comment">// Create an app instance</span>
-
 <span class="hljs-keyword">const</span> app = dialogflow()
 
 <span class="hljs-comment">// Register handlers for Dialogflow intents</span>
@@ -105,16 +104,14 @@ app.intent(<span class="hljs-string">'Default Fallback Intent'</span>, conv =&gt
   conv.ask(<span class="hljs-string">`I didn't understand. Can you tell me something else?`</span>)
 })
 </code></pre>
-				<h3 id="actions-sdk">Actions SDK</h3>
+				<h4 id="actions-sdk">Actions SDK</h4>
 				<pre><code class="lang-javascript"><span class="hljs-comment">// Import the appropriate service and chosen wrappers</span>
-
 <span class="hljs-keyword">const</span> {
   actionssdk,
   Image,
 } = <span class="hljs-built_in">require</span>(<span class="hljs-string">'actions-on-google'</span>)
 
 <span class="hljs-comment">// Create an app instance</span>
-
 <span class="hljs-keyword">const</span> app = actionssdk()
 
 <span class="hljs-comment">// Register handlers for Actions SDK intents</span>
@@ -135,13 +132,29 @@ app.intent(<span class="hljs-string">'actions.intent.TEXT'</span>, (conv, input)
   conv.ask(<span class="hljs-string">`I didn't understand. Can you tell me something else?`</span>)
 })
 </code></pre>
+				<h4 id="notes-about-the-code-snippet">Notes about the code snippet</h4>
+				<ul>
+					<li><a href="https://actions-on-google.github.io/actions-on-google-nodejs/classes/conversation.conversation-1.html#ask"><code>conv.ask</code></a>/<a href="https://actions-on-google.github.io/actions-on-google-nodejs/classes/conversation.conversation-1.html#close"><code>conv.close</code></a>
+					can be called with any of the <a href="https://actions-on-google.github.io/actions-on-google-nodejs/modules/conversation.html#response"><code>Response</code></a> types.</li>
+					<li>All <a href="https://actions-on-google.github.io/actions-on-google-nodejs/modules/conversation_question.html"><code>Question</code></a> classes are of the <code>Response</code> type.</li>
+				</ul>
+				<h5 id="dialogflow">Dialogflow</h5>
+				<ul>
+					<li><code>app</code> is an instance of type <a href="https://actions-on-google.github.io/actions-on-google-nodejs/interfaces/dialogflow.dialogflowapp.html#catch"><code>DialogflowApp</code></a>.</li>
+					<li><code>app</code> accepts options of type <a href="https://actions-on-google.github.io/actions-on-google-nodejs/interfaces/dialogflow.dialogflowoptions.html#clientid"><code>DialogflowOptions</code></a>.</li>
+					<li><code>conv</code> is an instance of type <a href="https://actions-on-google.github.io/actions-on-google-nodejs/classes/dialogflow.dialogflowconversation.html"><code>DialogflowConversation</code></a>.</li>
+				</ul>
+				<h5 id="actions-sdk">Actions SDK</h5>
+				<ul>
+					<li><code>app</code> is an instance of type <a href="https://actions-on-google.github.io/actions-on-google-nodejs/interfaces/actionssdk.actionssdkapp.html#catch"><code>ActionsSdkApp</code></a>.</li>
+					<li><code>app</code> accepts options of type <a href="https://actions-on-google.github.io/actions-on-google-nodejs/interfaces/actionssdk.actionssdkoptions.html#clientid"><code>ActionsSdkOptions</code></a>.</li>
+					<li><code>conv</code> is an instance of type <a href="https://actions-on-google.github.io/actions-on-google-nodejs/classes/actionssdk.actionssdkconversation.html"><code>ActionsSdkConversation</code></a>.</li>
+				</ul>
 				<h3 id="smart-home">Smart Home</h3>
 				<pre><code class="lang-javascript"><span class="hljs-comment">// Import the appropriate service</span>
-
 <span class="hljs-keyword">const</span> { smarthome } = <span class="hljs-built_in">require</span>(<span class="hljs-string">'actions-on-google'</span>)
 
 <span class="hljs-comment">// Create an app instance</span>
-
 <span class="hljs-keyword">const</span> app = smarthome()
 
 <span class="hljs-comment">// Register handlers for Smart Home intents</span>
@@ -173,6 +186,11 @@ app.onSync(<span class="hljs-function">(<span class="hljs-params">body, headers<
   }
 })
 </code></pre>
+				<h4 id="notes-about-the-code-snippet">Notes about the code snippet</h4>
+				<ul>
+					<li><code>app</code> is an instance of type <a href="https://actions-on-google.github.io/actions-on-google-nodejs/interfaces/smarthome.smarthomeapp.html#onexecute"><code>SmartHomeApp</code></a>.</li>
+					<li><code>app</code> accepts options of type <a href="https://actions-on-google.github.io/actions-on-google-nodejs/interfaces/smarthome.smarthomeoptions.html#debug"><code>SmartHomeOptions</code></a>.</li>
+				</ul>
 				<h3 id="frameworks">Frameworks</h3>
 				<p>Export or run for your appropriate framework:</p>
 				<h4 id="firebase-functions">Firebase Functions</h4>
