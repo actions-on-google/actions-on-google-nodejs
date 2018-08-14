@@ -285,22 +285,23 @@ export class DialogflowConversation<
    * @public
    */
   followup(event: string, parameters?: Parameters, lang?: string) {
+    this._responded = true
     if (this.version === 1) {
-      return this.json<ApiV1.DialogflowV1WebhookResponse>({
-        followupEvent: {
-          name: event,
-          data: parameters,
-        },
-      })
-    }
-    const body = this.body as Api.GoogleCloudDialogflowV2WebhookRequest
-    return this.json<Api.GoogleCloudDialogflowV2WebhookResponse>({
-      followupEventInput: {
+      const serialization = this.serialize() as ApiV1.DialogflowV1WebhookResponse
+      serialization.followupEvent = {
         name: event,
-        parameters,
-        languageCode: lang || body.queryResult!.languageCode,
-      },
-    })
+        data: parameters,
+      }
+      return this.json<ApiV1.DialogflowV1WebhookResponse>(serialization)
+    }
+    const serialization = this.serialize() as Api.GoogleCloudDialogflowV2WebhookResponse
+    const body = this.body as Api.GoogleCloudDialogflowV2WebhookRequest
+    serialization.followupEventInput = {
+      name: event,
+      parameters,
+      languageCode: lang || body.queryResult!.languageCode,
+    }
+    return this.json<Api.GoogleCloudDialogflowV2WebhookResponse>(serialization)
   }
 
   /** @public */

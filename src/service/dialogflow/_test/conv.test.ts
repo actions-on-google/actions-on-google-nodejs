@@ -182,11 +182,9 @@ test('conv.followup sets the raw json correctly with no parameters', t => {
     headers: {},
   })
   conv.followup(event)
-  t.deepEqual(clone(conv._raw), {
-    followupEventInput: {
-      name: event,
-      languageCode: lang,
-    },
+  t.deepEqual(clone(conv._raw!.followupEventInput), {
+    name: event,
+    languageCode: lang,
   })
 })
 
@@ -209,12 +207,10 @@ test('conv.followup sets the raw json correctly with parameters', t => {
     headers: {},
   })
   conv.followup(event, parameters)
-  t.deepEqual(conv._raw, {
-    followupEventInput: {
-      name: event,
-      languageCode: lang,
-      parameters,
-    },
+  t.deepEqual(conv._raw!.followupEventInput, {
+    name: event,
+    languageCode: lang,
+    parameters,
   })
 })
 
@@ -237,12 +233,10 @@ test('conv.followup sets the raw json correctly with parameters and lang', t => 
     headers: {},
   })
   conv.followup(event, parameters, lang)
-  t.deepEqual(conv._raw, {
-    followupEventInput: {
-      name: event,
-      languageCode: lang,
-      parameters,
-    },
+  t.deepEqual(conv._raw!.followupEventInput, {
+    name: event,
+    languageCode: lang,
+    parameters,
   })
 })
 
