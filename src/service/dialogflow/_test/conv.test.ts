@@ -182,7 +182,9 @@ test('conv.followup sets the raw json correctly with no parameters', t => {
     headers: {},
   })
   conv.followup(event)
-  t.deepEqual(clone(conv._raw!.followupEventInput), {
+  const followup = (conv.serialize() as Api.GoogleCloudDialogflowV2WebhookResponse)
+    .followupEventInput
+  t.deepEqual(clone(followup), {
     name: event,
     languageCode: lang,
   })
@@ -207,7 +209,7 @@ test('conv.followup sets the raw json correctly with parameters', t => {
     headers: {},
   })
   conv.followup(event, parameters)
-  t.deepEqual(conv._raw!.followupEventInput, {
+  t.deepEqual((conv.serialize() as Api.GoogleCloudDialogflowV2WebhookResponse).followupEventInput, {
     name: event,
     languageCode: lang,
     parameters,
@@ -233,7 +235,7 @@ test('conv.followup sets the raw json correctly with parameters and lang', t => 
     headers: {},
   })
   conv.followup(event, parameters, lang)
-  t.deepEqual(conv._raw!.followupEventInput, {
+  t.deepEqual((conv.serialize() as Api.GoogleCloudDialogflowV2WebhookResponse).followupEventInput, {
     name: event,
     languageCode: lang,
     parameters,

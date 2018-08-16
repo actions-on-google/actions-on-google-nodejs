@@ -183,6 +183,9 @@ export class DialogflowConversation<
   /** @public */
   version: number
 
+  /** @hidden */
+  _followup?: JsonObject
+
   /** @public */
   constructor(options: DialogflowConversationOptions<TConvData, TUserStorage>) {
     super({
@@ -258,6 +261,10 @@ export class DialogflowConversation<
 
   /**
    * Triggers an intent of your choosing by sending a followup event from the webhook.
+   * Final response can theoretically include responses and Action SDK specific data but
+   * these will not be handled by Dialogflow nor Google Assistant respectively.
+   * Contexts will be persisted and new contexts can be inserted (conv.data is also
+   * persisted through contexts).
    *
    * @example
    * ```javascript
@@ -287,21 +294,19 @@ export class DialogflowConversation<
   followup(event: string, parameters?: Parameters, lang?: string) {
     this._responded = true
     if (this.version === 1) {
-      const serialization = this.serialize() as ApiV1.DialogflowV1WebhookResponse
-      serialization.followupEvent = {
-        name: event,
-        data: parameters,
+      this._followup = {
+          name: event,
+          data: parameters,
       }
-      return this.json<ApiV1.DialogflowV1WebhookResponse>(serialization)
+      return this
     }
-    const serialization = this.serialize() as Api.GoogleCloudDialogflowV2WebhookResponse
     const body = this.body as Api.GoogleCloudDialogflowV2WebhookRequest
-    serialization.followupEventInput = {
+    this._followup = {
       name: event,
       parameters,
       languageCode: lang || body.queryResult!.languageCode,
     }
-    return this.json<Api.GoogleCloudDialogflowV2WebhookResponse>(serialization)
+    return this
   }
 
   /** @public */
@@ -337,6 +342,7 @@ export class DialogflowConversation<
       const response: ApiV1.DialogflowV1WebhookResponse = {
         data: payload,
         contextOut,
+        followupEvent: this._followup,
       }
       return response
     }
@@ -344,6 +350,7 @@ export class DialogflowConversation<
     const response: Api.GoogleCloudDialogflowV2WebhookResponse = {
       payload,
       outputContexts,
+      followupEventInput: this._followup,
     }
     return response
   }
