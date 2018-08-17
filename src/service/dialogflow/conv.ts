@@ -184,7 +184,7 @@ export class DialogflowConversation<
   version: number
 
   /** @hidden */
-  _followup?: JsonObject
+  _followup?: Api.GoogleCloudDialogflowV2EventInput | ApiV1.DialogflowV1FollowupEvent
 
   /** @public */
   constructor(options: DialogflowConversationOptions<TConvData, TUserStorage>) {
@@ -261,10 +261,9 @@ export class DialogflowConversation<
 
   /**
    * Triggers an intent of your choosing by sending a followup event from the webhook.
-   * Final response can theoretically include responses and Action SDK specific data but
-   * these will not be handled by Dialogflow nor Google Assistant respectively.
-   * Contexts will be persisted and new contexts can be inserted (conv.data is also
-   * persisted through contexts).
+   * Final response can theoretically include responses but these will not be handled
+   * by Dialogflow. Dialogflow will not pass anything back to Google Assistant, therefore
+   * Google Assistant specific information, most notably conv.user.data, is ignored.
    *
    * @example
    * ```javascript
