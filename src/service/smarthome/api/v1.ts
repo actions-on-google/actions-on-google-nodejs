@@ -21,7 +21,7 @@ import { ApiClientObjectMap } from '../../../common'
 // See https://developers.google.com/actions/smarthome/
 
 export type SmartHomeV1Intents = 'action.devices.SYNC' | 'action.devices.QUERY'
-  | 'action.devices.EXECUTE'
+  | 'action.devices.EXECUTE' | 'action.devices.DISCONNECT'
 
 export type SmartHomeV1ExecuteStatus = 'SUCCESS' | 'PENDING' | 'OFFLINE' | 'ERROR'
 
@@ -81,8 +81,15 @@ export interface SmartHomeV1ExecuteRequest {
   inputs: SmartHomeV1ExecuteRequestInputs[]
 }
 
+export interface SmartHomeV1DisconnectRequest {
+  requestId: string,
+  inputs: {
+    intent: 'action.devices.DISCONNECT',
+  }[]
+}
+
 export type SmartHomeV1Request = SmartHomeV1SyncRequest | SmartHomeV1QueryRequest |
-  SmartHomeV1ExecuteRequest
+  SmartHomeV1ExecuteRequest | SmartHomeV1DisconnectRequest
 
 export interface SmartHomeV1SyncName {
   defaultNames: string[],
@@ -148,8 +155,10 @@ export interface SmartHomeV1ExecuteResponse {
   payload: SmartHomeV1ExecutePayload
 }
 
+export interface SmartHomeV1DisconnectResponse { }
+
 export type SmartHomeV1Response = SmartHomeV1SyncResponse | SmartHomeV1QueryResponse |
-  SmartHomeV1ExecuteResponse
+  SmartHomeV1ExecuteResponse | SmartHomeV1DisconnectResponse
 
 export interface SmartHomeV1ReportStateRequest {
   requestId: string,

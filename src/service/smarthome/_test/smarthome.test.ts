@@ -126,6 +126,28 @@ test('execute intent handler is invoked', (t) => {
   })
 })
 
+test('disconnect intent handler is invoked', (t) => {
+  const app = smarthome()
+  let invoked = false
+
+  const intentHandler = (body: Api.SmartHomeV1Request) => {
+    invoked = true
+    return Sample.DISCONNECT_RESPONSE
+  }
+  app.onSync(throwError)
+  app.onQuery(throwError)
+  app.onExecute(throwError)
+  app.onDisconnect(intentHandler)
+
+  const promise = app.handler(Sample.DISCONNECT_REQUEST, {})
+
+  return promise.then((result) => {
+    t.is(result.status, 200)
+    t.is(result.body, Sample.DISCONNECT_RESPONSE)
+    t.true(invoked)
+  })
+})
+
 // Run test serially to not interfere with sinon stubs
 test.serial('request sync fails if no API key is defined', async (t) => {
   const mock = sinon.stub(common, 'request')

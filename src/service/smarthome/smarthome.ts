@@ -162,6 +162,27 @@ export interface SmartHomeApp extends ServiceBaseApp {
   ): this
 
   /**
+   * Defines a function that will run when a DISCONNECT request is received.
+   *
+   * @example
+   * ```javascript
+   *
+   * const app = smarthome();
+   * app.onDisconnect((body, headers) => {
+   *   // User unlinked their account, stop reporting state for user
+   *   return {}
+   * })
+   * ```
+   * @param handler The function that will run for an EXECUTE request. It should
+   *   return a valid response or a Promise that resolves to valid response.
+   *
+   * @public
+   */
+  onDisconnect(
+    handler: SmartHomeHandler<Api.SmartHomeV1DisconnectRequest, Api.SmartHomeV1DisconnectResponse>,
+  ): this
+
+  /**
    * Sends a request to the home graph to send a new SYNC request. This should
    * be called when a device is added or removed for a given user id.
    *
@@ -368,6 +389,9 @@ export const smarthome: SmartHome = (options = {}) => attach<SmartHomeApp>({
   },
   onExecute(this: SmartHomeApp, handler) {
     return this._intent('action.devices.EXECUTE', handler)
+  },
+  onDisconnect(this: SmartHomeApp, handler) {
+    return this._intent('action.devices.DISCONNECT', handler)
   },
   async requestSync(this: SmartHomeApp, agentUserId) {
     if (!this.key) {
