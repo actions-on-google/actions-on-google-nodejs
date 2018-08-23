@@ -263,7 +263,7 @@ export class DialogflowConversation<
    * Triggers an intent of your choosing by sending a followup event from the webhook.
    * Final response can theoretically include responses but these will not be handled
    * by Dialogflow. Dialogflow will not pass anything back to Google Assistant, therefore
-   * Google Assistant specific information, most notably conv.user.data, is ignored.
+   * Google Assistant specific information, most notably conv.user.storage, is ignored.
    *
    * @example
    * ```javascript
