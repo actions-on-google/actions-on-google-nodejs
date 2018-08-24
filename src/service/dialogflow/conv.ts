@@ -183,6 +183,9 @@ export class DialogflowConversation<
   /** @public */
   version: number
 
+  /** @hidden */
+  _followup?: Api.GoogleCloudDialogflowV2EventInput | ApiV1.DialogflowV1FollowupEvent
+
   /** @public */
   constructor(options: DialogflowConversationOptions<TConvData, TUserStorage>) {
     super({
@@ -258,6 +261,9 @@ export class DialogflowConversation<
 
   /**
    * Triggers an intent of your choosing by sending a followup event from the webhook.
+   * Final response can theoretically include responses but these will not be handled
+   * by Dialogflow. Dialogflow will not pass anything back to Google Assistant, therefore
+   * Google Assistant specific information, most notably conv.user.storage, is ignored.
    *
    * @example
    * ```javascript
@@ -285,22 +291,21 @@ export class DialogflowConversation<
    * @public
    */
   followup(event: string, parameters?: Parameters, lang?: string) {
+    this._responded = true
     if (this.version === 1) {
-      return this.json<ApiV1.DialogflowV1WebhookResponse>({
-        followupEvent: {
+      this._followup = {
           name: event,
           data: parameters,
-        },
-      })
+      }
+      return this
     }
     const body = this.body as Api.GoogleCloudDialogflowV2WebhookRequest
-    return this.json<Api.GoogleCloudDialogflowV2WebhookResponse>({
-      followupEventInput: {
-        name: event,
-        parameters,
-        languageCode: lang || body.queryResult!.languageCode,
-      },
-    })
+    this._followup = {
+      name: event,
+      parameters,
+      languageCode: lang || body.queryResult!.languageCode,
+    }
+    return this
   }
 
   /** @public */
@@ -336,6 +341,7 @@ export class DialogflowConversation<
       const response: ApiV1.DialogflowV1WebhookResponse = {
         data: payload,
         contextOut,
+        followupEvent: this._followup,
       }
       return response
     }
@@ -343,6 +349,7 @@ export class DialogflowConversation<
     const response: Api.GoogleCloudDialogflowV2WebhookResponse = {
       payload,
       outputContexts,
+      followupEventInput: this._followup,
     }
     return response
   }
