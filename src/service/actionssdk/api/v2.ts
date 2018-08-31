@@ -33,7 +33,7 @@ export type GoogleActionsV2EntitlementSkuType = 'TYPE_UNSPECIFIED' | 'IN_APP' | 
 export type GoogleActionsV2MediaResponseMediaType = 'MEDIA_TYPE_UNSPECIFIED' | 'AUDIO'
 
 
-export type GoogleActionsV2MediaStatusStatus = 'STATUS_UNSPECIFIED' | 'FINISHED'
+export type GoogleActionsV2MediaStatusStatus = 'STATUS_UNSPECIFIED' | 'FINISHED' | 'FAILED'
 
 
 export type GoogleActionsV2NewSurfaceValueStatus = 'NEW_SURFACE_STATUS_UNSPECIFIED' | 'CANCELLED' | 'OK'
@@ -75,7 +75,7 @@ export type GoogleActionsV2OrdersTimeType = 'UNKNOWN' | 'DELIVERY_DATE' | 'ETA' 
 export type GoogleActionsV2PermissionValueSpecPermissions = 'UNSPECIFIED_PERMISSION' | 'NAME' | 'DEVICE_PRECISE_LOCATION' | 'DEVICE_COARSE_LOCATION' | 'UPDATE'
 
 
-export type GoogleActionsV2RawInputInputType = 'UNSPECIFIED_INPUT_TYPE' | 'TOUCH' | 'VOICE' | 'KEYBOARD'
+export type GoogleActionsV2RawInputInputType = 'UNSPECIFIED_INPUT_TYPE' | 'TOUCH' | 'VOICE' | 'KEYBOARD' | 'URL'
 
 
 export type GoogleActionsV2RegisterUpdateValueStatus = 'REGISTER_UPDATE_STATUS_UNSPECIFIED' | 'OK' | 'CANCELLED'
@@ -622,6 +622,11 @@ export interface GoogleActionsV2Location {
    * phone number for delivery location.
    */
   phoneNumber?: string
+  /**
+   * place_id is used with Places API to fetch details of a place.
+   * See https://developers.google.com/places/web-service/place-id
+   */
+  placeId?: string
   /**
    * Postal address.
    * Requires the DEVICE_PRECISE_LOCATION or
@@ -1373,6 +1378,10 @@ export interface GoogleActionsV2RawInput {
    * Typed or spoken input from the end user.
    */
   query?: string
+  /**
+   * The triggering URL.
+   */
+  url?: string
 }
 
 export interface GoogleActionsV2RegisterUpdateValue {
@@ -1439,6 +1448,10 @@ export interface GoogleActionsV2RichResponseItem {
    * Response indicating a set of media to be played.
    */
   mediaResponse?: GoogleActionsV2MediaResponse
+  /**
+   * Optional named identifier of this Item.
+   */
+  name?: string
   /**
    * Voice and text-only response.
    */
@@ -1728,6 +1741,14 @@ export interface GoogleActionsV2UiElementsCarouselSelect {
    * min: 2 max: 10
    */
   items?: GoogleActionsV2UiElementsCarouselSelectCarouselItem[]
+  /**
+   * Subtitle of the carousel. Optional.
+   */
+  subtitle?: string
+  /**
+   * Title of the carousel. Optional.
+   */
+  title?: string
 }
 
 export interface GoogleActionsV2UiElementsCarouselSelectCarouselItem {
@@ -1805,6 +1826,11 @@ export interface GoogleActionsV2UiElementsListSelect {
    * min: 2 max: 30
    */
   items?: GoogleActionsV2UiElementsListSelectListItem[]
+  /**
+   * Subtitle of the list.
+   * Optional.
+   */
+  subtitle?: string
   /**
    * Overall title of the list.
    * Optional.
@@ -1945,9 +1971,7 @@ export interface GoogleActionsV2UpdatePermissionValueSpec {
 export interface GoogleActionsV2User {
   /**
    * An OAuth2 token that identifies the user in your system. Only
-   * available if Account Linking
-   * configuration is defined in the action package and the user links their
-   * account.
+   * available if the user links their account.
    */
   accessToken?: string
   /**
