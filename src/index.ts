@@ -108,6 +108,9 @@ export {
   DeliveryAddressArgument,
   DeliveryAddress,
   MediaStatusArgument,
+  HelperOptions,
+  Helper,
+  SoloHelper,
 } from './service/actionssdk'
 
 export {

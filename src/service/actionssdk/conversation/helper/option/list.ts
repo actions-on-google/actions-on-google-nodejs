@@ -103,12 +103,14 @@ export class List extends Helper<
    * @public
    */
   constructor(options: ListOptions) {
-    super('actions.intent.OPTION')
-
-    this._data('type.googleapis.com/google.actions.v2.OptionValueSpec', {
-      listSelect: {
-        title: options.title,
-        items: Array.isArray(options.items) ? options.items : convert(options.items),
+    super({
+      intent: 'actions.intent.OPTION',
+      type: 'type.googleapis.com/google.actions.v2.OptionValueSpec',
+      data: {
+        listSelect: {
+          title: options.title,
+          items: Array.isArray(options.items) ? options.items : convert(options.items),
+        },
       },
     })
   }

@@ -130,12 +130,14 @@ export class NewSurface extends SoloHelper<
    * @public
    */
   constructor(options: NewSurfaceOptions) {
-    super('actions.intent.NEW_SURFACE')
-
-    this._data('type.googleapis.com/google.actions.v2.NewSurfaceValueSpec', {
-      capabilities: toArray(options.capabilities),
-      context: options.context,
-      notificationTitle: options.notification,
+    super({
+      intent: 'actions.intent.NEW_SURFACE',
+      type: 'type.googleapis.com/google.actions.v2.NewSurfaceValueSpec',
+      data: {
+        capabilities: toArray(options.capabilities),
+        context: options.context,
+        notificationTitle: options.notification,
+      },
     })
   }
 }

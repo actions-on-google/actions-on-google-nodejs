@@ -122,12 +122,14 @@ export class Permission extends SoloHelper<
    * @public
    */
   constructor(options: PermissionOptions) {
-    super('actions.intent.PERMISSION')
-
-    this._data('type.googleapis.com/google.actions.v2.PermissionValueSpec', {
-      optContext: options.context,
-      permissions: toArray(options.permissions),
-      ...options.extra,
+    super({
+      intent: 'actions.intent.PERMISSION',
+      type: 'type.googleapis.com/google.actions.v2.PermissionValueSpec',
+      data: {
+        optContext: options.context,
+        permissions: toArray(options.permissions),
+        ...options.extra,
+      },
     })
   }
 }

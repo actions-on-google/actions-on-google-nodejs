@@ -115,15 +115,17 @@ export class DateTime extends SoloHelper<
    * @public
    */
   constructor(options: DateTimeOptions) {
-    super('actions.intent.DATETIME')
-
     const { prompts = {} } = options
 
-    this._data('type.googleapis.com/google.actions.v2.DateTimeValueSpec', {
-      dialogSpec: {
-        requestDatetimeText: prompts.initial,
-        requestDateText: prompts.date,
-        requestTimeText: prompts.time,
+    super({
+      intent: 'actions.intent.DATETIME',
+      type: 'type.googleapis.com/google.actions.v2.DateTimeValueSpec',
+      data: {
+        dialogSpec: {
+          requestDatetimeText: prompts.initial,
+          requestDateText: prompts.date,
+          requestTimeText: prompts.time,
+        },
       },
     })
   }

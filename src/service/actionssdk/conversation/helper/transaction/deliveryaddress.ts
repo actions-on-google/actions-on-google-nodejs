@@ -33,8 +33,10 @@ export class DeliveryAddress extends SoloHelper<
    * @public
    */
   constructor(options?: Api.GoogleActionsV2DeliveryAddressValueSpec) {
-    super('actions.intent.DELIVERY_ADDRESS')
-
-    this._data('type.googleapis.com/google.actions.v2.DeliveryAddressValueSpec', options)
+    super({
+      intent: 'actions.intent.DELIVERY_ADDRESS',
+      type: 'type.googleapis.com/google.actions.v2.DeliveryAddressValueSpec',
+      data: options,
+    })
   }
 }

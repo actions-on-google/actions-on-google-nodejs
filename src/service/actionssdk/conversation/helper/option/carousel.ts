@@ -122,12 +122,14 @@ export class Carousel extends Helper<
    * @public
    */
   constructor(options: CarouselOptions) {
-    super('actions.intent.OPTION')
-
-    this._data('type.googleapis.com/google.actions.v2.OptionValueSpec', {
-      carouselSelect: {
-        items: Array.isArray(options.items) ? options.items : convert(options.items),
-        imageDisplayOptions: options.display,
+    super({
+      intent: 'actions.intent.OPTION',
+      type: 'type.googleapis.com/google.actions.v2.OptionValueSpec',
+      data: {
+        carouselSelect: {
+          items: Array.isArray(options.items) ? options.items : convert(options.items),
+          imageDisplayOptions: options.display,
+        },
       },
     })
   }

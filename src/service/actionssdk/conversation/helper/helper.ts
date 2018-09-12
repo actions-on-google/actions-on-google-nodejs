@@ -18,28 +18,37 @@ import * as Api from '../../api/v2'
 import { Intent, InputValueSpec } from '../conversation'
 import { ProtoAny } from '../../../../common'
 
-/** @hidden */
+/** @public */
+export interface HelperOptions<
+  TIntent extends Intent,
+  TValueSpec,
+> {
+  intent: TIntent
+  type: InputValueSpec
+  data?: TValueSpec
+}
+
+/** @public */
 export interface Helper<
   TIntent extends Intent,
   TValueSpec
 > extends Api.GoogleActionsV2ExpectedIntent { }
-export abstract class Helper<
+
+/** @public */
+export class Helper<
   TIntent extends Intent,
   TValueSpec
 > implements Api.GoogleActionsV2ExpectedIntent {
   inputValueData: ProtoAny<InputValueSpec, TValueSpec>
 
-  constructor(public intent: TIntent) {
-  }
-
-  _data(type: InputValueSpec, spec?: TValueSpec) {
-    this.inputValueData = Object.assign({ '@type': type }, spec)
+  constructor(options: HelperOptions<TIntent, TValueSpec>) {
+    this.intent = options.intent
+    this.inputValueData = Object.assign({ '@type': options.type }, options.data)
   }
 }
 
-/** @hidden */
-export abstract class SoloHelper<
+/** @public */
+export class SoloHelper<
   TIntent extends Intent,
   TValueSpec
-> extends Helper<TIntent, TValueSpec> {
-}
+> extends Helper<TIntent, TValueSpec> { }

@@ -98,14 +98,16 @@ export class RegisterUpdate extends SoloHelper<
    * @public
    */
   constructor(options: RegisterUpdateOptions) {
-    super('actions.intent.REGISTER_UPDATE')
-
-    this._data('type.googleapis.com/google.actions.v2.RegisterUpdateValueSpec', {
-      intent: options.intent,
-      arguments: options.arguments,
-      triggerContext: {
-        timeContext: {
-          frequency: options.frequency,
+    super({
+      intent: 'actions.intent.REGISTER_UPDATE',
+      type: 'type.googleapis.com/google.actions.v2.RegisterUpdateValueSpec',
+      data: {
+        intent: options.intent,
+        arguments: options.arguments,
+        triggerContext: {
+          timeContext: {
+            frequency: options.frequency,
+          },
         },
       },
     })

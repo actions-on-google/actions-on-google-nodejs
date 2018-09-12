@@ -105,23 +105,25 @@ export class DeepLink extends Helper<
    * @public
    */
   constructor(options: DeepLinkOptions) {
-    super('actions.intent.LINK')
-
     const extension: ProtoAny<DialogSpec, Api.GoogleActionsV2LinkValueSpecLinkDialogSpec> = {
       '@type': 'type.googleapis.com/google.actions.v2.LinkValueSpec.LinkDialogSpec',
       destinationName: options.destination,
       requestLinkReason: options.reason,
     }
 
-    this._data('type.googleapis.com/google.actions.v2.LinkValueSpec', {
-      openUrlAction: {
-        url: options.url,
-        androidApp: {
-          packageName: options.package,
+    super({
+      intent: 'actions.intent.LINK',
+      type: 'type.googleapis.com/google.actions.v2.LinkValueSpec',
+      data: {
+        openUrlAction: {
+          url: options.url,
+          androidApp: {
+            packageName: options.package,
+          },
         },
-      },
-      dialogSpec: {
-        extension,
+        dialogSpec: {
+          extension,
+        },
       },
     })
   }

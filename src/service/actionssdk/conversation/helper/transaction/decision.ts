@@ -33,8 +33,10 @@ export class TransactionDecision extends SoloHelper<
    * @public
    */
   constructor(options?: Api.GoogleActionsV2TransactionDecisionValueSpec) {
-    super('actions.intent.TRANSACTION_DECISION')
-
-    this._data('type.googleapis.com/google.actions.v2.TransactionDecisionValueSpec', options)
+    super({
+      intent: 'actions.intent.TRANSACTION_DECISION',
+      type: 'type.googleapis.com/google.actions.v2.TransactionDecisionValueSpec',
+      data: options,
+    })
   }
 }

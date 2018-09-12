@@ -33,8 +33,10 @@ export class TransactionRequirements extends SoloHelper<
    * @public
    */
   constructor(options?: Api.GoogleActionsV2TransactionRequirementsCheckSpec) {
-    super('actions.intent.TRANSACTION_REQUIREMENTS_CHECK')
-
-    this._data('type.googleapis.com/google.actions.v2.TransactionRequirementsCheckSpec', options)
+    super({
+      intent: 'actions.intent.TRANSACTION_REQUIREMENTS_CHECK',
+      type: 'type.googleapis.com/google.actions.v2.TransactionRequirementsCheckSpec',
+      data: options,
+    })
   }
 }

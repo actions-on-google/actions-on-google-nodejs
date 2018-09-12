@@ -76,10 +76,12 @@ export class SignIn extends SoloHelper<
    * @public
    */
   constructor(context?: string) {
-    super('actions.intent.SIGN_IN')
-
-    this._data('type.googleapis.com/google.actions.v2.SignInValueSpec', {
-      optContext: context,
+    super({
+      intent: 'actions.intent.SIGN_IN',
+      type: 'type.googleapis.com/google.actions.v2.SignInValueSpec',
+      data: {
+        optContext: context,
+      },
     })
   }
 }

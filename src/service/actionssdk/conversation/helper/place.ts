@@ -101,17 +101,19 @@ export class Place extends SoloHelper<
    * @public
    */
   constructor(options: PlaceOptions) {
-    super('actions.intent.PLACE')
-
     const extension: ProtoAny<DialogSpec, Api.GoogleActionsV2PlaceValueSpecPlaceDialogSpec> = {
       '@type': 'type.googleapis.com/google.actions.v2.PlaceValueSpec.PlaceDialogSpec',
       permissionContext: options.context,
       requestPrompt: options.prompt,
     }
 
-    this._data('type.googleapis.com/google.actions.v2.PlaceValueSpec', {
-      dialogSpec: {
-        extension,
+    super({
+      intent: 'actions.intent.PLACE',
+      type: 'type.googleapis.com/google.actions.v2.PlaceValueSpec',
+      data: {
+        dialogSpec: {
+          extension,
+        },
       },
     })
   }

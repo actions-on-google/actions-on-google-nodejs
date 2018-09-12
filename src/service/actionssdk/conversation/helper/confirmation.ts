@@ -70,11 +70,13 @@ export class Confirmation extends SoloHelper<
    * @public
    */
   constructor(text: string) {
-    super('actions.intent.CONFIRMATION')
-
-    this._data('type.googleapis.com/google.actions.v2.ConfirmationValueSpec', {
-      dialogSpec: {
-        requestConfirmationText: text,
+    super({
+      intent: 'actions.intent.CONFIRMATION',
+      type: 'type.googleapis.com/google.actions.v2.ConfirmationValueSpec',
+      data: {
+        dialogSpec: {
+          requestConfirmationText: text,
+        },
       },
     })
   }
