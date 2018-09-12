@@ -15,23 +15,38 @@
  */
 
 import * as Api from '../../../api/v2'
-import { Question } from '../question'
-import { OptionArgument, OptionItems, convert } from './option'
+import { Helper } from '../helper'
+import { OptionArgument, OptionItems, convert, OptionItem } from './option'
 
 /** @public */
-export type ListArgument = OptionArgument
+export type CarouselArgument = OptionArgument
 
 /** @public */
-export interface ListOptions {
-  /** @public */
-  title?: string
+export interface CarouselOptionItem extends OptionItem {
+  /**
+   * Description text of the item.
+   * @public
+   */
+  description: string
+}
 
-  /** @public */
-  items: OptionItems | Api.GoogleActionsV2UiElementsListSelectListItem[]
+/** @public */
+export interface CarouselOptions {
+  /**
+   * Sets the display options for the images in this carousel.
+   * @public
+   */
+  display?: Api.GoogleActionsV2UiElementsCarouselSelectImageDisplayOptions
+
+  /**
+   * List of 2-20 items to show in this carousel. Required.
+   * @public
+   */
+  items: OptionItems<CarouselOptionItem> | Api.GoogleActionsV2UiElementsCarouselSelectCarouselItem[]
 }
 
 /**
- * Asks to collect user's input with a list.
+ * Asks to collect user's input with a carousel.
  *
  * @example
  * ```javascript
@@ -41,14 +56,16 @@ export interface ListOptions {
  *
  * app.intent('actions.intent.MAIN', conv => {
  *   conv.ask('Which of these looks good?')
- *   conv.ask(new List({
+ *   conv.ask(new Carousel({
  *     items: {
  *       [SELECTION_KEY_ONE]: {
  *         title: 'Number one',
+ *         description: 'Description of number one',
  *         synonyms: ['synonym of KEY_ONE 1', 'synonym of KEY_ONE 2'],
  *       },
  *       [SELECTION_KEY_TWO]: {
  *         title: 'Number two',
+ *         description: 'Description of number one',
  *         synonyms: ['synonym of KEY_TWO 1', 'synonym of KEY_TWO 2'],
  *       }
  *     }
@@ -68,14 +85,16 @@ export interface ListOptions {
  *
  * app.intent('Default Welcome Intent', conv => {
  *   conv.ask('Which of these looks good?')
- *   conv.ask(new List({
+ *   conv.ask(new Carousel({
  *     items: {
  *       [SELECTION_KEY_ONE]: {
  *         title: 'Number one',
+ *         description: 'Description of number one',
  *         synonyms: ['synonym of KEY_ONE 1', 'synonym of KEY_ONE 2'],
  *       },
  *       [SELECTION_KEY_TWO]: {
  *         title: 'Number two',
+ *         description: 'Description of number one',
  *         synonyms: ['synonym of KEY_TWO 1', 'synonym of KEY_TWO 2'],
  *       }
  *     }
@@ -94,21 +113,21 @@ export interface ListOptions {
  *
  * @public
  */
-export class List extends Question<
+export class Carousel extends Helper<
   'actions.intent.OPTION',
   Api.GoogleActionsV2OptionValueSpec
 > {
   /**
-   * @param options List options
+   * @param options Carousel option
    * @public
    */
-  constructor(options: ListOptions) {
+  constructor(options: CarouselOptions) {
     super('actions.intent.OPTION')
 
     this._data('type.googleapis.com/google.actions.v2.OptionValueSpec', {
-      listSelect: {
-        title: options.title,
+      carouselSelect: {
         items: Array.isArray(options.items) ? options.items : convert(options.items),
+        imageDisplayOptions: options.display,
       },
     })
   }

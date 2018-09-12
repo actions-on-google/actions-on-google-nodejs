@@ -15,7 +15,7 @@
  */
 
 import * as Api from '../../api/v2'
-import { SoloQuestion } from './question'
+import { SoloHelper } from './helper'
 
 /** @public */
 export type ConfirmationArgument = boolean
@@ -60,7 +60,7 @@ export type ConfirmationArgument = boolean
  *
  * @public
  */
-export class Confirmation extends SoloQuestion<
+export class Confirmation extends SoloHelper<
   'actions.intent.CONFIRMATION',
   Api.GoogleActionsV2ConfirmationValueSpec
 > {

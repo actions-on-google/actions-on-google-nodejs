@@ -15,7 +15,7 @@
  */
 
 import * as Api from '../../../api/v2'
-import { SoloQuestion } from '../question'
+import { SoloHelper } from '../helper'
 
 /** @public */
 export type TransactionRequirementsArgument = Api.GoogleActionsV2TransactionRequirementsCheckResult
@@ -24,7 +24,7 @@ export type TransactionRequirementsArgument = Api.GoogleActionsV2TransactionRequ
  * Checks whether user is in transactable state.
  * @public
  */
-export class TransactionRequirements extends SoloQuestion<
+export class TransactionRequirements extends SoloHelper<
   'actions.intent.TRANSACTION_REQUIREMENTS_CHECK',
   Api.GoogleActionsV2TransactionRequirementsCheckSpec
 > {

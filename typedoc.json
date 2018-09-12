@@ -7,7 +7,7 @@
   ],
   "ignoreCompilerErrors": true,
   "disableOutputCheck": true,
-  "external-modulemap": ".*\/((?:conversation\/question)|(?:conversation\/argument)|(?:conversation\/response)|(?:framework)|(?:conversation)|(?:actionssdk\/api\/v2)|(?:dialogflow\/api\/v1)|(?:dialogflow\/api\/v2)|(?:smarthome\/api\/v1)|(?:assistant)|(?:common)|(?:dialogflow)|(?:actionssdk)|(?:smarthome))",
+  "external-modulemap": ".*\/((?:conversation\/helper)|(?:conversation\/argument)|(?:conversation\/response)|(?:framework)|(?:conversation)|(?:actionssdk\/api\/v2)|(?:dialogflow\/api\/v1)|(?:dialogflow\/api\/v2)|(?:smarthome\/api\/v1)|(?:assistant)|(?:common)|(?:dialogflow)|(?:actionssdk)|(?:smarthome))",
   "excludeExternals": true,
   "excludePrivate": true,
   "excludeNotExported": true

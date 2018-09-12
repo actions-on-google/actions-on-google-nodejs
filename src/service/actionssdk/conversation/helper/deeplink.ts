@@ -15,7 +15,7 @@
  */
 
 import * as Api from '../../api/v2'
-import { Question } from './question'
+import { Helper } from './helper'
 import { ProtoAny } from '../../../../common'
 import { DialogSpec } from '../conversation'
 
@@ -96,7 +96,7 @@ export type DeepLinkArgument = undefined
  *
  * @public
  */
-export class DeepLink extends Question<
+export class DeepLink extends Helper<
   'actions.intent.LINK',
   Api.GoogleActionsV2LinkValueSpec
 > {

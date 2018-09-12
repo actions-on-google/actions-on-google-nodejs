@@ -15,7 +15,7 @@
  */
 
 import * as Api from '../../api/v2'
-import { SoloQuestion } from './question'
+import { SoloHelper } from './helper'
 
 /** @public */
 export type SignInArgument = Api.GoogleActionsV2SignInValue
@@ -65,7 +65,7 @@ export type SignInArgument = Api.GoogleActionsV2SignInValue
  *
  * @public
  */
-export class SignIn extends SoloQuestion<
+export class SignIn extends SoloHelper<
   'actions.intent.SIGN_IN',
   Api.GoogleActionsV2SignInValueSpec
 > {

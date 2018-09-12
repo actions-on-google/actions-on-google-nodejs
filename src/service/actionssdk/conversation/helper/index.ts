@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-export * from './question'
+export * from './helper'
 
 export * from './newsurface'
 export * from './confirmation'

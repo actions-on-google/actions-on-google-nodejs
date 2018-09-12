@@ -15,7 +15,7 @@
  */
 
 export * from './conversation'
-export * from './question'
+export * from './helper'
 export * from './argument'
 export * from './response'
 export * from './surface'

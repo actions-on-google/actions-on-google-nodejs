@@ -15,7 +15,7 @@
  */
 
 import * as Api from '../../../api/v2'
-import { SoloQuestion } from '../question'
+import { SoloHelper } from '../helper'
 
 /** @public */
 export type TransactionDecisionArgument = Api.GoogleActionsV2TransactionDecisionValue
@@ -24,7 +24,7 @@ export type TransactionDecisionArgument = Api.GoogleActionsV2TransactionDecision
  * Asks user to confirm transaction information.
  * @public
  */
-export class TransactionDecision extends SoloQuestion<
+export class TransactionDecision extends SoloHelper<
   'actions.intent.TRANSACTION_DECISION',
   Api.GoogleActionsV2TransactionDecisionValueSpec
 > {

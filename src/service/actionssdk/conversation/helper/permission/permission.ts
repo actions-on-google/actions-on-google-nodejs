@@ -15,7 +15,7 @@
  */
 
 import * as Api from '../../../api/v2'
-import { SoloQuestion } from '../question'
+import { SoloHelper } from '../helper'
 import { toArray } from '../../../../../common'
 
 /** @public */
@@ -113,7 +113,7 @@ export interface PermissionOptions {
  * * {@link Place|conv.ask(new Place)} which also can ask for Location permission to get a place
  * @public
  */
-export class Permission extends SoloQuestion<
+export class Permission extends SoloHelper<
   'actions.intent.PERMISSION',
   Api.GoogleActionsV2PermissionValueSpec
 > {

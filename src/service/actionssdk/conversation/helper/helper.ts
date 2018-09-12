@@ -19,11 +19,11 @@ import { Intent, InputValueSpec } from '../conversation'
 import { ProtoAny } from '../../../../common'
 
 /** @hidden */
-export interface Question<
+export interface Helper<
   TIntent extends Intent,
   TValueSpec
 > extends Api.GoogleActionsV2ExpectedIntent { }
-export abstract class Question<
+export abstract class Helper<
   TIntent extends Intent,
   TValueSpec
 > implements Api.GoogleActionsV2ExpectedIntent {
@@ -38,8 +38,8 @@ export abstract class Question<
 }
 
 /** @hidden */
-export abstract class SoloQuestion<
+export abstract class SoloHelper<
   TIntent extends Intent,
   TValueSpec
-> extends Question<TIntent, TValueSpec> {
+> extends Helper<TIntent, TValueSpec> {
 }

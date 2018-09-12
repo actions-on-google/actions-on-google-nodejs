@@ -28,7 +28,7 @@ import {
   MediaResponse,
   SimpleResponse,
 } from './response'
-import { Question, SoloQuestion } from './question'
+import { Helper, SoloHelper } from './helper'
 import { Arguments } from './argument'
 import { Device } from './device'
 import { Input } from './input'
@@ -84,7 +84,7 @@ export type Response =
   Image |
   Suggestions |
   MediaObject |
-  Question<Intent, JsonObject>
+  Helper<Intent, JsonObject>
 
 /** @hidden */
 export interface ConversationResponse {
@@ -393,10 +393,10 @@ export class Conversation<TUserStorage> {
         richResponse.add(response)
         continue
       }
-      if (response instanceof Question) {
+      if (response instanceof Helper) {
         expectedIntent = response
-        if (response instanceof SoloQuestion) {
-          // SoloQuestions don't require a SimpleResponse
+        if (response instanceof SoloHelper) {
+          // SoloHelper classes don't require a SimpleResponse
           // but API still requires a SimpleResponse
           // so a placeholder is added to not error
 

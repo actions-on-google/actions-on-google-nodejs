@@ -15,7 +15,7 @@
  */
 
 import * as Api from '../../../api/v2'
-import { SoloQuestion } from '../question'
+import { SoloHelper } from '../helper'
 
 /** @public */
 export type DeliveryAddressArgument = Api.GoogleActionsV2DeliveryAddressValue
@@ -24,7 +24,7 @@ export type DeliveryAddressArgument = Api.GoogleActionsV2DeliveryAddressValue
  * Asks user for delivery address.
  * @public
  */
-export class DeliveryAddress extends SoloQuestion<
+export class DeliveryAddress extends SoloHelper<
   'actions.intent.DELIVERY_ADDRESS',
   Api.GoogleActionsV2DeliveryAddressValueSpec
 > {

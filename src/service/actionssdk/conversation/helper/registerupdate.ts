@@ -15,7 +15,7 @@
  */
 
 import * as Api from '../../api/v2'
-import { SoloQuestion } from './question'
+import { SoloHelper } from './helper'
 
 /** @public */
 export type RegisterUpdateArgument = Api.GoogleActionsV2RegisterUpdateValue
@@ -89,7 +89,7 @@ export interface RegisterUpdateOptions {
  *
  * @public
  */
-export class RegisterUpdate extends SoloQuestion<
+export class RegisterUpdate extends SoloHelper<
   'actions.intent.REGISTER_UPDATE',
   Api.GoogleActionsV2RegisterUpdateValueSpec
 > {

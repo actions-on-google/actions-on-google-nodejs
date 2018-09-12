@@ -15,7 +15,7 @@
  */
 
 import * as Api from '../../api/v2'
-import { SoloQuestion } from './question'
+import { SoloHelper } from './helper'
 import { toArray } from '../../../../common'
 import { SurfaceCapability } from '../surface'
 
@@ -121,7 +121,7 @@ export interface NewSurfaceOptions {
  *
  * @public
  */
-export class NewSurface extends SoloQuestion<
+export class NewSurface extends SoloHelper<
   'actions.intent.NEW_SURFACE',
   Api.GoogleActionsV2NewSurfaceValueSpec
 > {

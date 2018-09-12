@@ -82,7 +82,7 @@ app.intent('actions.intent.TEXT', (conv, input) => {
 #### Notes about the code snippet
 * [`conv.ask`](https://actions-on-google.github.io/actions-on-google-nodejs/classes/conversation.conversation-1.html#ask)/[`conv.close`](https://actions-on-google.github.io/actions-on-google-nodejs/classes/conversation.conversation-1.html#close)
 can be called with any of the [`Response`](https://actions-on-google.github.io/actions-on-google-nodejs/modules/conversation.html#response) types.
-* All [`Question`](https://actions-on-google.github.io/actions-on-google-nodejs/modules/conversation_question.html) classes are of the `Response` type.
+* All [`Helper`](https://actions-on-google.github.io/actions-on-google-nodejs/modules/conversation_helper.html) classes are of the `Response` type.
 
 ##### Dialogflow
 * `app` is an instance of type [`DialogflowApp`](https://actions-on-google.github.io/actions-on-google-nodejs/interfaces/dialogflow.dialogflowapp.html#catch).

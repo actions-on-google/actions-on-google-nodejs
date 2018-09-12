@@ -15,7 +15,7 @@
  */
 
 import * as Api from '../../api/v2'
-import { SoloQuestion } from './question'
+import { SoloHelper } from './helper'
 import { ProtoAny } from '../../../../common'
 import { DialogSpec } from '../conversation'
 
@@ -92,7 +92,7 @@ export type PlaceArgument = Api.GoogleActionsV2Location | undefined
  *
  * @public
  */
-export class Place extends SoloQuestion<
+export class Place extends SoloHelper<
   'actions.intent.PLACE',
   Api.GoogleActionsV2PlaceValueSpec
 > {

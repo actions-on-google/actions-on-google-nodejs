@@ -15,7 +15,7 @@
  */
 
 import * as Api from '../../api/v2'
-import { SoloQuestion } from './question'
+import { SoloHelper } from './helper'
 
 /** @public */
 export type DateTimeArgument = Api.GoogleActionsV2DateTime
@@ -106,7 +106,7 @@ export interface DateTimeOptions {
  *
  * @public
  */
-export class DateTime extends SoloQuestion<
+export class DateTime extends SoloHelper<
   'actions.intent.DATETIME',
   Api.GoogleActionsV2DateTimeValueSpec
 > {
