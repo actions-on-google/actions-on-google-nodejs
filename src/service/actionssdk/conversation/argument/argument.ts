@@ -29,6 +29,7 @@ import {
   DeliveryAddressArgument,
   RegisterUpdateArgument,
   UpdatePermissionUserIdArgument,
+  CompletePurchaseArgument,
 } from '..'
 import {
   RepromptArgument,
@@ -88,6 +89,13 @@ export interface ArgumentsNamed {
    * @public
    */
   TRANSACTION_DECISION_VALUE?: TransactionDecisionArgument
+
+  /**
+   * The complete purchase information.
+   * Only use after calling {@link CompletePurchase|conv.ask(new CompletePurchase)}.
+   * @public
+   */
+  COMPLETE_PURCHASE_VALUE?: CompletePurchaseArgument
 
   /**
    * The confirmation decision.
