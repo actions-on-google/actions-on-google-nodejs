@@ -439,6 +439,9 @@ export const dialogflow: Dialogflow = <
     while (typeof handler !== 'function') {
       if (typeof handler === 'undefined') {
         if (!this._handlers.fallback) {
+          if (!intent) {
+            throw new Error('No intent was provided and fallback intent is not defined.')
+          }
           throw new Error(`Dialogflow IntentHandler not found for intent: ${intent}`)
         }
         handler = this._handlers.fallback
