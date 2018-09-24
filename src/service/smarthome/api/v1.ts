@@ -116,7 +116,7 @@ export interface SmartHomeV1SyncDevices {
 }
 
 export interface SmartHomeV1SyncPayload {
-  agentUserId: string,
+  agentUserId?: string,
   errorCode?: string,
   debugString?: string,
   devices: SmartHomeV1SyncDevices[]
