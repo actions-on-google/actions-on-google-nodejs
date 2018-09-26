@@ -22,8 +22,10 @@ import { ProtoAny, JsonObject } from '../../common'
 import { Contexts, ContextValues, Parameters } from './context'
 import { Incoming } from './incoming'
 
-const APP_DATA_CONTEXT = '_actions_on_google'
-const APP_DATA_CONTEXT_LIFESPAN = 99
+const CONV_DATA_CONTEXT = '_actions_on_google'
+const CONV_DATA_CONTEXT_LIFESPAN = 99
+const SIMULATOR_WARNING = 'Cannot display response in Dialogflow simulator. ' +
+  'Please test on the Google Assistant simulator instead.'
 
 /** @hidden */
 export interface SystemIntent {
@@ -58,6 +60,18 @@ export interface DialogflowConversationOptions<
 const isV1 = (
   body: Api.GoogleCloudDialogflowV2WebhookRequest | ApiV1.DialogflowV1WebhookRequest,
 ): body is ApiV1.DialogflowV1WebhookRequest => !!(body as ApiV1.DialogflowV1WebhookRequest).result
+
+const isSimulator = (
+  body: Api.GoogleCloudDialogflowV2WebhookRequest | ApiV1.DialogflowV1WebhookRequest,
+) => {
+  if (isV1(body)) {
+    return !body.originalRequest
+  }
+  if (!body.originalDetectIntentRequest) {
+    return false
+  }
+  return Object.keys(body.originalDetectIntentRequest.payload!).length === 0
+}
 
 const getRequest = (
   body: Api.GoogleCloudDialogflowV2WebhookRequest | ApiV1.DialogflowV1WebhookRequest,
@@ -250,7 +264,7 @@ export class DialogflowConversation<
 
     this.data = (init && init.data) || {} as TConvData
 
-    const context = this.contexts.input[APP_DATA_CONTEXT]
+    const context = this.contexts.input[CONV_DATA_CONTEXT]
     if (context) {
       const { data } = context.parameters
       if (typeof data === 'string') {
@@ -333,15 +347,24 @@ export class DialogflowConversation<
     const payload: PayloadGoogle = {
       google,
     }
-    this.contexts.set(APP_DATA_CONTEXT, APP_DATA_CONTEXT_LIFESPAN, {
+    this.contexts.set(CONV_DATA_CONTEXT, CONV_DATA_CONTEXT_LIFESPAN, {
       data: JSON.stringify(this.data),
     })
+    const simulator = !this._followup && isSimulator(this.body)
     if (this.version === 1) {
       const contextOut = this.contexts._serializeV1()
       const response: ApiV1.DialogflowV1WebhookResponse = {
         data: payload,
         contextOut,
         followupEvent: this._followup,
+      }
+      if (simulator) {
+        const items = payload.google.richResponse.items!
+        response.displayText =
+          (payload.google.systemIntent || items.length > 1) ?
+          SIMULATOR_WARNING :
+          (items[0].simpleResponse!.displayText ||
+            items[0].simpleResponse!.textToSpeech)
       }
       return response
     }
@@ -350,6 +373,14 @@ export class DialogflowConversation<
       payload,
       outputContexts,
       followupEventInput: this._followup,
+    }
+    if (simulator) {
+      const items = payload.google.richResponse.items!
+      response.fulfillmentText =
+        (payload.google.systemIntent || items.length > 1) ?
+        SIMULATOR_WARNING :
+        (items[0].simpleResponse!.displayText ||
+          items[0].simpleResponse!.textToSpeech)
     }
     return response
   }

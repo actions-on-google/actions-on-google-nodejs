@@ -17,6 +17,8 @@
 import ava, { RegisterContextual } from 'ava'
 import { DialogflowConversation } from '../conv'
 import * as ApiV1 from '../api/v1'
+import { clone } from '../../../common'
+import { Permission, SimpleResponse, Image, List } from '../../actionssdk'
 
 interface AvaContext {
   conv: DialogflowConversation
@@ -38,4 +40,373 @@ test.beforeEach(t => {
 
 test('conv can be instantiated', t => {
   t.true(t.context.conv instanceof DialogflowConversation)
+})
+
+test('conv.serialize returns the raw json when set with conv.json', t => {
+  const json = {
+    a: '1',
+    b: '2',
+    c: {
+      d: '3',
+      e: '4',
+    },
+  }
+  t.context.conv.json(json)
+  t.deepEqual(t.context.conv.serialize() as typeof json, json)
+})
+
+test('conv.serialize returns the correct response with simple response string', t => {
+  const response = 'abc123'
+  const conv = t.context.conv
+  conv.add(response)
+  t.deepEqual(clone(conv.serialize()), {
+    data: {
+      google: {
+        expectUserResponse: true,
+        richResponse: {
+          items: [
+            {
+              simpleResponse: {
+                textToSpeech: response,
+              },
+            },
+          ],
+        },
+        userStorage: '{"data":{}}',
+      },
+    },
+    contextOut: [
+      {
+        name: '_actions_on_google',
+        lifespan: 99,
+        parameters: {
+          data: '{}',
+        },
+      },
+    ],
+  })
+})
+
+const simulatorConv = () => new DialogflowConversation({
+  body: {
+    id: 'idRandom',
+    timestamp: 'timestampRandom',
+    lang: 'en',
+    result: {
+      source: 'agent',
+      resolvedQuery: 'test',
+      speech: '',
+      action: 'input.unknown',
+      actionIncomplete: false,
+      parameters: {},
+      contexts: [],
+      metadata: {
+        intentId: 'intentIdRandom',
+        webhookUsed: 'true',
+        webhookForSlotFillingUsed: 'false',
+        isFallbackIntent: 'true',
+        intentName: 'Default Fallback Intent',
+      },
+      fulfillment: {
+        speech: "Sorry, I didn't get that.",
+        messages: [
+          {
+            type: 0,
+            speech: 'What was that?',
+          },
+        ],
+      },
+      score: 1,
+    },
+    status: {
+      code: 200,
+      errorType: 'success',
+    },
+    sessionId: 'sessionIdRandom',
+  } as ApiV1.DialogflowV1WebhookRequest,
+  headers: {},
+})
+
+test('conv.serialize w/ simple response has fulfillmentText when from simulator', t => {
+  const response = 'abc123'
+  const conv = simulatorConv()
+  conv.add(response)
+  t.deepEqual(clone(conv.serialize()), {
+    data: {
+      google: {
+        expectUserResponse: true,
+        richResponse: {
+          items: [
+            {
+              simpleResponse: {
+                textToSpeech: response,
+              },
+            },
+          ],
+        },
+        userStorage: '{"data":{}}',
+      },
+    },
+    contextOut: [
+      {
+        name: '_actions_on_google',
+        lifespan: 99,
+        parameters: {
+          data: '{}',
+        },
+      },
+    ],
+    displayText: response,
+  })
+})
+
+test('conv.serialize w/ simple response text has fulfillmentText when from simulator', t => {
+  const speech = 'abc123'
+  const text = 'abcd1234'
+  const conv = simulatorConv()
+  conv.add(new SimpleResponse({
+    speech,
+    text,
+  }))
+  t.deepEqual(clone(conv.serialize()), {
+    data: {
+      google: {
+        expectUserResponse: true,
+        richResponse: {
+          items: [
+            {
+              simpleResponse: {
+                textToSpeech: speech,
+                displayText: text,
+              },
+            },
+          ],
+        },
+        userStorage: '{"data":{}}',
+      },
+    },
+    contextOut: [
+      {
+        name: '_actions_on_google',
+        lifespan: 99,
+        parameters: {
+          data: '{}',
+        },
+      },
+    ],
+    displayText: text,
+  })
+})
+
+test('conv.serialize w/ two simple responses has fulfillmentText warning for simulator', t => {
+  const response = 'abc123'
+  const response2 = 'abcd1234'
+  const conv = simulatorConv()
+  conv.add(response)
+  conv.add(response2)
+  t.deepEqual(clone(conv.serialize()), {
+    data: {
+      google: {
+        expectUserResponse: true,
+        richResponse: {
+          items: [
+            {
+              simpleResponse: {
+                textToSpeech: response,
+              },
+            },
+            {
+              simpleResponse: {
+                textToSpeech: response2,
+              },
+            },
+          ],
+        },
+        userStorage: '{"data":{}}',
+      },
+    },
+    contextOut: [
+      {
+        name: '_actions_on_google',
+        lifespan: 99,
+        parameters: {
+          data: '{}',
+        },
+      },
+    ],
+    displayText: 'Cannot display response in Dialogflow simulator. ' +
+      'Please test on the Google Assistant simulator instead.',
+  })
+})
+
+test('conv.serialize w/ solo helper has fulfillmentText warning for simulator', t => {
+  const permission: 'NAME' = 'NAME'
+  const context = 'To read your mind'
+  const conv = simulatorConv()
+  conv.ask(new Permission({
+    permissions: permission,
+    context,
+  }))
+  t.deepEqual(clone(conv.serialize()), {
+    data: {
+      google: {
+        expectUserResponse: true,
+        richResponse: {
+          items: [
+            {
+              simpleResponse: {
+                textToSpeech: 'PLACEHOLDER',
+              },
+            },
+          ],
+        },
+        systemIntent: {
+          data: {
+            '@type': 'type.googleapis.com/google.actions.v2.PermissionValueSpec',
+            optContext: context,
+            permissions: [
+              permission,
+            ],
+          },
+          intent: 'actions.intent.PERMISSION',
+        },
+        userStorage: '{"data":{}}',
+      },
+    },
+    contextOut: [
+      {
+        name: '_actions_on_google',
+        lifespan: 99,
+        parameters: {
+          data: '{}',
+        },
+      },
+    ],
+    displayText: 'Cannot display response in Dialogflow simulator. ' +
+      'Please test on the Google Assistant simulator instead.',
+  })
+})
+
+test('conv.serialize w/ non solo helper has fulfillmentText warning for simulator', t => {
+  const response = 'abc123'
+  const conv = simulatorConv()
+  conv.ask(response)
+  conv.ask(new List({
+    items: {
+      one: {
+        title: 'one1',
+        synonyms: ['one11', 'one12'],
+      },
+      two: {
+        title: 'two1',
+        synonyms: ['two11', 'two12'],
+      },
+    },
+  }))
+  t.deepEqual(clone(conv.serialize()), {
+    data: {
+      google: {
+        expectUserResponse: true,
+        richResponse: {
+          items: [
+            {
+              simpleResponse: {
+                textToSpeech: response,
+              },
+            },
+          ],
+        },
+        systemIntent: {
+          data: {
+            '@type': 'type.googleapis.com/google.actions.v2.OptionValueSpec',
+            listSelect: {
+              items: [
+                {
+                  optionInfo: {
+                    key: 'one',
+                    synonyms: [
+                      'one11',
+                      'one12',
+                    ],
+                  },
+                  title: 'one1',
+                },
+                {
+                  optionInfo: {
+                    key: 'two',
+                    synonyms: [
+                      'two11',
+                      'two12',
+                    ],
+                  },
+                  title: 'two1',
+                },
+              ],
+            },
+          },
+          intent: 'actions.intent.OPTION',
+        },
+        userStorage: '{"data":{}}',
+      },
+    },
+    contextOut: [
+      {
+        name: '_actions_on_google',
+        lifespan: 99,
+        parameters: {
+          data: '{}',
+        },
+      },
+    ],
+    displayText: 'Cannot display response in Dialogflow simulator. ' +
+      'Please test on the Google Assistant simulator instead.',
+  })
+})
+
+test('conv.serialize w/ image has fulfillmentText warning for simulator', t => {
+  const response = 'abc123'
+  const image = 'abcd1234'
+  const alt = 'abcde12345'
+  const conv = simulatorConv()
+  conv.add(response)
+  conv.add(new Image({
+    url: image,
+    alt,
+  }))
+  t.deepEqual(clone(conv.serialize()), {
+    data: {
+      google: {
+        expectUserResponse: true,
+        richResponse: {
+          items: [
+            {
+              simpleResponse: {
+                textToSpeech: response,
+              },
+            },
+            {
+              basicCard: {
+                image: {
+                  accessibilityText: alt,
+                  url: image,
+                },
+              },
+            },
+          ],
+        },
+        userStorage: '{"data":{}}',
+      },
+    },
+    contextOut: [
+      {
+        name: '_actions_on_google',
+        lifespan: 99,
+        parameters: {
+          data: '{}',
+        },
+      },
+    ],
+    displayText: 'Cannot display response in Dialogflow simulator. ' +
+      'Please test on the Google Assistant simulator instead.',
+  })
 })
