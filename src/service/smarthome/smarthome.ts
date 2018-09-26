@@ -394,13 +394,18 @@ export const smarthome: SmartHome = (options = {}) => attach<SmartHomeApp>({
     return this._intent('action.devices.DISCONNECT', handler)
   },
   async requestSync(this: SmartHomeApp, agentUserId) {
-    if (!this.key) {
-      throw new Error(`An API key was not specified. ` +
-        `Please visit https://console.cloud.google.com/apis/api/homegraph.googleapis.com/overview`)
+    if (this.jwt) {
+      return await makeApiCall('/v1/devices:requestSync', {
+        agent_user_id: agentUserId,
+      }, this.jwt)
     }
-    return await makeApiCall(`/v1/devices:requestSync?key=${encodeURIComponent(this.key)}`, {
-      agent_user_id: agentUserId,
-    })
+    if (this.key) {
+      return await makeApiCall(`/v1/devices:requestSync?key=${encodeURIComponent(this.key)}`, {
+        agent_user_id: agentUserId,
+      })
+    }
+    throw new Error(`An API key was not specified. ` +
+        `Please visit https://console.cloud.google.com/apis/api/homegraph.googleapis.com/overview`)
   },
   async reportState(this: SmartHomeApp, reportedState) {
     if (!this.jwt) {
