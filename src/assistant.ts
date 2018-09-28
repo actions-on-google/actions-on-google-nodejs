@@ -87,7 +87,7 @@ export const attach = <TService>(
     if (!response.headers) {
       response.headers = {}
     }
-    response.headers['content-type'] = 'application/json; charset=utf-8'
+    response.headers['content-type'] = 'application/json;charset=utf-8'
     log('Response', common.stringify(response))
     return response
   }

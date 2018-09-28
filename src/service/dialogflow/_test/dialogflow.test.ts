@@ -103,18 +103,8 @@ test('app gets simple response string when using app.intent', async t => {
             },
           ],
         },
-        userStorage: '{"data":{}}',
       },
     },
-    outputContexts: [
-      {
-        name: `${session}/contexts/_actions_on_google`,
-        lifespanCount: 99,
-        parameters: {
-          data: '{}',
-        },
-      },
-    ],
   })
 })
 
@@ -163,18 +153,8 @@ test('app gets simple response string with reprompts when using app.intent', asy
             textToSpeech: reprompt2,
           },
         ],
-        userStorage: '{"data":{}}',
       },
     },
-    outputContexts: [
-      {
-        name: `${session}/contexts/_actions_on_google`,
-        lifespanCount: 99,
-        parameters: {
-          data: '{}',
-        },
-      },
-    ],
   })
 })
 
@@ -246,18 +226,8 @@ test('app uses catcher when intent handler throws error', async t => {
             },
           ],
         },
-        userStorage: '{"data":{}}',
       },
     },
-    outputContexts: [
-      {
-        name: `${session}/contexts/_actions_on_google`,
-        lifespanCount: 99,
-        parameters: {
-          data: '{}',
-        },
-      },
-    ],
   })
 })
 
@@ -296,18 +266,8 @@ test('app uses fallback when no intent handler', async t => {
             },
           ],
         },
-        userStorage: '{"data":{}}',
       },
     },
-    outputContexts: [
-      {
-        name: `${session}/contexts/_actions_on_google`,
-        lifespanCount: 99,
-        parameters: {
-          data: '{}',
-        },
-      },
-    ],
   })
 })
 
@@ -358,18 +318,8 @@ test('app uses middleware using Object.assign', async t => {
             },
           ],
         },
-        userStorage: '{"data":{}}',
       },
     },
-    outputContexts: [
-      {
-        name: `${session}/contexts/_actions_on_google`,
-        lifespanCount: 99,
-        parameters: {
-          data: '{}',
-        },
-      },
-    ],
   })
 })
 
@@ -406,18 +356,8 @@ test('app uses async middleware using Object.assign', async t => {
             },
           ],
         },
-        userStorage: '{"data":{}}',
       },
     },
-    outputContexts: [
-      {
-        name: `${session}/contexts/_actions_on_google`,
-        lifespanCount: 99,
-        parameters: {
-          data: '{}',
-        },
-      },
-    ],
   })
 })
 
@@ -453,18 +393,8 @@ test('app uses async middleware returning void', async t => {
             },
           ],
         },
-        userStorage: '{"data":{}}',
       },
     },
-    outputContexts: [
-      {
-        name: `${session}/contexts/_actions_on_google`,
-        lifespanCount: 99,
-        parameters: {
-          data: '{}',
-        },
-      },
-    ],
   })
 })
 
@@ -501,18 +431,8 @@ test('app uses async middleware returning promise', async t => {
             },
           ],
         },
-        userStorage: '{"data":{}}',
       },
     },
-    outputContexts: [
-      {
-        name: `${session}/contexts/_actions_on_google`,
-        lifespanCount: 99,
-        parameters: {
-          data: '{}',
-        },
-      },
-    ],
   })
 })
 
@@ -559,18 +479,8 @@ test('app gives middleware framework metadata', async t => {
             },
           ],
         },
-        userStorage: '{"data":{}}',
       },
     },
-    outputContexts: [
-      {
-        name: `${session}/contexts/_actions_on_google`,
-        lifespanCount: 99,
-        parameters: {
-          data: '{}',
-        },
-      },
-    ],
   })
 })
 
@@ -609,18 +519,8 @@ test('app works when validation is valid headers', async t => {
             },
           ],
         },
-        userStorage: '{"data":{}}',
       },
     },
-    outputContexts: [
-      {
-        name: `${session}/contexts/_actions_on_google`,
-        lifespanCount: 99,
-        parameters: {
-          data: '{}',
-        },
-      },
-    ],
   })
 })
 

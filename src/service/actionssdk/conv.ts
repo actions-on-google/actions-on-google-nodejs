@@ -15,7 +15,7 @@
  */
 
 import * as Api from './api/v2'
-import { Conversation, ConversationBaseOptions } from './conversation'
+import { Conversation, ConversationBaseOptions, ConversationOptionsInit } from './conversation'
 
 /** @public */
 export interface ActionsSdkConversationOptions<
@@ -23,7 +23,20 @@ export interface ActionsSdkConversationOptions<
   TUserStorage
 > extends ConversationBaseOptions<TConvData, TUserStorage> {
   /** @public */
-  body: Api.GoogleActionsV2AppRequest
+  body?: Api.GoogleActionsV2AppRequest
+}
+
+const serializeData = <TConvData>(data: TConvData) =>
+  JSON.stringify({ data })
+
+const deserializeData = <TConvData>(
+  body: Api.GoogleActionsV2AppRequest, defaultData?: TConvData,
+) => {
+  const { conversation = {} } = body
+  const { conversationToken } = conversation
+  const data: TConvData = conversationToken ?
+    JSON.parse(conversationToken).data : (defaultData || {})
+  return data
 }
 
 /** @public */
@@ -65,28 +78,28 @@ export class ActionsSdkConversation<
    */
   data: TConvData
 
+  /** @hidden */
+  _init: ConversationOptionsInit<TConvData, TUserStorage>
+
   /** @public */
-  constructor(options: ActionsSdkConversationOptions<TConvData, TUserStorage>) {
+  constructor(options: ActionsSdkConversationOptions<TConvData, TUserStorage> = {}) {
+    const { body = {} } = options
     super({
-      request: options.body,
+      request: body,
       headers: options.headers,
       init: options.init,
     })
 
-    this.body = options.body
-
-    const { body = {}, init } = options
+    this.body = body
 
     const { inputs = [] } = body
     const [firstInput = {}] = inputs
 
     const { intent = '' } = firstInput
-    const { conversation = {} } = body
-    const { conversationToken } = conversation
 
     this.intent = intent
 
-    this.data = conversationToken ? JSON.parse(conversationToken).data : ((init && init.data) || {})
+    this.data = deserializeData<TConvData>(this.body, this._init.data)
   }
 
   /** @public */
@@ -112,13 +125,23 @@ export class ActionsSdkConversation<
       inputPrompt,
       possibleIntents,
     }
-    const conversationToken = JSON.stringify({ data: this.data })
-    return {
+    const response: Api.GoogleActionsV2AppResponse = {
       expectUserResponse,
-      expectedInputs: expectUserResponse ? [expectedInput] : undefined,
-      finalResponse: expectUserResponse ? undefined : { richResponse },
-      conversationToken,
-      userStorage,
     }
+    if (expectUserResponse) {
+      response.expectedInputs = [expectedInput]
+    } else {
+      response.finalResponse = { richResponse }
+    }
+    const convDataDefault = deserializeData<TConvData>(this.body, this._init.data)
+    const convDataIn = serializeData(convDataDefault)
+    const convDataOut = serializeData(this.data)
+    if (convDataOut !== convDataIn) {
+      response.conversationToken = convDataOut
+    }
+    if (userStorage) {
+      response.userStorage = userStorage
+    }
+    return response
   }
 }

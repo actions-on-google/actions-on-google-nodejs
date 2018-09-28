@@ -242,8 +242,7 @@ test('app.handler can process requests and response with response headers', asyn
   const app = attach({
     handler: async (body: JsonObject, headers: Headers): Promise<StandardResponse> => {
       return {
-        body: {
-        },
+        body: {},
         status: 123,
         headers: expectedHeaders,
       }
@@ -259,8 +258,7 @@ test('app.handler adds content-type headers', async t => {
   const app = attach({
     handler: async (body: JsonObject, headers: Headers): Promise<StandardResponse> => {
       return {
-        body: {
-        },
+        body: {},
         status: 123,
       }
     },
@@ -268,5 +266,5 @@ test('app.handler adds content-type headers', async t => {
   t.is(typeof app.handler, 'function')
   const res = await app.handler({}, {})
   t.is(res.status, 123)
-  t.is(res.headers!['content-type'], 'application/json; charset=utf-8')
+  t.is(res.headers!['content-type'], 'application/json;charset=utf-8')
 })

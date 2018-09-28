@@ -72,18 +72,8 @@ test('conv.serialize returns the correct response with simple response string', 
             },
           ],
         },
-        userStorage: '{"data":{}}',
       },
     },
-    contextOut: [
-      {
-        name: '_actions_on_google',
-        lifespan: 99,
-        parameters: {
-          data: '{}',
-        },
-      },
-    ],
   })
 })
 
@@ -144,18 +134,8 @@ test('conv.serialize w/ simple response has fulfillmentText when from simulator'
             },
           ],
         },
-        userStorage: '{"data":{}}',
       },
     },
-    contextOut: [
-      {
-        name: '_actions_on_google',
-        lifespan: 99,
-        parameters: {
-          data: '{}',
-        },
-      },
-    ],
     displayText: response,
   })
 })
@@ -182,18 +162,8 @@ test('conv.serialize w/ simple response text has fulfillmentText when from simul
             },
           ],
         },
-        userStorage: '{"data":{}}',
       },
     },
-    contextOut: [
-      {
-        name: '_actions_on_google',
-        lifespan: 99,
-        parameters: {
-          data: '{}',
-        },
-      },
-    ],
     displayText: text,
   })
 })
@@ -222,18 +192,8 @@ test('conv.serialize w/ two simple responses has fulfillmentText warning for sim
             },
           ],
         },
-        userStorage: '{"data":{}}',
       },
     },
-    contextOut: [
-      {
-        name: '_actions_on_google',
-        lifespan: 99,
-        parameters: {
-          data: '{}',
-        },
-      },
-    ],
     displayText: 'Cannot display response in Dialogflow simulator. ' +
       'Please test on the Google Assistant simulator instead.',
   })
@@ -270,18 +230,8 @@ test('conv.serialize w/ solo helper has fulfillmentText warning for simulator', 
           },
           intent: 'actions.intent.PERMISSION',
         },
-        userStorage: '{"data":{}}',
       },
     },
-    contextOut: [
-      {
-        name: '_actions_on_google',
-        lifespan: 99,
-        parameters: {
-          data: '{}',
-        },
-      },
-    ],
     displayText: 'Cannot display response in Dialogflow simulator. ' +
       'Please test on the Google Assistant simulator instead.',
   })
@@ -346,18 +296,8 @@ test('conv.serialize w/ non solo helper has fulfillmentText warning for simulato
           },
           intent: 'actions.intent.OPTION',
         },
-        userStorage: '{"data":{}}',
       },
     },
-    contextOut: [
-      {
-        name: '_actions_on_google',
-        lifespan: 99,
-        parameters: {
-          data: '{}',
-        },
-      },
-    ],
     displayText: 'Cannot display response in Dialogflow simulator. ' +
       'Please test on the Google Assistant simulator instead.',
   })
@@ -394,7 +334,103 @@ test('conv.serialize w/ image has fulfillmentText warning for simulator', t => {
             },
           ],
         },
-        userStorage: '{"data":{}}',
+      },
+    },
+    displayText: 'Cannot display response in Dialogflow simulator. ' +
+      'Please test on the Google Assistant simulator instead.',
+  })
+})
+
+test('conv.data is parsed correctly', t => {
+  const data = {
+    a: '1',
+    b: '2',
+    c: {
+      d: '3',
+      e: '4',
+    },
+  }
+  const conv = new DialogflowConversation({
+    body: {
+      result: {
+        contexts: [
+          {
+            name: '_actions_on_google',
+            parameters: {
+              data: JSON.stringify(data),
+            },
+          },
+        ],
+      },
+    } as ApiV1.DialogflowV1WebhookRequest,
+  })
+  t.deepEqual(conv.data, data)
+})
+
+test('conv generates no contexts from empty conv.data', t => {
+  const response = `What's up?`
+  const conv = new DialogflowConversation({
+    body: {
+      result: {},
+      originalRequest: {
+        data: {},
+      },
+    } as ApiV1.DialogflowV1WebhookRequest,
+  })
+  t.deepEqual(conv.data, {})
+  conv.ask(response)
+  t.deepEqual(clone(conv.serialize()), {
+    data: {
+      google: {
+        expectUserResponse: true,
+        richResponse: {
+          items: [
+            {
+              simpleResponse: {
+                textToSpeech: response,
+              },
+            },
+          ],
+        },
+      },
+    },
+  })
+})
+
+test('conv generates first conv.data replaced correctly', t => {
+  const response = `What's up?`
+  const data = {
+    a: '1',
+    b: '2',
+    c: {
+      d: '3',
+      e: '4',
+    },
+  }
+  const conv = new DialogflowConversation({
+    body: {
+      result: {},
+      originalRequest: {
+        data: {},
+      },
+    } as ApiV1.DialogflowV1WebhookRequest,
+  })
+  t.deepEqual(conv.data, {})
+  conv.ask(response)
+  conv.data = data
+  t.deepEqual(clone(conv.serialize()), {
+    data: {
+      google: {
+        expectUserResponse: true,
+        richResponse: {
+          items: [
+            {
+              simpleResponse: {
+                textToSpeech: response,
+              },
+            },
+          ],
+        },
       },
     },
     contextOut: [
@@ -402,11 +438,232 @@ test('conv.serialize w/ image has fulfillmentText warning for simulator', t => {
         name: '_actions_on_google',
         lifespan: 99,
         parameters: {
-          data: '{}',
+          data: JSON.stringify(data),
         },
       },
     ],
-    displayText: 'Cannot display response in Dialogflow simulator. ' +
-      'Please test on the Google Assistant simulator instead.',
+  })
+})
+
+test('conv generates first conv.data mutated correctly', t => {
+  const response = `What's up?`
+  const a = '7'
+  const conv = new DialogflowConversation<{ a: string }>({
+    body: {
+      result: {},
+      originalRequest: {
+        data: {},
+      },
+    } as ApiV1.DialogflowV1WebhookRequest,
+  })
+  t.deepEqual(conv.data, {})
+  conv.ask(response)
+  conv.data.a = a
+  t.deepEqual(clone(conv.serialize()), {
+    data: {
+      google: {
+        expectUserResponse: true,
+        richResponse: {
+          items: [
+            {
+              simpleResponse: {
+                textToSpeech: response,
+              },
+            },
+          ],
+        },
+      },
+    },
+    contextOut: [
+      {
+        name: '_actions_on_google',
+        lifespan: 99,
+        parameters: {
+          data: JSON.stringify({ a }),
+        },
+      },
+    ],
+  })
+})
+
+test('conv generates different conv.data correctly', t => {
+  const response = `What's up?`
+  const data = {
+    a: '1',
+    b: '2',
+    c: {
+      d: '3',
+      e: '4',
+    },
+  }
+  const e = '6'
+  const conv = new DialogflowConversation<typeof data>({
+    body: {
+      result: {
+        contexts: [
+          {
+            name: '_actions_on_google',
+            parameters: {
+              data: JSON.stringify(data),
+            },
+          },
+        ],
+      },
+      originalRequest: {
+        data: {},
+      },
+    } as ApiV1.DialogflowV1WebhookRequest,
+  })
+  t.deepEqual(conv.data, data)
+  conv.ask(response)
+  conv.data.c.e = e
+  t.deepEqual(clone(conv.serialize()), {
+    data: {
+      google: {
+        expectUserResponse: true,
+        richResponse: {
+          items: [
+            {
+              simpleResponse: {
+                textToSpeech: response,
+              },
+            },
+          ],
+        },
+      },
+    },
+    contextOut: [
+      {
+        name: '_actions_on_google',
+        lifespan: 99,
+        parameters: {
+          data: JSON.stringify({
+            a: '1',
+            b: '2',
+            c: {
+              d: '3',
+              e,
+            },
+          }),
+        },
+      },
+    ],
+  })
+})
+
+test('conv generates same conv.data as no output contexts', t => {
+  const response = `What's up?`
+  const data = {
+    a: '1',
+    b: '2',
+    c: {
+      d: '3',
+      e: '4',
+    },
+  }
+  const conv = new DialogflowConversation<typeof data>({
+    body: {
+      result: {
+        contexts: [
+          {
+            name: '_actions_on_google',
+            parameters: {
+              data: JSON.stringify(data),
+            },
+          },
+        ],
+      },
+      originalRequest: {
+        data: {},
+      },
+    } as ApiV1.DialogflowV1WebhookRequest,
+  })
+  t.deepEqual(conv.data, data)
+  conv.ask(response)
+  t.deepEqual(clone(conv.serialize()), {
+    data: {
+      google: {
+        expectUserResponse: true,
+        richResponse: {
+          items: [
+            {
+              simpleResponse: {
+                textToSpeech: response,
+              },
+            },
+          ],
+        },
+      },
+    },
+  })
+})
+
+test('conv sends userStorage when it is not empty', t => {
+  const response = `What's up?`
+  const data = {
+    a: '1',
+    b: '2',
+    c: {
+      d: '3',
+      e: '4',
+    },
+  }
+  const conv = new DialogflowConversation({
+    body: {
+      result: {},
+      originalRequest: {
+        data: {},
+      },
+    } as ApiV1.DialogflowV1WebhookRequest,
+  })
+  t.deepEqual(conv.data, {})
+  conv.user.storage = data
+  conv.ask(response)
+  t.deepEqual(clone(conv.serialize()), {
+    data: {
+      google: {
+        expectUserResponse: true,
+        richResponse: {
+          items: [
+            {
+              simpleResponse: {
+                textToSpeech: response,
+              },
+            },
+          ],
+        },
+        userStorage: JSON.stringify({ data }),
+      },
+    },
+  })
+})
+
+test('conv does not send userStorage when it is empty', t => {
+  const response = `What's up?`
+  const conv = new DialogflowConversation({
+    body: {
+      result: {},
+      originalRequest: {
+        data: {},
+      },
+    } as ApiV1.DialogflowV1WebhookRequest,
+  })
+  t.deepEqual(conv.user.storage, {})
+  conv.ask(response)
+  t.deepEqual(clone(conv.serialize()), {
+    data: {
+      google: {
+        expectUserResponse: true,
+        richResponse: {
+          items: [
+            {
+              simpleResponse: {
+                textToSpeech: response,
+              },
+            },
+          ],
+        },
+      },
+    },
   })
 })
