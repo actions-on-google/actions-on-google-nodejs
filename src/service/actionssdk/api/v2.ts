@@ -21,6 +21,12 @@
 import { ApiClientObjectMap } from '../../../common'
 
 
+export type GoogleActionsTransactionsV3CompletePurchaseValuePurchaseStatus = 'PURCHASE_STATUS_UNSPECIFIED' | 'PURCHASE_STATUS_OK' | 'PURCHASE_STATUS_ERROR' | 'PURCHASE_STATUS_USER_CANCELLED' | 'PURCHASE_STATUS_ALREADY_OWNED' | 'PURCHASE_STATUS_ITEM_UNAVAILABLE' | 'PURCHASE_STATUS_ITEM_CHANGE_REQUESTED'
+
+
+export type GoogleActionsTransactionsV3SkuIdSkuType = 'SKU_TYPE_UNSPECIFIED' | 'SKU_TYPE_IN_APP' | 'SKU_TYPE_SUBSCRIPTION'
+
+
 export type GoogleActionsV2ConversationType = 'TYPE_UNSPECIFIED' | 'NEW' | 'ACTIVE'
 
 
@@ -111,6 +117,51 @@ export type GoogleActionsV2UiElementsTableCardColumnPropertiesHorizontalAlignmen
 export type GoogleActionsV2UserPermissions = 'UNSPECIFIED_PERMISSION' | 'NAME' | 'DEVICE_PRECISE_LOCATION' | 'DEVICE_COARSE_LOCATION' | 'UPDATE'
 
 
+
+export interface GoogleActionsTransactionsV3CompletePurchaseValue {
+  /**
+   * A unique order identifier for the transaction. This identifier corresponds
+   * to the Google provided order ID.
+   */
+  orderId?: string
+  /**
+   * Status of current purchase.
+   */
+  purchaseStatus?: GoogleActionsTransactionsV3CompletePurchaseValuePurchaseStatus
+  /**
+   * A opaque token that uniquely identifies a purchase for a given item and
+   * user pair.
+   */
+  purchaseToken?: string
+}
+
+export interface GoogleActionsTransactionsV3CompletePurchaseValueSpec {
+  /**
+   * An opaque string specified by developer, which would associate with the
+   * purchase and is expected to return as part of purchase data.
+   */
+  developerPayload?: string
+  /**
+   * The product being purchased.
+   */
+  skuId?: GoogleActionsTransactionsV3SkuId
+}
+
+export interface GoogleActionsTransactionsV3SkuId {
+  /**
+   * The identifier of the product SKU used for registration in the developer
+   * console.
+   */
+  id?: string
+  /**
+   * The name of the android package under which the sku was registered.
+   */
+  packageName?: string
+  /**
+   * The type of SKU.
+   */
+  skuType?: GoogleActionsTransactionsV3SkuIdSkuType
+}
 
 export interface GoogleActionsV2AppRequest {
   /**

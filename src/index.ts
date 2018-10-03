@@ -107,6 +107,8 @@ export {
   TransactionRequirements,
   DeliveryAddressArgument,
   DeliveryAddress,
+  CompletePurchaseArgument,
+  CompletePurchase,
   MediaStatusArgument,
   HelperOptions,
   Helper,

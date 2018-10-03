@@ -55,7 +55,8 @@ export type Intent =
   'actions.intent.CONFIGURE_UPDATES' |
   'actions.intent.PLACE' |
   'actions.intent.LINK' |
-  'actions.intent.MEDIA_STATUS'
+  'actions.intent.MEDIA_STATUS' |
+  'actions.intent.COMPLETE_PURCHASE'
 
 /** @hidden */
 export type InputValueSpec =
@@ -70,7 +71,8 @@ export type InputValueSpec =
   'type.googleapis.com/google.actions.v2.RegisterUpdateValueSpec' |
   'type.googleapis.com/google.actions.v2.SignInValueSpec' |
   'type.googleapis.com/google.actions.v2.PlaceValueSpec' |
-  'type.googleapis.com/google.actions.v2.LinkValueSpec'
+  'type.googleapis.com/google.actions.v2.LinkValueSpec' |
+  'type.googleapis.com/google.actions.transactions.v3.CompletePurchaseValueSpec'
 
 /** @hidden */
 export type DialogSpec =

@@ -17,3 +17,4 @@
 export * from './decision'
 export * from './requirements'
 export * from './deliveryaddress'
+export * from './completepurchase'
