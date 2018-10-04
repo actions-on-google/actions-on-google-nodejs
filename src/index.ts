@@ -130,6 +130,7 @@ export {
   DialogflowOptions,
   Dialogflow,
   dialogflow,
+  DefaultDialogflowIntent,
 } from './service/dialogflow'
 
 export * from './service/dialogflow/api/v1'
