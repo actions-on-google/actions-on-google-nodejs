@@ -25,7 +25,7 @@ export interface BrowseCarouselOptions {
   display?: Api.GoogleActionsV2UiElementsCarouselBrowseImageDisplayOptions
 
   /**
-   * List of 2-20 items to show in this carousel. Required.
+   * List of 2-20 items to show in this carousel.
    * @public
    */
   items: Api.GoogleActionsV2UiElementsCarouselBrowseItem[]
@@ -34,31 +34,31 @@ export interface BrowseCarouselOptions {
 /** @public */
 export interface BrowseCarouselItemOptions {
   /**
-   * Title of the option item. Required.
+   * Title of the option item.
    * @public
    */
   title: string
 
   /**
-   * The URL of the link opened by clicking the BrowseCarouselItem. Optional.
+   * The URL of the link opened by clicking the BrowseCarouselItem.
    * @public
    */
   url: string
 
   /**
-   * Description text of the item. Optional.
+   * Description text of the item.
    * @public
    */
   description?: string
 
   /**
-   * Footer text of the item. Optional.
+   * Footer text of the item.
    * @public
    */
   footer?: string
 
   /**
-   * Image to show on item. Optional.
+   * Image to show on item.
    * @public
    */
   image?: Api.GoogleActionsV2UiElementsImage
