@@ -17,7 +17,7 @@
 import * as Api from './api/v2'
 import * as ApiV1 from './api/v1'
 import * as ActionsApi from '../actionssdk/api/v2'
-import { Conversation, ConversationBaseOptions } from '../actionssdk'
+import { Conversation, ConversationBaseOptions, ConversationOptionsInit } from '../actionssdk'
 import { ProtoAny, JsonObject } from '../../common'
 import { Contexts, ContextValues, Parameters } from './context'
 import { Incoming } from './incoming'
@@ -54,7 +54,7 @@ export interface DialogflowConversationOptions<
   TUserStorage
 > extends ConversationBaseOptions<TConvData, TUserStorage> {
   /** @public */
-  body: Api.GoogleCloudDialogflowV2WebhookRequest | ApiV1.DialogflowV1WebhookRequest
+  body?: Api.GoogleCloudDialogflowV2WebhookRequest | ApiV1.DialogflowV1WebhookRequest
 }
 
 const isV1 = (
@@ -84,6 +84,23 @@ const getRequest = (
   const { originalDetectIntentRequest = {} } = body
   const { payload = {} } = originalDetectIntentRequest
   return payload
+}
+
+const serializeData = <TConvData>(data: TConvData) =>
+  JSON.stringify(data)
+
+const deserializeData = <TContexts extends Contexts, TConvData>(
+  contexts: ContextValues<TContexts>, defaultData?: TConvData,
+): TConvData => {
+  const context = contexts.get(CONV_DATA_CONTEXT)
+  if (context) {
+    const { data } = context.parameters
+    if (typeof data === 'string') {
+      return JSON.parse(data)
+    }
+  }
+
+  return defaultData || {} as TConvData
 }
 
 /** @public */
@@ -200,15 +217,18 @@ export class DialogflowConversation<
   /** @hidden */
   _followup?: Api.GoogleCloudDialogflowV2EventInput | ApiV1.DialogflowV1FollowupEvent
 
+  /** @hidden */
+  _init: ConversationOptionsInit<TConvData, TUserStorage>
+
   /** @public */
-  constructor(options: DialogflowConversationOptions<TConvData, TUserStorage>) {
+  constructor(options: DialogflowConversationOptions<TConvData, TUserStorage> = {}) {
+    const { body = {} } = options
+
     super({
-      request: getRequest(options.body),
+      request: getRequest(body),
       headers: options.headers,
       init: options.init,
     })
-
-    const { body, init } = options
 
     this.body = body
 
@@ -262,15 +282,7 @@ export class DialogflowConversation<
       }
     }
 
-    this.data = (init && init.data) || {} as TConvData
-
-    const context = this.contexts.input[CONV_DATA_CONTEXT]
-    if (context) {
-      const { data } = context.parameters
-      if (typeof data === 'string') {
-        this.data = JSON.parse(data)
-      }
-    }
+    this.data = deserializeData(this.contexts, this._init.data)
   }
 
   /**
@@ -337,26 +349,37 @@ export class DialogflowConversation<
     const google: GoogleAssistantResponse = {
       expectUserResponse,
       richResponse,
-      userStorage,
       systemIntent: expectedIntent && {
         intent: expectedIntent.intent!,
         data: expectedIntent.inputValueData as ProtoAny<string, JsonObject>,
       },
       noInputPrompts,
     }
+    if (userStorage) {
+      google.userStorage = userStorage
+    }
     const payload: PayloadGoogle = {
       google,
     }
-    this.contexts.set(CONV_DATA_CONTEXT, CONV_DATA_CONTEXT_LIFESPAN, {
-      data: JSON.stringify(this.data),
-    })
+    const convDataDefault = deserializeData<TContexts, TConvData>(this.contexts, this._init.data)
+    const convDataIn = serializeData(convDataDefault)
+    const convDataOut = serializeData(this.data)
+    if (convDataOut !== convDataIn) {
+      // Previously was setting every webhook call
+      // But now will only set if different so lifespan does not get reset
+      this.contexts.set(CONV_DATA_CONTEXT, CONV_DATA_CONTEXT_LIFESPAN, {
+        data: convDataOut,
+      })
+    }
     const simulator = !this._followup && isSimulator(this.body)
     if (this.version === 1) {
-      const contextOut = this.contexts._serializeV1()
       const response: ApiV1.DialogflowV1WebhookResponse = {
         data: payload,
-        contextOut,
         followupEvent: this._followup,
+      }
+      const contextOut = this.contexts._serializeV1()
+      if (contextOut.length) {
+        response.contextOut = contextOut
       }
       if (simulator) {
         const items = payload.google.richResponse.items!
@@ -368,11 +391,13 @@ export class DialogflowConversation<
       }
       return response
     }
-    const outputContexts = this.contexts._serialize()
     const response: Api.GoogleCloudDialogflowV2WebhookResponse = {
       payload,
-      outputContexts,
       followupEventInput: this._followup,
+    }
+    const outputContexts = this.contexts._serialize()
+    if (outputContexts.length) {
+      response.outputContexts = outputContexts
     }
     if (simulator) {
       const items = payload.google.richResponse.items!

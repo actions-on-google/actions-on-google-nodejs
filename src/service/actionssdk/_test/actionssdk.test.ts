@@ -236,8 +236,6 @@ test('app uses async middleware using Object.assign', async t => {
         ],
       },
     ],
-    conversationToken: '{"data":{}}',
-    userStorage: '{"data":{}}',
   })
 })
 
@@ -281,8 +279,6 @@ test('app uses async middleware returning void', async t => {
         ],
       },
     ],
-    conversationToken: '{"data":{}}',
-    userStorage: '{"data":{}}',
   })
 })
 
@@ -327,7 +323,5 @@ test('app uses async middleware returning promise', async t => {
         ],
       },
     ],
-    conversationToken: '{"data":{}}',
-    userStorage: '{"data":{}}',
   })
 })

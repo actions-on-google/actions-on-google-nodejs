@@ -108,7 +108,7 @@ export interface ConversationOptionsInit<TConvData, TUserStorage> {
 /** @hidden */
 export interface ConversationBaseOptions<TConvData, TUserStorage> {
   /** @public */
-  headers: Headers
+  headers?: Headers
 
   /** @public */
   init?: ConversationOptionsInit<TConvData, TUserStorage>
@@ -120,10 +120,10 @@ export interface ConversationBaseOptions<TConvData, TUserStorage> {
 /** @hidden */
 export interface ConversationOptions<TUserStorage> {
   /** @public */
-  request: Api.GoogleActionsV2AppRequest
+  request?: Api.GoogleActionsV2AppRequest
 
   /** @public */
-  headers: Headers
+  headers?: Headers
 
   /** @public */
   init?: ConversationOptionsInit<{}, TUserStorage>
@@ -238,11 +238,15 @@ export class Conversation<TUserStorage> {
   _responded = false
 
   /** @hidden */
-  constructor(options: ConversationOptions<TUserStorage>) {
-    const { request, headers, init } = options
+  _init: ConversationOptionsInit<{}, TUserStorage>
+
+  /** @hidden */
+  constructor(options: ConversationOptions<TUserStorage> = {}) {
+    const { request = {}, headers = {}, init = {} } = options
 
     this.request = request
     this.headers = headers
+    this._init = init
 
     this.sandbox = !!this.request.isInSandbox
 
@@ -254,7 +258,7 @@ export class Conversation<TUserStorage> {
     this.surface = new Surface(this.request.surface)
     this.available = new Available(this.request.availableSurfaces)
 
-    this.user = new User(this.request.user, init && init.storage)
+    this.user = new User(this.request.user, this._init.storage)
 
     this.arguments = new Arguments(input.arguments)
 
@@ -428,7 +432,9 @@ export class Conversation<TUserStorage> {
       }
       richResponse.add(response)
     }
-    const userStorage = this.user._serialize()
+    const userStorageIn = (new User(this.user.raw, this._init.storage))._serialize()
+    const userStorageOut = this.user._serialize()
+    const userStorage = userStorageOut === userStorageIn ? '' : userStorageOut
     let noInputPrompts: Api.GoogleActionsV2SimpleResponse[] | undefined
     if (this.noInputs.length > 0) {
       noInputPrompts = this.noInputs.map(prompt => {
