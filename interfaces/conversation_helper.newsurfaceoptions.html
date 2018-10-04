@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>OptionItem | actions-on-google</title>
+	<title>NewSurfaceOptions | actions-on-google</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -52,13 +52,13 @@
 					<a href="../globals.html">Globals</a>
 				</li>
 				<li>
-					<a href="../modules/conversation_question.html">conversation/question</a>
+					<a href="../modules/conversation_helper.html">conversation/helper</a>
 				</li>
 				<li>
-					<a href="conversation_question.optionitem.html">OptionItem</a>
+					<a href="conversation_helper.newsurfaceoptions.html">NewSurfaceOptions</a>
 				</li>
 			</ul>
-			<h1>Interface OptionItem</h1>
+			<h1>Interface NewSurfaceOptions</h1>
 		</div>
 	</div>
 </header>
@@ -67,21 +67,13 @@
 		<div class="col-8 col-content">
 			<section class="tsd-panel tsd-comment">
 				<div class="tsd-comment tsd-typography">
-					<div class="lead">
-						<p>Option item. Used in actions.intent.OPTION intent.</p>
-					</div>
 				</div>
 			</section>
 			<section class="tsd-panel tsd-hierarchy">
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="target">OptionItem</span>
-						<ul class="tsd-hierarchy">
-							<li>
-								<a href="conversation_question.carouseloptionitem.html" class="tsd-signature-type">CarouselOptionItem</a>
-							</li>
-						</ul>
+						<span class="target">NewSurfaceOptions</span>
 					</li>
 				</ul>
 			</section>
@@ -92,10 +84,9 @@
 						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="conversation_question.optionitem.html#description" class="tsd-kind-icon">description</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="conversation_question.optionitem.html#image" class="tsd-kind-icon">image</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="conversation_question.optionitem.html#synonyms" class="tsd-kind-icon">synonyms</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="conversation_question.optionitem.html#title" class="tsd-kind-icon">title</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="conversation_helper.newsurfaceoptions.html#capabilities" class="tsd-kind-icon">capabilities</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="conversation_helper.newsurfaceoptions.html#context" class="tsd-kind-icon">context</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="conversation_helper.newsurfaceoptions.html#notification" class="tsd-kind-icon">notification</a></li>
 							</ul>
 						</section>
 					</div>
@@ -104,62 +95,48 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Properties</h2>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="description" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagOptional">Optional</span> description</h3>
-					<div class="tsd-signature tsd-kind-icon">description<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></div>
+					<a name="capabilities" class="tsd-anchor"></a>
+					<h3>capabilities</h3>
+					<div class="tsd-signature tsd-kind-icon">capabilities<span class="tsd-signature-symbol">:</span> <a href="../modules/conversation.html#surfacecapability" class="tsd-signature-type">SurfaceCapability</a><span class="tsd-signature-symbol"> | </span><a href="../modules/conversation.html#surfacecapability" class="tsd-signature-type">SurfaceCapability</a><span class="tsd-signature-symbol">[]</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in service/actionssdk/conversation/question/option/option.ts:51</li>
+							<li>Defined in service/actionssdk/conversation/helper/newsurface.ts:44</li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>Optional text describing the item.</p>
+							<p>The list of capabilities required in the surface.</p>
 						</div>
 					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="image" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagOptional">Optional</span> image</h3>
-					<div class="tsd-signature tsd-kind-icon">image<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Api.GoogleActionsV2UiElementsImage</span></div>
+					<a name="context" class="tsd-anchor"></a>
+					<h3>context</h3>
+					<div class="tsd-signature tsd-kind-icon">context<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in service/actionssdk/conversation/question/option/option.ts:57</li>
+							<li>Defined in service/actionssdk/conversation/helper/newsurface.ts:32</li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>Square image to show for this item.</p>
+							<p>Context why new surface is requested.
+							It&#39;s the TTS prompt prefix (action phrase) we ask the user.</p>
 						</div>
 					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="synonyms" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagOptional">Optional</span> synonyms</h3>
-					<div class="tsd-signature tsd-kind-icon">synonyms<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span></div>
+					<a name="notification" class="tsd-anchor"></a>
+					<h3>notification</h3>
+					<div class="tsd-signature tsd-kind-icon">notification<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in service/actionssdk/conversation/question/option/option.ts:39</li>
+							<li>Defined in service/actionssdk/conversation/helper/newsurface.ts:38</li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>Synonyms that can be used by the user to indicate this option if they do not use the key.</p>
-						</div>
-					</div>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="title" class="tsd-anchor"></a>
-					<h3>title</h3>
-					<div class="tsd-signature tsd-kind-icon">title<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in service/actionssdk/conversation/question/option/option.ts:45</li>
-						</ul>
-					</aside>
-					<div class="tsd-comment tsd-typography">
-						<div class="lead">
-							<p>Name of the item.</p>
+							<p>Title of the notification appearing on new surface device.</p>
 						</div>
 					</div>
 				</section>
@@ -187,7 +164,7 @@
 						<a href="../modules/conversation_argument.html">conversation/argument</a>
 					</li>
 					<li class="current tsd-kind-external-module">
-						<a href="../modules/conversation_question.html">conversation/question</a>
+						<a href="../modules/conversation_helper.html">conversation/helper</a>
 					</li>
 					<li class=" tsd-kind-external-module">
 						<a href="../modules/conversation_response.html">conversation/response</a>
@@ -217,19 +194,16 @@
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-interface tsd-parent-kind-external-module">
-						<a href="conversation_question.optionitem.html" class="tsd-kind-icon">Option<wbr>Item</a>
+						<a href="conversation_helper.newsurfaceoptions.html" class="tsd-kind-icon">New<wbr>Surface<wbr>Options</a>
 						<ul>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="conversation_question.optionitem.html#description" class="tsd-kind-icon">description</a>
+								<a href="conversation_helper.newsurfaceoptions.html#capabilities" class="tsd-kind-icon">capabilities</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="conversation_question.optionitem.html#image" class="tsd-kind-icon">image</a>
+								<a href="conversation_helper.newsurfaceoptions.html#context" class="tsd-kind-icon">context</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="conversation_question.optionitem.html#synonyms" class="tsd-kind-icon">synonyms</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="conversation_question.optionitem.html#title" class="tsd-kind-icon">title</a>
+								<a href="conversation_helper.newsurfaceoptions.html#notification" class="tsd-kind-icon">notification</a>
 							</li>
 						</ul>
 					</li>

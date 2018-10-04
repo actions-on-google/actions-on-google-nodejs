@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>UpdatePermissionOptions | actions-on-google</title>
+	<title>HelperOptions | actions-on-google</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -52,13 +52,13 @@
 					<a href="../globals.html">Globals</a>
 				</li>
 				<li>
-					<a href="../modules/conversation_question.html">conversation/question</a>
+					<a href="../modules/conversation_helper.html">conversation/helper</a>
 				</li>
 				<li>
-					<a href="conversation_question.updatepermissionoptions.html">UpdatePermissionOptions</a>
+					<a href="conversation_helper.helperoptions.html">HelperOptions</a>
 				</li>
 			</ul>
-			<h1>Interface UpdatePermissionOptions</h1>
+			<h1>Interface HelperOptions&lt;TIntent, TValueSpec&gt;</h1>
 		</div>
 	</div>
 </header>
@@ -69,11 +69,22 @@
 				<div class="tsd-comment tsd-typography">
 				</div>
 			</section>
+			<section class="tsd-panel tsd-type-parameters">
+				<h3>Type parameters</h3>
+				<ul class="tsd-type-parameters">
+					<li>
+						<h4>TIntent<span class="tsd-signature-symbol">: </span><a href="../modules/conversation.html#intent" class="tsd-signature-type">Intent</a></h4>
+					</li>
+					<li>
+						<h4>TValueSpec</h4>
+					</li>
+				</ul>
+			</section>
 			<section class="tsd-panel tsd-hierarchy">
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="target">UpdatePermissionOptions</span>
+						<span class="target">HelperOptions</span>
 					</li>
 				</ul>
 			</section>
@@ -84,8 +95,9 @@
 						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="conversation_question.updatepermissionoptions.html#arguments" class="tsd-kind-icon">arguments</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="conversation_question.updatepermissionoptions.html#intent" class="tsd-kind-icon">intent</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="conversation_helper.helperoptions.html#data" class="tsd-kind-icon">data</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="conversation_helper.helperoptions.html#intent" class="tsd-kind-icon">intent</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="conversation_helper.helperoptions.html#type" class="tsd-kind-icon">type</a></li>
 							</ul>
 						</section>
 					</div>
@@ -94,35 +106,34 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Properties</h2>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="arguments" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagOptional">Optional</span> arguments</h3>
-					<div class="tsd-signature tsd-kind-icon">arguments<span class="tsd-signature-symbol">:</span> <a href="actionssdk_api_v2.googleactionsv2argument.html" class="tsd-signature-type">GoogleActionsV2Argument</a><span class="tsd-signature-symbol">[]</span></div>
+					<a name="data" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> data</h3>
+					<div class="tsd-signature tsd-kind-icon">data<span class="tsd-signature-symbol">:</span> <a href="" class="tsd-signature-type">TValueSpec</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in service/actionssdk/conversation/question/permission/update.ts:36</li>
+							<li>Defined in service/actionssdk/conversation/helper/helper.ts:28</li>
 						</ul>
 					</aside>
-					<div class="tsd-comment tsd-typography">
-						<div class="lead">
-							<p>The necessary arguments to fulfill the intent triggered on update.
-							These can be retrieved using {@link Arguments#get|conv.arguments.get}.</p>
-						</div>
-					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
 					<a name="intent" class="tsd-anchor"></a>
 					<h3>intent</h3>
-					<div class="tsd-signature tsd-kind-icon">intent<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+					<div class="tsd-signature tsd-kind-icon">intent<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">TIntent</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in service/actionssdk/conversation/question/permission/update.ts:29</li>
+							<li>Defined in service/actionssdk/conversation/helper/helper.ts:26</li>
 						</ul>
 					</aside>
-					<div class="tsd-comment tsd-typography">
-						<div class="lead">
-							<p>The Dialogflow/Actions SDK intent name to be triggered when the update is received.</p>
-						</div>
-					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="type" class="tsd-anchor"></a>
+					<h3>type</h3>
+					<div class="tsd-signature tsd-kind-icon">type<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">InputValueSpec</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in service/actionssdk/conversation/helper/helper.ts:27</li>
+						</ul>
+					</aside>
 				</section>
 			</section>
 		</div>
@@ -148,7 +159,7 @@
 						<a href="../modules/conversation_argument.html">conversation/argument</a>
 					</li>
 					<li class="current tsd-kind-external-module">
-						<a href="../modules/conversation_question.html">conversation/question</a>
+						<a href="../modules/conversation_helper.html">conversation/helper</a>
 					</li>
 					<li class=" tsd-kind-external-module">
 						<a href="../modules/conversation_response.html">conversation/response</a>
@@ -177,14 +188,17 @@
 				<ul class="before-current">
 				</ul>
 				<ul class="current">
-					<li class="current tsd-kind-interface tsd-parent-kind-external-module">
-						<a href="conversation_question.updatepermissionoptions.html" class="tsd-kind-icon">Update<wbr>Permission<wbr>Options</a>
+					<li class="current tsd-kind-interface tsd-parent-kind-external-module tsd-has-type-parameter">
+						<a href="conversation_helper.helperoptions.html" class="tsd-kind-icon">Helper<wbr>Options</a>
 						<ul>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="conversation_question.updatepermissionoptions.html#arguments" class="tsd-kind-icon">arguments</a>
+								<a href="conversation_helper.helperoptions.html#data" class="tsd-kind-icon">data</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="conversation_question.updatepermissionoptions.html#intent" class="tsd-kind-icon">intent</a>
+								<a href="conversation_helper.helperoptions.html#intent" class="tsd-kind-icon">intent</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="conversation_helper.helperoptions.html#type" class="tsd-kind-icon">type</a>
 							</li>
 						</ul>
 					</li>

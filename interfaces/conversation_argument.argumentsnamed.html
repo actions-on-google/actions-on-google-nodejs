@@ -85,6 +85,7 @@
 						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="conversation_argument.argumentsnamed.html#complete_purchase_value" class="tsd-kind-icon">COMPLETE_<wbr>PURCHASE_<wbr>VALUE</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="conversation_argument.argumentsnamed.html#confirmation" class="tsd-kind-icon">CONFIRMATION</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="conversation_argument.argumentsnamed.html#datetime" class="tsd-kind-icon">DATETIME</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="conversation_argument.argumentsnamed.html#delivery_address_value" class="tsd-kind-icon">DELIVERY_<wbr>ADDRESS_<wbr>VALUE</a></li>
@@ -109,50 +110,66 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Properties</h2>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="confirmation" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagOptional">Optional</span> CONFIRMATION</h3>
-					<div class="tsd-signature tsd-kind-icon">CONFIRMATION<span class="tsd-signature-symbol">:</span> <a href="../modules/conversation_question.html#confirmationargument" class="tsd-signature-type">ConfirmationArgument</a></div>
+					<a name="complete_purchase_value" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> COMPLETE_<wbr>PURCHASE_<wbr>VALUE</h3>
+					<div class="tsd-signature tsd-kind-icon">COMPLETE_<wbr>PURCHASE_<wbr>VALUE<span class="tsd-signature-symbol">:</span> <a href="../modules/conversation_helper.html#completepurchaseargument" class="tsd-signature-type">CompletePurchaseArgument</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in service/actionssdk/conversation/argument/argument.ts:97</li>
+							<li>Defined in service/actionssdk/conversation/argument/argument.ts:98</li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The complete purchase information.
+							Only use after calling <a href="../classes/conversation_helper.completepurchase.html">conv.ask(new CompletePurchase)</a>.</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="confirmation" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> CONFIRMATION</h3>
+					<div class="tsd-signature tsd-kind-icon">CONFIRMATION<span class="tsd-signature-symbol">:</span> <a href="../modules/conversation_helper.html#confirmationargument" class="tsd-signature-type">ConfirmationArgument</a></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in service/actionssdk/conversation/argument/argument.ts:105</li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
 							<p>The confirmation decision.
-							Use after <a href="../classes/conversation_question.confirmation.html">conv.ask(new Confirmation)</a></p>
+							Use after <a href="../classes/conversation_helper.confirmation.html">conv.ask(new Confirmation)</a></p>
 						</div>
 					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
 					<a name="datetime" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagOptional">Optional</span> DATETIME</h3>
-					<div class="tsd-signature tsd-kind-icon">DATETIME<span class="tsd-signature-symbol">:</span> <a href="../modules/conversation_question.html#datetimeargument" class="tsd-signature-type">DateTimeArgument</a></div>
+					<div class="tsd-signature tsd-kind-icon">DATETIME<span class="tsd-signature-symbol">:</span> <a href="../modules/conversation_helper.html#datetimeargument" class="tsd-signature-type">DateTimeArgument</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in service/actionssdk/conversation/argument/argument.ts:104</li>
+							<li>Defined in service/actionssdk/conversation/argument/argument.ts:112</li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
 							<p>The user provided date and time.
-							Use after <a href="../classes/conversation_question.datetime.html">conv.ask(new DateTime)</a></p>
+							Use after <a href="../classes/conversation_helper.datetime.html">conv.ask(new DateTime)</a></p>
 						</div>
 					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
 					<a name="delivery_address_value" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagOptional">Optional</span> DELIVERY_<wbr>ADDRESS_<wbr>VALUE</h3>
-					<div class="tsd-signature tsd-kind-icon">DELIVERY_<wbr>ADDRESS_<wbr>VALUE<span class="tsd-signature-symbol">:</span> <a href="../modules/conversation_question.html#deliveryaddressargument" class="tsd-signature-type">DeliveryAddressArgument</a></div>
+					<div class="tsd-signature tsd-kind-icon">DELIVERY_<wbr>ADDRESS_<wbr>VALUE<span class="tsd-signature-symbol">:</span> <a href="../modules/conversation_helper.html#deliveryaddressargument" class="tsd-signature-type">DeliveryAddressArgument</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in service/actionssdk/conversation/argument/argument.ts:81</li>
+							<li>Defined in service/actionssdk/conversation/argument/argument.ts:82</li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
 							<p>The order delivery address.
-							Only use after calling <a href="../classes/conversation_question.deliveryaddress.html">conv.ask(new DeliveryAddress)</a>.</p>
+							Only use after calling <a href="../classes/conversation_helper.deliveryaddress.html">conv.ask(new DeliveryAddress)</a>.</p>
 						</div>
 					</div>
 				</section>
@@ -162,7 +179,7 @@
 					<div class="tsd-signature tsd-kind-icon">IS_<wbr>FINAL_<wbr>REPROMPT<span class="tsd-signature-symbol">:</span> <a href="../modules/conversation_argument.html#finalrepromptargument" class="tsd-signature-type">FinalRepromptArgument</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in service/actionssdk/conversation/argument/argument.ts:128</li>
+							<li>Defined in service/actionssdk/conversation/argument/argument.ts:136</li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -177,10 +194,10 @@
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
 					<a name="link" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagOptional">Optional</span> LINK</h3>
-					<div class="tsd-signature tsd-kind-icon">LINK<span class="tsd-signature-symbol">:</span> <a href="../modules/conversation_question.html#deeplinkargument" class="tsd-signature-type">DeepLinkArgument</a></div>
+					<div class="tsd-signature tsd-kind-icon">LINK<span class="tsd-signature-symbol">:</span> <a href="../modules/conversation_helper.html#deeplinkargument" class="tsd-signature-type">DeepLinkArgument</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in service/actionssdk/conversation/argument/argument.ts:165</li>
+							<li>Defined in service/actionssdk/conversation/argument/argument.ts:173</li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -197,7 +214,7 @@
 					<div class="tsd-signature tsd-kind-icon">MEDIA_<wbr>STATUS<span class="tsd-signature-symbol">:</span> <a href="../modules/conversation_argument.html#mediastatusargument" class="tsd-signature-type">MediaStatusArgument</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in service/actionssdk/conversation/argument/argument.ts:171</li>
+							<li>Defined in service/actionssdk/conversation/argument/argument.ts:179</li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -209,15 +226,15 @@
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
 					<a name="new_surface" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagOptional">Optional</span> NEW_<wbr>SURFACE</h3>
-					<div class="tsd-signature tsd-kind-icon">NEW_<wbr>SURFACE<span class="tsd-signature-symbol">:</span> <a href="../modules/conversation_question.html#newsurfaceargument" class="tsd-signature-type">NewSurfaceArgument</a></div>
+					<div class="tsd-signature tsd-kind-icon">NEW_<wbr>SURFACE<span class="tsd-signature-symbol">:</span> <a href="../modules/conversation_helper.html#newsurfaceargument" class="tsd-signature-type">NewSurfaceArgument</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in service/actionssdk/conversation/argument/argument.ts:136</li>
+							<li>Defined in service/actionssdk/conversation/argument/argument.ts:144</li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>The result of <a href="../classes/conversation_question.newsurface.html">conv.ask(new NewSurface)</a>
+							<p>The result of <a href="../classes/conversation_helper.newsurface.html">conv.ask(new NewSurface)</a>
 								True if user has triggered conversation on a new device following the
 							<code>actions.intent.NEW_SURFACE</code> intent.</p>
 						</div>
@@ -226,27 +243,27 @@
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
 					<a name="option" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagOptional">Optional</span> OPTION</h3>
-					<div class="tsd-signature tsd-kind-icon">OPTION<span class="tsd-signature-symbol">:</span> <a href="../modules/conversation_question.html#optionargument" class="tsd-signature-type">OptionArgument</a></div>
+					<div class="tsd-signature tsd-kind-icon">OPTION<span class="tsd-signature-symbol">:</span> <a href="../modules/conversation_helper.html#optionargument" class="tsd-signature-type">OptionArgument</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in service/actionssdk/conversation/argument/argument.ts:66</li>
+							<li>Defined in service/actionssdk/conversation/argument/argument.ts:67</li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
 							<p>The option key user chose from options response.
-								Only use after calling <a href="../classes/conversation_question.list.html">conv.ask(new List)</a>
-							or <a href="../classes/conversation_question.carousel.html">conv.ask(new Carousel)</a>.</p>
+								Only use after calling <a href="../classes/conversation_helper.list.html">conv.ask(new List)</a>
+							or <a href="../classes/conversation_helper.carousel.html">conv.ask(new Carousel)</a>.</p>
 						</div>
 					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
 					<a name="permission" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagOptional">Optional</span> PERMISSION</h3>
-					<div class="tsd-signature tsd-kind-icon">PERMISSION<span class="tsd-signature-symbol">:</span> <a href="../modules/conversation_question.html#permissionargument" class="tsd-signature-type">PermissionArgument</a></div>
+					<div class="tsd-signature tsd-kind-icon">PERMISSION<span class="tsd-signature-symbol">:</span> <a href="../modules/conversation_helper.html#permissionargument" class="tsd-signature-type">PermissionArgument</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in service/actionssdk/conversation/argument/argument.ts:58</li>
+							<li>Defined in service/actionssdk/conversation/argument/argument.ts:59</li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -254,40 +271,40 @@
 							<p>True if the request follows a previous request asking for
 								permission from the user and the user granted the permission(s).
 								Otherwise, false.
-								Only use after calling <a href="../classes/conversation_question.permission.html">conv.ask(new Permission)</a>
-							or <a href="../classes/conversation_question.updatepermission.html">conv.ask(new UpdatePermission)</a>.</p>
+								Only use after calling <a href="../classes/conversation_helper.permission.html">conv.ask(new Permission)</a>
+							or <a href="../classes/conversation_helper.updatepermission.html">conv.ask(new UpdatePermission)</a>.</p>
 						</div>
 					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
 					<a name="place" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagOptional">Optional</span> PLACE</h3>
-					<div class="tsd-signature tsd-kind-icon">PLACE<span class="tsd-signature-symbol">:</span> <a href="../modules/conversation_question.html#placeargument" class="tsd-signature-type">PlaceArgument</a></div>
+					<div class="tsd-signature tsd-kind-icon">PLACE<span class="tsd-signature-symbol">:</span> <a href="../modules/conversation_helper.html#placeargument" class="tsd-signature-type">PlaceArgument</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in service/actionssdk/conversation/argument/argument.ts:157</li>
+							<li>Defined in service/actionssdk/conversation/argument/argument.ts:165</li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
 							<p>The user provided place.
-							Use after <a href="../classes/conversation_question.place.html">conv.ask(new Place)</a>.</p>
+							Use after <a href="../classes/conversation_helper.place.html">conv.ask(new Place)</a>.</p>
 						</div>
 					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
 					<a name="register_update" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagOptional">Optional</span> REGISTER_<wbr>UPDATE</h3>
-					<div class="tsd-signature tsd-kind-icon">REGISTER_<wbr>UPDATE<span class="tsd-signature-symbol">:</span> <a href="../modules/conversation_question.html#registerupdateargument" class="tsd-signature-type">RegisterUpdateArgument</a></div>
+					<div class="tsd-signature tsd-kind-icon">REGISTER_<wbr>UPDATE<span class="tsd-signature-symbol">:</span> <a href="../modules/conversation_helper.html#registerupdateargument" class="tsd-signature-type">RegisterUpdateArgument</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in service/actionssdk/conversation/argument/argument.ts:143</li>
+							<li>Defined in service/actionssdk/conversation/argument/argument.ts:151</li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
 							<p>True if user accepted update registration request.
-							Used with <a href="../classes/conversation_question.registerupdate.html">conv.ask(new RegisterUpdate)</a></p>
+							Used with <a href="../classes/conversation_helper.registerupdate.html">conv.ask(new RegisterUpdate)</a></p>
 						</div>
 					</div>
 				</section>
@@ -297,7 +314,7 @@
 					<div class="tsd-signature tsd-kind-icon">REPROMPT_<wbr>COUNT<span class="tsd-signature-symbol">:</span> <a href="../modules/conversation_argument.html#repromptargument" class="tsd-signature-type">RepromptArgument</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in service/actionssdk/conversation/argument/argument.ts:119</li>
+							<li>Defined in service/actionssdk/conversation/argument/argument.ts:127</li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -311,26 +328,26 @@
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
 					<a name="sign_in" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagOptional">Optional</span> SIGN_<wbr>IN</h3>
-					<div class="tsd-signature tsd-kind-icon">SIGN_<wbr>IN<span class="tsd-signature-symbol">:</span> <a href="../modules/conversation_question.html#signinargument" class="tsd-signature-type">SignInArgument</a></div>
+					<div class="tsd-signature tsd-kind-icon">SIGN_<wbr>IN<span class="tsd-signature-symbol">:</span> <a href="../modules/conversation_helper.html#signinargument" class="tsd-signature-type">SignInArgument</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in service/actionssdk/conversation/argument/argument.ts:111</li>
+							<li>Defined in service/actionssdk/conversation/argument/argument.ts:119</li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
 							<p>The status of user sign in request.
-							Use after <a href="../classes/conversation_question.signin.html">conv.ask(new SignIn)</a></p>
+							Use after <a href="../classes/conversation_helper.signin.html">conv.ask(new SignIn)</a></p>
 						</div>
 					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
 					<a name="transaction_decision_value" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagOptional">Optional</span> TRANSACTION_<wbr>DECISION_<wbr>VALUE</h3>
-					<div class="tsd-signature tsd-kind-icon">TRANSACTION_<wbr>DECISION_<wbr>VALUE<span class="tsd-signature-symbol">:</span> <a href="../modules/conversation_question.html#transactiondecisionargument" class="tsd-signature-type">TransactionDecisionArgument</a></div>
+					<div class="tsd-signature tsd-kind-icon">TRANSACTION_<wbr>DECISION_<wbr>VALUE<span class="tsd-signature-symbol">:</span> <a href="../modules/conversation_helper.html#transactiondecisionargument" class="tsd-signature-type">TransactionDecisionArgument</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in service/actionssdk/conversation/argument/argument.ts:90</li>
+							<li>Defined in service/actionssdk/conversation/argument/argument.ts:91</li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -338,23 +355,23 @@
 							<p>The transaction decision information.
 								Is object with userDecision only if user declines.
 								userDecision will be one of <a href="../modules/actionssdk_api_v2.html#googleactionsv2transactiondecisionvalueuserdecision">GoogleActionsV2TransactionDecisionValueUserDecision</a>.
-							Only use after calling <a href="../classes/conversation_question.transactiondecision.html">conv.ask(new TransactionDecision)</a>.</p>
+							Only use after calling <a href="../classes/conversation_helper.transactiondecision.html">conv.ask(new TransactionDecision)</a>.</p>
 						</div>
 					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
 					<a name="transaction_requirements_check_result" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagOptional">Optional</span> TRANSACTION_<wbr>REQUIREMENTS_<wbr>CHECK_<wbr>RESULT</h3>
-					<div class="tsd-signature tsd-kind-icon">TRANSACTION_<wbr>REQUIREMENTS_<wbr>CHECK_<wbr>RESULT<span class="tsd-signature-symbol">:</span> <a href="../modules/conversation_question.html#transactionrequirementsargument" class="tsd-signature-type">TransactionRequirementsArgument</a></div>
+					<div class="tsd-signature tsd-kind-icon">TRANSACTION_<wbr>REQUIREMENTS_<wbr>CHECK_<wbr>RESULT<span class="tsd-signature-symbol">:</span> <a href="../modules/conversation_helper.html#transactionrequirementsargument" class="tsd-signature-type">TransactionRequirementsArgument</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in service/actionssdk/conversation/argument/argument.ts:74</li>
+							<li>Defined in service/actionssdk/conversation/argument/argument.ts:75</li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
 							<p>The transactability of user.
-								Only use after calling <a href="../classes/conversation_question.transactionrequirements.html">conv.ask(new TransactionRequirements)</a>.
+								Only use after calling <a href="../classes/conversation_helper.transactionrequirements.html">conv.ask(new TransactionRequirements)</a>.
 							Undefined if no result given.</p>
 						</div>
 					</div>
@@ -362,16 +379,16 @@
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
 					<a name="updates_user_id" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagOptional">Optional</span> UPDATES_<wbr>USER_<wbr>ID</h3>
-					<div class="tsd-signature tsd-kind-icon">UPDATES_<wbr>USER_<wbr>ID<span class="tsd-signature-symbol">:</span> <a href="../modules/conversation_question.html#updatepermissionuseridargument" class="tsd-signature-type">UpdatePermissionUserIdArgument</a></div>
+					<div class="tsd-signature tsd-kind-icon">UPDATES_<wbr>USER_<wbr>ID<span class="tsd-signature-symbol">:</span> <a href="../modules/conversation_helper.html#updatepermissionuseridargument" class="tsd-signature-type">UpdatePermissionUserIdArgument</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in service/actionssdk/conversation/argument/argument.ts:150</li>
+							<li>Defined in service/actionssdk/conversation/argument/argument.ts:158</li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
 							<p>The updates user id.
-							Only use after calling <a href="../classes/conversation_question.updatepermission.html">conv.ask(new UpdatePermission)</a>.</p>
+							Only use after calling <a href="../classes/conversation_helper.updatepermission.html">conv.ask(new UpdatePermission)</a>.</p>
 						</div>
 					</div>
 				</section>
@@ -399,7 +416,7 @@
 						<a href="../modules/conversation_argument.html">conversation/argument</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="../modules/conversation_question.html">conversation/question</a>
+						<a href="../modules/conversation_helper.html">conversation/helper</a>
 					</li>
 					<li class=" tsd-kind-external-module">
 						<a href="../modules/conversation_response.html">conversation/response</a>
@@ -443,6 +460,9 @@
 					<li class="current tsd-kind-interface tsd-parent-kind-external-module">
 						<a href="conversation_argument.argumentsnamed.html" class="tsd-kind-icon">Arguments<wbr>Named</a>
 						<ul>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="conversation_argument.argumentsnamed.html#complete_purchase_value" class="tsd-kind-icon">COMPLETE_<wbr>PURCHASE_<wbr>VALUE</a>
+							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
 								<a href="conversation_argument.argumentsnamed.html#confirmation" class="tsd-kind-icon">CONFIRMATION</a>
 							</li>

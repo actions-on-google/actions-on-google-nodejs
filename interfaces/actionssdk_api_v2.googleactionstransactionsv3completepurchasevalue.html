@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>RegisterUpdateOptions | actions-on-google</title>
+	<title>GoogleActionsTransactionsV3CompletePurchaseValue | actions-on-google</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -52,28 +52,24 @@
 					<a href="../globals.html">Globals</a>
 				</li>
 				<li>
-					<a href="../modules/conversation_question.html">conversation/question</a>
+					<a href="../modules/actionssdk_api_v2.html">actionssdk/api/v2</a>
 				</li>
 				<li>
-					<a href="conversation_question.registerupdateoptions.html">RegisterUpdateOptions</a>
+					<a href="actionssdk_api_v2.googleactionstransactionsv3completepurchasevalue.html">GoogleActionsTransactionsV3CompletePurchaseValue</a>
 				</li>
 			</ul>
-			<h1>Interface RegisterUpdateOptions</h1>
+			<h1>Interface GoogleActionsTransactionsV3CompletePurchaseValue</h1>
 		</div>
 	</div>
 </header>
 <div class="container container-main">
 	<div class="row">
 		<div class="col-8 col-content">
-			<section class="tsd-panel tsd-comment">
-				<div class="tsd-comment tsd-typography">
-				</div>
-			</section>
 			<section class="tsd-panel tsd-hierarchy">
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="target">RegisterUpdateOptions</span>
+						<span class="target">GoogleActionsTransactionsV3CompletePurchaseValue</span>
 					</li>
 				</ul>
 			</section>
@@ -84,9 +80,9 @@
 						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="conversation_question.registerupdateoptions.html#arguments" class="tsd-kind-icon">arguments</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="conversation_question.registerupdateoptions.html#frequency" class="tsd-kind-icon">frequency</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="conversation_question.registerupdateoptions.html#intent" class="tsd-kind-icon">intent</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="actionssdk_api_v2.googleactionstransactionsv3completepurchasevalue.html#orderid" class="tsd-kind-icon">order<wbr>Id</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="actionssdk_api_v2.googleactionstransactionsv3completepurchasevalue.html#purchasestatus" class="tsd-kind-icon">purchase<wbr>Status</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="actionssdk_api_v2.googleactionstransactionsv3completepurchasevalue.html#purchasetoken" class="tsd-kind-icon">purchase<wbr>Token</a></li>
 							</ul>
 						</section>
 					</div>
@@ -95,48 +91,49 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Properties</h2>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="arguments" class="tsd-anchor"></a>
-					<h3>arguments</h3>
-					<div class="tsd-signature tsd-kind-icon">arguments<span class="tsd-signature-symbol">:</span> <a href="actionssdk_api_v2.googleactionsv2argument.html" class="tsd-signature-type">GoogleActionsV2Argument</a><span class="tsd-signature-symbol">[]</span></div>
+					<a name="orderid" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> order<wbr>Id</h3>
+					<div class="tsd-signature tsd-kind-icon">order<wbr>Id<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in service/actionssdk/conversation/question/registerupdate.ts:36</li>
+							<li>Defined in service/actionssdk/api/v2.ts:126</li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>The necessary arguments to fulfill the intent triggered on update.
-							These can be retrieved using {@link Arguments#get|conv.arguments.get}.</p>
+							<p>A unique order identifier for the transaction. This identifier corresponds
+							to the Google provided order ID.</p>
 						</div>
 					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="frequency" class="tsd-anchor"></a>
-					<h3>frequency</h3>
-					<div class="tsd-signature tsd-kind-icon">frequency<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Api.GoogleActionsV2TriggerContextTimeContextFrequency</span></div>
+					<a name="purchasestatus" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> purchase<wbr>Status</h3>
+					<div class="tsd-signature tsd-kind-icon">purchase<wbr>Status<span class="tsd-signature-symbol">:</span> <a href="../modules/actionssdk_api_v2.html#googleactionstransactionsv3completepurchasevaluepurchasestatus" class="tsd-signature-type">GoogleActionsTransactionsV3CompletePurchaseValuePurchaseStatus</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in service/actionssdk/conversation/question/registerupdate.ts:42</li>
+							<li>Defined in service/actionssdk/api/v2.ts:130</li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>The high-level frequency of the recurring update.</p>
+							<p>Status of current purchase.</p>
 						</div>
 					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="intent" class="tsd-anchor"></a>
-					<h3>intent</h3>
-					<div class="tsd-signature tsd-kind-icon">intent<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+					<a name="purchasetoken" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> purchase<wbr>Token</h3>
+					<div class="tsd-signature tsd-kind-icon">purchase<wbr>Token<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in service/actionssdk/conversation/question/registerupdate.ts:29</li>
+							<li>Defined in service/actionssdk/api/v2.ts:135</li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>The Dialogflow/Actions SDK intent name to be triggered when the update is received.</p>
+							<p>A opaque token that uniquely identifies a purchase for a given item and
+							user pair.</p>
 						</div>
 					</div>
 				</section>
@@ -151,7 +148,7 @@
 					<li class=" tsd-kind-external-module">
 						<a href="../modules/actionssdk.html">actionssdk</a>
 					</li>
-					<li class=" tsd-kind-external-module">
+					<li class="current tsd-kind-external-module">
 						<a href="../modules/actionssdk_api_v2.html">actionssdk/api/v2</a>
 					</li>
 					<li class=" tsd-kind-external-module">
@@ -163,8 +160,8 @@
 					<li class=" tsd-kind-external-module">
 						<a href="../modules/conversation_argument.html">conversation/argument</a>
 					</li>
-					<li class="current tsd-kind-external-module">
-						<a href="../modules/conversation_question.html">conversation/question</a>
+					<li class=" tsd-kind-external-module">
+						<a href="../modules/conversation_helper.html">conversation/helper</a>
 					</li>
 					<li class=" tsd-kind-external-module">
 						<a href="../modules/conversation_response.html">conversation/response</a>
@@ -194,16 +191,16 @@
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-interface tsd-parent-kind-external-module">
-						<a href="conversation_question.registerupdateoptions.html" class="tsd-kind-icon">Register<wbr>Update<wbr>Options</a>
+						<a href="actionssdk_api_v2.googleactionstransactionsv3completepurchasevalue.html" class="tsd-kind-icon">Google<wbr>Actions<wbr>Transactions<wbr>V3Complete<wbr>Purchase<wbr>Value</a>
 						<ul>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="conversation_question.registerupdateoptions.html#arguments" class="tsd-kind-icon">arguments</a>
+								<a href="actionssdk_api_v2.googleactionstransactionsv3completepurchasevalue.html#orderid" class="tsd-kind-icon">order<wbr>Id</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="conversation_question.registerupdateoptions.html#frequency" class="tsd-kind-icon">frequency</a>
+								<a href="actionssdk_api_v2.googleactionstransactionsv3completepurchasevalue.html#purchasestatus" class="tsd-kind-icon">purchase<wbr>Status</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="conversation_question.registerupdateoptions.html#intent" class="tsd-kind-icon">intent</a>
+								<a href="actionssdk_api_v2.googleactionstransactionsv3completepurchasevalue.html#purchasetoken" class="tsd-kind-icon">purchase<wbr>Token</a>
 							</li>
 						</ul>
 					</li>

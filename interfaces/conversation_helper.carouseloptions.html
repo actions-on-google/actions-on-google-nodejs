@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>DateTimeOptionsPrompts | actions-on-google</title>
+	<title>CarouselOptions | actions-on-google</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -52,24 +52,28 @@
 					<a href="../globals.html">Globals</a>
 				</li>
 				<li>
-					<a href="../modules/conversation_question.html">conversation/question</a>
+					<a href="../modules/conversation_helper.html">conversation/helper</a>
 				</li>
 				<li>
-					<a href="conversation_question.datetimeoptionsprompts.html">DateTimeOptionsPrompts</a>
+					<a href="conversation_helper.carouseloptions.html">CarouselOptions</a>
 				</li>
 			</ul>
-			<h1>Interface DateTimeOptionsPrompts</h1>
+			<h1>Interface CarouselOptions</h1>
 		</div>
 	</div>
 </header>
 <div class="container container-main">
 	<div class="row">
 		<div class="col-8 col-content">
+			<section class="tsd-panel tsd-comment">
+				<div class="tsd-comment tsd-typography">
+				</div>
+			</section>
 			<section class="tsd-panel tsd-hierarchy">
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="target">DateTimeOptionsPrompts</span>
+						<span class="target">CarouselOptions</span>
 					</li>
 				</ul>
 			</section>
@@ -80,9 +84,8 @@
 						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="conversation_question.datetimeoptionsprompts.html#date" class="tsd-kind-icon">date</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="conversation_question.datetimeoptionsprompts.html#initial" class="tsd-kind-icon">initial</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="conversation_question.datetimeoptionsprompts.html#time" class="tsd-kind-icon">time</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="conversation_helper.carouseloptions.html#display" class="tsd-kind-icon">display</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="conversation_helper.carouseloptions.html#items" class="tsd-kind-icon">items</a></li>
 							</ul>
 						</section>
 					</div>
@@ -91,50 +94,32 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Properties</h2>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="date" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagOptional">Optional</span> date</h3>
-					<div class="tsd-signature tsd-kind-icon">date<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></div>
+					<a name="display" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> display</h3>
+					<div class="tsd-signature tsd-kind-icon">display<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Api.GoogleActionsV2UiElementsCarouselSelectImageDisplayOptions</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in service/actionssdk/conversation/question/datetime.ts:36</li>
+							<li>Defined in service/actionssdk/conversation/helper/option/carousel.ts:39</li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>The prompt used to specifically ask for the date if not provided by user.
-							If not provided, Google will use a generic prompt.</p>
+							<p>Sets the display options for the images in this carousel.</p>
 						</div>
 					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="initial" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagOptional">Optional</span> initial</h3>
-					<div class="tsd-signature tsd-kind-icon">initial<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></div>
+					<a name="items" class="tsd-anchor"></a>
+					<h3>items</h3>
+					<div class="tsd-signature tsd-kind-icon">items<span class="tsd-signature-symbol">:</span> <a href="conversation_helper.optionitems.html" class="tsd-signature-type">OptionItems</a><span class="tsd-signature-symbol">&lt;</span><a href="conversation_helper.carouseloptionitem.html" class="tsd-signature-type">CarouselOptionItem</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><a href="actionssdk_api_v2.googleactionsv2uielementscarouselselectcarouselitem.html" class="tsd-signature-type">GoogleActionsV2UiElementsCarouselSelectCarouselItem</a><span class="tsd-signature-symbol">[]</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in service/actionssdk/conversation/question/datetime.ts:29</li>
+							<li>Defined in service/actionssdk/conversation/helper/option/carousel.ts:45</li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>The initial prompt used to ask for a date and time.
-							If not provided, Google will use a generic prompt.</p>
-						</div>
-					</div>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="time" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagOptional">Optional</span> time</h3>
-					<div class="tsd-signature tsd-kind-icon">time<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in service/actionssdk/conversation/question/datetime.ts:43</li>
-						</ul>
-					</aside>
-					<div class="tsd-comment tsd-typography">
-						<div class="lead">
-							<p>The prompt used to specifically ask for the time if not provided by user.
-							If not provided, Google will use a generic prompt.</p>
+							<p>List of 2-20 items to show in this carousel. Required.</p>
 						</div>
 					</div>
 				</section>
@@ -162,7 +147,7 @@
 						<a href="../modules/conversation_argument.html">conversation/argument</a>
 					</li>
 					<li class="current tsd-kind-external-module">
-						<a href="../modules/conversation_question.html">conversation/question</a>
+						<a href="../modules/conversation_helper.html">conversation/helper</a>
 					</li>
 					<li class=" tsd-kind-external-module">
 						<a href="../modules/conversation_response.html">conversation/response</a>
@@ -192,16 +177,13 @@
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-interface tsd-parent-kind-external-module">
-						<a href="conversation_question.datetimeoptionsprompts.html" class="tsd-kind-icon">Date<wbr>Time<wbr>Options<wbr>Prompts</a>
+						<a href="conversation_helper.carouseloptions.html" class="tsd-kind-icon">Carousel<wbr>Options</a>
 						<ul>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="conversation_question.datetimeoptionsprompts.html#date" class="tsd-kind-icon">date</a>
+								<a href="conversation_helper.carouseloptions.html#display" class="tsd-kind-icon">display</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="conversation_question.datetimeoptionsprompts.html#initial" class="tsd-kind-icon">initial</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="conversation_question.datetimeoptionsprompts.html#time" class="tsd-kind-icon">time</a>
+								<a href="conversation_helper.carouseloptions.html#items" class="tsd-kind-icon">items</a>
 							</li>
 						</ul>
 					</li>

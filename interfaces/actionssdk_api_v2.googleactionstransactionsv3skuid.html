@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>PlaceOptions | actions-on-google</title>
+	<title>GoogleActionsTransactionsV3SkuId | actions-on-google</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -52,28 +52,24 @@
 					<a href="../globals.html">Globals</a>
 				</li>
 				<li>
-					<a href="../modules/conversation_question.html">conversation/question</a>
+					<a href="../modules/actionssdk_api_v2.html">actionssdk/api/v2</a>
 				</li>
 				<li>
-					<a href="conversation_question.placeoptions.html">PlaceOptions</a>
+					<a href="actionssdk_api_v2.googleactionstransactionsv3skuid.html">GoogleActionsTransactionsV3SkuId</a>
 				</li>
 			</ul>
-			<h1>Interface PlaceOptions</h1>
+			<h1>Interface GoogleActionsTransactionsV3SkuId</h1>
 		</div>
 	</div>
 </header>
 <div class="container container-main">
 	<div class="row">
 		<div class="col-8 col-content">
-			<section class="tsd-panel tsd-comment">
-				<div class="tsd-comment tsd-typography">
-				</div>
-			</section>
 			<section class="tsd-panel tsd-hierarchy">
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="target">PlaceOptions</span>
+						<span class="target">GoogleActionsTransactionsV3SkuId</span>
 					</li>
 				</ul>
 			</section>
@@ -84,8 +80,9 @@
 						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="conversation_question.placeoptions.html#context" class="tsd-kind-icon">context</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="conversation_question.placeoptions.html#prompt" class="tsd-kind-icon">prompt</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="actionssdk_api_v2.googleactionstransactionsv3skuid.html#id" class="tsd-kind-icon">id</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="actionssdk_api_v2.googleactionstransactionsv3skuid.html#packagename" class="tsd-kind-icon">package<wbr>Name</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="actionssdk_api_v2.googleactionstransactionsv3skuid.html#skutype" class="tsd-kind-icon">sku<wbr>Type</a></li>
 							</ul>
 						</section>
 					</div>
@@ -94,36 +91,48 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Properties</h2>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="context" class="tsd-anchor"></a>
-					<h3>context</h3>
-					<div class="tsd-signature tsd-kind-icon">context<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+					<a name="id" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> id</h3>
+					<div class="tsd-signature tsd-kind-icon">id<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in service/actionssdk/conversation/question/place.ts:38</li>
+							<li>Defined in service/actionssdk/api/v2.ts:155</li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>This is the context for seeking permissions.
-								For example: &quot;To find a place to pick you up&quot;
-								Prompt to user: &quot;<em>To find a place to pick you up</em>, I just need to check your location.
-							Can I get that from Google?&quot;.</p>
+							<p>The identifier of the product SKU used for registration in the developer
+							console.</p>
 						</div>
 					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="prompt" class="tsd-anchor"></a>
-					<h3>prompt</h3>
-					<div class="tsd-signature tsd-kind-icon">prompt<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+					<a name="packagename" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> package<wbr>Name</h3>
+					<div class="tsd-signature tsd-kind-icon">package<wbr>Name<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in service/actionssdk/conversation/question/place.ts:29</li>
+							<li>Defined in service/actionssdk/api/v2.ts:159</li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>This is the initial response by location sub-dialog.
-							For example: &quot;Where do you want to get picked up?&quot;</p>
+							<p>The name of the android package under which the sku was registered.</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="skutype" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> sku<wbr>Type</h3>
+					<div class="tsd-signature tsd-kind-icon">sku<wbr>Type<span class="tsd-signature-symbol">:</span> <a href="../modules/actionssdk_api_v2.html#googleactionstransactionsv3skuidskutype" class="tsd-signature-type">GoogleActionsTransactionsV3SkuIdSkuType</a></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in service/actionssdk/api/v2.ts:163</li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The type of SKU.</p>
 						</div>
 					</div>
 				</section>
@@ -138,7 +147,7 @@
 					<li class=" tsd-kind-external-module">
 						<a href="../modules/actionssdk.html">actionssdk</a>
 					</li>
-					<li class=" tsd-kind-external-module">
+					<li class="current tsd-kind-external-module">
 						<a href="../modules/actionssdk_api_v2.html">actionssdk/api/v2</a>
 					</li>
 					<li class=" tsd-kind-external-module">
@@ -150,8 +159,8 @@
 					<li class=" tsd-kind-external-module">
 						<a href="../modules/conversation_argument.html">conversation/argument</a>
 					</li>
-					<li class="current tsd-kind-external-module">
-						<a href="../modules/conversation_question.html">conversation/question</a>
+					<li class=" tsd-kind-external-module">
+						<a href="../modules/conversation_helper.html">conversation/helper</a>
 					</li>
 					<li class=" tsd-kind-external-module">
 						<a href="../modules/conversation_response.html">conversation/response</a>
@@ -181,13 +190,16 @@
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-interface tsd-parent-kind-external-module">
-						<a href="conversation_question.placeoptions.html" class="tsd-kind-icon">Place<wbr>Options</a>
+						<a href="actionssdk_api_v2.googleactionstransactionsv3skuid.html" class="tsd-kind-icon">Google<wbr>Actions<wbr>Transactions<wbr>V3Sku<wbr>Id</a>
 						<ul>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="conversation_question.placeoptions.html#context" class="tsd-kind-icon">context</a>
+								<a href="actionssdk_api_v2.googleactionstransactionsv3skuid.html#id" class="tsd-kind-icon">id</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="conversation_question.placeoptions.html#prompt" class="tsd-kind-icon">prompt</a>
+								<a href="actionssdk_api_v2.googleactionstransactionsv3skuid.html#packagename" class="tsd-kind-icon">package<wbr>Name</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="actionssdk_api_v2.googleactionstransactionsv3skuid.html#skutype" class="tsd-kind-icon">sku<wbr>Type</a>
 							</li>
 						</ul>
 					</li>

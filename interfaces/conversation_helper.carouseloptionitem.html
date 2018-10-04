@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>OptionItems | actions-on-google</title>
+	<title>CarouselOptionItem | actions-on-google</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -52,43 +52,118 @@
 					<a href="../globals.html">Globals</a>
 				</li>
 				<li>
-					<a href="../modules/conversation_question.html">conversation/question</a>
+					<a href="../modules/conversation_helper.html">conversation/helper</a>
 				</li>
 				<li>
-					<a href="conversation_question.optionitems.html">OptionItems</a>
+					<a href="conversation_helper.carouseloptionitem.html">CarouselOptionItem</a>
 				</li>
 			</ul>
-			<h1>Interface OptionItems&lt;TOptionItem&gt;</h1>
+			<h1>Interface CarouselOptionItem</h1>
 		</div>
 	</div>
 </header>
 <div class="container container-main">
 	<div class="row">
 		<div class="col-8 col-content">
-			<section class="tsd-panel tsd-type-parameters">
-				<h3>Type parameters</h3>
-				<ul class="tsd-type-parameters">
-					<li>
-						<h4>TOptionItem</h4>
-					</li>
-				</ul>
+			<section class="tsd-panel tsd-comment">
+				<div class="tsd-comment tsd-typography">
+				</div>
 			</section>
 			<section class="tsd-panel tsd-hierarchy">
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="target">OptionItems</span>
+						<a href="conversation_helper.optionitem.html" class="tsd-signature-type">OptionItem</a>
+						<ul class="tsd-hierarchy">
+							<li>
+								<span class="target">CarouselOptionItem</span>
+							</li>
+						</ul>
 					</li>
 				</ul>
 			</section>
-			<section class="tsd-panel tsd-kind-interface tsd-parent-kind-external-module tsd-has-type-parameter">
-				<h3 class="tsd-before-signature">Indexable</h3>
-				<div class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">[</span>key: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">]: </span><span class="tsd-signature-type">TOptionItem</span></div>
-				<div class="tsd-comment tsd-typography">
-					<div class="lead">
-						<p>key: Unique string ID for this option.</p>
+			<section class="tsd-panel-group tsd-index-group">
+				<h2>Index</h2>
+				<section class="tsd-panel tsd-index-panel">
+					<div class="tsd-index-content">
+						<section class="tsd-index-section ">
+							<h3>Properties</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-overwrite"><a href="conversation_helper.carouseloptionitem.html#description" class="tsd-kind-icon">description</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="conversation_helper.carouseloptionitem.html#image" class="tsd-kind-icon">image</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="conversation_helper.carouseloptionitem.html#synonyms" class="tsd-kind-icon">synonyms</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="conversation_helper.carouseloptionitem.html#title" class="tsd-kind-icon">title</a></li>
+							</ul>
+						</section>
 					</div>
-				</div>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Properties</h2>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-overwrite">
+					<a name="description" class="tsd-anchor"></a>
+					<h3>description</h3>
+					<div class="tsd-signature tsd-kind-icon">description<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+					<aside class="tsd-sources">
+						<p>Overrides <a href="conversation_helper.optionitem.html">OptionItem</a>.<a href="conversation_helper.optionitem.html#description">description</a></p>
+						<ul>
+							<li>Defined in service/actionssdk/conversation/helper/option/carousel.ts:30</li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Description text of the item.</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+					<a name="image" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> image</h3>
+					<div class="tsd-signature tsd-kind-icon">image<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Api.GoogleActionsV2UiElementsImage</span></div>
+					<aside class="tsd-sources">
+						<p>Inherited from <a href="conversation_helper.optionitem.html">OptionItem</a>.<a href="conversation_helper.optionitem.html#image">image</a></p>
+						<ul>
+							<li>Defined in service/actionssdk/conversation/helper/option/option.ts:57</li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Square image to show for this item.</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+					<a name="synonyms" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> synonyms</h3>
+					<div class="tsd-signature tsd-kind-icon">synonyms<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span></div>
+					<aside class="tsd-sources">
+						<p>Inherited from <a href="conversation_helper.optionitem.html">OptionItem</a>.<a href="conversation_helper.optionitem.html#synonyms">synonyms</a></p>
+						<ul>
+							<li>Defined in service/actionssdk/conversation/helper/option/option.ts:39</li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Synonyms that can be used by the user to indicate this option if they do not use the key.</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+					<a name="title" class="tsd-anchor"></a>
+					<h3>title</h3>
+					<div class="tsd-signature tsd-kind-icon">title<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+					<aside class="tsd-sources">
+						<p>Inherited from <a href="conversation_helper.optionitem.html">OptionItem</a>.<a href="conversation_helper.optionitem.html#title">title</a></p>
+						<ul>
+							<li>Defined in service/actionssdk/conversation/helper/option/option.ts:45</li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Name of the item.</p>
+						</div>
+					</div>
+				</section>
 			</section>
 		</div>
 		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
@@ -113,7 +188,7 @@
 						<a href="../modules/conversation_argument.html">conversation/argument</a>
 					</li>
 					<li class="current tsd-kind-external-module">
-						<a href="../modules/conversation_question.html">conversation/question</a>
+						<a href="../modules/conversation_helper.html">conversation/helper</a>
 					</li>
 					<li class=" tsd-kind-external-module">
 						<a href="../modules/conversation_response.html">conversation/response</a>
@@ -142,8 +217,22 @@
 				<ul class="before-current">
 				</ul>
 				<ul class="current">
-					<li class="current tsd-kind-interface tsd-parent-kind-external-module tsd-has-type-parameter">
-						<a href="conversation_question.optionitems.html" class="tsd-kind-icon">Option<wbr>Items</a>
+					<li class="current tsd-kind-interface tsd-parent-kind-external-module">
+						<a href="conversation_helper.carouseloptionitem.html" class="tsd-kind-icon">Carousel<wbr>Option<wbr>Item</a>
+						<ul>
+							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-overwrite">
+								<a href="conversation_helper.carouseloptionitem.html#description" class="tsd-kind-icon">description</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+								<a href="conversation_helper.carouseloptionitem.html#image" class="tsd-kind-icon">image</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+								<a href="conversation_helper.carouseloptionitem.html#synonyms" class="tsd-kind-icon">synonyms</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+								<a href="conversation_helper.carouseloptionitem.html#title" class="tsd-kind-icon">title</a>
+							</li>
+						</ul>
 					</li>
 				</ul>
 				<ul class="after-current">

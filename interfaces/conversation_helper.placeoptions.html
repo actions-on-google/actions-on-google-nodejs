@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>DateTimeOptions | actions-on-google</title>
+	<title>PlaceOptions | actions-on-google</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -52,13 +52,13 @@
 					<a href="../globals.html">Globals</a>
 				</li>
 				<li>
-					<a href="../modules/conversation_question.html">conversation/question</a>
+					<a href="../modules/conversation_helper.html">conversation/helper</a>
 				</li>
 				<li>
-					<a href="conversation_question.datetimeoptions.html">DateTimeOptions</a>
+					<a href="conversation_helper.placeoptions.html">PlaceOptions</a>
 				</li>
 			</ul>
-			<h1>Interface DateTimeOptions</h1>
+			<h1>Interface PlaceOptions</h1>
 		</div>
 	</div>
 </header>
@@ -73,7 +73,7 @@
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="target">DateTimeOptions</span>
+						<span class="target">PlaceOptions</span>
 					</li>
 				</ul>
 			</section>
@@ -84,7 +84,8 @@
 						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="conversation_question.datetimeoptions.html#prompts" class="tsd-kind-icon">prompts</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="conversation_helper.placeoptions.html#context" class="tsd-kind-icon">context</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="conversation_helper.placeoptions.html#prompt" class="tsd-kind-icon">prompt</a></li>
 							</ul>
 						</section>
 					</div>
@@ -93,17 +94,36 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Properties</h2>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="prompts" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagOptional">Optional</span> prompts</h3>
-					<div class="tsd-signature tsd-kind-icon">prompts<span class="tsd-signature-symbol">:</span> <a href="conversation_question.datetimeoptionsprompts.html" class="tsd-signature-type">DateTimeOptionsPrompts</a></div>
+					<a name="context" class="tsd-anchor"></a>
+					<h3>context</h3>
+					<div class="tsd-signature tsd-kind-icon">context<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in service/actionssdk/conversation/question/datetime.ts:52</li>
+							<li>Defined in service/actionssdk/conversation/helper/place.ts:38</li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>Prompts for the user</p>
+							<p>This is the context for seeking permissions.
+								For example: &quot;To find a place to pick you up&quot;
+								Prompt to user: &quot;<em>To find a place to pick you up</em>, I just need to check your location.
+							Can I get that from Google?&quot;.</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="prompt" class="tsd-anchor"></a>
+					<h3>prompt</h3>
+					<div class="tsd-signature tsd-kind-icon">prompt<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in service/actionssdk/conversation/helper/place.ts:29</li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>This is the initial response by location sub-dialog.
+							For example: &quot;Where do you want to get picked up?&quot;</p>
 						</div>
 					</div>
 				</section>
@@ -131,7 +151,7 @@
 						<a href="../modules/conversation_argument.html">conversation/argument</a>
 					</li>
 					<li class="current tsd-kind-external-module">
-						<a href="../modules/conversation_question.html">conversation/question</a>
+						<a href="../modules/conversation_helper.html">conversation/helper</a>
 					</li>
 					<li class=" tsd-kind-external-module">
 						<a href="../modules/conversation_response.html">conversation/response</a>
@@ -161,10 +181,13 @@
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-interface tsd-parent-kind-external-module">
-						<a href="conversation_question.datetimeoptions.html" class="tsd-kind-icon">Date<wbr>Time<wbr>Options</a>
+						<a href="conversation_helper.placeoptions.html" class="tsd-kind-icon">Place<wbr>Options</a>
 						<ul>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="conversation_question.datetimeoptions.html#prompts" class="tsd-kind-icon">prompts</a>
+								<a href="conversation_helper.placeoptions.html#context" class="tsd-kind-icon">context</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="conversation_helper.placeoptions.html#prompt" class="tsd-kind-icon">prompt</a>
 							</li>
 						</ul>
 					</li>

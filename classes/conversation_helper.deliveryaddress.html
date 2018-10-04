@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>CarouselOptions | actions-on-google</title>
+	<title>DeliveryAddress | actions-on-google</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -52,13 +52,13 @@
 					<a href="../globals.html">Globals</a>
 				</li>
 				<li>
-					<a href="../modules/conversation_question.html">conversation/question</a>
+					<a href="../modules/conversation_helper.html">conversation/helper</a>
 				</li>
 				<li>
-					<a href="conversation_question.carouseloptions.html">CarouselOptions</a>
+					<a href="conversation_helper.deliveryaddress.html">DeliveryAddress</a>
 				</li>
 			</ul>
-			<h1>Interface CarouselOptions</h1>
+			<h1>Class DeliveryAddress</h1>
 		</div>
 	</div>
 </header>
@@ -67,13 +67,21 @@
 		<div class="col-8 col-content">
 			<section class="tsd-panel tsd-comment">
 				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Asks user for delivery address.</p>
+					</div>
 				</div>
 			</section>
 			<section class="tsd-panel tsd-hierarchy">
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="target">CarouselOptions</span>
+						<a href="conversation_helper.solohelper.html" class="tsd-signature-type">SoloHelper</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">"actions.intent.DELIVERY_ADDRESS"</span><span class="tsd-signature-symbol">, </span><a href="../interfaces/actionssdk_api_v2.googleactionsv2deliveryaddressvaluespec.html" class="tsd-signature-type">GoogleActionsV2DeliveryAddressValueSpec</a><span class="tsd-signature-symbol">&gt;</span>
+						<ul class="tsd-hierarchy">
+							<li>
+								<span class="target">DeliveryAddress</span>
+							</li>
+						</ul>
 					</li>
 				</ul>
 			</section>
@@ -82,44 +90,119 @@
 				<section class="tsd-panel tsd-index-panel">
 					<div class="tsd-index-content">
 						<section class="tsd-index-section ">
+							<h3>Constructors</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-constructor tsd-parent-kind-class"><a href="conversation_helper.deliveryaddress.html#constructor" class="tsd-kind-icon">constructor</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section tsd-is-inherited">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="conversation_question.carouseloptions.html#display" class="tsd-kind-icon">display</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="conversation_question.carouseloptions.html#items" class="tsd-kind-icon">items</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-static"><a href="conversation_helper.deliveryaddress.html#inputvaluedata" class="tsd-kind-icon">input<wbr>Value<wbr>Data</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-static"><a href="conversation_helper.deliveryaddress.html#intent" class="tsd-kind-icon">intent</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-static"><a href="conversation_helper.deliveryaddress.html#parametername" class="tsd-kind-icon">parameter<wbr>Name</a></li>
 							</ul>
 						</section>
 					</div>
 				</section>
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Constructors</h2>
+				<section class="tsd-panel tsd-member tsd-kind-constructor tsd-parent-kind-class">
+					<a name="constructor" class="tsd-anchor"></a>
+					<h3>constructor</h3>
+					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Delivery<wbr>Address<span class="tsd-signature-symbol">(</span>options<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">Api.GoogleActionsV2DeliveryAddressValueSpec</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="conversation_helper.deliveryaddress.html" class="tsd-signature-type">DeliveryAddress</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in service/actionssdk/conversation/helper/transaction/deliveryaddress.ts:30</li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> options: <span class="tsd-signature-type">Api.GoogleActionsV2DeliveryAddressValueSpec</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<div class="lead">
+											<p>The raw <a href="../interfaces/actionssdk_api_v2.googleactionsv2deliveryaddressvaluespec.html">GoogleActionsV2DeliveryAddressValueSpec</a></p>
+										</div>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="conversation_helper.deliveryaddress.html" class="tsd-signature-type">DeliveryAddress</a></h4>
+						</li>
+					</ul>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group tsd-is-inherited">
 				<h2>Properties</h2>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="display" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagOptional">Optional</span> display</h3>
-					<div class="tsd-signature tsd-kind-icon">display<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Api.GoogleActionsV2UiElementsCarouselSelectImageDisplayOptions</span></div>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-static">
+					<a name="inputvaluedata" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagStatic">Static</span> <span class="tsd-flag ts-flagOptional">Optional</span> input<wbr>Value<wbr>Data</h3>
+					<div class="tsd-signature tsd-kind-icon">input<wbr>Value<wbr>Data<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">ApiClientObjectMap</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span></div>
 					<aside class="tsd-sources">
+						<p>Inherited from <a href="../interfaces/actionssdk_api_v2.googleactionsv2expectedintent.html">GoogleActionsV2ExpectedIntent</a>.<a href="../interfaces/actionssdk_api_v2.googleactionsv2expectedintent.html#inputvaluedata">inputValueData</a></p>
 						<ul>
-							<li>Defined in service/actionssdk/conversation/question/option/carousel.ts:39</li>
+							<li>Defined in service/actionssdk/api/v2.ts:549</li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>Sets the display options for the images in this carousel.</p>
+							<p>Additional configuration data required by a built-in intent. Possible
+								values for the built-in intents: <code>actions.intent.OPTION -&gt;</code>
+								[google.actions.v2.OptionValueSpec], <code>actions.intent.CONFIRMATION -&gt;</code>
+								[google.actions.v2.ConfirmationValueSpec],
+								<code>actions.intent.TRANSACTION_REQUIREMENTS_CHECK -&gt;</code>
+								[google.actions.v2.TransactionRequirementsCheckSpec],
+								<code>actions.intent.DELIVERY_ADDRESS -&gt;</code>
+								[google.actions.v2.DeliveryAddressValueSpec],
+								<code>actions.intent.TRANSACTION_DECISION -&gt;</code>
+								[google.actions.v2.TransactionDecisionValueSpec],
+								<code>actions.intent.PLACE -&gt;</code>
+								[google.actions.v2.PlaceValueSpec],
+								<code>actions.intent.Link -&gt;</code>
+							[google.actions.v2.LinkValueSpec]</p>
 						</div>
 					</div>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="items" class="tsd-anchor"></a>
-					<h3>items</h3>
-					<div class="tsd-signature tsd-kind-icon">items<span class="tsd-signature-symbol">:</span> <a href="conversation_question.optionitems.html" class="tsd-signature-type">OptionItems</a><span class="tsd-signature-symbol">&lt;</span><a href="conversation_question.carouseloptionitem.html" class="tsd-signature-type">CarouselOptionItem</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><a href="actionssdk_api_v2.googleactionsv2uielementscarouselselectcarouselitem.html" class="tsd-signature-type">GoogleActionsV2UiElementsCarouselSelectCarouselItem</a><span class="tsd-signature-symbol">[]</span></div>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-static">
+					<a name="intent" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagStatic">Static</span> <span class="tsd-flag ts-flagOptional">Optional</span> intent</h3>
+					<div class="tsd-signature tsd-kind-icon">intent<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
+						<p>Inherited from <a href="../interfaces/actionssdk_api_v2.googleactionsv2expectedintent.html">GoogleActionsV2ExpectedIntent</a>.<a href="../interfaces/actionssdk_api_v2.googleactionsv2expectedintent.html#intent">intent</a></p>
 						<ul>
-							<li>Defined in service/actionssdk/conversation/question/option/carousel.ts:45</li>
+							<li>Defined in service/actionssdk/api/v2.ts:556</li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>List of 2-20 items to show in this carousel. Required.</p>
+							<p>The built-in intent name, e.g. <code>actions.intent.TEXT</code>, or intents
+								defined in the action package. If the intent specified is not a built-in
+								intent, it is only used for speech biasing and the input provided by the
+							Google Assistant will be the <code>actions.intent.TEXT</code> intent.</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-static">
+					<a name="parametername" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagStatic">Static</span> <span class="tsd-flag ts-flagOptional">Optional</span> parameter<wbr>Name</h3>
+					<div class="tsd-signature tsd-kind-icon">parameter<wbr>Name<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></div>
+					<aside class="tsd-sources">
+						<p>Inherited from <a href="../interfaces/actionssdk_api_v2.googleactionsv2expectedintent.html">GoogleActionsV2ExpectedIntent</a>.<a href="../interfaces/actionssdk_api_v2.googleactionsv2expectedintent.html#parametername">parameterName</a></p>
+						<ul>
+							<li>Defined in service/actionssdk/api/v2.ts:561</li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Optionally, a parameter of the intent that is being requested. Only valid
+							for requested intents. Used for speech biasing.</p>
 						</div>
 					</div>
 				</section>
@@ -147,7 +230,7 @@
 						<a href="../modules/conversation_argument.html">conversation/argument</a>
 					</li>
 					<li class="current tsd-kind-external-module">
-						<a href="../modules/conversation_question.html">conversation/question</a>
+						<a href="../modules/conversation_helper.html">conversation/helper</a>
 					</li>
 					<li class=" tsd-kind-external-module">
 						<a href="../modules/conversation_response.html">conversation/response</a>
@@ -176,14 +259,20 @@
 				<ul class="before-current">
 				</ul>
 				<ul class="current">
-					<li class="current tsd-kind-interface tsd-parent-kind-external-module">
-						<a href="conversation_question.carouseloptions.html" class="tsd-kind-icon">Carousel<wbr>Options</a>
+					<li class="current tsd-kind-class tsd-parent-kind-external-module">
+						<a href="conversation_helper.deliveryaddress.html" class="tsd-kind-icon">Delivery<wbr>Address</a>
 						<ul>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="conversation_question.carouseloptions.html#display" class="tsd-kind-icon">display</a>
+							<li class=" tsd-kind-constructor tsd-parent-kind-class">
+								<a href="conversation_helper.deliveryaddress.html#constructor" class="tsd-kind-icon">constructor</a>
 							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="conversation_question.carouseloptions.html#items" class="tsd-kind-icon">items</a>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-static">
+								<a href="conversation_helper.deliveryaddress.html#inputvaluedata" class="tsd-kind-icon">input<wbr>Value<wbr>Data</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-static">
+								<a href="conversation_helper.deliveryaddress.html#intent" class="tsd-kind-icon">intent</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-static">
+								<a href="conversation_helper.deliveryaddress.html#parametername" class="tsd-kind-icon">parameter<wbr>Name</a>
 							</li>
 						</ul>
 					</li>

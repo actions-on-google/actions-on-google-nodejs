@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>PermissionOptions | actions-on-google</title>
+	<title>CompletePurchase | actions-on-google</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -52,13 +52,13 @@
 					<a href="../globals.html">Globals</a>
 				</li>
 				<li>
-					<a href="../modules/conversation_question.html">conversation/question</a>
+					<a href="../modules/conversation_helper.html">conversation/helper</a>
 				</li>
 				<li>
-					<a href="conversation_question.permissionoptions.html">PermissionOptions</a>
+					<a href="conversation_helper.completepurchase.html">CompletePurchase</a>
 				</li>
 			</ul>
-			<h1>Interface PermissionOptions</h1>
+			<h1>Class CompletePurchase</h1>
 		</div>
 	</div>
 </header>
@@ -67,13 +67,21 @@
 		<div class="col-8 col-content">
 			<section class="tsd-panel tsd-comment">
 				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Asks the user to complete a purchase</p>
+					</div>
 				</div>
 			</section>
 			<section class="tsd-panel tsd-hierarchy">
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="target">PermissionOptions</span>
+						<a href="conversation_helper.solohelper.html" class="tsd-signature-type">SoloHelper</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">"actions.intent.COMPLETE_PURCHASE"</span><span class="tsd-signature-symbol">, </span><a href="../interfaces/actionssdk_api_v2.googleactionstransactionsv3completepurchasevaluespec.html" class="tsd-signature-type">GoogleActionsTransactionsV3CompletePurchaseValueSpec</a><span class="tsd-signature-symbol">&gt;</span>
+						<ul class="tsd-hierarchy">
+							<li>
+								<span class="target">CompletePurchase</span>
+							</li>
+						</ul>
 					</li>
 				</ul>
 			</section>
@@ -82,63 +90,119 @@
 				<section class="tsd-panel tsd-index-panel">
 					<div class="tsd-index-content">
 						<section class="tsd-index-section ">
+							<h3>Constructors</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-constructor tsd-parent-kind-class"><a href="conversation_helper.completepurchase.html#constructor" class="tsd-kind-icon">constructor</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section tsd-is-inherited">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="conversation_question.permissionoptions.html#context" class="tsd-kind-icon">context</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="conversation_question.permissionoptions.html#extra" class="tsd-kind-icon">extra</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="conversation_question.permissionoptions.html#permissions" class="tsd-kind-icon">permissions</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-static"><a href="conversation_helper.completepurchase.html#inputvaluedata" class="tsd-kind-icon">input<wbr>Value<wbr>Data</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-static"><a href="conversation_helper.completepurchase.html#intent" class="tsd-kind-icon">intent</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-static"><a href="conversation_helper.completepurchase.html#parametername" class="tsd-kind-icon">parameter<wbr>Name</a></li>
 							</ul>
 						</section>
 					</div>
 				</section>
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Constructors</h2>
+				<section class="tsd-panel tsd-member tsd-kind-constructor tsd-parent-kind-class">
+					<a name="constructor" class="tsd-anchor"></a>
+					<h3>constructor</h3>
+					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Complete<wbr>Purchase<span class="tsd-signature-symbol">(</span>options<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">Api.GoogleActionsTransactionsV3CompletePurchaseValueSpec</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="conversation_helper.completepurchase.html" class="tsd-signature-type">CompletePurchase</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in service/actionssdk/conversation/helper/transaction/completepurchase.ts:30</li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> options: <span class="tsd-signature-type">Api.GoogleActionsTransactionsV3CompletePurchaseValueSpec</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<div class="lead">
+											<p>The raw <a href="../interfaces/actionssdk_api_v2.googleactionstransactionsv3completepurchasevaluespec.html">GoogleActionsTransactionsV3CompletePurchaseValueSpec</a></p>
+										</div>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="conversation_helper.completepurchase.html" class="tsd-signature-type">CompletePurchase</a></h4>
+						</li>
+					</ul>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group tsd-is-inherited">
 				<h2>Properties</h2>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="context" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagOptional">Optional</span> context</h3>
-					<div class="tsd-signature tsd-kind-icon">context<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></div>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-static">
+					<a name="inputvaluedata" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagStatic">Static</span> <span class="tsd-flag ts-flagOptional">Optional</span> input<wbr>Value<wbr>Data</h3>
+					<div class="tsd-signature tsd-kind-icon">input<wbr>Value<wbr>Data<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">ApiClientObjectMap</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span></div>
 					<aside class="tsd-sources">
+						<p>Inherited from <a href="../interfaces/actionssdk_api_v2.googleactionsv2expectedintent.html">GoogleActionsV2ExpectedIntent</a>.<a href="../interfaces/actionssdk_api_v2.googleactionsv2expectedintent.html#inputvaluedata">inputValueData</a></p>
 						<ul>
-							<li>Defined in service/actionssdk/conversation/question/permission/permission.ts:31</li>
+							<li>Defined in service/actionssdk/api/v2.ts:549</li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>Context why the permission is being asked.
-							It&#39;s the TTS prompt prefix (action phrase) we ask the user.</p>
+							<p>Additional configuration data required by a built-in intent. Possible
+								values for the built-in intents: <code>actions.intent.OPTION -&gt;</code>
+								[google.actions.v2.OptionValueSpec], <code>actions.intent.CONFIRMATION -&gt;</code>
+								[google.actions.v2.ConfirmationValueSpec],
+								<code>actions.intent.TRANSACTION_REQUIREMENTS_CHECK -&gt;</code>
+								[google.actions.v2.TransactionRequirementsCheckSpec],
+								<code>actions.intent.DELIVERY_ADDRESS -&gt;</code>
+								[google.actions.v2.DeliveryAddressValueSpec],
+								<code>actions.intent.TRANSACTION_DECISION -&gt;</code>
+								[google.actions.v2.TransactionDecisionValueSpec],
+								<code>actions.intent.PLACE -&gt;</code>
+								[google.actions.v2.PlaceValueSpec],
+								<code>actions.intent.Link -&gt;</code>
+							[google.actions.v2.LinkValueSpec]</p>
 						</div>
 					</div>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="extra" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagOptional">Optional</span> extra</h3>
-					<div class="tsd-signature tsd-kind-icon">extra<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Api.GoogleActionsV2PermissionValueSpec</span></div>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-static">
+					<a name="intent" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagStatic">Static</span> <span class="tsd-flag ts-flagOptional">Optional</span> intent</h3>
+					<div class="tsd-signature tsd-kind-icon">intent<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
+						<p>Inherited from <a href="../interfaces/actionssdk_api_v2.googleactionsv2expectedintent.html">GoogleActionsV2ExpectedIntent</a>.<a href="../interfaces/actionssdk_api_v2.googleactionsv2expectedintent.html#intent">intent</a></p>
 						<ul>
-							<li>Defined in service/actionssdk/conversation/question/permission/permission.ts:46</li>
+							<li>Defined in service/actionssdk/api/v2.ts:556</li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>Extra properties to be spread into the value.
-							For advanced usages like used in <a href="../classes/conversation_question.updatepermission.html">UpdatePermission</a></p>
+							<p>The built-in intent name, e.g. <code>actions.intent.TEXT</code>, or intents
+								defined in the action package. If the intent specified is not a built-in
+								intent, it is only used for speech biasing and the input provided by the
+							Google Assistant will be the <code>actions.intent.TEXT</code> intent.</p>
 						</div>
 					</div>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="permissions" class="tsd-anchor"></a>
-					<h3>permissions</h3>
-					<div class="tsd-signature tsd-kind-icon">permissions<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Api.GoogleActionsV2PermissionValueSpecPermissions</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">Api.GoogleActionsV2PermissionValueSpecPermissions</span><span class="tsd-signature-symbol">[]</span></div>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-static">
+					<a name="parametername" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagStatic">Static</span> <span class="tsd-flag ts-flagOptional">Optional</span> parameter<wbr>Name</h3>
+					<div class="tsd-signature tsd-kind-icon">parameter<wbr>Name<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
+						<p>Inherited from <a href="../interfaces/actionssdk_api_v2.googleactionsv2expectedintent.html">GoogleActionsV2ExpectedIntent</a>.<a href="../interfaces/actionssdk_api_v2.googleactionsv2expectedintent.html#parametername">parameterName</a></p>
 						<ul>
-							<li>Defined in service/actionssdk/conversation/question/permission/permission.ts:38</li>
+							<li>Defined in service/actionssdk/api/v2.ts:561</li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>Array or string of permissions App supports,
-							each of which comes from <a href="../modules/actionssdk_api_v2.html#googleactionsv2permissionvaluespecpermissions">GoogleActionsV2PermissionValueSpecPermissions</a>.</p>
+							<p>Optionally, a parameter of the intent that is being requested. Only valid
+							for requested intents. Used for speech biasing.</p>
 						</div>
 					</div>
 				</section>
@@ -166,7 +230,7 @@
 						<a href="../modules/conversation_argument.html">conversation/argument</a>
 					</li>
 					<li class="current tsd-kind-external-module">
-						<a href="../modules/conversation_question.html">conversation/question</a>
+						<a href="../modules/conversation_helper.html">conversation/helper</a>
 					</li>
 					<li class=" tsd-kind-external-module">
 						<a href="../modules/conversation_response.html">conversation/response</a>
@@ -195,17 +259,20 @@
 				<ul class="before-current">
 				</ul>
 				<ul class="current">
-					<li class="current tsd-kind-interface tsd-parent-kind-external-module">
-						<a href="conversation_question.permissionoptions.html" class="tsd-kind-icon">Permission<wbr>Options</a>
+					<li class="current tsd-kind-class tsd-parent-kind-external-module">
+						<a href="conversation_helper.completepurchase.html" class="tsd-kind-icon">Complete<wbr>Purchase</a>
 						<ul>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="conversation_question.permissionoptions.html#context" class="tsd-kind-icon">context</a>
+							<li class=" tsd-kind-constructor tsd-parent-kind-class">
+								<a href="conversation_helper.completepurchase.html#constructor" class="tsd-kind-icon">constructor</a>
 							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="conversation_question.permissionoptions.html#extra" class="tsd-kind-icon">extra</a>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-static">
+								<a href="conversation_helper.completepurchase.html#inputvaluedata" class="tsd-kind-icon">input<wbr>Value<wbr>Data</a>
 							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="conversation_question.permissionoptions.html#permissions" class="tsd-kind-icon">permissions</a>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-static">
+								<a href="conversation_helper.completepurchase.html#intent" class="tsd-kind-icon">intent</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-static">
+								<a href="conversation_helper.completepurchase.html#parametername" class="tsd-kind-icon">parameter<wbr>Name</a>
 							</li>
 						</ul>
 					</li>
