@@ -70,7 +70,8 @@ const isSimulator = (
   if (!body.originalDetectIntentRequest) {
     return false
   }
-  return Object.keys(body.originalDetectIntentRequest.payload!).length === 0
+  return Object.keys(body.originalDetectIntentRequest.payload!).length === 0 &&
+    !!body.responseId
 }
 
 const getRequest = (

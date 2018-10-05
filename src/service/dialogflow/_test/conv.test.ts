@@ -906,3 +906,31 @@ test('conv does not send userStorage when it is empty', t => {
     },
   })
 })
+
+test('conv does not detect coming from simulator given no responseId', t => {
+  const response = `What's up?`
+  const conv = new DialogflowConversation({
+    body: {
+      originalDetectIntentRequest: {
+        payload: {},
+      },
+    },
+  })
+  conv.ask(response)
+  t.deepEqual(clone(conv.serialize()), {
+    payload: {
+      google: {
+        expectUserResponse: true,
+        richResponse: {
+          items: [
+            {
+              simpleResponse: {
+                textToSpeech: response,
+              },
+            },
+          ],
+        },
+      },
+    },
+  })
+})
