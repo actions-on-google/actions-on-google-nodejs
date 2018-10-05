@@ -17,7 +17,15 @@
 import test from 'ava'
 import { Conversation } from '../conversation'
 import * as Api from '../../api/v2'
-import { BasicCard, Button, Suggestions, SimpleResponse } from '..'
+import {
+  BasicCard,
+  Button,
+  Suggestions,
+  SimpleResponse,
+  Carousel,
+  Permission,
+  Image,
+} from '..'
 import { clone } from '../../../../common'
 
 const CONVERSATION_ID = '1234'
@@ -386,4 +394,68 @@ test('conv generates same user storage as empty string', t => {
     },
     userStorage: '',
   })
+})
+
+test('conv.response throws error when no response has been set', t => {
+  const conv = new Conversation()
+  t.throws(() => conv.response(), 'No response has been set. ' +
+    'Is this being used in an async call that was not ' +
+    'returned as a promise to the intent handler?')
+})
+
+test('conv.response throws error when response has been digested twice', t => {
+  const conv = new Conversation()
+  conv.ask(`What's up?`)
+  conv.response()
+  t.throws(() => conv.response(), 'Response has already been digested')
+})
+
+test('conv.response throws error when only one helper has been sent', t => {
+  const conv = new Conversation()
+  conv.ask(new Carousel({
+    items: [],
+  }))
+  t.throws(
+    () => conv.response(),
+    'A simple response is required in addition to this type of response',
+  )
+})
+
+test('conv.response does not throws error when only one SoloHelper has been sent', t => {
+  const conv = new Conversation()
+  conv.ask(new Permission({
+    permissions: 'NAME',
+  }))
+  t.deepEqual(clone(conv.response()), {
+    expectUserResponse: true,
+    expectedIntent: {
+      intent: 'actions.intent.PERMISSION',
+      inputValueData: {
+        '@type': 'type.googleapis.com/google.actions.v2.PermissionValueSpec',
+        permissions: ['NAME'],
+      },
+    },
+    richResponse: {
+      items: [
+        {
+          simpleResponse: {
+            textToSpeech: 'PLACEHOLDER',
+          },
+        },
+      ],
+    },
+    userStorage: '',
+  })
+})
+
+test('conv.response throws error when only one rich response has been sent', t => {
+  const conv = new Conversation()
+  conv.ask(new Image({
+    url: 'url',
+    alt: 'alt',
+  }))
+  t.throws(
+    () => conv.response(),
+    'A simple response is required in addition to this type of response',
+  )
 })

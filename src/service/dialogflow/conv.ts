@@ -339,27 +339,30 @@ export class DialogflowConversation<
     if (this._raw) {
       return this._raw
     }
-    const {
-      richResponse,
-      expectUserResponse,
-      userStorage,
-      expectedIntent,
-      noInputPrompts,
-    } = this.response()
-    const google: GoogleAssistantResponse = {
-      expectUserResponse,
-      richResponse,
-      systemIntent: expectedIntent && {
-        intent: expectedIntent.intent!,
-        data: expectedIntent.inputValueData as ProtoAny<string, JsonObject>,
-      },
-      noInputPrompts,
-    }
-    if (userStorage) {
-      google.userStorage = userStorage
-    }
-    const payload: PayloadGoogle = {
-      google,
+    let payload: PayloadGoogle | undefined
+    if (this._followup) {
+      this.digested = true
+    } else {
+      const {
+        richResponse,
+        expectUserResponse,
+        userStorage,
+        expectedIntent,
+        noInputPrompts,
+      } = this.response()
+      const google: GoogleAssistantResponse = {
+        expectUserResponse,
+        richResponse,
+        systemIntent: expectedIntent && {
+          intent: expectedIntent.intent!,
+          data: expectedIntent.inputValueData as ProtoAny<string, JsonObject>,
+        },
+        noInputPrompts,
+      }
+      if (userStorage) {
+        google.userStorage = userStorage
+      }
+      payload = { google }
     }
     const convDataDefault = deserializeData<TContexts, TConvData>(this.contexts, this._init.data)
     const convDataIn = serializeData(convDataDefault)
@@ -371,7 +374,7 @@ export class DialogflowConversation<
         data: convDataOut,
       })
     }
-    const simulator = !this._followup && isSimulator(this.body)
+    const simulator = isSimulator(this.body)
     if (this.version === 1) {
       const response: ApiV1.DialogflowV1WebhookResponse = {
         data: payload,
@@ -381,7 +384,7 @@ export class DialogflowConversation<
       if (contextOut.length) {
         response.contextOut = contextOut
       }
-      if (simulator) {
+      if (simulator && payload) {
         const items = payload.google.richResponse.items!
         response.displayText =
           (payload.google.systemIntent || items.length > 1) ?
@@ -399,7 +402,7 @@ export class DialogflowConversation<
     if (outputContexts.length) {
       response.outputContexts = outputContexts
     }
-    if (simulator) {
+    if (simulator && payload) {
       const items = payload.google.richResponse.items!
       response.fulfillmentText =
         (payload.google.systemIntent || items.length > 1) ?

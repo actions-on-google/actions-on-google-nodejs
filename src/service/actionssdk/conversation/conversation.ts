@@ -432,6 +432,10 @@ export class Conversation<TUserStorage> {
       }
       richResponse.add(response)
     }
+    if (richResponse.items!.length < 2 &&
+      (!richResponse.items![0] || !richResponse.items![0].simpleResponse)) {
+      throw new Error('A simple response is required in addition to this type of response')
+    }
     const userStorageIn = (new User(this.user.raw, this._init.storage))._serialize()
     const userStorageOut = this.user._serialize()
     const userStorage = userStorageOut === userStorageIn ? '' : userStorageOut
