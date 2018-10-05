@@ -387,7 +387,9 @@ export class DialogflowConversation<
       }
       if (simulator && payload) {
         const items = payload.google.richResponse.items!
-        response.displayText =
+        // Simulator only shows speech response
+        // Since this is only shown to the simulator as text, the speech is the displayText
+        response.speech =
           (payload.google.systemIntent || items.length > 1) ?
           SIMULATOR_WARNING :
           (items[0].simpleResponse!.displayText ||

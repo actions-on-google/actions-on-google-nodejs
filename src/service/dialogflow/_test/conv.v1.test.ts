@@ -136,7 +136,7 @@ test('conv.serialize w/ simple response has fulfillmentText when from simulator'
         },
       },
     },
-    displayText: response,
+    speech: response,
   })
 })
 
@@ -164,7 +164,7 @@ test('conv.serialize w/ simple response text has fulfillmentText when from simul
         },
       },
     },
-    displayText: text,
+    speech: text,
   })
 })
 
@@ -194,7 +194,7 @@ test('conv.serialize w/ two simple responses has fulfillmentText warning for sim
         },
       },
     },
-    displayText: 'Cannot display response in Dialogflow simulator. ' +
+    speech: 'Cannot display response in Dialogflow simulator. ' +
       'Please test on the Google Assistant simulator instead.',
   })
 })
@@ -232,7 +232,7 @@ test('conv.serialize w/ solo helper has fulfillmentText warning for simulator', 
         },
       },
     },
-    displayText: 'Cannot display response in Dialogflow simulator. ' +
+    speech: 'Cannot display response in Dialogflow simulator. ' +
       'Please test on the Google Assistant simulator instead.',
   })
 })
@@ -298,7 +298,7 @@ test('conv.serialize w/ non solo helper has fulfillmentText warning for simulato
         },
       },
     },
-    displayText: 'Cannot display response in Dialogflow simulator. ' +
+    speech: 'Cannot display response in Dialogflow simulator. ' +
       'Please test on the Google Assistant simulator instead.',
   })
 })
@@ -336,7 +336,7 @@ test('conv.serialize w/ image has fulfillmentText warning for simulator', t => {
         },
       },
     },
-    displayText: 'Cannot display response in Dialogflow simulator. ' +
+    speech: 'Cannot display response in Dialogflow simulator. ' +
       'Please test on the Google Assistant simulator instead.',
   })
 })
