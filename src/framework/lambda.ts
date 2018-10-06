@@ -44,12 +44,16 @@ export class Lambda implements Framework<LambdaHandler> {
         context,
         event,
       }
+      const entireBodyFormat = typeof event.headers !== 'object' || Array.isArray(event.headers)
       // convert header keys to lowercase for case insensitive header retrieval
-      const headers = Object.keys(event.headers).reduce((o, k) => {
-        o[k.toLowerCase()] = event.headers[k]
-        return o
-      }, {} as Headers)
-      const result = await standard(JSON.parse(event.body), headers, { lambda: metadata })
+      const headers = entireBodyFormat ? {} as Headers :
+        Object.keys(event.headers).reduce((o, k) => {
+          o[k.toLowerCase()] = event.headers[k]
+          return o
+        }, {} as Headers)
+      const body = entireBodyFormat ? event :
+        (typeof event.body === 'string' ? JSON.parse(event.body) : event.body)
+      const result = await standard(body, headers, { lambda: metadata })
       .catch((e: Error) => {
         common.error(e.stack || e)
         callback(e)
@@ -57,10 +61,10 @@ export class Lambda implements Framework<LambdaHandler> {
       if (!result) {
         return
       }
-      const { status, body } = result
+      const { status } = result
       callback(null, {
         statusCode: status,
-        body: JSON.stringify(body),
+        body: JSON.stringify(result.body),
         headers: result.headers,
       })
     }

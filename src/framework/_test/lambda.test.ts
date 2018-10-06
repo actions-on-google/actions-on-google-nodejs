@@ -130,7 +130,7 @@ test('converts headers to lower', async t => {
   t.is(receivedStatus, expectedStatus)
 })
 
-test('handles error', async t => {
+test.serial('handles error', async t => {
   const expectedError = new Error('test')
   const sentBody = {
     a: '1',
@@ -153,6 +153,39 @@ test('handles error', async t => {
     succeed() {},
     // tslint:disable-next-line:no-any mocking context
   } as any, (e: Error) => {
+    receivedError = e
+  })
+  // tslint:disable-next-line:no-any mocking promise
+  await (promise as any).catch(() => {})
+  await new Promise(resolve => setTimeout(resolve))
+  t.true(stub.called)
+  stub.restore()
+  t.is(receivedError, expectedError)
+})
+
+test.serial('handles string error', async t => {
+  const expectedError = 'test'
+  const sentBody = {
+    a: '1',
+  }
+  const sentHeaders = {
+    key: 'value',
+  }
+  let receivedError: string | null = null
+  let promise: Promise<StandardResponse> | null = null
+  const stub = sinon.stub(common, 'error')
+  t.context.lambda.handle((body, headers) => {
+    t.deepEqual(body, sentBody)
+    t.deepEqual(headers, sentHeaders)
+    promise = Promise.reject(expectedError)
+    return promise
+  })({
+    body: JSON.stringify(sentBody),
+    headers: sentHeaders,
+  }, {
+    succeed() {},
+    // tslint:disable-next-line:no-any mocking context
+  } as any, (e: any) => {
     receivedError = e
   })
   // tslint:disable-next-line:no-any mocking promise
@@ -228,6 +261,78 @@ test('sends back metadata', async t => {
     })
     return promise
   })(event, context, (e: Error, body: JsonObject) => {
+    receivedStatus = body.statusCode
+    receivedBody = body.body
+  })
+  await promise
+  await new Promise(resolve => setTimeout(resolve))
+  // tslint:disable-next-line:no-any change to string even if null
+  t.deepEqual(JSON.parse(receivedBody as any), expectedBody)
+  t.is(receivedStatus, expectedStatus)
+})
+
+test('returns back correctly when only the body is received', async t => {
+  const expectedBody = {
+    prop: true,
+  }
+  const expectedStatus = 123
+  const sentBody = {
+    a: '1',
+  }
+  let receivedBody: string | null = null
+  let receivedStatus = -1
+  let promise: Promise<StandardResponse> | null = null
+  t.context.lambda.handle((body, headers) => {
+    t.deepEqual(body, sentBody)
+    t.deepEqual(headers, {})
+    promise = Promise.resolve({
+      body: expectedBody,
+      status: expectedStatus,
+    })
+    return promise
+  })(sentBody, {
+    succeed() {},
+    // tslint:disable-next-line:no-any mocking context
+  } as any, (e: Error, body: JsonObject) => {
+    receivedStatus = body.statusCode
+    receivedBody = body.body
+  })
+  await promise
+  await new Promise(resolve => setTimeout(resolve))
+  // tslint:disable-next-line:no-any change to string even if null
+  t.deepEqual(JSON.parse(receivedBody as any), expectedBody)
+  t.is(receivedStatus, expectedStatus)
+})
+
+test('parses body if it is an object', async t => {
+  const expectedBody = {
+    prop: true,
+  }
+  const expectedStatus = 123
+  const sentBody = {
+    a: '1',
+  }
+  const sentHeaders = {
+    key: 'value',
+  }
+  let receivedBody: string | null = null
+  let receivedStatus = -1
+  let promise: Promise<StandardResponse> | null = null
+  t.context.lambda.handle((body, headers) => {
+    t.deepEqual(body, sentBody)
+    t.deepEqual(headers, sentHeaders)
+    promise = Promise.resolve({
+      body: expectedBody,
+      status: expectedStatus,
+    })
+    return promise
+  })({
+    body: sentBody,
+    headers: sentHeaders,
+  }, {
+    succeed() {},
+    // tslint:disable-next-line:no-any mocking context
+  } as any, (e: Error, body: JsonObject) => {
     receivedStatus = body.statusCode
     receivedBody = body.body
   })
