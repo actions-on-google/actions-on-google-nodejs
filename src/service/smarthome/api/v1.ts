@@ -25,9 +25,9 @@ export type SmartHomeV1Intents = 'action.devices.SYNC' | 'action.devices.QUERY'
 
 export type SmartHomeV1ExecuteStatus = 'SUCCESS' | 'PENDING' | 'OFFLINE' | 'ERROR'
 
-export type SmartHomeV1ExecuteErrors = 'authExpired' | 'authFailure' | 'deviceOffline' | 'timeout' |
-  'deviceTurnedOff' | 'deviceNotFound' | 'valueOutOfRange' | 'notSupported' | 'protocolError' |
-  'unknownError'
+// See an extensive list of error codes at
+// https://developers.google.com/actions/reference/smarthome/errors-exceptions
+export type SmartHomeV1ExecuteErrors = string
 
 export interface SmartHomeV1SyncRequestInputs {
   intent: SmartHomeV1Intents,
