@@ -141,7 +141,7 @@ export interface SmartHomeV1ExecuteResponseCommands {
   status: SmartHomeV1ExecuteStatus,
   errorCode?: SmartHomeV1ExecuteErrors,
   debugString?: string,
-  states?: ApiClientObjectMap<string | boolean | number>
+  states?: ApiClientObjectMap<any>
 }
 
 export interface SmartHomeV1ExecutePayload {
