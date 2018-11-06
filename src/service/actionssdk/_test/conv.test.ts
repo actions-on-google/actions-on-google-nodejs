@@ -322,7 +322,7 @@ test('conv generates different conv.data correctly', t => {
   })
 })
 
-test('conv generates same conv.data no conversationToken', t => {
+test('conv generates same conv.data persisted', t => {
   const response = `What's up?`
   const data = {
     a: '1',
@@ -363,6 +363,7 @@ test('conv generates same conv.data no conversationToken', t => {
         ],
       },
     ],
+    conversationToken: JSON.stringify({ data }),
   })
 })
 

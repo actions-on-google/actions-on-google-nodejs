@@ -133,10 +133,12 @@ export class ActionsSdkConversation<
     } else {
       response.finalResponse = { richResponse }
     }
-    const convDataDefault = deserializeData<TConvData>(this.body, this._init.data)
-    const convDataIn = serializeData(convDataDefault)
+    const convDataDefault = deserializeData<TConvData>({}, this._init.data)
+    const convDataDefaultSerialized = serializeData(convDataDefault)
+    const convDataDefaulted = deserializeData<TConvData>(this.body, this._init.data)
+    const convDataIn = serializeData(convDataDefaulted)
     const convDataOut = serializeData(this.data)
-    if (convDataOut !== convDataIn) {
+    if (convDataOut !== convDataDefaultSerialized || convDataOut !== convDataIn) {
       response.conversationToken = convDataOut
     }
     if (userStorage) {
