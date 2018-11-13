@@ -934,3 +934,28 @@ test('conv does not detect coming from simulator given no responseId', t => {
     },
   })
 })
+
+test('conv sends speechBiasingHints when set', t => {
+  const response = 'What is your favorite color out of red, blue, and green?'
+  const biasing = ['red', 'blue', 'green']
+  const conv = new DialogflowConversation()
+  conv.speechBiasing = biasing
+  conv.ask(response)
+  t.deepEqual(clone(conv.serialize()), {
+    payload: {
+      google: {
+        expectUserResponse: true,
+        richResponse: {
+          items: [
+            {
+              simpleResponse: {
+                textToSpeech: response,
+              },
+            },
+          ],
+        },
+        speechBiasingHints: biasing,
+      },
+    },
+  })
+})

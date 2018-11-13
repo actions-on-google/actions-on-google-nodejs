@@ -486,3 +486,35 @@ test('conv sends correct close response', t => {
   })
 })
 
+test('conv sends speechBiasingHints when set', t => {
+  const response = 'What is your favorite color out of red, blue, and green?'
+  const biasing = ['red', 'blue', 'green']
+  const conv = new ActionsSdkConversation()
+  conv.speechBiasing = biasing
+  conv.ask(response)
+  t.deepEqual(clone(conv.serialize()), {
+    expectUserResponse: true,
+    expectedInputs: [
+      {
+        inputPrompt: {
+          richInitialPrompt: {
+            items: [
+              {
+                simpleResponse: {
+                  textToSpeech: response,
+                },
+              },
+            ],
+          },
+        },
+        possibleIntents: [
+          {
+            intent: 'actions.intent.TEXT',
+          },
+        ],
+        speechBiasingHints: biasing,
+      },
+    ],
+  })
+})
+

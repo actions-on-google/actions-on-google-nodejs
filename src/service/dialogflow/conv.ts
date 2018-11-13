@@ -41,6 +41,7 @@ export interface GoogleAssistantResponse {
   richResponse: ActionsApi.GoogleActionsV2RichResponse
   systemIntent?: SystemIntent
   userStorage?: string
+  speechBiasingHints?: string[]
 }
 
 /** @hidden */
@@ -350,6 +351,7 @@ export class DialogflowConversation<
         userStorage,
         expectedIntent,
         noInputPrompts,
+        speechBiasingHints,
       } = this.response()
       const google: GoogleAssistantResponse = {
         expectUserResponse,
@@ -359,6 +361,7 @@ export class DialogflowConversation<
           data: expectedIntent.inputValueData as ProtoAny<string, JsonObject>,
         },
         noInputPrompts,
+        speechBiasingHints,
       }
       if (userStorage) {
         google.userStorage = userStorage

@@ -95,6 +95,7 @@ export interface ConversationResponse {
   userStorage: string
   expectedIntent?: Api.GoogleActionsV2ExpectedIntent
   noInputPrompts?: Api.GoogleActionsV2SimpleResponse[]
+  speechBiasingHints?: string[]
 }
 
 export interface ConversationOptionsInit<TConvData, TUserStorage> {
@@ -230,6 +231,22 @@ export class Conversation<TUserStorage> {
    * @public
    */
   noInputs: (string | SimpleResponse)[] = []
+
+  /**
+   * Sets speech biasing options.
+   *
+   * @example
+   * ``` javascript
+   *
+   * app.intent('actions.intent.MAIN', conv => {
+   *   conv.speechBiasing = ['red', 'blue', 'green']
+   *   conv.ask('What is your favorite color out of red, blue, and green?')
+   * })
+   * ```
+   *
+   * @public
+   */
+  speechBiasing: string[] = []
 
   /** @hidden */
   _raw?: JsonObject
@@ -439,19 +456,21 @@ export class Conversation<TUserStorage> {
     const userStorageIn = (new User(this.user.raw, this._init.storage))._serialize()
     const userStorageOut = this.user._serialize()
     const userStorage = userStorageOut === userStorageIn ? '' : userStorageOut
-    let noInputPrompts: Api.GoogleActionsV2SimpleResponse[] | undefined
-    if (this.noInputs.length > 0) {
-      noInputPrompts = this.noInputs.map(prompt => {
-        return (typeof prompt === 'string') ? new SimpleResponse(prompt) : prompt
-      })
-    }
-    return {
+    const response: ConversationResponse = {
       expectUserResponse,
       richResponse,
       userStorage,
       expectedIntent,
-      noInputPrompts,
     }
+    if (this.noInputs.length > 0) {
+      response.noInputPrompts = this.noInputs.map(prompt => {
+        return (typeof prompt === 'string') ? new SimpleResponse(prompt) : prompt
+      })
+    }
+    if (this.speechBiasing.length > 0) {
+      response.speechBiasingHints = this.speechBiasing
+    }
+    return response
   }
 }
 

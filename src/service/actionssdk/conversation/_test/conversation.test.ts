@@ -459,3 +459,26 @@ test('conv.response throws error when only one rich response has been sent', t =
     'A simple response is required in addition to this type of response',
   )
 })
+
+
+test('conv sends speechBiasingHints when set', t => {
+  const response = 'What is your favorite color out of red, blue, and green?'
+  const biasing = ['red', 'blue', 'green']
+  const conv = new Conversation()
+  conv.speechBiasing = biasing
+  conv.ask(response)
+  t.deepEqual(clone(conv.response()), {
+    expectUserResponse: true,
+    richResponse: {
+      items: [
+        {
+          simpleResponse: {
+            textToSpeech: response,
+          },
+        },
+      ],
+    },
+    userStorage: '',
+    speechBiasingHints: biasing,
+  })
+})

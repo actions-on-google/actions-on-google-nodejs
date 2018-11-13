@@ -113,6 +113,7 @@ export class ActionsSdkConversation<
       userStorage,
       expectedIntent,
       noInputPrompts,
+      speechBiasingHints,
     } = this.response()
     const inputPrompt: Api.GoogleActionsV2InputPrompt = {
       richInitialPrompt: richResponse,
@@ -124,6 +125,7 @@ export class ActionsSdkConversation<
     const expectedInput: Api.GoogleActionsV2ExpectedInput = {
       inputPrompt,
       possibleIntents,
+      speechBiasingHints,
     }
     const response: Api.GoogleActionsV2AppResponse = {
       expectUserResponse,
