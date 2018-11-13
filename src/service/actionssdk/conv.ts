@@ -116,16 +116,20 @@ export class ActionsSdkConversation<
       speechBiasingHints,
     } = this.response()
     const inputPrompt: Api.GoogleActionsV2InputPrompt = {
-      richInitialPrompt: richResponse,
       noInputPrompts,
+    }
+    if (richResponse.items!.length) {
+      inputPrompt.richInitialPrompt = richResponse
     }
     const possibleIntents: Api.GoogleActionsV2ExpectedIntent[] = [expectedIntent || {
       intent: 'actions.intent.TEXT',
     }]
     const expectedInput: Api.GoogleActionsV2ExpectedInput = {
-      inputPrompt,
       possibleIntents,
       speechBiasingHints,
+    }
+    if (inputPrompt.richInitialPrompt || inputPrompt.noInputPrompts) {
+      expectedInput.inputPrompt = inputPrompt
     }
     const response: Api.GoogleActionsV2AppResponse = {
       expectUserResponse,

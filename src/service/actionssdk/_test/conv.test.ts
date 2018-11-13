@@ -26,6 +26,7 @@ import {
   ActionsSdkConversationOptions,
   ActionsSdkConversation,
 } from '../conv'
+import { Permission } from '..'
 
 const CONVERSATION_ID = '1234'
 const USER_ID = 'abcd'
@@ -518,3 +519,25 @@ test('conv sends speechBiasingHints when set', t => {
   })
 })
 
+test('conv does not send inputPrompt when items are empty', t => {
+  const conv = new ActionsSdkConversation()
+  conv.ask(new Permission({ permissions: 'NAME' }))
+  t.deepEqual(clone(conv.serialize()), {
+    expectUserResponse: true,
+    expectedInputs: [
+      {
+        possibleIntents: [
+          {
+            inputValueData: {
+              '@type': 'type.googleapis.com/google.actions.v2.PermissionValueSpec',
+              permissions: [
+                'NAME',
+              ],
+            },
+            intent: 'actions.intent.PERMISSION',
+          },
+        ],
+      },
+    ],
+  })
+})

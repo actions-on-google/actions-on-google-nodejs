@@ -35,10 +35,10 @@ export interface SystemIntent {
 
 /** @hidden */
 export interface GoogleAssistantResponse {
-  expectUserResponse: boolean
+  expectUserResponse?: boolean
   noInputPrompts?: ActionsApi.GoogleActionsV2SimpleResponse[]
   isSsml?: boolean
-  richResponse: ActionsApi.GoogleActionsV2RichResponse
+  richResponse?: ActionsApi.GoogleActionsV2RichResponse
   systemIntent?: SystemIntent
   userStorage?: string
   speechBiasingHints?: string[]
@@ -355,13 +355,15 @@ export class DialogflowConversation<
       } = this.response()
       const google: GoogleAssistantResponse = {
         expectUserResponse,
-        richResponse,
         systemIntent: expectedIntent && {
           intent: expectedIntent.intent!,
           data: expectedIntent.inputValueData as ProtoAny<string, JsonObject>,
         },
         noInputPrompts,
         speechBiasingHints,
+      }
+      if (richResponse.items!.length) {
+        google.richResponse = richResponse
       }
       if (userStorage) {
         google.userStorage = userStorage
@@ -389,14 +391,20 @@ export class DialogflowConversation<
         response.contextOut = contextOut
       }
       if (simulator && payload) {
-        const items = payload.google.richResponse.items!
+        const { richResponse = {} } = payload.google
+        const { items = [] } = richResponse
         // Simulator only shows speech response
         // Since this is only shown to the simulator as text, the speech is the displayText
-        response.speech =
-          (payload.google.systemIntent || items.length > 1) ?
-          SIMULATOR_WARNING :
-          (items[0].simpleResponse!.displayText ||
-            items[0].simpleResponse!.textToSpeech)
+        response.speech = SIMULATOR_WARNING
+        if (!payload.google.systemIntent && items.length < 2) {
+          for (const { simpleResponse } of items) {
+            if (simpleResponse) {
+              response.speech = simpleResponse.displayText ||
+              simpleResponse.textToSpeech
+              break
+            }
+          }
+        }
       }
       return response
     }
@@ -409,12 +417,18 @@ export class DialogflowConversation<
       response.outputContexts = outputContexts
     }
     if (simulator && payload) {
-      const items = payload.google.richResponse.items!
-      response.fulfillmentText =
-        (payload.google.systemIntent || items.length > 1) ?
-        SIMULATOR_WARNING :
-        (items[0].simpleResponse!.displayText ||
-          items[0].simpleResponse!.textToSpeech)
+      const { richResponse = {} } = payload.google
+      const { items = [] } = richResponse
+      response.fulfillmentText = SIMULATOR_WARNING
+      if (!payload.google.systemIntent && items.length < 2) {
+        for (const { simpleResponse } of items) {
+          if (simpleResponse) {
+            response.fulfillmentText = simpleResponse.displayText ||
+            simpleResponse.textToSpeech
+            break
+          }
+        }
+      }
     }
     return response
   }

@@ -211,15 +211,6 @@ test('conv.serialize w/ solo helper has fulfillmentText warning for simulator', 
     data: {
       google: {
         expectUserResponse: true,
-        richResponse: {
-          items: [
-            {
-              simpleResponse: {
-                textToSpeech: 'PLACEHOLDER',
-              },
-            },
-          ],
-        },
         systemIntent: {
           data: {
             '@type': 'type.googleapis.com/google.actions.v2.PermissionValueSpec',
@@ -665,5 +656,81 @@ test('conv does not send userStorage when it is empty', t => {
         },
       },
     },
+  })
+})
+
+test('conv does not error out when simple response is after image', t => {
+  const response = 'How are you?'
+  const conv = new DialogflowConversation({
+    body: {
+      result: {},
+      originalRequest: {
+        data: {},
+      },
+    } as ApiV1.DialogflowV1WebhookRequest,
+  })
+  conv.ask(new Image({ url: '', alt: '' }))
+  conv.ask(response)
+  t.deepEqual(clone(conv.serialize()), {
+    data: {
+      google: {
+        expectUserResponse: true,
+        richResponse: {
+          items: [
+            {
+              basicCard: {
+                image: {
+                  url: '',
+                  accessibilityText: '',
+                },
+              },
+            },
+            {
+              simpleResponse: {
+                textToSpeech: response,
+              },
+            },
+          ],
+        },
+      },
+    },
+  })
+})
+
+test('conv w/ simple response after image has fulfillmentText warning for simulator', t => {
+  const response = 'abc123'
+  const image = 'abcd1234'
+  const alt = 'abcde12345'
+  const conv = simulatorConv()
+  conv.add(new Image({
+    url: image,
+    alt,
+  }))
+  conv.add(response)
+  t.deepEqual(clone(conv.serialize()), {
+    data: {
+      google: {
+        expectUserResponse: true,
+        richResponse: {
+          items: [
+            {
+              basicCard: {
+                image: {
+                  accessibilityText: alt,
+                  url: image,
+                },
+              },
+            },
+            {
+              simpleResponse: {
+                textToSpeech: response,
+              },
+            },
+          ],
+        },
+      },
+    },
+    speech: 'Cannot display response in Dialogflow simulator. ' +
+      'Please test on the Google Assistant simulator instead.',
   })
 })

@@ -27,6 +27,10 @@ import {
   MediaObject,
   MediaResponse,
   SimpleResponse,
+  Table,
+  BrowseCarousel,
+  OrderUpdate,
+  LinkOutSuggestion,
 } from './response'
 import { Helper, SoloHelper } from './helper'
 import { Arguments } from './argument'
@@ -411,6 +415,7 @@ export class Conversation<TUserStorage> {
     const { expectUserResponse } = this
     let richResponse = new RichResponse()
     let expectedIntent: Api.GoogleActionsV2ExpectedIntent | undefined
+    let requireSimpleResponse = false
     for (const response of this.responses) {
       if (typeof response === 'string') {
         richResponse.add(response)
@@ -418,13 +423,8 @@ export class Conversation<TUserStorage> {
       }
       if (response instanceof Helper) {
         expectedIntent = response
-        if (response instanceof SoloHelper) {
-          // SoloHelper classes don't require a SimpleResponse
-          // but API still requires a SimpleResponse
-          // so a placeholder is added to not error
-
-          // It won't show up to the user as PLACEHOLDER
-          richResponse.add('PLACEHOLDER')
+        if (!(response instanceof SoloHelper)) {
+          requireSimpleResponse = true
         }
         continue
       }
@@ -433,24 +433,42 @@ export class Conversation<TUserStorage> {
         continue
       }
       if (response instanceof Suggestions) {
-        if (!richResponse.suggestions) {
-          richResponse.suggestions = []
-        }
-        richResponse.suggestions.push(...response.suggestions)
+        requireSimpleResponse = true
+        richResponse.addSuggestion(response)
         continue
       }
       if (response instanceof Image) {
+        requireSimpleResponse = true
         richResponse.add(new BasicCard({ image: response }))
         continue
       }
       if (response instanceof MediaObject) {
+        requireSimpleResponse = true
         richResponse.add(new MediaResponse(response))
+        continue
+      }
+      if (
+        response instanceof BasicCard ||
+        response instanceof Table ||
+        response instanceof BrowseCarousel ||
+        response instanceof MediaResponse ||
+        response instanceof OrderUpdate ||
+        response instanceof LinkOutSuggestion
+      ) {
+        requireSimpleResponse = true
+        richResponse.add(response)
         continue
       }
       richResponse.add(response)
     }
-    if (richResponse.items!.length < 2 &&
-      (!richResponse.items![0] || !richResponse.items![0].simpleResponse)) {
+    let hasSimpleResponse = false
+    for (const response of richResponse.items!) {
+      if (response.simpleResponse) {
+        hasSimpleResponse = true
+        break
+      }
+    }
+    if (requireSimpleResponse && !hasSimpleResponse) {
       throw new Error('A simple response is required in addition to this type of response')
     }
     const userStorageIn = (new User(this.user.raw, this._init.storage))._serialize()
