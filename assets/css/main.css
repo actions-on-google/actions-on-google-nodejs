@@ -863,3 +863,4 @@ input[type=checkbox]:checked + .tsd-widget:before { background-position: -160px 
   .tsd-select .tsd-select-label:before { background-position: -280px 0; } }
 
 img { max-width: 100%; }
+a[href="modules/conversation.html"], a[href="conversation.html"], a[href="../modules/conversation.html"] { display: none !important; }
