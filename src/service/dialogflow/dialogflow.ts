@@ -23,6 +23,7 @@ import {
   Argument,
   ConversationApp,
   ConversationAppOptions,
+  UnauthorizedError,
 } from '../actionssdk'
 import * as common from '../../common'
 import { Contexts, Parameters } from './context'
@@ -526,14 +527,25 @@ export const dialogflow: Dialogflow = <
       handler = this._handlers.intents[handler]
     }
     try {
-      await handler(
-        conv,
-        conv.parameters,
-        conv.arguments.parsed.list[0],
-        conv.arguments.status.list[0],
-      )
+      try {
+        await handler(
+          conv,
+          conv.parameters,
+          conv.arguments.parsed.list[0],
+          conv.arguments.status.list[0],
+        )
+      } catch (e) {
+        await this._handlers.catcher(conv as TConversation, e)
+      }
     } catch (e) {
-      await this._handlers.catcher(conv as TConversation, e)
+      if (e instanceof UnauthorizedError) {
+        return {
+          status: 401,
+          headers: {},
+          body: {},
+        }
+      }
+      throw e
     }
     return {
       status: 200,

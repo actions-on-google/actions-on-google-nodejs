@@ -27,7 +27,7 @@ import { DialogflowConversation } from '../conv'
 import * as Api from '../api/v2'
 import * as ActionsApi from '../../actionssdk/api/v2'
 import { clone } from '../../../common'
-import { Argument } from '../../actionssdk'
+import { Argument, UnauthorizedError } from '../../actionssdk'
 import { OAuth2Client } from 'google-auth-library'
 import { SimpleResponse } from '../../actionssdk'
 
@@ -577,4 +577,40 @@ test('auth config is not set with no clientId', t => {
   const app = dialogflow()
   t.is(typeof app._client, 'undefined')
   t.is(typeof app.auth, 'undefined')
+})
+
+test('throwing an UnauthorizedError makes library respond with 401', async t => {
+  const app = dialogflow()
+  app.fallback(() => {
+    throw new UnauthorizedError()
+  })
+  const result = await app.handler({}, {})
+  t.is(result.status, 401)
+  t.deepEqual(result.body, {})
+})
+
+test('throwing an UnauthorizedError in catch makes library respond with 401', async t => {
+  const app = dialogflow()
+  app.fallback(() => {
+    throw new Error()
+  })
+  app.catch(() => {
+    throw new UnauthorizedError()
+  })
+  const result = await app.handler({}, {})
+  t.is(result.status, 401)
+  t.deepEqual(result.body, {})
+})
+
+test('throwing an Error in catch makes library propogate error', async t => {
+  const message = 'test'
+
+  const app = dialogflow()
+  app.fallback(() => {
+    throw new Error()
+  })
+  app.catch(() => {
+    throw new Error(message)
+  })
+  await t.throws(app.handler({}, {}), message)
 })

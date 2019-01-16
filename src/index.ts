@@ -113,6 +113,7 @@ export {
   HelperOptions,
   Helper,
   SoloHelper,
+  UnauthorizedError,
 } from './service/actionssdk'
 
 export {

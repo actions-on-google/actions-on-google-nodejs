@@ -25,6 +25,7 @@ import { Conversation, ActionsSdkConversation, Argument } from '..'
 import * as Api from '../api/v2'
 import { OAuth2Client } from 'google-auth-library'
 import { clone } from '../../../common'
+import { UnauthorizedError } from '../conversation'
 
 const CONVERSATION_ID = '1234'
 const USER_ID = 'abcd'
@@ -324,4 +325,40 @@ test('app uses async middleware returning promise', async t => {
       },
     ],
   })
+})
+
+test('throwing an UnauthorizedError makes library respond with 401', async t => {
+  const app = actionssdk()
+  app.fallback(() => {
+    throw new UnauthorizedError()
+  })
+  const result = await app.handler({}, {})
+  t.is(result.status, 401)
+  t.deepEqual(result.body, {})
+})
+
+test('throwing an UnauthorizedError in catch makes library respond with 401', async t => {
+  const app = actionssdk()
+  app.fallback(() => {
+    throw new Error()
+  })
+  app.catch(() => {
+    throw new UnauthorizedError()
+  })
+  const result = await app.handler({}, {})
+  t.is(result.status, 401)
+  t.deepEqual(result.body, {})
+})
+
+test('throwing an Error in catch makes library propogate error', async t => {
+  const message = 'test'
+
+  const app = actionssdk()
+  app.fallback(() => {
+    throw new Error()
+  })
+  app.catch(() => {
+    throw new Error(message)
+  })
+  await t.throws(app.handler({}, {}), message)
 })
