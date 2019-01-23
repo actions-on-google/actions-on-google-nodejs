@@ -22,7 +22,17 @@
 						<li class="state loading">Preparing search index...</li>
 						<li class="state failure">The search index is not available</li>
 					</ul>
+					<ul class="results-priority" style="display:none">
+						<li data-name=".*Conversation.data" data-subtitle="Session data"></li>
+						<li data-name="conversation/response.*" data-subtitle="Rich response"></li>
+						<li data-name="conversation.User.storage" data-subtitle="Persistent storage"></li>
+					</ul>
 					<a href="../index.html" class="title">actions-on-google</a>
+					&emsp;<a href="https://developers.google.com/actions/extending-the-assistant" class="title">Guides</a>
+					&emsp;<a href="https://developers.google.com/actions/reference/nodejsv2/overview" class="title">Reference</a>
+					&emsp;<a href="https://developers.google.com/actions/codelabs/index" class="title">Codelabs</a>
+					&emsp;<a href="https://developers.google.com/actions/samples/index" class="title">Samples</a>
+					&emsp;<a href="https://developers.google.com/actions/glossary" class="title">Glossary</a>
 				</div>
 				<div class="table-cell" id="tsd-widgets">
 					<div id="tsd-filter">
@@ -58,13 +68,20 @@
 					<a href="conversation_helper.helperoptions.html">HelperOptions</a>
 				</li>
 			</ul>
-			<h1>Interface HelperOptions&lt;TIntent, TValueSpec&gt;</h1>
 		</div>
 	</div>
 </header>
 <div class="container container-main">
 	<div class="row">
-		<div class="col-8 col-content">
+		<div class="col-3 col-menu menu-sticky-wrap menu-highlight">
+			<nav class="tsd-navigation outline primary">
+				<ul style="display:none">
+					[{&quot;Actions SDK&quot;:{&quot;Overview&quot;:&quot;actionssdk&quot;,&quot;Conversation&quot;:&quot;classes/actionssdk.actionssdkconversation&quot;,&quot;api/v2&quot;:&quot;actionssdk_api_v2&quot;},&quot;Dialogflow&quot;:{&quot;Overview&quot;:&quot;dialogflow&quot;,&quot;Conversation&quot;:&quot;classes/dialogflow.dialogflowconversation&quot;,&quot;api/v1&quot;:&quot;dialogflow_api_v1&quot;,&quot;api/v2&quot;:&quot;dialogflow_api_v2&quot;},&quot;Smart Home&quot;:{&quot;Overview&quot;:&quot;smarthome&quot;,&quot;Smart Home App&quot;:&quot;interfaces/smarthome.smarthomeapp&quot;,&quot;api/v1&quot;:&quot;smarthome_api_v1&quot;},&quot;Framework&quot;:{&quot;Overview&quot;:&quot;framework&quot;,&quot;Assistant&quot;:&quot;assistant&quot;}}]
+				</ul>
+			</nav>
+		</div>
+		<div class="col-7 offset-3 col-content">
+			<h1>Interface HelperOptions&lt;TIntent, TValueSpec&gt;</h1>
 			<section class="tsd-panel tsd-comment">
 				<div class="tsd-comment tsd-typography">
 				</div>
@@ -89,7 +106,6 @@
 				</ul>
 			</section>
 			<section class="tsd-panel-group tsd-index-group">
-				<h2>Index</h2>
 				<section class="tsd-panel tsd-index-panel">
 					<div class="tsd-index-content">
 						<section class="tsd-index-section ">
@@ -136,59 +152,14 @@
 					</aside>
 				</section>
 			</section>
+			<!--{&quot;options&quot;:&quot;typedoc.json&quot;,&quot;theme&quot;:&quot;node_modules/typedoc-neo-theme/bin/default&quot;,&quot;out&quot;:&quot;docs&quot;,&quot;exclude&quot;:[&quot;**/_test/**/*.*&quot;,&quot;**/index.ts&quot;,&quot;**/common.ts&quot;],&quot;ignoreCompilerErrors&quot;:true,&quot;disableOutputCheck&quot;:true,&quot;external-modulemap&quot;:&quot;.*/((?:conversation/helper)|(?:conversation/argument)|(?:conversation/response)|(?:framework)|(?:conversation)|(?:actionssdk/api/v2)|(?:dialogflow/api/v1)|(?:dialogflow/api/v2)|(?:smarthome/api/v1)|(?:assistant)|(?:common)|(?:dialogflow)|(?:actionssdk)|(?:smarthome))&quot;,&quot;excludeExternals&quot;:true,&quot;excludePrivate&quot;:true,&quot;excludeNotExported&quot;:true,&quot;links&quot;:[{&quot;label&quot;:&quot;Guides&quot;,&quot;url&quot;:&quot;https://developers.google.com/actions/extending-the-assistant&quot;},{&quot;label&quot;:&quot;Reference&quot;,&quot;url&quot;:&quot;https://developers.google.com/actions/reference/nodejsv2/overview&quot;},{&quot;label&quot;:&quot;Codelabs&quot;,&quot;url&quot;:&quot;https://developers.google.com/actions/codelabs/index&quot;},{&quot;label&quot;:&quot;Samples&quot;,&quot;url&quot;:&quot;https://developers.google.com/actions/samples/index&quot;},{&quot;label&quot;:&quot;Glossary&quot;,&quot;url&quot;:&quot;https://developers.google.com/actions/glossary&quot;}],&quot;outline&quot;:[{&quot;Actions SDK&quot;:{&quot;Overview&quot;:&quot;actionssdk&quot;,&quot;Conversation&quot;:&quot;classes/actionssdk.actionssdkconversation&quot;,&quot;api/v2&quot;:&quot;actionssdk_api_v2&quot;},&quot;Dialogflow&quot;:{&quot;Overview&quot;:&quot;dialogflow&quot;,&quot;Conversation&quot;:&quot;classes/dialogflow.dialogflowconversation&quot;,&quot;api/v1&quot;:&quot;dialogflow_api_v1&quot;,&quot;api/v2&quot;:&quot;dialogflow_api_v2&quot;},&quot;Smart Home&quot;:{&quot;Overview&quot;:&quot;smarthome&quot;,&quot;Smart Home App&quot;:&quot;interfaces/smarthome.smarthomeapp&quot;,&quot;api/v1&quot;:&quot;smarthome_api_v1&quot;},&quot;Framework&quot;:{&quot;Overview&quot;:&quot;framework&quot;,&quot;Assistant&quot;:&quot;assistant&quot;}}],&quot;search&quot;:[{&quot;name&quot;:&quot;.*Conversation.data&quot;,&quot;subtitle&quot;:&quot;Session data&quot;},{&quot;name&quot;:&quot;conversation/response.*&quot;,&quot;subtitle&quot;:&quot;Rich response&quot;},{&quot;name&quot;:&quot;conversation.User.storage&quot;,&quot;subtitle&quot;:&quot;Persistent storage&quot;}]}-->
 		</div>
-		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
-			<nav class="tsd-navigation primary">
-				<ul>
-					<li class="globals  ">
-						<a href="../globals.html"><em>Globals</em></a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="../modules/actionssdk.html">actionssdk</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="../modules/actionssdk_api_v2.html">actionssdk/api/v2</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="../modules/assistant.html">assistant</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="../modules/conversation.html">conversation</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="../modules/conversation_argument.html">conversation/argument</a>
-					</li>
-					<li class="current tsd-kind-external-module">
-						<a href="../modules/conversation_helper.html">conversation/helper</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="../modules/conversation_response.html">conversation/response</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="../modules/dialogflow.html">dialogflow</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="../modules/dialogflow_api_v1.html">dialogflow/api/v1</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="../modules/dialogflow_api_v2.html">dialogflow/api/v2</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="../modules/framework.html">framework</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="../modules/smarthome.html">smarthome</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="../modules/smarthome_api_v1.html">smarthome/api/v1</a>
-					</li>
-				</ul>
-			</nav>
+		<div class="col-2 col-menu secondary-menu">
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
 				</ul>
 				<ul class="current">
-					<li class="current tsd-kind-interface tsd-parent-kind-external-module tsd-has-type-parameter">
+					<li class="current tsd-kind-interface tsd-parent-kind-external-module tsd-has-type-parameter root">
 						<a href="conversation_helper.helperoptions.html" class="tsd-kind-icon">Helper<wbr>Options</a>
 						<ul>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
@@ -210,63 +181,6 @@
 	</div>
 </div>
 <footer class="with-border-bottom">
-	<div class="container">
-		<h2>Legend</h2>
-		<div class="tsd-legend-group">
-			<ul class="tsd-legend">
-				<li class="tsd-kind-module"><span class="tsd-kind-icon">Module</span></li>
-				<li class="tsd-kind-object-literal"><span class="tsd-kind-icon">Object literal</span></li>
-				<li class="tsd-kind-variable"><span class="tsd-kind-icon">Variable</span></li>
-				<li class="tsd-kind-function"><span class="tsd-kind-icon">Function</span></li>
-				<li class="tsd-kind-function tsd-has-type-parameter"><span class="tsd-kind-icon">Function with type parameter</span></li>
-				<li class="tsd-kind-index-signature"><span class="tsd-kind-icon">Index signature</span></li>
-				<li class="tsd-kind-type-alias"><span class="tsd-kind-icon">Type alias</span></li>
-			</ul>
-			<ul class="tsd-legend">
-				<li class="tsd-kind-enum"><span class="tsd-kind-icon">Enumeration</span></li>
-				<li class="tsd-kind-enum-member"><span class="tsd-kind-icon">Enumeration member</span></li>
-				<li class="tsd-kind-property tsd-parent-kind-enum"><span class="tsd-kind-icon">Property</span></li>
-				<li class="tsd-kind-method tsd-parent-kind-enum"><span class="tsd-kind-icon">Method</span></li>
-			</ul>
-			<ul class="tsd-legend">
-				<li class="tsd-kind-interface"><span class="tsd-kind-icon">Interface</span></li>
-				<li class="tsd-kind-interface tsd-has-type-parameter"><span class="tsd-kind-icon">Interface with type parameter</span></li>
-				<li class="tsd-kind-constructor tsd-parent-kind-interface"><span class="tsd-kind-icon">Constructor</span></li>
-				<li class="tsd-kind-property tsd-parent-kind-interface"><span class="tsd-kind-icon">Property</span></li>
-				<li class="tsd-kind-method tsd-parent-kind-interface"><span class="tsd-kind-icon">Method</span></li>
-				<li class="tsd-kind-index-signature tsd-parent-kind-interface"><span class="tsd-kind-icon">Index signature</span></li>
-			</ul>
-			<ul class="tsd-legend">
-				<li class="tsd-kind-class"><span class="tsd-kind-icon">Class</span></li>
-				<li class="tsd-kind-class tsd-has-type-parameter"><span class="tsd-kind-icon">Class with type parameter</span></li>
-				<li class="tsd-kind-constructor tsd-parent-kind-class"><span class="tsd-kind-icon">Constructor</span></li>
-				<li class="tsd-kind-property tsd-parent-kind-class"><span class="tsd-kind-icon">Property</span></li>
-				<li class="tsd-kind-method tsd-parent-kind-class"><span class="tsd-kind-icon">Method</span></li>
-				<li class="tsd-kind-accessor tsd-parent-kind-class"><span class="tsd-kind-icon">Accessor</span></li>
-				<li class="tsd-kind-index-signature tsd-parent-kind-class"><span class="tsd-kind-icon">Index signature</span></li>
-			</ul>
-			<ul class="tsd-legend">
-				<li class="tsd-kind-constructor tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited constructor</span></li>
-				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited property</span></li>
-				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited method</span></li>
-				<li class="tsd-kind-accessor tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited accessor</span></li>
-			</ul>
-			<ul class="tsd-legend">
-				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected property</span></li>
-				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected method</span></li>
-				<li class="tsd-kind-accessor tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected accessor</span></li>
-			</ul>
-			<ul class="tsd-legend">
-				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private property</span></li>
-				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private method</span></li>
-				<li class="tsd-kind-accessor tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private accessor</span></li>
-			</ul>
-			<ul class="tsd-legend">
-				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-static"><span class="tsd-kind-icon">Static property</span></li>
-				<li class="tsd-kind-call-signature tsd-parent-kind-class tsd-is-static"><span class="tsd-kind-icon">Static method</span></li>
-			</ul>
-		</div>
-	</div>
 </footer>
 <div class="container tsd-generator">
 	<p>Generated using <a href="http://typedoc.org/" target="_blank">TypeDoc</a></p>

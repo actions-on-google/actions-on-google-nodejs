@@ -22,7 +22,17 @@
 						<li class="state loading">Preparing search index...</li>
 						<li class="state failure">The search index is not available</li>
 					</ul>
+					<ul class="results-priority" style="display:none">
+						<li data-name=".*Conversation.data" data-subtitle="Session data"></li>
+						<li data-name="conversation/response.*" data-subtitle="Rich response"></li>
+						<li data-name="conversation.User.storage" data-subtitle="Persistent storage"></li>
+					</ul>
 					<a href="../index.html" class="title">actions-on-google</a>
+					&emsp;<a href="https://developers.google.com/actions/extending-the-assistant" class="title">Guides</a>
+					&emsp;<a href="https://developers.google.com/actions/reference/nodejsv2/overview" class="title">Reference</a>
+					&emsp;<a href="https://developers.google.com/actions/codelabs/index" class="title">Codelabs</a>
+					&emsp;<a href="https://developers.google.com/actions/samples/index" class="title">Samples</a>
+					&emsp;<a href="https://developers.google.com/actions/glossary" class="title">Glossary</a>
 				</div>
 				<div class="table-cell" id="tsd-widgets">
 					<div id="tsd-filter">
@@ -55,54 +65,60 @@
 					<a href="smarthome_api_v1.html">smarthome/api/v1</a>
 				</li>
 			</ul>
-			<h1>External module smarthome/api/v1</h1>
 		</div>
 	</div>
 </header>
 <div class="container container-main">
 	<div class="row">
-		<div class="col-8 col-content">
+		<div class="col-3 col-menu menu-sticky-wrap menu-highlight">
+			<nav class="tsd-navigation outline primary">
+				<ul style="display:none">
+					[{&quot;Actions SDK&quot;:{&quot;Overview&quot;:&quot;actionssdk&quot;,&quot;Conversation&quot;:&quot;classes/actionssdk.actionssdkconversation&quot;,&quot;api/v2&quot;:&quot;actionssdk_api_v2&quot;},&quot;Dialogflow&quot;:{&quot;Overview&quot;:&quot;dialogflow&quot;,&quot;Conversation&quot;:&quot;classes/dialogflow.dialogflowconversation&quot;,&quot;api/v1&quot;:&quot;dialogflow_api_v1&quot;,&quot;api/v2&quot;:&quot;dialogflow_api_v2&quot;},&quot;Smart Home&quot;:{&quot;Overview&quot;:&quot;smarthome&quot;,&quot;Smart Home App&quot;:&quot;interfaces/smarthome.smarthomeapp&quot;,&quot;api/v1&quot;:&quot;smarthome_api_v1&quot;},&quot;Framework&quot;:{&quot;Overview&quot;:&quot;framework&quot;,&quot;Assistant&quot;:&quot;assistant&quot;}}]
+				</ul>
+			</nav>
+		</div>
+		<div class="col-7 offset-3 col-content">
+			<h1>External module smarthome/api/v1</h1>
 			<section class="tsd-panel-group tsd-index-group">
-				<h2>Index</h2>
 				<section class="tsd-panel tsd-index-panel">
 					<div class="tsd-index-content">
 						<section class="tsd-index-section ">
 							<h3>Interfaces</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-interface tsd-parent-kind-external-module"><a href="../interfaces/smarthome_api_v1.smarthomev1disconnectrequest.html" class="tsd-kind-icon">Smart<wbr>Home<wbr>V1Disconnect<wbr>Request</a></li>
-								<li class="tsd-kind-interface tsd-parent-kind-external-module"><a href="../interfaces/smarthome_api_v1.smarthomev1disconnectresponse.html" class="tsd-kind-icon">Smart<wbr>Home<wbr>V1Disconnect<wbr>Response</a></li>
-								<li class="tsd-kind-interface tsd-parent-kind-external-module"><a href="../interfaces/smarthome_api_v1.smarthomev1executepayload.html" class="tsd-kind-icon">Smart<wbr>Home<wbr>V1Execute<wbr>Payload</a></li>
-								<li class="tsd-kind-interface tsd-parent-kind-external-module"><a href="../interfaces/smarthome_api_v1.smarthomev1executerequest.html" class="tsd-kind-icon">Smart<wbr>Home<wbr>V1Execute<wbr>Request</a></li>
-								<li class="tsd-kind-interface tsd-parent-kind-external-module"><a href="../interfaces/smarthome_api_v1.smarthomev1executerequestcommands.html" class="tsd-kind-icon">Smart<wbr>Home<wbr>V1Execute<wbr>Request<wbr>Commands</a></li>
-								<li class="tsd-kind-interface tsd-parent-kind-external-module"><a href="../interfaces/smarthome_api_v1.smarthomev1executerequestexecution.html" class="tsd-kind-icon">Smart<wbr>Home<wbr>V1Execute<wbr>Request<wbr>Execution</a></li>
-								<li class="tsd-kind-interface tsd-parent-kind-external-module"><a href="../interfaces/smarthome_api_v1.smarthomev1executerequestinputs.html" class="tsd-kind-icon">Smart<wbr>Home<wbr>V1Execute<wbr>Request<wbr>Inputs</a></li>
-								<li class="tsd-kind-interface tsd-parent-kind-external-module"><a href="../interfaces/smarthome_api_v1.smarthomev1executerequestpayload.html" class="tsd-kind-icon">Smart<wbr>Home<wbr>V1Execute<wbr>Request<wbr>Payload</a></li>
-								<li class="tsd-kind-interface tsd-parent-kind-external-module"><a href="../interfaces/smarthome_api_v1.smarthomev1executeresponse.html" class="tsd-kind-icon">Smart<wbr>Home<wbr>V1Execute<wbr>Response</a></li>
-								<li class="tsd-kind-interface tsd-parent-kind-external-module"><a href="../interfaces/smarthome_api_v1.smarthomev1executeresponsecommands.html" class="tsd-kind-icon">Smart<wbr>Home<wbr>V1Execute<wbr>Response<wbr>Commands</a></li>
-								<li class="tsd-kind-interface tsd-parent-kind-external-module"><a href="../interfaces/smarthome_api_v1.smarthomev1querypayload.html" class="tsd-kind-icon">Smart<wbr>Home<wbr>V1Query<wbr>Payload</a></li>
-								<li class="tsd-kind-interface tsd-parent-kind-external-module"><a href="../interfaces/smarthome_api_v1.smarthomev1queryrequest.html" class="tsd-kind-icon">Smart<wbr>Home<wbr>V1Query<wbr>Request</a></li>
-								<li class="tsd-kind-interface tsd-parent-kind-external-module"><a href="../interfaces/smarthome_api_v1.smarthomev1queryrequestdevices.html" class="tsd-kind-icon">Smart<wbr>Home<wbr>V1Query<wbr>Request<wbr>Devices</a></li>
-								<li class="tsd-kind-interface tsd-parent-kind-external-module"><a href="../interfaces/smarthome_api_v1.smarthomev1queryrequestinputs.html" class="tsd-kind-icon">Smart<wbr>Home<wbr>V1Query<wbr>Request<wbr>Inputs</a></li>
-								<li class="tsd-kind-interface tsd-parent-kind-external-module"><a href="../interfaces/smarthome_api_v1.smarthomev1queryrequestpayload.html" class="tsd-kind-icon">Smart<wbr>Home<wbr>V1Query<wbr>Request<wbr>Payload</a></li>
-								<li class="tsd-kind-interface tsd-parent-kind-external-module"><a href="../interfaces/smarthome_api_v1.smarthomev1queryresponse.html" class="tsd-kind-icon">Smart<wbr>Home<wbr>V1Query<wbr>Response</a></li>
-								<li class="tsd-kind-interface tsd-parent-kind-external-module"><a href="../interfaces/smarthome_api_v1.smarthomev1reportstaterequest.html" class="tsd-kind-icon">Smart<wbr>Home<wbr>V1Report<wbr>State<wbr>Request</a></li>
-								<li class="tsd-kind-interface tsd-parent-kind-external-module"><a href="../interfaces/smarthome_api_v1.smarthomev1syncdeviceinfo.html" class="tsd-kind-icon">Smart<wbr>Home<wbr>V1Sync<wbr>Device<wbr>Info</a></li>
-								<li class="tsd-kind-interface tsd-parent-kind-external-module"><a href="../interfaces/smarthome_api_v1.smarthomev1syncdevices.html" class="tsd-kind-icon">Smart<wbr>Home<wbr>V1Sync<wbr>Devices</a></li>
-								<li class="tsd-kind-interface tsd-parent-kind-external-module"><a href="../interfaces/smarthome_api_v1.smarthomev1syncname.html" class="tsd-kind-icon">Smart<wbr>Home<wbr>V1Sync<wbr>Name</a></li>
-								<li class="tsd-kind-interface tsd-parent-kind-external-module"><a href="../interfaces/smarthome_api_v1.smarthomev1syncpayload.html" class="tsd-kind-icon">Smart<wbr>Home<wbr>V1Sync<wbr>Payload</a></li>
-								<li class="tsd-kind-interface tsd-parent-kind-external-module"><a href="../interfaces/smarthome_api_v1.smarthomev1syncrequest.html" class="tsd-kind-icon">Smart<wbr>Home<wbr>V1Sync<wbr>Request</a></li>
-								<li class="tsd-kind-interface tsd-parent-kind-external-module"><a href="../interfaces/smarthome_api_v1.smarthomev1syncrequestinputs.html" class="tsd-kind-icon">Smart<wbr>Home<wbr>V1Sync<wbr>Request<wbr>Inputs</a></li>
-								<li class="tsd-kind-interface tsd-parent-kind-external-module"><a href="../interfaces/smarthome_api_v1.smarthomev1syncresponse.html" class="tsd-kind-icon">Smart<wbr>Home<wbr>V1Sync<wbr>Response</a></li>
+								<li class="tsd-kind-interface tsd-parent-kind-external-module"><a href="../interfaces/smarthome_api_v1.smarthomev1disconnectrequest.html" class="tsd-kind-icon">SmartHomeV1DisconnectRequest</a></li>
+								<li class="tsd-kind-interface tsd-parent-kind-external-module"><a href="../interfaces/smarthome_api_v1.smarthomev1disconnectresponse.html" class="tsd-kind-icon">SmartHomeV1DisconnectResponse</a></li>
+								<li class="tsd-kind-interface tsd-parent-kind-external-module"><a href="../interfaces/smarthome_api_v1.smarthomev1executepayload.html" class="tsd-kind-icon">SmartHomeV1ExecutePayload</a></li>
+								<li class="tsd-kind-interface tsd-parent-kind-external-module"><a href="../interfaces/smarthome_api_v1.smarthomev1executerequest.html" class="tsd-kind-icon">SmartHomeV1ExecuteRequest</a></li>
+								<li class="tsd-kind-interface tsd-parent-kind-external-module"><a href="../interfaces/smarthome_api_v1.smarthomev1executerequestcommands.html" class="tsd-kind-icon">SmartHomeV1ExecuteRequestCommands</a></li>
+								<li class="tsd-kind-interface tsd-parent-kind-external-module"><a href="../interfaces/smarthome_api_v1.smarthomev1executerequestexecution.html" class="tsd-kind-icon">SmartHomeV1ExecuteRequestExecution</a></li>
+								<li class="tsd-kind-interface tsd-parent-kind-external-module"><a href="../interfaces/smarthome_api_v1.smarthomev1executerequestinputs.html" class="tsd-kind-icon">SmartHomeV1ExecuteRequestInputs</a></li>
+								<li class="tsd-kind-interface tsd-parent-kind-external-module"><a href="../interfaces/smarthome_api_v1.smarthomev1executerequestpayload.html" class="tsd-kind-icon">SmartHomeV1ExecuteRequestPayload</a></li>
+								<li class="tsd-kind-interface tsd-parent-kind-external-module"><a href="../interfaces/smarthome_api_v1.smarthomev1executeresponse.html" class="tsd-kind-icon">SmartHomeV1ExecuteResponse</a></li>
+								<li class="tsd-kind-interface tsd-parent-kind-external-module"><a href="../interfaces/smarthome_api_v1.smarthomev1executeresponsecommands.html" class="tsd-kind-icon">SmartHomeV1ExecuteResponseCommands</a></li>
+								<li class="tsd-kind-interface tsd-parent-kind-external-module"><a href="../interfaces/smarthome_api_v1.smarthomev1querypayload.html" class="tsd-kind-icon">SmartHomeV1QueryPayload</a></li>
+								<li class="tsd-kind-interface tsd-parent-kind-external-module"><a href="../interfaces/smarthome_api_v1.smarthomev1queryrequest.html" class="tsd-kind-icon">SmartHomeV1QueryRequest</a></li>
+								<li class="tsd-kind-interface tsd-parent-kind-external-module"><a href="../interfaces/smarthome_api_v1.smarthomev1queryrequestdevices.html" class="tsd-kind-icon">SmartHomeV1QueryRequestDevices</a></li>
+								<li class="tsd-kind-interface tsd-parent-kind-external-module"><a href="../interfaces/smarthome_api_v1.smarthomev1queryrequestinputs.html" class="tsd-kind-icon">SmartHomeV1QueryRequestInputs</a></li>
+								<li class="tsd-kind-interface tsd-parent-kind-external-module"><a href="../interfaces/smarthome_api_v1.smarthomev1queryrequestpayload.html" class="tsd-kind-icon">SmartHomeV1QueryRequestPayload</a></li>
+								<li class="tsd-kind-interface tsd-parent-kind-external-module"><a href="../interfaces/smarthome_api_v1.smarthomev1queryresponse.html" class="tsd-kind-icon">SmartHomeV1QueryResponse</a></li>
+								<li class="tsd-kind-interface tsd-parent-kind-external-module"><a href="../interfaces/smarthome_api_v1.smarthomev1reportstaterequest.html" class="tsd-kind-icon">SmartHomeV1ReportStateRequest</a></li>
+								<li class="tsd-kind-interface tsd-parent-kind-external-module"><a href="../interfaces/smarthome_api_v1.smarthomev1syncdeviceinfo.html" class="tsd-kind-icon">SmartHomeV1SyncDeviceInfo</a></li>
+								<li class="tsd-kind-interface tsd-parent-kind-external-module"><a href="../interfaces/smarthome_api_v1.smarthomev1syncdevices.html" class="tsd-kind-icon">SmartHomeV1SyncDevices</a></li>
+								<li class="tsd-kind-interface tsd-parent-kind-external-module"><a href="../interfaces/smarthome_api_v1.smarthomev1syncname.html" class="tsd-kind-icon">SmartHomeV1SyncName</a></li>
+								<li class="tsd-kind-interface tsd-parent-kind-external-module"><a href="../interfaces/smarthome_api_v1.smarthomev1syncpayload.html" class="tsd-kind-icon">SmartHomeV1SyncPayload</a></li>
+								<li class="tsd-kind-interface tsd-parent-kind-external-module"><a href="../interfaces/smarthome_api_v1.smarthomev1syncrequest.html" class="tsd-kind-icon">SmartHomeV1SyncRequest</a></li>
+								<li class="tsd-kind-interface tsd-parent-kind-external-module"><a href="../interfaces/smarthome_api_v1.smarthomev1syncrequestinputs.html" class="tsd-kind-icon">SmartHomeV1SyncRequestInputs</a></li>
+								<li class="tsd-kind-interface tsd-parent-kind-external-module"><a href="../interfaces/smarthome_api_v1.smarthomev1syncresponse.html" class="tsd-kind-icon">SmartHomeV1SyncResponse</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section ">
 							<h3>Type aliases</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-type-alias tsd-parent-kind-external-module"><a href="smarthome_api_v1.html#smarthomev1executeerrors" class="tsd-kind-icon">Smart<wbr>Home<wbr>V1Execute<wbr>Errors</a></li>
-								<li class="tsd-kind-type-alias tsd-parent-kind-external-module"><a href="smarthome_api_v1.html#smarthomev1executestatus" class="tsd-kind-icon">Smart<wbr>Home<wbr>V1Execute<wbr>Status</a></li>
-								<li class="tsd-kind-type-alias tsd-parent-kind-external-module"><a href="smarthome_api_v1.html#smarthomev1intents" class="tsd-kind-icon">Smart<wbr>Home<wbr>V1Intents</a></li>
-								<li class="tsd-kind-type-alias tsd-parent-kind-external-module"><a href="smarthome_api_v1.html#smarthomev1request" class="tsd-kind-icon">Smart<wbr>Home<wbr>V1Request</a></li>
-								<li class="tsd-kind-type-alias tsd-parent-kind-external-module"><a href="smarthome_api_v1.html#smarthomev1response" class="tsd-kind-icon">Smart<wbr>Home<wbr>V1Response</a></li>
+								<li class="tsd-kind-type-alias tsd-parent-kind-external-module"><a href="smarthome_api_v1.html#smarthomev1executeerrors" class="tsd-kind-icon">SmartHomeV1ExecuteErrors</a></li>
+								<li class="tsd-kind-type-alias tsd-parent-kind-external-module"><a href="smarthome_api_v1.html#smarthomev1executestatus" class="tsd-kind-icon">SmartHomeV1ExecuteStatus</a></li>
+								<li class="tsd-kind-type-alias tsd-parent-kind-external-module"><a href="smarthome_api_v1.html#smarthomev1intents" class="tsd-kind-icon">SmartHomeV1Intents</a></li>
+								<li class="tsd-kind-type-alias tsd-parent-kind-external-module"><a href="smarthome_api_v1.html#smarthomev1request" class="tsd-kind-icon">SmartHomeV1Request</a></li>
+								<li class="tsd-kind-type-alias tsd-parent-kind-external-module"><a href="smarthome_api_v1.html#smarthomev1response" class="tsd-kind-icon">SmartHomeV1Response</a></li>
 							</ul>
 						</section>
 					</div>
@@ -161,141 +177,96 @@
 					</aside>
 				</section>
 			</section>
+			<!--{&quot;options&quot;:&quot;typedoc.json&quot;,&quot;theme&quot;:&quot;node_modules/typedoc-neo-theme/bin/default&quot;,&quot;out&quot;:&quot;docs&quot;,&quot;exclude&quot;:[&quot;**/_test/**/*.*&quot;,&quot;**/index.ts&quot;,&quot;**/common.ts&quot;],&quot;ignoreCompilerErrors&quot;:true,&quot;disableOutputCheck&quot;:true,&quot;external-modulemap&quot;:&quot;.*/((?:conversation/helper)|(?:conversation/argument)|(?:conversation/response)|(?:framework)|(?:conversation)|(?:actionssdk/api/v2)|(?:dialogflow/api/v1)|(?:dialogflow/api/v2)|(?:smarthome/api/v1)|(?:assistant)|(?:common)|(?:dialogflow)|(?:actionssdk)|(?:smarthome))&quot;,&quot;excludeExternals&quot;:true,&quot;excludePrivate&quot;:true,&quot;excludeNotExported&quot;:true,&quot;links&quot;:[{&quot;label&quot;:&quot;Guides&quot;,&quot;url&quot;:&quot;https://developers.google.com/actions/extending-the-assistant&quot;},{&quot;label&quot;:&quot;Reference&quot;,&quot;url&quot;:&quot;https://developers.google.com/actions/reference/nodejsv2/overview&quot;},{&quot;label&quot;:&quot;Codelabs&quot;,&quot;url&quot;:&quot;https://developers.google.com/actions/codelabs/index&quot;},{&quot;label&quot;:&quot;Samples&quot;,&quot;url&quot;:&quot;https://developers.google.com/actions/samples/index&quot;},{&quot;label&quot;:&quot;Glossary&quot;,&quot;url&quot;:&quot;https://developers.google.com/actions/glossary&quot;}],&quot;outline&quot;:[{&quot;Actions SDK&quot;:{&quot;Overview&quot;:&quot;actionssdk&quot;,&quot;Conversation&quot;:&quot;classes/actionssdk.actionssdkconversation&quot;,&quot;api/v2&quot;:&quot;actionssdk_api_v2&quot;},&quot;Dialogflow&quot;:{&quot;Overview&quot;:&quot;dialogflow&quot;,&quot;Conversation&quot;:&quot;classes/dialogflow.dialogflowconversation&quot;,&quot;api/v1&quot;:&quot;dialogflow_api_v1&quot;,&quot;api/v2&quot;:&quot;dialogflow_api_v2&quot;},&quot;Smart Home&quot;:{&quot;Overview&quot;:&quot;smarthome&quot;,&quot;Smart Home App&quot;:&quot;interfaces/smarthome.smarthomeapp&quot;,&quot;api/v1&quot;:&quot;smarthome_api_v1&quot;},&quot;Framework&quot;:{&quot;Overview&quot;:&quot;framework&quot;,&quot;Assistant&quot;:&quot;assistant&quot;}}],&quot;search&quot;:[{&quot;name&quot;:&quot;.*Conversation.data&quot;,&quot;subtitle&quot;:&quot;Session data&quot;},{&quot;name&quot;:&quot;conversation/response.*&quot;,&quot;subtitle&quot;:&quot;Rich response&quot;},{&quot;name&quot;:&quot;conversation.User.storage&quot;,&quot;subtitle&quot;:&quot;Persistent storage&quot;}]}-->
 		</div>
-		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
-			<nav class="tsd-navigation primary">
-				<ul>
-					<li class="globals  ">
-						<a href="../globals.html"><em>Globals</em></a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="actionssdk.html">actionssdk</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="actionssdk_api_v2.html">actionssdk/api/v2</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="assistant.html">assistant</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="conversation.html">conversation</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="conversation_argument.html">conversation/argument</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="conversation_helper.html">conversation/helper</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="conversation_response.html">conversation/response</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="dialogflow.html">dialogflow</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="dialogflow_api_v1.html">dialogflow/api/v1</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="dialogflow_api_v2.html">dialogflow/api/v2</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="framework.html">framework</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="smarthome.html">smarthome</a>
-					</li>
-					<li class="current tsd-kind-external-module">
-						<a href="smarthome_api_v1.html">smarthome/api/v1</a>
-					</li>
-				</ul>
-			</nav>
+		<div class="col-2 col-menu secondary-menu">
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
-					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module root">
 						<a href="../interfaces/smarthome_api_v1.smarthomev1disconnectrequest.html" class="tsd-kind-icon">Smart<wbr>Home<wbr>V1Disconnect<wbr>Request</a>
 					</li>
-					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module root">
 						<a href="../interfaces/smarthome_api_v1.smarthomev1disconnectresponse.html" class="tsd-kind-icon">Smart<wbr>Home<wbr>V1Disconnect<wbr>Response</a>
 					</li>
-					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module root">
 						<a href="../interfaces/smarthome_api_v1.smarthomev1executepayload.html" class="tsd-kind-icon">Smart<wbr>Home<wbr>V1Execute<wbr>Payload</a>
 					</li>
-					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module root">
 						<a href="../interfaces/smarthome_api_v1.smarthomev1executerequest.html" class="tsd-kind-icon">Smart<wbr>Home<wbr>V1Execute<wbr>Request</a>
 					</li>
-					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module root">
 						<a href="../interfaces/smarthome_api_v1.smarthomev1executerequestcommands.html" class="tsd-kind-icon">Smart<wbr>Home<wbr>V1Execute<wbr>Request<wbr>Commands</a>
 					</li>
-					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module root">
 						<a href="../interfaces/smarthome_api_v1.smarthomev1executerequestexecution.html" class="tsd-kind-icon">Smart<wbr>Home<wbr>V1Execute<wbr>Request<wbr>Execution</a>
 					</li>
-					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module root">
 						<a href="../interfaces/smarthome_api_v1.smarthomev1executerequestinputs.html" class="tsd-kind-icon">Smart<wbr>Home<wbr>V1Execute<wbr>Request<wbr>Inputs</a>
 					</li>
-					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module root">
 						<a href="../interfaces/smarthome_api_v1.smarthomev1executerequestpayload.html" class="tsd-kind-icon">Smart<wbr>Home<wbr>V1Execute<wbr>Request<wbr>Payload</a>
 					</li>
-					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module root">
 						<a href="../interfaces/smarthome_api_v1.smarthomev1executeresponse.html" class="tsd-kind-icon">Smart<wbr>Home<wbr>V1Execute<wbr>Response</a>
 					</li>
-					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module root">
 						<a href="../interfaces/smarthome_api_v1.smarthomev1executeresponsecommands.html" class="tsd-kind-icon">Smart<wbr>Home<wbr>V1Execute<wbr>Response<wbr>Commands</a>
 					</li>
-					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module root">
 						<a href="../interfaces/smarthome_api_v1.smarthomev1querypayload.html" class="tsd-kind-icon">Smart<wbr>Home<wbr>V1Query<wbr>Payload</a>
 					</li>
-					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module root">
 						<a href="../interfaces/smarthome_api_v1.smarthomev1queryrequest.html" class="tsd-kind-icon">Smart<wbr>Home<wbr>V1Query<wbr>Request</a>
 					</li>
-					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module root">
 						<a href="../interfaces/smarthome_api_v1.smarthomev1queryrequestdevices.html" class="tsd-kind-icon">Smart<wbr>Home<wbr>V1Query<wbr>Request<wbr>Devices</a>
 					</li>
-					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module root">
 						<a href="../interfaces/smarthome_api_v1.smarthomev1queryrequestinputs.html" class="tsd-kind-icon">Smart<wbr>Home<wbr>V1Query<wbr>Request<wbr>Inputs</a>
 					</li>
-					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module root">
 						<a href="../interfaces/smarthome_api_v1.smarthomev1queryrequestpayload.html" class="tsd-kind-icon">Smart<wbr>Home<wbr>V1Query<wbr>Request<wbr>Payload</a>
 					</li>
-					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module root">
 						<a href="../interfaces/smarthome_api_v1.smarthomev1queryresponse.html" class="tsd-kind-icon">Smart<wbr>Home<wbr>V1Query<wbr>Response</a>
 					</li>
-					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module root">
 						<a href="../interfaces/smarthome_api_v1.smarthomev1reportstaterequest.html" class="tsd-kind-icon">Smart<wbr>Home<wbr>V1Report<wbr>State<wbr>Request</a>
 					</li>
-					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module root">
 						<a href="../interfaces/smarthome_api_v1.smarthomev1syncdeviceinfo.html" class="tsd-kind-icon">Smart<wbr>Home<wbr>V1Sync<wbr>Device<wbr>Info</a>
 					</li>
-					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module root">
 						<a href="../interfaces/smarthome_api_v1.smarthomev1syncdevices.html" class="tsd-kind-icon">Smart<wbr>Home<wbr>V1Sync<wbr>Devices</a>
 					</li>
-					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module root">
 						<a href="../interfaces/smarthome_api_v1.smarthomev1syncname.html" class="tsd-kind-icon">Smart<wbr>Home<wbr>V1Sync<wbr>Name</a>
 					</li>
-					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module root">
 						<a href="../interfaces/smarthome_api_v1.smarthomev1syncpayload.html" class="tsd-kind-icon">Smart<wbr>Home<wbr>V1Sync<wbr>Payload</a>
 					</li>
-					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module root">
 						<a href="../interfaces/smarthome_api_v1.smarthomev1syncrequest.html" class="tsd-kind-icon">Smart<wbr>Home<wbr>V1Sync<wbr>Request</a>
 					</li>
-					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module root">
 						<a href="../interfaces/smarthome_api_v1.smarthomev1syncrequestinputs.html" class="tsd-kind-icon">Smart<wbr>Home<wbr>V1Sync<wbr>Request<wbr>Inputs</a>
 					</li>
-					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module root">
 						<a href="../interfaces/smarthome_api_v1.smarthomev1syncresponse.html" class="tsd-kind-icon">Smart<wbr>Home<wbr>V1Sync<wbr>Response</a>
 					</li>
-					<li class=" tsd-kind-type-alias tsd-parent-kind-external-module">
+					<li class=" tsd-kind-type-alias tsd-parent-kind-external-module root">
 						<a href="smarthome_api_v1.html#smarthomev1executeerrors" class="tsd-kind-icon">Smart<wbr>Home<wbr>V1Execute<wbr>Errors</a>
 					</li>
-					<li class=" tsd-kind-type-alias tsd-parent-kind-external-module">
+					<li class=" tsd-kind-type-alias tsd-parent-kind-external-module root">
 						<a href="smarthome_api_v1.html#smarthomev1executestatus" class="tsd-kind-icon">Smart<wbr>Home<wbr>V1Execute<wbr>Status</a>
 					</li>
-					<li class=" tsd-kind-type-alias tsd-parent-kind-external-module">
+					<li class=" tsd-kind-type-alias tsd-parent-kind-external-module root">
 						<a href="smarthome_api_v1.html#smarthomev1intents" class="tsd-kind-icon">Smart<wbr>Home<wbr>V1Intents</a>
 					</li>
-					<li class=" tsd-kind-type-alias tsd-parent-kind-external-module">
+					<li class=" tsd-kind-type-alias tsd-parent-kind-external-module root">
 						<a href="smarthome_api_v1.html#smarthomev1request" class="tsd-kind-icon">Smart<wbr>Home<wbr>V1Request</a>
 					</li>
-					<li class=" tsd-kind-type-alias tsd-parent-kind-external-module">
+					<li class=" tsd-kind-type-alias tsd-parent-kind-external-module root">
 						<a href="smarthome_api_v1.html#smarthomev1response" class="tsd-kind-icon">Smart<wbr>Home<wbr>V1Response</a>
 					</li>
 				</ul>
@@ -304,63 +275,6 @@
 	</div>
 </div>
 <footer class="with-border-bottom">
-	<div class="container">
-		<h2>Legend</h2>
-		<div class="tsd-legend-group">
-			<ul class="tsd-legend">
-				<li class="tsd-kind-module"><span class="tsd-kind-icon">Module</span></li>
-				<li class="tsd-kind-object-literal"><span class="tsd-kind-icon">Object literal</span></li>
-				<li class="tsd-kind-variable"><span class="tsd-kind-icon">Variable</span></li>
-				<li class="tsd-kind-function"><span class="tsd-kind-icon">Function</span></li>
-				<li class="tsd-kind-function tsd-has-type-parameter"><span class="tsd-kind-icon">Function with type parameter</span></li>
-				<li class="tsd-kind-index-signature"><span class="tsd-kind-icon">Index signature</span></li>
-				<li class="tsd-kind-type-alias"><span class="tsd-kind-icon">Type alias</span></li>
-			</ul>
-			<ul class="tsd-legend">
-				<li class="tsd-kind-enum"><span class="tsd-kind-icon">Enumeration</span></li>
-				<li class="tsd-kind-enum-member"><span class="tsd-kind-icon">Enumeration member</span></li>
-				<li class="tsd-kind-property tsd-parent-kind-enum"><span class="tsd-kind-icon">Property</span></li>
-				<li class="tsd-kind-method tsd-parent-kind-enum"><span class="tsd-kind-icon">Method</span></li>
-			</ul>
-			<ul class="tsd-legend">
-				<li class="tsd-kind-interface"><span class="tsd-kind-icon">Interface</span></li>
-				<li class="tsd-kind-interface tsd-has-type-parameter"><span class="tsd-kind-icon">Interface with type parameter</span></li>
-				<li class="tsd-kind-constructor tsd-parent-kind-interface"><span class="tsd-kind-icon">Constructor</span></li>
-				<li class="tsd-kind-property tsd-parent-kind-interface"><span class="tsd-kind-icon">Property</span></li>
-				<li class="tsd-kind-method tsd-parent-kind-interface"><span class="tsd-kind-icon">Method</span></li>
-				<li class="tsd-kind-index-signature tsd-parent-kind-interface"><span class="tsd-kind-icon">Index signature</span></li>
-			</ul>
-			<ul class="tsd-legend">
-				<li class="tsd-kind-class"><span class="tsd-kind-icon">Class</span></li>
-				<li class="tsd-kind-class tsd-has-type-parameter"><span class="tsd-kind-icon">Class with type parameter</span></li>
-				<li class="tsd-kind-constructor tsd-parent-kind-class"><span class="tsd-kind-icon">Constructor</span></li>
-				<li class="tsd-kind-property tsd-parent-kind-class"><span class="tsd-kind-icon">Property</span></li>
-				<li class="tsd-kind-method tsd-parent-kind-class"><span class="tsd-kind-icon">Method</span></li>
-				<li class="tsd-kind-accessor tsd-parent-kind-class"><span class="tsd-kind-icon">Accessor</span></li>
-				<li class="tsd-kind-index-signature tsd-parent-kind-class"><span class="tsd-kind-icon">Index signature</span></li>
-			</ul>
-			<ul class="tsd-legend">
-				<li class="tsd-kind-constructor tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited constructor</span></li>
-				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited property</span></li>
-				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited method</span></li>
-				<li class="tsd-kind-accessor tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited accessor</span></li>
-			</ul>
-			<ul class="tsd-legend">
-				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected property</span></li>
-				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected method</span></li>
-				<li class="tsd-kind-accessor tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected accessor</span></li>
-			</ul>
-			<ul class="tsd-legend">
-				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private property</span></li>
-				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private method</span></li>
-				<li class="tsd-kind-accessor tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private accessor</span></li>
-			</ul>
-			<ul class="tsd-legend">
-				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-static"><span class="tsd-kind-icon">Static property</span></li>
-				<li class="tsd-kind-call-signature tsd-parent-kind-class tsd-is-static"><span class="tsd-kind-icon">Static method</span></li>
-			</ul>
-		</div>
-	</div>
 </footer>
 <div class="container tsd-generator">
 	<p>Generated using <a href="http://typedoc.org/" target="_blank">TypeDoc</a></p>
