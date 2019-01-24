@@ -125,7 +125,7 @@ export class MediaResponse implements Api.GoogleActionsV2MediaResponse {
     options?: MediaResponseOptions |
       MediaObjectString[] |
       MediaObjectString,
-    ...objects: MediaObjectString[],
+    ...objects: MediaObjectString[]
   ) {
     this.mediaType = 'AUDIO'
 

@@ -90,7 +90,7 @@ export class RichResponse implements Api.GoogleActionsV2RichResponse {
   constructor(...items: RichResponseItem[])
   constructor(
     options?: RichResponseOptions | RichResponseItem[] | RichResponseItem,
-    ...items: RichResponseItem[],
+    ...items: RichResponseItem[]
   ) {
     this.items = []
     if (!options) {

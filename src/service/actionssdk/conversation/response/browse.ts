@@ -117,7 +117,7 @@ export class BrowseCarousel implements Api.GoogleActionsV2UiElementsCarouselBrow
     options?: BrowseCarouselOptions |
       Api.GoogleActionsV2UiElementsCarouselBrowseItem[] |
       Api.GoogleActionsV2UiElementsCarouselBrowseItem,
-    ...items: Api.GoogleActionsV2UiElementsCarouselBrowseItem[],
+    ...items: Api.GoogleActionsV2UiElementsCarouselBrowseItem[]
   ) {
     if (!options) {
       this.items = []
