@@ -97,10 +97,55 @@ test('handles valid body fine', async t => {
   t.is(receivedStatus, expectedStatus)
 })
 
-test('handles error', async t => {
+test.serial('handles error', async t => {
   const expectedError = new Error('test')
   const expectedBody = {
     error: expectedError.message,
+  }
+  const expectedStatus = 500
+  const sentBody = {
+    a: '1',
+  }
+  const sentHeaders = {
+    key: 'value',
+  }
+  let receivedStatus = -1
+  let receivedBody: JsonObject | null = null
+  let promise: Promise<StandardResponse> | null = null
+  const stub = sinon.stub(common, 'error')
+  t.context.express.handle((body, headers) => {
+    t.is(body, sentBody)
+    t.is(headers, sentHeaders)
+    promise = Promise.reject(expectedError)
+    return promise
+  })({
+    body: sentBody,
+    headers: sentHeaders,
+    get() {},
+    // tslint:disable-next-line:no-any mocking request
+  } as any, {
+    status(status: number) {
+      receivedStatus = status
+      return this
+    },
+    send(body: JsonObject) {
+      receivedBody = body
+      return this
+    },
+    // tslint:disable-next-line:no-any mocking response
+  } as any)
+  // tslint:disable-next-line:no-any mocking promise
+  await (promise as any).catch(() => {})
+  t.true(stub.called)
+  stub.restore()
+  t.deepEqual(receivedBody, expectedBody)
+  t.is(receivedStatus, expectedStatus)
+})
+
+test.serial('handles string error', async t => {
+  const expectedError = 'test'
+  const expectedBody = {
+    error: expectedError,
   }
   const expectedStatus = 500
   const sentBody = {

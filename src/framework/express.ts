@@ -54,7 +54,7 @@ export class Express implements Framework<ExpressHandler> {
       })
       .catch((e: Error) => {
         common.error(e.stack || e)
-        response.status(500).send({ error: e.message })
+        response.status(500).send({ error: e.message || e })
       })
     }
   }
