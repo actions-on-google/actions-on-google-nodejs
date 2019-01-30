@@ -134,6 +134,35 @@ export interface ConversationOptions<TUserStorage> {
   init?: ConversationOptionsInit<{}, TUserStorage>
 }
 
+/**
+ * Throw an UnauthorizedError in an intent handler to make the library
+ * respond with a HTTP 401 Status Code.
+ *
+ * @example
+ * ```javascript
+ * const app = dialogflow()
+ *
+ * // If using Actions SDK:
+ * // const app = actionssdk()
+ *
+ * app.intent('intent', conv => {
+ *   // ...
+ *
+ *   // given a function to check if a user auth is still valid
+ *   const valid = checkUserAuthValid(conv)
+ *   if (!valid) {
+ *     throw new UnauthorizedError()
+ *   }
+ *
+ *   // ...
+ * })
+ *
+ * ```
+ *
+ * @public
+ */
+export class UnauthorizedError extends Error { }
+
 /** @public */
 export class Conversation<TUserStorage> {
   /** @public */
