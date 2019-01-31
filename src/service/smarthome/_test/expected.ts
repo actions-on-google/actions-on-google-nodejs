@@ -239,3 +239,26 @@ export const FRAMEWORK_METADATA = {
     request: 'test',
   },
 }
+
+export const REPORT_STATE_RESPONSE_SUCCESS = {
+  requestId: '8947781099822982',
+}
+
+export const REPORT_STATE_RESPONSE_ERROR = {
+  error: {
+    code: 403,
+    message: 'HomeGraph API Error.',
+    status: 'PERMISSION_DENIED',
+    details: [
+      {
+        '@type': 'type.googleapis.com/google.rpc.Help',
+        links: [
+          {
+            description: 'Link error',
+            url: 'https://console.developers.google.com/apis/api/homegraph.googleapis.com/',
+          },
+        ],
+      },
+    ],
+  },
+}
