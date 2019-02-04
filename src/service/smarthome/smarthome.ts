@@ -330,7 +330,7 @@ const makeApiCall = (url: string, data: JsonObject, jwt?: SmartHomeJwt): Promise
       )
       jwtClient.authorize((err: Error, tokens: JsonObject) => {
         if (err) {
-          reject(err)
+          return reject(err)
         }
         options.headers = {
           Authorization: ` Bearer ${tokens.access_token}`,
