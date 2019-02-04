@@ -23,16 +23,8 @@
 						<li class="state failure">The search index is not available</li>
 					</ul>
 					<ul class="results-priority" style="display:none">
-						<li data-name=".*Conversation.data" data-subtitle="Session data"></li>
-						<li data-name="conversation/response.*" data-subtitle="Rich response"></li>
-						<li data-name="conversation.User.storage" data-subtitle="Persistent storage"></li>
 					</ul>
 					<a href="../index.html" class="title">actions-on-google</a>
-					&emsp;<a href="https://developers.google.com/actions/extending-the-assistant" class="title">Guides</a>
-					&emsp;<a href="https://developers.google.com/actions/reference/nodejsv2/overview" class="title">Reference</a>
-					&emsp;<a href="https://developers.google.com/actions/codelabs/index" class="title">Codelabs</a>
-					&emsp;<a href="https://developers.google.com/actions/samples/index" class="title">Samples</a>
-					&emsp;<a href="https://developers.google.com/actions/glossary" class="title">Glossary</a>
 				</div>
 				<div class="table-cell" id="tsd-widgets">
 					<div id="tsd-filter">
@@ -74,9 +66,50 @@
 <div class="container container-main">
 	<div class="row">
 		<div class="col-3 col-menu menu-sticky-wrap menu-highlight">
-			<nav class="tsd-navigation outline primary">
-				<ul style="display:none">
-					[{&quot;Actions SDK&quot;:{&quot;Overview&quot;:&quot;actionssdk&quot;,&quot;Conversation&quot;:&quot;classes/actionssdk.actionssdkconversation&quot;,&quot;api/v2&quot;:&quot;actionssdk_api_v2&quot;},&quot;Dialogflow&quot;:{&quot;Overview&quot;:&quot;dialogflow&quot;,&quot;Conversation&quot;:&quot;classes/dialogflow.dialogflowconversation&quot;,&quot;api/v1&quot;:&quot;dialogflow_api_v1&quot;,&quot;api/v2&quot;:&quot;dialogflow_api_v2&quot;},&quot;Smart Home&quot;:{&quot;Overview&quot;:&quot;smarthome&quot;,&quot;Smart Home App&quot;:&quot;interfaces/smarthome.smarthomeapp&quot;,&quot;api/v1&quot;:&quot;smarthome_api_v1&quot;},&quot;Framework&quot;:{&quot;Overview&quot;:&quot;framework&quot;,&quot;Assistant&quot;:&quot;assistant&quot;}}]
+			<nav class="tsd-navigation primary">
+				<ul>
+					<li class="globals  ">
+						<a href="../globals.html" style="display:none"><em>Globals</em></a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="../modules/actionssdk.html" style="display:none">actionssdk</a>
+					</li>
+					<li class="current tsd-kind-external-module">
+						<a href="../modules/actionssdk_api_v2.html" style="display:none">actionssdk/api/v2</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="../modules/assistant.html" style="display:none">assistant</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="../modules/conversation.html" style="display:none">conversation</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="../modules/conversation_argument.html" style="display:none">conversation/argument</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="../modules/conversation_helper.html" style="display:none">conversation/helper</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="../modules/conversation_response.html" style="display:none">conversation/response</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="../modules/dialogflow.html" style="display:none">dialogflow</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="../modules/dialogflow_api_v1.html" style="display:none">dialogflow/api/v1</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="../modules/dialogflow_api_v2.html" style="display:none">dialogflow/api/v2</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="../modules/framework.html" style="display:none">framework</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="../modules/smarthome.html" style="display:none">smarthome</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="../modules/smarthome_api_v1.html" style="display:none">smarthome/api/v1</a>
+					</li>
 				</ul>
 			</nav>
 		</div>
@@ -123,10 +156,28 @@
 							<li>Defined in service/actionssdk/api/v2.ts:2196</li>
 						</ul>
 					</aside>
-					<div class="tsd-comment tsd-typography">
+					<div class="tsd-comment tsd-typography tsd-comment-shorttext">
 						<div class="lead">
 							<p>Unstructured address lines describing the lower levels of an address.</p>
-						</div>
+							</div><p>Because values in address_lines do not have type information and may
+							sometimes contain multiple values in a single field (e.g.
+							\&quot;Austin, TX\&quot;), it is important that the line order is clear. The order of
+							address lines should be \&quot;envelope order\&quot; for the country/region of the
+							address. In places where this can vary (e.g. Japan), address_language is
+							used to make it explicit (e.g. \&quot;ja\&quot; for large-to-small ordering and
+							\&quot;ja-Latn\&quot; or \&quot;en\&quot; for small-to-large). This way, the most specific line
+						of an address can be selected based on the language.</p>
+						<p>The minimum permitted structural representation of an address consists
+							of a region_code with all remaining information placed in the
+							address_lines. It would be possible to format such an address very
+							approximately without geocoding, but no semantic reasoning could be
+							made about any of the address components until it was at least
+						partially resolved.</p>
+						<p>Creating an address only containing a region_code and address_lines, and
+							then geocoding is the recommended way to handle completely unstructured
+							addresses (as opposed to guessing which parts of the address should be
+						localities or administrative areas).</p>
+						</div><div class="tsd-comment tsd-typography tsd-comment-text">
 						<p>Because values in address_lines do not have type information and may
 							sometimes contain multiple values in a single field (e.g.
 							\&quot;Austin, TX\&quot;), it is important that the line order is clear. The order of
@@ -156,7 +207,7 @@
 							<li>Defined in service/actionssdk/api/v2.ts:2206</li>
 						</ul>
 					</aside>
-					<div class="tsd-comment tsd-typography">
+					<div class="tsd-comment tsd-typography tsd-comment-shorttext">
 						<div class="lead">
 							<p>Optional. Highest administrative subdivision which is used for postal
 								addresses of a country or region.
@@ -165,8 +216,7 @@
 								community (e.g. \&quot;Barcelona\&quot; and not \&quot;Catalonia\&quot;).
 								Many countries don&#39;t use an administrative area in postal addresses. E.g.
 							in Switzerland this should be left unpopulated.</p>
-						</div>
-					</div>
+					</div></div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
 					<a name="languagecode" class="tsd-anchor"></a>
@@ -177,7 +227,7 @@
 							<li>Defined in service/actionssdk/api/v2.ts:2221</li>
 						</ul>
 					</aside>
-					<div class="tsd-comment tsd-typography">
+					<div class="tsd-comment tsd-typography tsd-comment-shorttext">
 						<div class="lead">
 							<p>Optional. BCP-47 language code of the contents of this address (if
 								known). This is often the UI language of the input form or is expected
@@ -186,7 +236,10 @@
 								This can affect formatting in certain countries, but is not critical
 								to the correctness of the data and will never affect any validation or
 							other non-formatting related operations.</p>
-						</div>
+							</div><p>If this value is not known, it should be omitted (rather than specifying a
+						possibly incorrect default).</p>
+						<p>Examples: \&quot;zh-Hant\&quot;, \&quot;ja\&quot;, \&quot;ja-Latn\&quot;, \&quot;en\&quot;.</p>
+						</div><div class="tsd-comment tsd-typography tsd-comment-text">
 						<p>If this value is not known, it should be omitted (rather than specifying a
 						possibly incorrect default).</p>
 						<p>Examples: \&quot;zh-Hant\&quot;, \&quot;ja\&quot;, \&quot;ja-Latn\&quot;, \&quot;en\&quot;.</p>
@@ -201,14 +254,13 @@
 							<li>Defined in service/actionssdk/api/v2.ts:2228</li>
 						</ul>
 					</aside>
-					<div class="tsd-comment tsd-typography">
+					<div class="tsd-comment tsd-typography tsd-comment-shorttext">
 						<div class="lead">
 							<p>Optional. Generally refers to the city/town portion of the address.
 								Examples: US city, IT comune, UK post town.
 								In regions of the world where localities are not well defined or do not fit
 							into this structure well, leave locality empty and use address_lines.</p>
-						</div>
-					</div>
+					</div></div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
 					<a name="organization" class="tsd-anchor"></a>
@@ -219,11 +271,10 @@
 							<li>Defined in service/actionssdk/api/v2.ts:2232</li>
 						</ul>
 					</aside>
-					<div class="tsd-comment tsd-typography">
+					<div class="tsd-comment tsd-typography tsd-comment-shorttext">
 						<div class="lead">
 							<p>Optional. The name of the organization at the address.</p>
-						</div>
-					</div>
+					</div></div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
 					<a name="postalcode" class="tsd-anchor"></a>
@@ -234,14 +285,13 @@
 							<li>Defined in service/actionssdk/api/v2.ts:2239</li>
 						</ul>
 					</aside>
-					<div class="tsd-comment tsd-typography">
+					<div class="tsd-comment tsd-typography tsd-comment-shorttext">
 						<div class="lead">
 							<p>Optional. Postal code of the address. Not all countries use or require
 								postal codes to be present, but where they are used, they may trigger
 								additional validation with other parts of the address (e.g. state/zip
 							validation in the U.S.A.).</p>
-						</div>
-					</div>
+					</div></div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
 					<a name="recipients" class="tsd-anchor"></a>
@@ -252,13 +302,12 @@
 							<li>Defined in service/actionssdk/api/v2.ts:2245</li>
 						</ul>
 					</aside>
-					<div class="tsd-comment tsd-typography">
+					<div class="tsd-comment tsd-typography tsd-comment-shorttext">
 						<div class="lead">
 							<p>Optional. The recipient at the address.
 								This field may, under certain circumstances, contain multiline information.
 							For example, it might contain \&quot;care of\&quot; information.</p>
-						</div>
-					</div>
+					</div></div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
 					<a name="regioncode" class="tsd-anchor"></a>
@@ -269,15 +318,14 @@
 							<li>Defined in service/actionssdk/api/v2.ts:2253</li>
 						</ul>
 					</aside>
-					<div class="tsd-comment tsd-typography">
+					<div class="tsd-comment tsd-typography tsd-comment-shorttext">
 						<div class="lead">
 							<p>Required. CLDR region code of the country/region of the address. This
 								is never inferred and it is up to the user to ensure the value is
 								correct. See <a href="http://cldr.unicode.org/">http://cldr.unicode.org/</a> and
 								<a href="http://www.unicode.org/cldr/charts/30/supplemental/territory_information.html">http://www.unicode.org/cldr/charts/30/supplemental/territory_information.html</a>
 							for details. Example: \&quot;CH\&quot; for Switzerland.</p>
-						</div>
-					</div>
+					</div></div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
 					<a name="revision" class="tsd-anchor"></a>
@@ -288,11 +336,12 @@
 							<li>Defined in service/actionssdk/api/v2.ts:2260</li>
 						</ul>
 					</aside>
-					<div class="tsd-comment tsd-typography">
+					<div class="tsd-comment tsd-typography tsd-comment-shorttext">
 						<div class="lead">
 							<p>The schema revision of the <code>PostalAddress</code>. This must be set to 0, which is
 							the latest revision.</p>
-						</div>
+						</div><p>All new revisions <strong>must</strong> be backward compatible with old revisions.</p>
+						</div><div class="tsd-comment tsd-typography tsd-comment-text">
 						<p>All new revisions <strong>must</strong> be backward compatible with old revisions.</p>
 					</div>
 				</section>
@@ -305,15 +354,14 @@
 							<li>Defined in service/actionssdk/api/v2.ts:2268</li>
 						</ul>
 					</aside>
-					<div class="tsd-comment tsd-typography">
+					<div class="tsd-comment tsd-typography tsd-comment-shorttext">
 						<div class="lead">
 							<p>Optional. Additional, country-specific, sorting code. This is not used
 								in most regions. Where it is used, the value is either a string like
 								\&quot;CEDEX\&quot;, optionally followed by a number (e.g. \&quot;CEDEX 7\&quot;), or just a
 								number alone, representing the \&quot;sector code\&quot; (Jamaica), \&quot;delivery area
 							indicator\&quot; (Malawi) or \&quot;post office indicator\&quot; (e.g. Côte d&#39;Ivoire).</p>
-						</div>
-					</div>
+					</div></div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
 					<a name="sublocality" class="tsd-anchor"></a>
@@ -324,15 +372,14 @@
 							<li>Defined in service/actionssdk/api/v2.ts:2273</li>
 						</ul>
 					</aside>
-					<div class="tsd-comment tsd-typography">
+					<div class="tsd-comment tsd-typography tsd-comment-shorttext">
 						<div class="lead">
 							<p>Optional. Sublocality of the address.
 							For example, this can be neighborhoods, boroughs, districts.</p>
-						</div>
-					</div>
+					</div></div>
 				</section>
 			</section>
-			<!--{&quot;options&quot;:&quot;typedoc.json&quot;,&quot;theme&quot;:&quot;node_modules/typedoc-neo-theme/bin/default&quot;,&quot;out&quot;:&quot;docs&quot;,&quot;exclude&quot;:[&quot;**/_test/**/*.*&quot;,&quot;**/index.ts&quot;,&quot;**/common.ts&quot;],&quot;ignoreCompilerErrors&quot;:true,&quot;disableOutputCheck&quot;:true,&quot;external-modulemap&quot;:&quot;.*/((?:conversation/helper)|(?:conversation/argument)|(?:conversation/response)|(?:framework)|(?:conversation)|(?:actionssdk/api/v2)|(?:dialogflow/api/v1)|(?:dialogflow/api/v2)|(?:smarthome/api/v1)|(?:assistant)|(?:common)|(?:dialogflow)|(?:actionssdk)|(?:smarthome))&quot;,&quot;excludeExternals&quot;:true,&quot;excludePrivate&quot;:true,&quot;excludeNotExported&quot;:true,&quot;links&quot;:[{&quot;label&quot;:&quot;Guides&quot;,&quot;url&quot;:&quot;https://developers.google.com/actions/extending-the-assistant&quot;},{&quot;label&quot;:&quot;Reference&quot;,&quot;url&quot;:&quot;https://developers.google.com/actions/reference/nodejsv2/overview&quot;},{&quot;label&quot;:&quot;Codelabs&quot;,&quot;url&quot;:&quot;https://developers.google.com/actions/codelabs/index&quot;},{&quot;label&quot;:&quot;Samples&quot;,&quot;url&quot;:&quot;https://developers.google.com/actions/samples/index&quot;},{&quot;label&quot;:&quot;Glossary&quot;,&quot;url&quot;:&quot;https://developers.google.com/actions/glossary&quot;}],&quot;outline&quot;:[{&quot;Actions SDK&quot;:{&quot;Overview&quot;:&quot;actionssdk&quot;,&quot;Conversation&quot;:&quot;classes/actionssdk.actionssdkconversation&quot;,&quot;api/v2&quot;:&quot;actionssdk_api_v2&quot;},&quot;Dialogflow&quot;:{&quot;Overview&quot;:&quot;dialogflow&quot;,&quot;Conversation&quot;:&quot;classes/dialogflow.dialogflowconversation&quot;,&quot;api/v1&quot;:&quot;dialogflow_api_v1&quot;,&quot;api/v2&quot;:&quot;dialogflow_api_v2&quot;},&quot;Smart Home&quot;:{&quot;Overview&quot;:&quot;smarthome&quot;,&quot;Smart Home App&quot;:&quot;interfaces/smarthome.smarthomeapp&quot;,&quot;api/v1&quot;:&quot;smarthome_api_v1&quot;},&quot;Framework&quot;:{&quot;Overview&quot;:&quot;framework&quot;,&quot;Assistant&quot;:&quot;assistant&quot;}}],&quot;search&quot;:[{&quot;name&quot;:&quot;.*Conversation.data&quot;,&quot;subtitle&quot;:&quot;Session data&quot;},{&quot;name&quot;:&quot;conversation/response.*&quot;,&quot;subtitle&quot;:&quot;Rich response&quot;},{&quot;name&quot;:&quot;conversation.User.storage&quot;,&quot;subtitle&quot;:&quot;Persistent storage&quot;}]}-->
+			<!--{&quot;options&quot;:&quot;typedoc.json&quot;,&quot;theme&quot;:&quot;./node_modules/typedoc-neo-theme/bin/default&quot;,&quot;out&quot;:&quot;docs&quot;,&quot;exclude&quot;:[&quot;**/_test/**/*.*&quot;,&quot;**/index.ts&quot;,&quot;**/common.ts&quot;],&quot;ignoreCompilerErrors&quot;:true,&quot;disableOutputCheck&quot;:true,&quot;external-modulemap&quot;:&quot;.*/((?:conversation/helper)|(?:conversation/argument)|(?:conversation/response)|(?:framework)|(?:conversation)|(?:actionssdk/api/v2)|(?:dialogflow/api/v1)|(?:dialogflow/api/v2)|(?:smarthome/api/v1)|(?:assistant)|(?:common)|(?:dialogflow)|(?:actionssdk)|(?:smarthome))&quot;,&quot;excludeExternals&quot;:true,&quot;excludePrivate&quot;:true,&quot;excludeNotExported&quot;:true}-->
 		</div>
 		<div class="col-2 col-menu secondary-menu">
 			<nav class="tsd-navigation secondary menu-sticky">

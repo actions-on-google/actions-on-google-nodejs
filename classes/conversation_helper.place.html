@@ -23,16 +23,8 @@
 						<li class="state failure">The search index is not available</li>
 					</ul>
 					<ul class="results-priority" style="display:none">
-						<li data-name=".*Conversation.data" data-subtitle="Session data"></li>
-						<li data-name="conversation/response.*" data-subtitle="Rich response"></li>
-						<li data-name="conversation.User.storage" data-subtitle="Persistent storage"></li>
 					</ul>
 					<a href="../index.html" class="title">actions-on-google</a>
-					&emsp;<a href="https://developers.google.com/actions/extending-the-assistant" class="title">Guides</a>
-					&emsp;<a href="https://developers.google.com/actions/reference/nodejsv2/overview" class="title">Reference</a>
-					&emsp;<a href="https://developers.google.com/actions/codelabs/index" class="title">Codelabs</a>
-					&emsp;<a href="https://developers.google.com/actions/samples/index" class="title">Samples</a>
-					&emsp;<a href="https://developers.google.com/actions/glossary" class="title">Glossary</a>
 				</div>
 				<div class="table-cell" id="tsd-widgets">
 					<div id="tsd-filter">
@@ -74,23 +66,61 @@
 <div class="container container-main">
 	<div class="row">
 		<div class="col-3 col-menu menu-sticky-wrap menu-highlight">
-			<nav class="tsd-navigation outline primary">
-				<ul style="display:none">
-					[{&quot;Actions SDK&quot;:{&quot;Overview&quot;:&quot;actionssdk&quot;,&quot;Conversation&quot;:&quot;classes/actionssdk.actionssdkconversation&quot;,&quot;api/v2&quot;:&quot;actionssdk_api_v2&quot;},&quot;Dialogflow&quot;:{&quot;Overview&quot;:&quot;dialogflow&quot;,&quot;Conversation&quot;:&quot;classes/dialogflow.dialogflowconversation&quot;,&quot;api/v1&quot;:&quot;dialogflow_api_v1&quot;,&quot;api/v2&quot;:&quot;dialogflow_api_v2&quot;},&quot;Smart Home&quot;:{&quot;Overview&quot;:&quot;smarthome&quot;,&quot;Smart Home App&quot;:&quot;interfaces/smarthome.smarthomeapp&quot;,&quot;api/v1&quot;:&quot;smarthome_api_v1&quot;},&quot;Framework&quot;:{&quot;Overview&quot;:&quot;framework&quot;,&quot;Assistant&quot;:&quot;assistant&quot;}}]
+			<nav class="tsd-navigation primary">
+				<ul>
+					<li class="globals  ">
+						<a href="../globals.html" style="display:none"><em>Globals</em></a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="../modules/actionssdk.html" style="display:none">actionssdk</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="../modules/actionssdk_api_v2.html" style="display:none">actionssdk/api/v2</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="../modules/assistant.html" style="display:none">assistant</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="../modules/conversation.html" style="display:none">conversation</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="../modules/conversation_argument.html" style="display:none">conversation/argument</a>
+					</li>
+					<li class="current tsd-kind-external-module">
+						<a href="../modules/conversation_helper.html" style="display:none">conversation/helper</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="../modules/conversation_response.html" style="display:none">conversation/response</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="../modules/dialogflow.html" style="display:none">dialogflow</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="../modules/dialogflow_api_v1.html" style="display:none">dialogflow/api/v1</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="../modules/dialogflow_api_v2.html" style="display:none">dialogflow/api/v2</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="../modules/framework.html" style="display:none">framework</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="../modules/smarthome.html" style="display:none">smarthome</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="../modules/smarthome_api_v1.html" style="display:none">smarthome/api/v1</a>
+					</li>
 				</ul>
 			</nav>
 		</div>
 		<div class="col-7 offset-3 col-content">
 			<h1>Class Place</h1>
-			<section class="tsd-panel tsd-comment">
-				<div class="tsd-comment tsd-typography">
+			<section class="tsd-panel tsd-comment"><div class="tsd-comment tsd-typography tsd-comment-shorttext">
 					<div class="lead">
 						<p>Asks user to provide a geo-located place, possibly using contextual information,
 						like a store near the user&#39;s location or a contact&#39;s address.</p>
-					</div>
-					<p>Developer provides custom text prompts to tailor the request handled by Google.</p>
-					<dl class="tsd-comment-tags">
-						<dt>example</dt>
+					</div><p>Developer provides custom text prompts to tailor the request handled by Google.</p>
+					<dl class="tsd-comment-tags"><dt>example</dt>
 						<dd><pre><code class="lang-javascript">
 <span class="hljs-comment">// Actions SDK</span>
 <span class="hljs-keyword">const</span> app = actionssdk()
@@ -131,10 +161,93 @@ app.intent(<span class="hljs-string">'Get Place'</span>, (conv, params, place, s
   }
 })
 </code></pre>
-						</dd>
-					</dl>
-				</div>
-			</section>
+					</dd></dl></div><div class="tsd-comment tsd-typography tsd-comment-text">
+					<p>Developer provides custom text prompts to tailor the request handled by Google.</p>
+					<dl class="tsd-comment-tags"><dt>example</dt>
+						<dd><pre><code class="lang-javascript">
+<span class="hljs-comment">// Actions SDK</span>
+<span class="hljs-keyword">const</span> app = actionssdk()
+
+app.intent(<span class="hljs-string">'actions.intent.MAIN'</span>, conv =&gt; {
+  conv.ask(<span class="hljs-keyword">new</span> Place({
+    <span class="hljs-attr">prompt</span>: <span class="hljs-string">'Where do you want to get picked up?'</span>,
+    <span class="hljs-attr">context</span>: <span class="hljs-string">'To find a place to pick you up'</span>,
+  }))
+})
+
+app.intent(<span class="hljs-string">'actions.intent.PLACE'</span>, (conv, input, place, status) =&gt; {
+  <span class="hljs-keyword">if</span> (place) {
+    conv.close(<span class="hljs-string">`Ah, I see. You want to get picked up at <span class="hljs-subst">${place.formattedAddress}</span>`</span>)
+  } <span class="hljs-keyword">else</span> {
+    <span class="hljs-comment">// Possibly do something with status</span>
+    conv.close(<span class="hljs-string">`Sorry, I couldn't find where you want to get picked up`</span>)
+  }
+})
+
+<span class="hljs-comment">// Dialogflow</span>
+<span class="hljs-keyword">const</span> app = dialogflow()
+
+app.intent(<span class="hljs-string">'Default Welcome Intent'</span>, conv =&gt; {
+  conv.ask(<span class="hljs-keyword">new</span> Place({
+    <span class="hljs-attr">prompt</span>: <span class="hljs-string">'Where do you want to get picked up?'</span>,
+    <span class="hljs-attr">context</span>: <span class="hljs-string">'To find a place to pick you up'</span>,
+  }))
+})
+
+<span class="hljs-comment">// Create a Dialogflow intent with the `actions_intent_PLACE` event</span>
+app.intent(<span class="hljs-string">'Get Place'</span>, (conv, params, place, status) =&gt; {
+  <span class="hljs-keyword">if</span> (place) {
+    conv.close(<span class="hljs-string">`Ah, I see. You want to get picked up at <span class="hljs-subst">${place.formattedAddress}</span>`</span>)
+  } <span class="hljs-keyword">else</span> {
+    <span class="hljs-comment">// Possibly do something with status</span>
+    conv.close(<span class="hljs-string">`Sorry, I couldn't find where you want to get picked up`</span>)
+  }
+})
+</code></pre>
+					</dd></dl></div><div class="tsd-comment tsd-typography tsd-comment-tags">
+					<dl class="tsd-comment-tags"><dt>example</dt>
+						<dd><pre><code class="lang-javascript">
+<span class="hljs-comment">// Actions SDK</span>
+<span class="hljs-keyword">const</span> app = actionssdk()
+
+app.intent(<span class="hljs-string">'actions.intent.MAIN'</span>, conv =&gt; {
+  conv.ask(<span class="hljs-keyword">new</span> Place({
+    <span class="hljs-attr">prompt</span>: <span class="hljs-string">'Where do you want to get picked up?'</span>,
+    <span class="hljs-attr">context</span>: <span class="hljs-string">'To find a place to pick you up'</span>,
+  }))
+})
+
+app.intent(<span class="hljs-string">'actions.intent.PLACE'</span>, (conv, input, place, status) =&gt; {
+  <span class="hljs-keyword">if</span> (place) {
+    conv.close(<span class="hljs-string">`Ah, I see. You want to get picked up at <span class="hljs-subst">${place.formattedAddress}</span>`</span>)
+  } <span class="hljs-keyword">else</span> {
+    <span class="hljs-comment">// Possibly do something with status</span>
+    conv.close(<span class="hljs-string">`Sorry, I couldn't find where you want to get picked up`</span>)
+  }
+})
+
+<span class="hljs-comment">// Dialogflow</span>
+<span class="hljs-keyword">const</span> app = dialogflow()
+
+app.intent(<span class="hljs-string">'Default Welcome Intent'</span>, conv =&gt; {
+  conv.ask(<span class="hljs-keyword">new</span> Place({
+    <span class="hljs-attr">prompt</span>: <span class="hljs-string">'Where do you want to get picked up?'</span>,
+    <span class="hljs-attr">context</span>: <span class="hljs-string">'To find a place to pick you up'</span>,
+  }))
+})
+
+<span class="hljs-comment">// Create a Dialogflow intent with the `actions_intent_PLACE` event</span>
+app.intent(<span class="hljs-string">'Get Place'</span>, (conv, params, place, status) =&gt; {
+  <span class="hljs-keyword">if</span> (place) {
+    conv.close(<span class="hljs-string">`Ah, I see. You want to get picked up at <span class="hljs-subst">${place.formattedAddress}</span>`</span>)
+  } <span class="hljs-keyword">else</span> {
+    <span class="hljs-comment">// Possibly do something with status</span>
+    conv.close(<span class="hljs-string">`Sorry, I couldn't find where you want to get picked up`</span>)
+  }
+})
+</code></pre>
+					</dd></dl>
+			</div></section>
 			<section class="tsd-panel tsd-hierarchy">
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
@@ -183,17 +296,14 @@ app.intent(<span class="hljs-string">'Get Place'</span>, (conv, params, place, s
 									<li>Defined in service/actionssdk/conversation/helper/place.ts:98</li>
 								</ul>
 							</aside>
-							<div class="tsd-comment tsd-typography">
-							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
 									<h5>options: <a href="../interfaces/conversation_helper.placeoptions.html" class="tsd-signature-type">PlaceOptions</a></h5>
-									<div class="tsd-comment tsd-typography">
+									<div class="tsd-comment tsd-typography tsd-comment-shorttext">
 										<div class="lead">
 											<p>Place options</p>
-										</div>
-									</div>
+									</div></div>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="conversation_helper.place.html" class="tsd-signature-type">Place</a></h4>
@@ -213,7 +323,7 @@ app.intent(<span class="hljs-string">'Get Place'</span>, (conv, params, place, s
 							<li>Defined in service/actionssdk/api/v2.ts:549</li>
 						</ul>
 					</aside>
-					<div class="tsd-comment tsd-typography">
+					<div class="tsd-comment tsd-typography tsd-comment-shorttext">
 						<div class="lead">
 							<p>Additional configuration data required by a built-in intent. Possible
 								values for the built-in intents: <code>actions.intent.OPTION -&gt;</code>
@@ -229,8 +339,7 @@ app.intent(<span class="hljs-string">'Get Place'</span>, (conv, params, place, s
 								[google.actions.v2.PlaceValueSpec],
 								<code>actions.intent.Link -&gt;</code>
 							[google.actions.v2.LinkValueSpec]</p>
-						</div>
-					</div>
+					</div></div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-static">
 					<a name="intent" class="tsd-anchor"></a>
@@ -242,14 +351,13 @@ app.intent(<span class="hljs-string">'Get Place'</span>, (conv, params, place, s
 							<li>Defined in service/actionssdk/api/v2.ts:556</li>
 						</ul>
 					</aside>
-					<div class="tsd-comment tsd-typography">
+					<div class="tsd-comment tsd-typography tsd-comment-shorttext">
 						<div class="lead">
 							<p>The built-in intent name, e.g. <code>actions.intent.TEXT</code>, or intents
 								defined in the action package. If the intent specified is not a built-in
 								intent, it is only used for speech biasing and the input provided by the
 							Google Assistant will be the <code>actions.intent.TEXT</code> intent.</p>
-						</div>
-					</div>
+					</div></div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-static">
 					<a name="parametername" class="tsd-anchor"></a>
@@ -261,15 +369,14 @@ app.intent(<span class="hljs-string">'Get Place'</span>, (conv, params, place, s
 							<li>Defined in service/actionssdk/api/v2.ts:561</li>
 						</ul>
 					</aside>
-					<div class="tsd-comment tsd-typography">
+					<div class="tsd-comment tsd-typography tsd-comment-shorttext">
 						<div class="lead">
 							<p>Optionally, a parameter of the intent that is being requested. Only valid
 							for requested intents. Used for speech biasing.</p>
-						</div>
-					</div>
+					</div></div>
 				</section>
 			</section>
-			<!--{&quot;options&quot;:&quot;typedoc.json&quot;,&quot;theme&quot;:&quot;node_modules/typedoc-neo-theme/bin/default&quot;,&quot;out&quot;:&quot;docs&quot;,&quot;exclude&quot;:[&quot;**/_test/**/*.*&quot;,&quot;**/index.ts&quot;,&quot;**/common.ts&quot;],&quot;ignoreCompilerErrors&quot;:true,&quot;disableOutputCheck&quot;:true,&quot;external-modulemap&quot;:&quot;.*/((?:conversation/helper)|(?:conversation/argument)|(?:conversation/response)|(?:framework)|(?:conversation)|(?:actionssdk/api/v2)|(?:dialogflow/api/v1)|(?:dialogflow/api/v2)|(?:smarthome/api/v1)|(?:assistant)|(?:common)|(?:dialogflow)|(?:actionssdk)|(?:smarthome))&quot;,&quot;excludeExternals&quot;:true,&quot;excludePrivate&quot;:true,&quot;excludeNotExported&quot;:true,&quot;links&quot;:[{&quot;label&quot;:&quot;Guides&quot;,&quot;url&quot;:&quot;https://developers.google.com/actions/extending-the-assistant&quot;},{&quot;label&quot;:&quot;Reference&quot;,&quot;url&quot;:&quot;https://developers.google.com/actions/reference/nodejsv2/overview&quot;},{&quot;label&quot;:&quot;Codelabs&quot;,&quot;url&quot;:&quot;https://developers.google.com/actions/codelabs/index&quot;},{&quot;label&quot;:&quot;Samples&quot;,&quot;url&quot;:&quot;https://developers.google.com/actions/samples/index&quot;},{&quot;label&quot;:&quot;Glossary&quot;,&quot;url&quot;:&quot;https://developers.google.com/actions/glossary&quot;}],&quot;outline&quot;:[{&quot;Actions SDK&quot;:{&quot;Overview&quot;:&quot;actionssdk&quot;,&quot;Conversation&quot;:&quot;classes/actionssdk.actionssdkconversation&quot;,&quot;api/v2&quot;:&quot;actionssdk_api_v2&quot;},&quot;Dialogflow&quot;:{&quot;Overview&quot;:&quot;dialogflow&quot;,&quot;Conversation&quot;:&quot;classes/dialogflow.dialogflowconversation&quot;,&quot;api/v1&quot;:&quot;dialogflow_api_v1&quot;,&quot;api/v2&quot;:&quot;dialogflow_api_v2&quot;},&quot;Smart Home&quot;:{&quot;Overview&quot;:&quot;smarthome&quot;,&quot;Smart Home App&quot;:&quot;interfaces/smarthome.smarthomeapp&quot;,&quot;api/v1&quot;:&quot;smarthome_api_v1&quot;},&quot;Framework&quot;:{&quot;Overview&quot;:&quot;framework&quot;,&quot;Assistant&quot;:&quot;assistant&quot;}}],&quot;search&quot;:[{&quot;name&quot;:&quot;.*Conversation.data&quot;,&quot;subtitle&quot;:&quot;Session data&quot;},{&quot;name&quot;:&quot;conversation/response.*&quot;,&quot;subtitle&quot;:&quot;Rich response&quot;},{&quot;name&quot;:&quot;conversation.User.storage&quot;,&quot;subtitle&quot;:&quot;Persistent storage&quot;}]}-->
+			<!--{&quot;options&quot;:&quot;typedoc.json&quot;,&quot;theme&quot;:&quot;./node_modules/typedoc-neo-theme/bin/default&quot;,&quot;out&quot;:&quot;docs&quot;,&quot;exclude&quot;:[&quot;**/_test/**/*.*&quot;,&quot;**/index.ts&quot;,&quot;**/common.ts&quot;],&quot;ignoreCompilerErrors&quot;:true,&quot;disableOutputCheck&quot;:true,&quot;external-modulemap&quot;:&quot;.*/((?:conversation/helper)|(?:conversation/argument)|(?:conversation/response)|(?:framework)|(?:conversation)|(?:actionssdk/api/v2)|(?:dialogflow/api/v1)|(?:dialogflow/api/v2)|(?:smarthome/api/v1)|(?:assistant)|(?:common)|(?:dialogflow)|(?:actionssdk)|(?:smarthome))&quot;,&quot;excludeExternals&quot;:true,&quot;excludePrivate&quot;:true,&quot;excludeNotExported&quot;:true}-->
 		</div>
 		<div class="col-2 col-menu secondary-menu">
 			<nav class="tsd-navigation secondary menu-sticky">
