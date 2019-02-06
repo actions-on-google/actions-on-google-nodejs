@@ -30,7 +30,11 @@ const throwError = () => {
   throw Error('')
 }
 
-const httpsResponse = (callback: Function) => {
+const defaultHttpsResponse: common.JsonObject = {
+  ok: true,
+}
+
+const httpsResponse = (sampleResponse = defaultHttpsResponse, callback: Function) => {
   let onData: ((d?: string | Buffer) => void) | null = null
   let onEnd: ((d?: string | Buffer) => void) | null = null
   callback({
@@ -45,7 +49,7 @@ const httpsResponse = (callback: Function) => {
       }
     },
   })
-  const buffer = new Buffer('test', 'utf8')
+  const buffer = new Buffer(JSON.stringify(sampleResponse), 'utf8')
   onData!(buffer)
   onEnd!()
 }
@@ -157,7 +161,7 @@ test.serial('request sync fails if no API key is defined', async (t) => {
     t.is(options.path, '/v1/devices:requestSync?key=API-KEY')
     t.is(options.method, 'POST')
     t.is(options.headers, {})
-    httpsResponse(callback)
+    httpsResponse(undefined, callback)
   })
 
   const app = smarthome()
@@ -179,7 +183,7 @@ test.serial('request sync succeeds if API key is defined', async (t) => {
     t.is(options.path, '/v1/devices:requestSync?key=API-KEY')
     t.is(options.method, 'POST')
     t.deepEqual(options.headers, {})
-    httpsResponse(callback)
+    httpsResponse(undefined, callback)
   })
 
   const app = smarthome({
@@ -203,7 +207,7 @@ test.serial('report state fails if JWT is not defined', async (t) => {
     t.is(options.path, '/v1/devices:reportStateAndNotification')
     t.is(options.method, 'POST')
     t.is(options.headers.Authorization, ' Bearer 1234')
-    httpsResponse(callback)
+    httpsResponse(undefined, callback)
   })
 
   const app = smarthome()
@@ -225,7 +229,7 @@ test.serial('report state succeeds if JWT is defined', async (t) => {
     t.is(options.path, '/v1/devices:reportStateAndNotification')
     t.is(options.method, 'POST')
     t.is(options.headers.Authorization, ' Bearer 1234')
-    httpsResponse(callback)
+    httpsResponse(Sample.REPORT_STATE_RESPONSE_SUCCESS, callback)
   })
 
   const app = smarthome({
@@ -237,6 +241,28 @@ test.serial('report state succeeds if JWT is defined', async (t) => {
     t.pass('The API was called successfully')
   } catch (e) {
     t.fail('You should be able to call request with a JWT: ' + e)
+  }
+  mock.restore()
+})
+
+// Run test serially to not interfere with sinon stubs
+test.serial('report state fails if response is an error', async (t) => {
+  const mock = sinon.stub(common, 'request')
+  mock.callsFake((options, callback) => {
+    t.is(options.hostname, 'homegraph.googleapis.com')
+    t.is(options.path, '/v1/devices:reportStateAndNotification')
+    t.is(options.method, 'POST')
+    t.is(options.headers.Authorization, ' Bearer 1234')
+    httpsResponse(Sample.REPORT_STATE_RESPONSE_ERROR, callback)
+  })
+
+  const app = smarthome()
+
+  try {
+    await app.reportState(Sample.REPORT_STATE_REQUEST)
+    t.fail('This response should not resolve the Promise')
+  } catch (e) {
+    t.pass('This method call properly throws an error')
   }
   mock.restore()
 })
