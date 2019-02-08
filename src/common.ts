@@ -26,9 +26,11 @@ export const debug = Debug(`${name}:debug`)
 export const warn = Debug(`${name}:warn`)
 
 /** @hidden */
+// tslint:disable-next-line:no-console Allow console binding
 export const error = console.error.bind(console) as typeof console.error
 
 /** @hidden */
+// tslint:disable-next-line:no-console Allow console binding
 export const info = console.log.bind(console) as typeof console.log
 
 warn.log = error
@@ -51,7 +53,7 @@ export const values = <T>(o: { [key: string]: T }) => Object.keys(o).map(k => o[
 export const clone = <T>(o: T): T => JSON.parse(JSON.stringify(o))
 
 /** @hidden */
-// tslint:disable-next-line:no-any root can by anything
+// tslint:disable-next-line:no-any root can be anything
 export const stringify = (root: any, ...exclude: string[]) => {
   const excluded = new Set(exclude)
   const filtered = Object.keys(root).reduce((o, k) => {
