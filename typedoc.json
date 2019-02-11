@@ -10,5 +10,54 @@
   "external-modulemap": ".*\/((?:conversation\/helper)|(?:conversation\/argument)|(?:conversation\/response)|(?:framework)|(?:conversation)|(?:actionssdk\/api\/v2)|(?:dialogflow\/api\/v1)|(?:dialogflow\/api\/v2)|(?:smarthome\/api\/v1)|(?:assistant)|(?:common)|(?:dialogflow)|(?:actionssdk)|(?:smarthome))",
   "excludeExternals": true,
   "excludePrivate": true,
-  "excludeNotExported": true
+  "excludeNotExported": true,
+  "links": [{
+    "label": "Guides",
+    "url": "https://developers.google.com/actions/extending-the-assistant"
+  }, {
+    "label": "Reference",
+    "url": "https://developers.google.com/actions/reference/nodejsv2/overview"
+  }, {
+    "label": "Codelabs",
+    "url": "https://developers.google.com/actions/codelabs/index"
+  }, {
+    "label": "Samples",
+    "url": "https://developers.google.com/actions/samples/index"
+  }, {
+    "label": "Glossary",
+    "url": "https://developers.google.com/actions/glossary"
+  }],
+  "outline": [{
+    "Actions SDK": {
+      "Overview": "actionssdk",
+      "Conversation": "classes/actionssdk.actionssdkconversation",
+      "api/v2": "actionssdk_api_v2"
+    },
+    "Dialogflow": {
+      "Overview": "dialogflow",
+      "Conversation": "classes/dialogflow.dialogflowconversation",
+      "api/v1": "dialogflow_api_v1",
+      "api/v2": "dialogflow_api_v2"
+    },
+    "Smart Home": {
+      "Overview": "smarthome",
+      "Smart Home App": "interfaces/smarthome.smarthomeapp",
+      "api/v1": "smarthome_api_v1"
+    },
+    "Framework": {
+      "Overview": "framework",
+      "Assistant": "assistant",
+      "Rich Responses": "conversation_response"
+    }
+  }],
+  "search": [{
+    "name": ".*Conversation.data",
+    "subtitle": "Session data"
+  }, {
+    "name": "conversation/response.*",
+    "subtitle": "Rich response"
+  }, {
+    "name": "conversation.User.storage",
+    "subtitle": "Persistent storage"
+  }]
 }

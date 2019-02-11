@@ -22,7 +22,7 @@
     "test:ci": "yarn audit && yarn test",
     "docs:redirect": "node script/redirect.js",
     "docs:hide": "echo 'a[href=\"modules/conversation.html\"], a[href=\"conversation.html\"], a[href=\"../modules/conversation.html\"] { display: none !important; }' >> docs/assets/css/main.css",
-    "docs": "typedoc --options typedoc.json && touch docs/.nojekyll && yarn docs:redirect && yarn docs:hide",
+    "docs": "typedoc --options typedoc.json --theme node_modules/typedoc-neo-theme/bin/default && touch docs/.nojekyll && yarn docs:redirect && yarn docs:hide",
     "docs:clean": "rm -rf docs && yarn docs",
     "docs:serve": "yarn docs:clean && live-server docs",
     "coverage": "yarn coverage:serve",
@@ -53,6 +53,7 @@
     "tslint-eslint-rules": "^5.1.0",
     "typedoc": "^0.11.1",
     "typedoc-plugin-external-module-map": "^0.1.0",
+    "typedoc-neo-theme": "^1.0.0",
     "typescript": "^3.2.0"
   },
   "dependencies": {
