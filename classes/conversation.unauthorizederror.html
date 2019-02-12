@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>ButtonOptions | actions-on-google</title>
+	<title>UnauthorizedError | actions-on-google</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -59,10 +59,10 @@
 		<div class="container">
 			<ul class="tsd-breadcrumb">
 				<li>
-					<a href="../modules/conversation_response.html">conversation/response</a>
+					<a href="../modules/conversation.html">conversation</a>
 				</li>
 				<li>
-					<a href="conversation_response.buttonoptions.html">ButtonOptions</a>
+					<a href="conversation.unauthorizederror.html">UnauthorizedError</a>
 				</li>
 			</ul>
 		</div>
@@ -79,13 +79,62 @@
 			</nav>
 		</div>
 		<div class="col-7 offset-3 col-content">
-			<h1>Interface ButtonOptions</h1>
-			<section class="tsd-panel tsd-comment"></section>
+			<h1>Class UnauthorizedError</h1>
+			<section class="tsd-panel tsd-comment"><div class="tsd-comment tsd-typography tsd-comment-shorttext">
+					<div class="lead">
+						<p>Throw an UnauthorizedError in an intent handler to make the library
+						respond with a HTTP 401 Status Code.</p>
+						</div><dl class="tsd-comment-tags"><dt>example</dt>
+						<dd><pre><code class="lang-javascript"><span class="hljs-keyword">const</span> app = dialogflow()
+
+<span class="hljs-comment">// If using Actions SDK:</span>
+<span class="hljs-comment">// const app = actionssdk()</span>
+
+app.intent(<span class="hljs-string">'intent'</span>, conv =&gt; {
+  <span class="hljs-comment">// ...</span>
+
+  <span class="hljs-comment">// given a function to check if a user auth is still valid</span>
+  <span class="hljs-keyword">const</span> valid = checkUserAuthValid(conv)
+  <span class="hljs-keyword">if</span> (!valid) {
+    <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> UnauthorizedError()
+  }
+
+  <span class="hljs-comment">// ...</span>
+})
+
+</code></pre>
+					</dd></dl></div><div class="tsd-comment tsd-typography tsd-comment-tags">
+					<dl class="tsd-comment-tags"><dt>example</dt>
+						<dd><pre><code class="lang-javascript"><span class="hljs-keyword">const</span> app = dialogflow()
+
+<span class="hljs-comment">// If using Actions SDK:</span>
+<span class="hljs-comment">// const app = actionssdk()</span>
+
+app.intent(<span class="hljs-string">'intent'</span>, conv =&gt; {
+  <span class="hljs-comment">// ...</span>
+
+  <span class="hljs-comment">// given a function to check if a user auth is still valid</span>
+  <span class="hljs-keyword">const</span> valid = checkUserAuthValid(conv)
+  <span class="hljs-keyword">if</span> (!valid) {
+    <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> UnauthorizedError()
+  }
+
+  <span class="hljs-comment">// ...</span>
+})
+
+</code></pre>
+					</dd></dl>
+			</div></section>
 			<section class="tsd-panel tsd-hierarchy">
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="target">ButtonOptions</span>
+						<span class="tsd-signature-type">Error</span>
+						<ul class="tsd-hierarchy">
+							<li>
+								<span class="target">UnauthorizedError</span>
+							</li>
+						</ul>
 					</li>
 				</ul>
 			</section>
@@ -95,9 +144,10 @@
 						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="conversation_response.buttonoptions.html#action" class="tsd-kind-icon">action</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="conversation_response.buttonoptions.html#title" class="tsd-kind-icon">title</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="conversation_response.buttonoptions.html#url" class="tsd-kind-icon">url</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-static"><a href="conversation.unauthorizederror.html#error" class="tsd-kind-icon">Error</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-static"><a href="conversation.unauthorizederror.html#message" class="tsd-kind-icon">message</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-static"><a href="conversation.unauthorizederror.html#name" class="tsd-kind-icon">name</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-overwrite tsd-is-inherited tsd-is-static"><a href="conversation.unauthorizederror.html#stack" class="tsd-kind-icon">stack</a></li>
 							</ul>
 						</section>
 					</div>
@@ -105,47 +155,49 @@
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Properties</h2>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="action" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagOptional">Optional</span> action</h3>
-					<div class="tsd-signature tsd-kind-icon">action<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Api.GoogleActionsV2UiElementsOpenUrlAction</span></div>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-static">
+					<a name="error" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagStatic">Static</span> Error</h3>
+					<div class="tsd-signature tsd-kind-icon">Error<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">ErrorConstructor</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in service/actionssdk/conversation/response/card/button.ts:37</li>
+							<li>Defined in /usr/local/google/home/fleker/samples/aog-nodejs/node_modules/typedoc/node_modules/typescript/lib/lib.es6.d.ts:896</li>
 						</ul>
 					</aside>
-					<div class="tsd-comment tsd-typography tsd-comment-shorttext">
-						<div class="lead">
-							<p>Action to take when selected. Recommended to use the url property for simple web page url open.</p>
-					</div></div>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="title" class="tsd-anchor"></a>
-					<h3>title</h3>
-					<div class="tsd-signature tsd-kind-icon">title<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-static">
+					<a name="message" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagStatic">Static</span> message</h3>
+					<div class="tsd-signature tsd-kind-icon">message<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
+						<p>Inherited from Error.message</p>
 						<ul>
-							<li>Defined in service/actionssdk/conversation/response/card/button.ts:25</li>
+							<li>Defined in /usr/local/google/home/fleker/samples/aog-nodejs/node_modules/typedoc/node_modules/typescript/lib/lib.es6.d.ts:886</li>
 						</ul>
 					</aside>
-					<div class="tsd-comment tsd-typography tsd-comment-shorttext">
-						<div class="lead">
-							<p>Text shown on the button.</p>
-					</div></div>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="url" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagOptional">Optional</span> url</h3>
-					<div class="tsd-signature tsd-kind-icon">url<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></div>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-static">
+					<a name="name" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagStatic">Static</span> name</h3>
+					<div class="tsd-signature tsd-kind-icon">name<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
+						<p>Inherited from Error.name</p>
 						<ul>
-							<li>Defined in service/actionssdk/conversation/response/card/button.ts:31</li>
+							<li>Defined in /usr/local/google/home/fleker/samples/aog-nodejs/node_modules/typedoc/node_modules/typescript/lib/lib.es6.d.ts:885</li>
 						</ul>
 					</aside>
-					<div class="tsd-comment tsd-typography tsd-comment-shorttext">
-						<div class="lead">
-							<p>String URL to open.</p>
-					</div></div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-overwrite tsd-is-inherited tsd-is-static">
+					<a name="stack" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagStatic">Static</span> <span class="tsd-flag ts-flagOptional">Optional</span> stack</h3>
+					<div class="tsd-signature tsd-kind-icon">stack<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></div>
+					<aside class="tsd-sources">
+						<p>Inherited from Error.stack</p>
+						<p>Overrides Error.stack</p>
+						<ul>
+							<li>Defined in /usr/local/google/home/fleker/samples/aog-nodejs/node_modules/typedoc/node_modules/typescript/lib/lib.es6.d.ts:887</li>
+						</ul>
+					</aside>
 				</section>
 			</section>
 			<!--{&quot;options&quot;:&quot;typedoc.json&quot;,&quot;theme&quot;:&quot;node_modules/typedoc-neo-theme/bin/default&quot;,&quot;out&quot;:&quot;docs&quot;,&quot;exclude&quot;:[&quot;**/_test/**/*.*&quot;,&quot;**/index.ts&quot;,&quot;**/common.ts&quot;],&quot;ignoreCompilerErrors&quot;:true,&quot;disableOutputCheck&quot;:true,&quot;external-modulemap&quot;:&quot;.*/((?:conversation/helper)|(?:conversation/argument)|(?:conversation/response)|(?:framework)|(?:conversation)|(?:actionssdk/api/v2)|(?:dialogflow/api/v1)|(?:dialogflow/api/v2)|(?:smarthome/api/v1)|(?:assistant)|(?:common)|(?:dialogflow)|(?:actionssdk)|(?:smarthome))&quot;,&quot;excludeExternals&quot;:true,&quot;excludePrivate&quot;:true,&quot;excludeNotExported&quot;:true,&quot;links&quot;:[{&quot;label&quot;:&quot;Guides&quot;,&quot;url&quot;:&quot;https://developers.google.com/actions/extending-the-assistant&quot;},{&quot;label&quot;:&quot;Reference&quot;,&quot;url&quot;:&quot;https://developers.google.com/actions/reference/nodejsv2/overview&quot;},{&quot;label&quot;:&quot;Codelabs&quot;,&quot;url&quot;:&quot;https://developers.google.com/actions/codelabs/index&quot;},{&quot;label&quot;:&quot;Samples&quot;,&quot;url&quot;:&quot;https://developers.google.com/actions/samples/index&quot;},{&quot;label&quot;:&quot;Glossary&quot;,&quot;url&quot;:&quot;https://developers.google.com/actions/glossary&quot;}],&quot;outline&quot;:[{&quot;Actions SDK&quot;:{&quot;Overview&quot;:&quot;actionssdk&quot;,&quot;Conversation&quot;:&quot;classes/actionssdk.actionssdkconversation&quot;,&quot;api/v2&quot;:&quot;actionssdk_api_v2&quot;},&quot;Dialogflow&quot;:{&quot;Overview&quot;:&quot;dialogflow&quot;,&quot;Conversation&quot;:&quot;classes/dialogflow.dialogflowconversation&quot;,&quot;api/v1&quot;:&quot;dialogflow_api_v1&quot;,&quot;api/v2&quot;:&quot;dialogflow_api_v2&quot;},&quot;Smart Home&quot;:{&quot;Overview&quot;:&quot;smarthome&quot;,&quot;Smart Home App&quot;:&quot;interfaces/smarthome.smarthomeapp&quot;,&quot;api/v1&quot;:&quot;smarthome_api_v1&quot;},&quot;Framework&quot;:{&quot;Overview&quot;:&quot;framework&quot;,&quot;Assistant&quot;:&quot;assistant&quot;,&quot;Rich Responses&quot;:&quot;conversation_response&quot;}}],&quot;search&quot;:[{&quot;name&quot;:&quot;.*Conversation.data&quot;,&quot;subtitle&quot;:&quot;Session data&quot;},{&quot;name&quot;:&quot;conversation/response.*&quot;,&quot;subtitle&quot;:&quot;Rich response&quot;},{&quot;name&quot;:&quot;conversation.User.storage&quot;,&quot;subtitle&quot;:&quot;Persistent storage&quot;}]}-->
@@ -154,109 +206,88 @@
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
 					<li class=" tsd-kind-class tsd-parent-kind-external-module root">
-						<a href="../classes/conversation_response.basiccard.html" class="tsd-kind-icon">Basic<wbr>Card</a>
+						<a href="conversation.access.html" class="tsd-kind-icon">Access</a>
 					</li>
 					<li class=" tsd-kind-class tsd-parent-kind-external-module root">
-						<a href="../classes/conversation_response.browsecarousel.html" class="tsd-kind-icon">Browse<wbr>Carousel</a>
+						<a href="conversation.available.html" class="tsd-kind-icon">Available</a>
 					</li>
 					<li class=" tsd-kind-class tsd-parent-kind-external-module root">
-						<a href="../classes/conversation_response.browsecarouselitem.html" class="tsd-kind-icon">Browse<wbr>Carousel<wbr>Item</a>
+						<a href="conversation.availablesurfaces.html" class="tsd-kind-icon">Available<wbr>Surfaces</a>
 					</li>
 					<li class=" tsd-kind-class tsd-parent-kind-external-module root">
-						<a href="../classes/conversation_response.button.html" class="tsd-kind-icon">Button</a>
+						<a href="conversation.availablesurfacescapabilities.html" class="tsd-kind-icon">Available<wbr>Surfaces<wbr>Capabilities</a>
 					</li>
 					<li class=" tsd-kind-class tsd-parent-kind-external-module root">
-						<a href="../classes/conversation_response.image.html" class="tsd-kind-icon">Image</a>
+						<a href="conversation.capabilities.html" class="tsd-kind-icon">Capabilities</a>
+					</li>
+					<li class=" tsd-kind-class tsd-parent-kind-external-module tsd-has-type-parameter root">
+						<a href="conversation.conversation-1.html" class="tsd-kind-icon">Conversation</a>
 					</li>
 					<li class=" tsd-kind-class tsd-parent-kind-external-module root">
-						<a href="../classes/conversation_response.linkoutsuggestion.html" class="tsd-kind-icon">Link<wbr>Out<wbr>Suggestion</a>
+						<a href="conversation.device.html" class="tsd-kind-icon">Device</a>
 					</li>
 					<li class=" tsd-kind-class tsd-parent-kind-external-module root">
-						<a href="../classes/conversation_response.mediaobject.html" class="tsd-kind-icon">Media<wbr>Object</a>
+						<a href="conversation.input.html" class="tsd-kind-icon">Input</a>
 					</li>
 					<li class=" tsd-kind-class tsd-parent-kind-external-module root">
-						<a href="../classes/conversation_response.mediaresponse.html" class="tsd-kind-icon">Media<wbr>Response</a>
+						<a href="conversation.last.html" class="tsd-kind-icon">Last</a>
 					</li>
 					<li class=" tsd-kind-class tsd-parent-kind-external-module root">
-						<a href="../classes/conversation_response.openurlaction.html" class="tsd-kind-icon">Open<wbr>Url<wbr>Action</a>
+						<a href="conversation.name.html" class="tsd-kind-icon">Name</a>
 					</li>
 					<li class=" tsd-kind-class tsd-parent-kind-external-module root">
-						<a href="../classes/conversation_response.orderupdate.html" class="tsd-kind-icon">Order<wbr>Update</a>
+						<a href="conversation.profile.html" class="tsd-kind-icon">Profile</a>
 					</li>
 					<li class=" tsd-kind-class tsd-parent-kind-external-module root">
-						<a href="../classes/conversation_response.richresponse.html" class="tsd-kind-icon">Rich<wbr>Response</a>
-					</li>
-					<li class=" tsd-kind-class tsd-parent-kind-external-module root">
-						<a href="../classes/conversation_response.simpleresponse.html" class="tsd-kind-icon">Simple<wbr>Response</a>
-					</li>
-					<li class=" tsd-kind-class tsd-parent-kind-external-module root">
-						<a href="../classes/conversation_response.suggestions.html" class="tsd-kind-icon">Suggestions</a>
-					</li>
-					<li class=" tsd-kind-class tsd-parent-kind-external-module root">
-						<a href="../classes/conversation_response.table.html" class="tsd-kind-icon">Table</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-parent-kind-external-module root">
-						<a href="conversation_response.basiccardoptions.html" class="tsd-kind-icon">Basic<wbr>Card<wbr>Options</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-parent-kind-external-module root">
-						<a href="conversation_response.browsecarouselitemoptions.html" class="tsd-kind-icon">Browse<wbr>Carousel<wbr>Item<wbr>Options</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-parent-kind-external-module root">
-						<a href="conversation_response.browsecarouseloptions.html" class="tsd-kind-icon">Browse<wbr>Carousel<wbr>Options</a>
+						<a href="conversation.surface.html" class="tsd-kind-icon">Surface</a>
 					</li>
 				</ul>
 				<ul class="current">
-					<li class="current tsd-kind-interface tsd-parent-kind-external-module root">
-						<a href="conversation_response.buttonoptions.html" class="tsd-kind-icon">Button<wbr>Options</a>
+					<li class="current tsd-kind-class tsd-parent-kind-external-module root">
+						<a href="conversation.unauthorizederror.html" class="tsd-kind-icon">Unauthorized<wbr>Error</a>
 						<ul>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="conversation_response.buttonoptions.html#action" class="tsd-kind-icon">action</a>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-static">
+								<a href="conversation.unauthorizederror.html#error" class="tsd-kind-icon">Error</a>
 							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="conversation_response.buttonoptions.html#title" class="tsd-kind-icon">title</a>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-static">
+								<a href="conversation.unauthorizederror.html#message" class="tsd-kind-icon">message</a>
 							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="conversation_response.buttonoptions.html#url" class="tsd-kind-icon">url</a>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-static">
+								<a href="conversation.unauthorizederror.html#name" class="tsd-kind-icon">name</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-overwrite tsd-is-inherited tsd-is-static">
+								<a href="conversation.unauthorizederror.html#stack" class="tsd-kind-icon">stack</a>
 							</li>
 						</ul>
 					</li>
 				</ul>
 				<ul class="after-current">
-					<li class=" tsd-kind-interface tsd-parent-kind-external-module root">
-						<a href="conversation_response.imageoptions.html" class="tsd-kind-icon">Image<wbr>Options</a>
+					<li class=" tsd-kind-class tsd-parent-kind-external-module tsd-has-type-parameter root">
+						<a href="conversation.user.html" class="tsd-kind-icon">User</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module tsd-has-type-parameter root">
+						<a href="../interfaces/conversation.conversationapp.html" class="tsd-kind-icon">Conversation<wbr>App</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module tsd-has-type-parameter root">
+						<a href="../interfaces/conversation.conversationoptionsinit.html" class="tsd-kind-icon">Conversation<wbr>Options<wbr>Init</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module tsd-has-type-parameter root">
+						<a href="../interfaces/conversation.exceptionhandler.html" class="tsd-kind-icon">Exception<wbr>Handler</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-external-module root">
-						<a href="conversation_response.linkoutsuggestionoptions.html" class="tsd-kind-icon">Link<wbr>Out<wbr>Suggestion<wbr>Options</a>
+						<a href="../interfaces/conversation.oauth2config.html" class="tsd-kind-icon">OAuth2<wbr>Config</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-external-module root">
-						<a href="conversation_response.mediaobjectoptions.html" class="tsd-kind-icon">Media<wbr>Object<wbr>Options</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-parent-kind-external-module root">
-						<a href="conversation_response.mediaresponseoptions.html" class="tsd-kind-icon">Media<wbr>Response<wbr>Options</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-parent-kind-external-module root">
-						<a href="conversation_response.openurlactionoptions.html" class="tsd-kind-icon">Open<wbr>Url<wbr>Action<wbr>Options</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-parent-kind-external-module root">
-						<a href="conversation_response.richresponseoptions.html" class="tsd-kind-icon">Rich<wbr>Response<wbr>Options</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-parent-kind-external-module root">
-						<a href="conversation_response.simpleresponseoptions.html" class="tsd-kind-icon">Simple<wbr>Response<wbr>Options</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-parent-kind-external-module root">
-						<a href="conversation_response.tablecolumn.html" class="tsd-kind-icon">Table<wbr>Column</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-parent-kind-external-module root">
-						<a href="conversation_response.tableoptions.html" class="tsd-kind-icon">Table<wbr>Options</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-parent-kind-external-module root">
-						<a href="conversation_response.tablerow.html" class="tsd-kind-icon">Table<wbr>Row</a>
+						<a href="../interfaces/conversation.oauth2configclient.html" class="tsd-kind-icon">OAuth2<wbr>Config<wbr>Client</a>
 					</li>
 					<li class=" tsd-kind-type-alias tsd-parent-kind-external-module root">
-						<a href="../modules/conversation_response.html#mediaobjectstring" class="tsd-kind-icon">Media<wbr>Object<wbr>String</a>
+						<a href="../modules/conversation.html#intent" class="tsd-kind-icon">Intent</a>
 					</li>
 					<li class=" tsd-kind-type-alias tsd-parent-kind-external-module root">
-						<a href="../modules/conversation_response.html#richresponseitem" class="tsd-kind-icon">Rich<wbr>Response<wbr>Item</a>
+						<a href="../modules/conversation.html#response" class="tsd-kind-icon">Response</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-parent-kind-external-module root">
+						<a href="../modules/conversation.html#surfacecapability" class="tsd-kind-icon">Surface<wbr>Capability</a>
 					</li>
 				</ul>
 			</nav>
