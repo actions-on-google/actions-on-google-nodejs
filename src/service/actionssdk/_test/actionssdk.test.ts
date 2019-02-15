@@ -360,5 +360,5 @@ test('throwing an Error in catch makes library propogate error', async t => {
   app.catch(() => {
     throw new Error(message)
   })
-  await t.throws(app.handler({}, {}), message)
+  await t.throwsAsync(app.handler({}, {}), message)
 })

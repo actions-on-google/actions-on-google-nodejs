@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import ava, { RegisterContextual } from 'ava'
+import ava, { TestInterface } from 'ava'
 import * as sinon from 'sinon'
 
 import * as common from '../../common'
@@ -27,7 +27,7 @@ interface AvaContext {
   express: Express
 }
 
-const test = ava as RegisterContextual<AvaContext>
+const test = ava as TestInterface<AvaContext>
 
 test.beforeEach(t => {
   t.context.express = new Express()

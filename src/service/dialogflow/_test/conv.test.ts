@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import ava, { RegisterContextual } from 'ava'
+import ava, { TestInterface } from 'ava'
 import { DialogflowConversation } from '../conv'
 import * as Api from '../api/v2'
 import * as ActionsApi from '../../actionssdk/api/v2'
@@ -29,7 +29,7 @@ interface AvaContext {
   request: ActionsApi.GoogleActionsV2AppRequest
 }
 
-const test = ava as RegisterContextual<AvaContext>
+const test = ava as TestInterface<AvaContext>
 
 test.beforeEach(t => {
   t.context.request = {

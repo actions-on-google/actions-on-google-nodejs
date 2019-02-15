@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import ava, { RegisterContextual } from 'ava'
+import ava, { TestInterface } from 'ava'
 import * as sinon from 'sinon'
 
 import * as common from '../common'
@@ -27,7 +27,7 @@ interface AvaContext {
   app: AppHandler
 }
 
-const test = ava as RegisterContextual<AvaContext>
+const test = ava as TestInterface<AvaContext>
 
 test.beforeEach(t => {
   t.context.app = attach({})
@@ -43,7 +43,7 @@ test('app.frameworks is an object', t => {
 
 test('app.handler throws error by default', async t => {
   const stub = sinon.stub(common, 'error')
-  await t.throws(t.context.app.handler({}, {}))
+  await t.throwsAsync(t.context.app.handler({}, {}))
   t.true(stub.called)
   stub.restore()
 })

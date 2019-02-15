@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import ava, { RegisterContextual } from 'ava'
+import ava, { TestInterface } from 'ava'
 import { AppHandler } from '../../../assistant'
 import {
   dialogflow,
@@ -35,7 +35,7 @@ interface AvaContext {
   app: AppHandler & DialogflowApp<{}, {}, Contexts, DialogflowConversation>
 }
 
-const test = ava as RegisterContextual<AvaContext>
+const test = ava as TestInterface<AvaContext>
 
 test.beforeEach(t => {
   t.context.app = dialogflow()
@@ -55,7 +55,7 @@ test('app.debug is true when passed true', t => {
 })
 
 test('app without any handlers throws error', async t => {
-  await t.throws(t.context.app.handler({
+  await t.throwsAsync(t.context.app.handler({
     originalDetectIntentRequest: {
       payload: {
         isInSandbox: true,
@@ -165,7 +165,7 @@ test('app throws error when intent handler throws error', async t => {
   t.context.app.intent(intent, conv => {
     throw new Error(error)
   })
-  const res: Error = await t.throws(t.context.app.handler({
+  const res: Error = await t.throwsAsync(t.context.app.handler({
     session,
     queryResult: {
       intent: {
@@ -612,5 +612,5 @@ test('throwing an Error in catch makes library propogate error', async t => {
   app.catch(() => {
     throw new Error(message)
   })
-  await t.throws(app.handler({}, {}), message)
+  await t.throwsAsync(app.handler({}, {}), message)
 })

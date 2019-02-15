@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import ava, { RegisterContextual } from 'ava'
+import ava, { TestInterface } from 'ava'
 import { DialogflowConversation } from '../conv'
 import * as ApiV1 from '../api/v1'
 import { clone } from '../../../common'
@@ -24,7 +24,7 @@ interface AvaContext {
   conv: DialogflowConversation
 }
 
-const test = ava as RegisterContextual<AvaContext>
+const test = ava as TestInterface<AvaContext>
 
 test.beforeEach(t => {
   t.context.conv = new DialogflowConversation({

@@ -44,16 +44,16 @@
   ],
   "devDependencies": {
     "@types/sinon": "^4.3.3",
-    "ava": "^0.25.0",
+    "ava": "^1.2.1",
     "concurrently": "^3.5.1",
     "live-server": "^1.2.0",
-    "nyc": "^11.6.0",
+    "nyc": "^13.3.0",
     "sinon": "^6.0.0",
     "tslint": "^5.9.1",
     "tslint-eslint-rules": "^5.1.0",
     "typedoc": "^0.11.1",
-    "typedoc-plugin-external-module-map": "^0.1.0",
     "typedoc-neo-theme": "^1.0.0",
+    "typedoc-plugin-external-module-map": "^0.1.0",
     "typescript": "^3.2.0"
   },
   "dependencies": {
