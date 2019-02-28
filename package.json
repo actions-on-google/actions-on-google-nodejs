@@ -14,7 +14,7 @@
     "clean": "rm -rf dist",
     "clean:pack": "rm -f *.tgz",
     "build": "tsc",
-    "postinstall": "test -d ./node_modules/actions-on-google && cd ./node_modules/actions-on-google; test -d dist || yarn build:clean",
+    "prepare": "yarn build:clean",
     "build:watch": "tsc -w",
     "build:clean": "yarn clean:pack && yarn clean && yarn build",
     "package": "yarn build:clean && yarn pack",
