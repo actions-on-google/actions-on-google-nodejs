@@ -323,6 +323,65 @@ test('conv generates different conv.data correctly', t => {
   })
 })
 
+test('conv generates different conv.data correctly when only with init data', t => {
+  const response = `What's up?`
+  const data = {
+    a: '1',
+    b: '2',
+    c: {
+      d: '3',
+      e: '4',
+    },
+  }
+  const a = '7'
+  const conv = new ActionsSdkConversation<typeof data>({
+    body: {
+      conversation: {
+        conversationToken: JSON.stringify({ data }),
+      },
+    } as Api.GoogleActionsV2AppRequest,
+    init: {
+      data,
+    },
+  })
+  t.deepEqual(conv.data, data)
+  conv.ask(response)
+  conv.data.a = a
+  t.deepEqual(clone(conv.serialize()), {
+    expectUserResponse: true,
+    expectedInputs: [
+      {
+        inputPrompt: {
+          richInitialPrompt: {
+            items: [
+              {
+                simpleResponse: {
+                  textToSpeech: response,
+                },
+              },
+            ],
+          },
+        },
+        possibleIntents: [
+          {
+            intent: 'actions.intent.TEXT',
+          },
+        ],
+      },
+    ],
+    conversationToken: JSON.stringify({
+      data: {
+        a,
+        b: '2',
+        c: {
+          d: '3',
+          e: '4',
+        },
+      },
+    }),
+  })
+})
+
 test('conv generates same conv.data persisted', t => {
   const response = `What's up?`
   const data = {
