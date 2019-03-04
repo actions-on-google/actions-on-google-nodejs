@@ -16,6 +16,7 @@
 
 import { ExpressHandler, Express, ExpressMetadata, express } from './express'
 import { LambdaHandler, Lambda, LambdaMetadata, lambda } from './lambda'
+import { koa, KoaHandler, Koa, KoaMetaData } from './koa'
 import { JsonObject } from '../common'
 
 export interface Frameworks {
@@ -34,7 +35,7 @@ export interface Framework<THandler> {
 }
 
 /** @public */
-export interface OmniHandler extends StandardHandler, ExpressHandler, LambdaHandler {
+export interface OmniHandler extends StandardHandler, ExpressHandler, LambdaHandler, KoaHandler {
   /** @public */
   // tslint:disable-next-line:no-any allow any inputs and outputs depending on framework
   (...args: any[]): any
@@ -51,7 +52,10 @@ export interface BuiltinFrameworkMetadata extends FrameworkMetadata {
   express?: ExpressMetadata
 
   /** @public */
-  lambda?: LambdaMetadata
+  lambda?: LambdaMetadata,
+
+  /** @public */
+  koa?: KoaMetaData
 }
 
 export interface BuiltinFrameworks extends Frameworks {
@@ -65,13 +69,20 @@ export interface BuiltinFrameworks extends Frameworks {
    * Plug and play web framework support for lambda API gateway
    * @public
    */
-  lambda: Lambda
+  lambda: Lambda,
+
+  /**
+   * Plug and play web framework support for koa using koa-bodyparser
+   * @public
+   */
+  koa: Koa
 }
 
 /** @hidden */
 export const builtin: BuiltinFrameworks = {
   express,
   lambda,
+  koa,
 }
 
 /** @public */
