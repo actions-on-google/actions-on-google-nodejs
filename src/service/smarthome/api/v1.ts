@@ -59,12 +59,16 @@ export interface SmartHomeV1QueryRequest {
 
 export interface SmartHomeV1ExecuteRequestExecution {
   command: string,
-  params: ApiClientObjectMap<any>
+  params: ApiClientObjectMap<any>,
+  challenge?: {
+    pin?: string,
+    ack?: boolean,
+  }
 }
 
 export interface SmartHomeV1ExecuteRequestCommands {
   devices: SmartHomeV1QueryRequestDevices[],
-  execution: SmartHomeV1ExecuteRequestExecution[]
+  execution: SmartHomeV1ExecuteRequestExecution[],
 }
 
 export interface SmartHomeV1ExecuteRequestPayload {
@@ -141,13 +145,18 @@ export interface SmartHomeV1ExecuteResponseCommands {
   status: SmartHomeV1ExecuteStatus,
   errorCode?: SmartHomeV1ExecuteErrors,
   debugString?: string,
-  states?: ApiClientObjectMap<any>
+  states?: ApiClientObjectMap<any>,
+  challengeNeeded?: {
+    type: challengeType,
+  },
 }
+
+export type challengeType = 'ackNeeded' | 'pinNeeded' | 'challengeFailedPinNeeded'
 
 export interface SmartHomeV1ExecutePayload {
   commands: SmartHomeV1ExecuteResponseCommands[],
   errorCode?: SmartHomeV1ExecuteErrors,
-  debugString?: string
+  debugString?: string,
 }
 
 export interface SmartHomeV1ExecuteResponse {

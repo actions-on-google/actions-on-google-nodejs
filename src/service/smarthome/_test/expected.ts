@@ -183,6 +183,84 @@ export const EXECUTE_RESPONSE: Api.SmartHomeV1ExecuteResponse = {
   },
 }
 
+export const EXECUTE_REQUEST_2FA_ACK: Api.SmartHomeV1ExecuteRequest = {
+  requestId: 'ff36a3cc-ec34-11e6-b1a0-64510650abcf',
+  inputs: [{
+    intent: 'action.devices.EXECUTE',
+    payload: {
+      commands: [{
+        devices: [{
+          id: '123',
+        }],
+        execution: [{
+          command: 'action.devices.commands.TemperatureSetting',
+          params: {
+            thermostatMode: 'heat',
+          },
+          challenge: {
+            ack: true,
+          },
+        }],
+      }],
+    },
+  }],
+}
+
+export const EXECUTE_RESPONSE_2FA_ACK: Api.SmartHomeV1ExecuteResponse = {
+  requestId: 'ff36a3cc-ec34-11e6-b1a0-64510650abcf',
+  payload: {
+    commands: [{
+      ids: ['123'],
+      status: 'ERROR',
+      states: {
+        thermostatMode: 'heat',
+        thermostatTemperatureSetpoint: 28,
+      },
+      errorCode: 'challengeNeeded',
+      challengeNeeded: {
+        type: 'ackNeeded',
+      },
+    }],
+  },
+}
+
+export const EXECUTE_REQUEST_2FA_PIN: Api.SmartHomeV1ExecuteRequest = {
+  requestId: 'ff36a3cc-ec34-11e6-b1a0-64510650abcf',
+  inputs: [{
+    intent: 'action.devices.EXECUTE',
+    payload: {
+      commands: [{
+        devices: [{
+          id: '123',
+        }],
+        execution: [{
+          command: 'action.devices.commands.LockUnlock',
+          params: {
+            lock: false,
+          },
+          challenge: {
+            pin: '333222',
+          },
+        }],
+      }],
+    },
+  }],
+}
+
+export const EXECUTE_RESPONSE_2FA_PIN_FAIL: Api.SmartHomeV1ExecuteResponse = {
+  requestId: 'ff36a3cc-ec34-11e6-b1a0-64510650abcf',
+  payload: {
+    commands: [{
+      ids: ['123'],
+      status: 'ERROR',
+      errorCode: 'challengeNeeded',
+      challengeNeeded: {
+        type: 'challengeFailedPinNeeded',
+      },
+    }],
+  },
+}
+
 export const DISCONNECT_REQUEST: Api.SmartHomeV1DisconnectRequest = {
   requestId: 'ff36a3cc-ec34-11e6-b1a0-64510650abcf', /* Any unique ID */
   inputs: [{
