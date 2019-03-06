@@ -789,6 +789,63 @@ test('conv generates different conv.data correctly', t => {
   })
 })
 
+test('conv generates different conv.data correctly when only with init data', t => {
+  const session = 'sessionId123'
+  const response = `What's up?`
+  const data = {
+    a: '1',
+    b: '2',
+    c: {
+      d: '3',
+      e: '4',
+    },
+  }
+  const a = '7'
+  const conv = new DialogflowConversation<typeof data>({
+    body: {
+      session,
+    } as Api.GoogleCloudDialogflowV2WebhookRequest,
+    init: {
+      data,
+    },
+  })
+  t.deepEqual(conv.data, data)
+  conv.ask(response)
+  conv.data.a = a
+  t.deepEqual(clone(conv.serialize()), {
+    payload: {
+      google: {
+        expectUserResponse: true,
+        richResponse: {
+          items: [
+            {
+              simpleResponse: {
+                textToSpeech: response,
+              },
+            },
+          ],
+        },
+      },
+    },
+    outputContexts: [
+      {
+        name: `${session}/contexts/_actions_on_google`,
+        lifespanCount: 99,
+        parameters: {
+          data: JSON.stringify({
+            a,
+            b: '2',
+            c: {
+              d: '3',
+              e: '4',
+            },
+          }),
+        },
+      },
+    ],
+  })
+})
+
 test('conv generates same conv.data as no output contexts', t => {
   const session = 'sessionId123'
   const response = `What's up?`

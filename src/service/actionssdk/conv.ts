@@ -35,7 +35,7 @@ const deserializeData = <TConvData>(
   const { conversation = {} } = body
   const { conversationToken } = conversation
   const data: TConvData = conversationToken ?
-    JSON.parse(conversationToken).data : (defaultData || {})
+    JSON.parse(conversationToken).data : Object.assign({}, defaultData)
   return data
 }
 

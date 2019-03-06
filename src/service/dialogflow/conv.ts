@@ -102,7 +102,7 @@ const deserializeData = <TContexts extends Contexts, TConvData>(
     }
   }
 
-  return defaultData || {} as TConvData
+  return Object.assign({}, defaultData) as TConvData
 }
 
 /** @public */
