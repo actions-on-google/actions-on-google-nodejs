@@ -84,6 +84,7 @@ export const SYNC_RESPONSE: Api.SmartHomeV1SyncResponse = {
         barValue: false,
         bazValue: 'bar',
       },
+      roomHint: 'Kitchen',
     }],
   },
 }

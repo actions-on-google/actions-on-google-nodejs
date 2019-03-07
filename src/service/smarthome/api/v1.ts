@@ -112,7 +112,8 @@ export interface SmartHomeV1SyncDevices {
   willReportState: boolean,
   deviceInfo?: SmartHomeV1SyncDeviceInfo,
   attributes?: ApiClientObjectMap<any>,
-  customData?: ApiClientObjectMap<any>
+  customData?: ApiClientObjectMap<any>,
+  roomHint?: string
 }
 
 export interface SmartHomeV1SyncPayload {
