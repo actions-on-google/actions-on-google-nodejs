@@ -173,13 +173,13 @@ export interface GoogleActionsV2AppRequest {
    */
   conversation?: GoogleActionsV2Conversation
   /**
-   * Information about the device the user is using to interact with the app.
+   * Information about the device the user is using to interact with the Action.
    */
   device?: GoogleActionsV2Device
   /**
-   * List of inputs corresponding to the expected inputs specified by the app.
-   * For the initial conversation trigger, the input contains information on
-   * how the user triggered the conversation.
+   * List of inputs corresponding to the expected inputs specified by the
+   * Action. For the initial conversation trigger, the input contains
+   * information on how the user triggered the conversation.
    */
   inputs?: GoogleActionsV2Input[]
   /**
@@ -199,27 +199,28 @@ export interface GoogleActionsV2AppRequest {
 
 export interface GoogleActionsV2AppResponse {
   /**
-   * An opaque token that is recirculated to the app every conversation
+   * An opaque token that is recirculated to the Action every conversation
    * turn.
    */
   conversationToken?: string
   /**
-   * Custom Push Message allows developers to send structured data to Google
-   * for interactions on the Assistant.
+   * A custom push message that allows developers to send structured data to
+   * Actions on Google.
    */
   customPushMessage?: GoogleActionsV2CustomPushMessage
   /**
-   * Indicates whether the app is expecting a user response. This is true when
-   * the conversation is ongoing, false when the conversation is done.
+   * Indicates whether the Action is expecting a user response. This is true
+   * when the conversation is ongoing, false when the conversation is done.
    */
   expectUserResponse?: boolean
   /**
-   * List of inputs the app expects, each input can be a built-in intent, or an
-   * input taking list of possible intents. Only one input is supported for now.
+   * List of inputs the Action expects, each input can be a common Actions on
+   * Google intent (start with 'actions.'), or an input taking list of possible
+   * intents. Only one input is supported for now.
    */
   expectedInputs?: GoogleActionsV2ExpectedInput[]
   /**
-   * Final response when the app does not expect user's input.
+   * Final response when the Action does not expect user's input.
    */
   finalResponse?: GoogleActionsV2FinalResponse
   /**
@@ -233,7 +234,7 @@ export interface GoogleActionsV2AppResponse {
    */
   resetUserStorage?: boolean
   /**
-   * An opaque token controlled by the application that is persisted across
+   * An opaque token controlled by the Action that is persisted across
    * conversations for a particular user. If empty or unspecified, the
    * existing persisted token will be unchanged.
    * The maximum size of the string is 10k bytes.
@@ -333,13 +334,13 @@ export interface GoogleActionsV2Conversation {
    */
   conversationId?: string
   /**
-   * Opaque token specified by the app in the last conversation turn. It can
-   * be used by an app to track the conversation or to store conversation
+   * Opaque token specified by the Action in the last conversation turn. It can
+   * be used by an Action to track the conversation or to store conversation
    * related data.
    */
   conversationToken?: string
   /**
-   * Type indicates the state of the conversation in its life cycle.
+   * Type indicates the state of the conversation in its lifecycle.
    */
   type?: GoogleActionsV2ConversationType
 }
@@ -449,10 +450,8 @@ export interface GoogleActionsV2DeliveryAddressValueSpecAddressOptions {
 
 export interface GoogleActionsV2Device {
   /**
-   * Represents actual device location such as lat, lng, and formatted address.
-   * Requires the
-   * DEVICE_COARSE_LOCATION
-   * or
+   * Represents actual device location such as latitude, longitude, and
+   * formatted address. Requires the DEVICE_COARSE_LOCATION or
    * DEVICE_PRECISE_LOCATION
    * permission.
    */
@@ -518,12 +517,12 @@ export interface GoogleActionsV2ExpectedInput {
   inputPrompt?: GoogleActionsV2InputPrompt
   /**
    * List of intents that can be used to fulfill this input.
-   * To have the Google Assistant just return the raw user input, the app
+   * To have Actions on Google just return the raw user input, the app
    * should ask for the `actions.intent.TEXT` intent.
    */
   possibleIntents?: GoogleActionsV2ExpectedIntent[]
   /**
-   * List of phrases the app wants Google to use for speech biasing.
+   * List of phrases the Action wants Google to use for speech biasing.
    * Up to 1000 phrases are allowed.
    */
   speechBiasingHints?: string[]
@@ -574,24 +573,25 @@ export interface GoogleActionsV2FinalResponse {
 
 export interface GoogleActionsV2Input {
   /**
-   * A list of provided argument values for the input requested by the app.
+   * A list of provided argument values for the input requested by the Action.
    */
   arguments?: GoogleActionsV2Argument[]
   /**
    * Indicates the user's intent. For the first conversation turn, the intent
-   * will refer to the intent of the action that is being triggered. For
-   * subsequent conversation turns, the intent will be a built-in intent.
+   * will refer to the triggering intent for the Action. For
+   * subsequent conversation turns, the intent will be a common Actions on
+   * Google intent (starts with 'actions.').
    * For example, if the expected input is `actions.intent.OPTION`, then the
    * the intent specified here will either be `actions.intent.OPTION` if the
    * Google Assistant was able to satisfy that intent, or
    * `actions.intent.TEXT` if the user provided other information.
+   * See https://developers.google.com/actions/reference/rest/intents.
    */
   intent?: string
   /**
-   * Raw input transcription from each turn of conversation that was used to
-   * provide this input.
-   * Multiple conversation turns that don't involve the app may be required
-   * for the assistant to provide some types of input.
+   * Raw input transcription from each turn of conversation.
+   * Multiple conversation turns may be required for Actions on Google to
+   * provide some types of input to the Action.
    */
   rawInputs?: GoogleActionsV2RawInput[]
 }
@@ -1463,9 +1463,11 @@ export interface GoogleActionsV2RichResponse {
   /**
    * A list of UI elements which compose the response
    * The items must meet the following requirements:
-   * 1. The first item must be a SimpleResponse
+   * 1. The first item must be a
+   * SimpleResponse
    * 2. At most two SimpleResponse
-   * 3. At most one card (e.g. BasicCard or
+   * 3. At most one card (e.g.
+   * BasicCard or
    *  StructuredResponse or
    *  MediaResponse
    * 4. Cards may not be used if an actions.intent.OPTION intent is used
@@ -2045,17 +2047,17 @@ export interface GoogleActionsV2User {
    */
   locale?: string
   /**
-   * List of user entitlements for every package name listed in action package,
-   * if any.
+   * List of user entitlements for every package name listed in the Action
+   * package, if any.
    */
   packageEntitlements?: GoogleActionsV2PackageEntitlement[]
   /**
-   * Contains permissions granted by user to this app.
+   * Contains permissions granted by user to this Action.
    */
   permissions?: GoogleActionsV2UserPermissions[]
   /**
    * Information about the end user. Some fields are only available if the user
-   * has given permission to provide this information to the app.
+   * has given permission to provide this information to the Action.
    */
   profile?: GoogleActionsV2UserProfile
   /**
@@ -2121,12 +2123,13 @@ export interface GoogleRpcStatus {
 export interface GoogleTypeDate {
   /**
    * Day of month. Must be from 1 to 31 and valid for the year and month, or 0
-   * if specifying a year/month where the day is not significant.
+   * if specifying a year by itself or a year and month where the day is not
+   * significant.
    */
   day?: number
   /**
-   * Month of year. Must be from 1 to 12, or 0 if specifying a date without a
-   * month.
+   * Month of year. Must be from 1 to 12, or 0 if specifying a year without a
+   * month and day.
    */
   month?: number
   /**
