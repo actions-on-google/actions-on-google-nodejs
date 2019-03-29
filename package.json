@@ -24,9 +24,9 @@
     "docs:hide": "echo 'a[href=\"modules/conversation.html\"], a[href=\"conversation.html\"], a[href=\"../modules/conversation.html\"] { display: none !important; }' >> docs/assets/css/main.css",
     "docs": "typedoc --options typedoc.json --theme node_modules/typedoc-neo-theme/bin/default && touch docs/.nojekyll && yarn docs:redirect && yarn docs:hide",
     "docs:clean": "rm -rf docs && yarn docs",
-    "docs:serve": "yarn docs:clean && live-server docs",
+    "docs:serve": "yarn docs:clean && hs docs -o",
     "coverage": "yarn coverage:serve",
-    "coverage:serve": "yarn test && live-server coverage"
+    "coverage:serve": "yarn test && hs coverage -o"
   },
   "repository": {
     "type": "git",
@@ -46,7 +46,7 @@
     "@types/sinon": "^4.3.3",
     "ava": "^1.2.1",
     "concurrently": "^3.5.1",
-    "live-server": "^1.2.0",
+    "http-server": "^0.11.1",
     "nyc": "^13.3.0",
     "sinon": "^6.0.0",
     "tslint": "^5.9.1",
