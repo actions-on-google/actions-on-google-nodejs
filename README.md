@@ -203,19 +203,18 @@ This library supports only Actions SDK fulfillment version 2.
 
 To ensure that your fulfillment uses version 2, set the [`"fulfillmentApiVersion": 2`](https://github.com/actions-on-google/actionssdk-eliza-nodejs/blob/a44a1b0ef0026ce2b0e525ce38bebbf8540ce344/eliza.json#L41) property in your action package.
 
-## References and How to report bugs
-* Actions on Google documentation: [https://developers.google.com/actions/](https://developers.google.com/actions/).
-* If you find any issues, please open a bug on [GitHub](https://github.com/actions-on-google/actions-on-google-nodejs).
-* Questions are answered on [StackOverflow](https://stackoverflow.com/questions/tagged/actions-on-google).
-
-## How to make contributions?
-Please read and follow the steps in the CONTRIBUTING.md.
-
+## References & Issues
++ Questions? Go to [StackOverflow](https://stackoverflow.com/questions/tagged/actions-on-google), [Assistant Developer Community on Reddit](https://www.reddit.com/r/GoogleAssistantDev/) or [Support](https://developers.google.com/actions/support/).
++ For bugs, please report an issue on Github.
++ Actions on Google [Documentation](https://developers.google.com/actions/extending-the-assistant)
++ Actions on Google [Codelabs](https://codelabs.developers.google.com/?cat=Assistant).
++ [Webhook Boilerplate Template](https://github.com/actions-on-google/dialogflow-webhook-boilerplate-nodejs) for Actions on Google.
+ 
+## Make Contributions
+Please read and follow the steps in the [CONTRIBUTING.md](CONTRIBUTING.md).
+ 
 ## License
-See LICENSE.md.
-
+See [LICENSE](LICENSE).
+ 
 ## Terms
-Your use of this library is subject to, and by using or downloading the sample files you agree to comply with, the [Google APIs Terms of Service](https://developers.google.com/terms/).
-
-## Google+
-Actions on Google Developers Community on Google+ [https://g.co/actionsdev](https://g.co/actionsdev).
+Your use of this sample is subject to, and by using or downloading the sample files you agree to comply with, the [Google APIs Terms of Service](https://developers.google.com/terms/).
