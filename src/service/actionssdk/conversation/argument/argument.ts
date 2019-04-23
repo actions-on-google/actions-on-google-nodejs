@@ -169,6 +169,7 @@ export interface ArgumentsNamed {
    * Is undefined as a noop.
    * Use {@link Status#get|conv.arguments.status.get('LINK')} to explicitly get the status.
    * @public
+   * @deprecated
    */
   LINK?: DeepLinkArgument
 

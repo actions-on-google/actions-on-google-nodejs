@@ -16,10 +16,13 @@
 
 import * as Api from '../../api/v2'
 import { Helper } from './helper'
-import { ProtoAny } from '../../../../common'
+import { ProtoAny, deprecate } from '../../../../common'
 import { DialogSpec } from '../conversation'
 
-/** @public */
+/**
+ * @public
+ * @deprecated
+ */
 export interface DeepLinkOptions {
   /**
    * The name of the link destination.
@@ -46,12 +49,17 @@ export interface DeepLinkOptions {
   reason?: string
 }
 
-/** @public */
+/**
+ * @public
+ * @deprecated
+ */
 export type DeepLinkArgument = undefined
 
 /**
  * Requests the user to transfer to a linked out Android app intent. Using this feature
- * requires verifying the linked app in the (Actions console)[console.actions.google.com].
+ * requires verifying the linked app in the [Actions console](console.actions.google.com).
+ *
+ * @deprecated Access will be by request only
  *
  * @example
  * ```javascript
@@ -102,9 +110,12 @@ export class DeepLink extends Helper<
 > {
   /**
    * @param options DeepLink options
+   * @deprecated
    * @public
    */
   constructor(options: DeepLinkOptions) {
+    deprecate('DeepLink', 'Access will be by request only')
+
     const extension: ProtoAny<DialogSpec, Api.GoogleActionsV2LinkValueSpecLinkDialogSpec> = {
       '@type': 'type.googleapis.com/google.actions.v2.LinkValueSpec.LinkDialogSpec',
       destinationName: options.destination,
