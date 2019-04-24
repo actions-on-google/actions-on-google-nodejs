@@ -451,7 +451,9 @@ export interface GoogleActionsV2DeliveryAddressValueSpecAddressOptions {
 export interface GoogleActionsV2Device {
   /**
    * Represents actual device location such as latitude, longitude, and
-   * formatted address. Requires the DEVICE_COARSE_LOCATION or
+   * formatted address. Requires the
+   * DEVICE_COARSE_LOCATION
+   * or
    * DEVICE_PRECISE_LOCATION
    * permission.
    */
@@ -1498,6 +1500,10 @@ export interface GoogleActionsV2RichResponseItem {
    */
   carouselBrowse?: GoogleActionsV2UiElementsCarouselBrowse
   /**
+   * Immersive response used to render on Canvas.
+   */
+  immersiveResponse?: GoogleActionsV2UiElementsImmersiveResponse
+  /**
    * Response indicating a set of media to be played.
    */
   mediaResponse?: GoogleActionsV2MediaResponse
@@ -1850,6 +1856,22 @@ export interface GoogleActionsV2UiElementsImage {
    * Optional.
    */
   width?: number
+}
+
+export interface GoogleActionsV2UiElementsImmersiveResponse {
+  /**
+   * The url of the application.
+   */
+  loadImmersiveUrl?: string
+  /**
+   * Provide an option so that mic won't be opened after this immersive
+   * response.
+   */
+  suppressMic?: boolean
+  /**
+   * Communicate the following JSON object to the app.
+   */
+  updatedState?: ApiClientObjectMap<any>
 }
 
 export interface GoogleActionsV2UiElementsLinkOutSuggestion {

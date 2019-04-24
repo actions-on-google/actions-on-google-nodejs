@@ -22,6 +22,7 @@ import { MediaResponse } from './media'
 import { OrderUpdate } from './order'
 import { LinkOutSuggestion } from './linkout'
 import { Suggestions } from './suggestion'
+import { ImmersiveResponse } from './canvas'
 
 /** @public */
 export type RichResponseItem =
@@ -33,6 +34,7 @@ export type RichResponseItem =
   MediaResponse |
   OrderUpdate |
   LinkOutSuggestion |
+  ImmersiveResponse |
   Api.GoogleActionsV2RichResponseItem
 
 /** @public */
@@ -123,6 +125,7 @@ export class RichResponse implements Api.GoogleActionsV2RichResponse {
    * @public
    */
   add(...items: RichResponseItem[]) {
+    const raw = this.items!
     for (const item of items) {
       if (typeof item === 'string') {
         this.add(new SimpleResponse(item))
@@ -133,30 +136,34 @@ export class RichResponse implements Api.GoogleActionsV2RichResponse {
         continue
       }
       if (item instanceof SimpleResponse) {
-        this.items!.push({ simpleResponse: item })
+        raw.push({ simpleResponse: item })
         continue
       }
       if (item instanceof BasicCard) {
-        this.items!.push({ basicCard: item })
+        raw.push({ basicCard: item })
         continue
       }
       if (item instanceof Table) {
-        this.items!.push({ tableCard: item })
+        raw.push({ tableCard: item })
         continue
       }
       if (item instanceof BrowseCarousel) {
-        this.items!.push({ carouselBrowse: item })
+        raw.push({ carouselBrowse: item })
         continue
       }
       if (item instanceof MediaResponse) {
-        this.items!.push({ mediaResponse: item })
+        raw.push({ mediaResponse: item })
         continue
       }
       if (item instanceof OrderUpdate) {
-        this.items!.push({ structuredResponse: { orderUpdate: item } })
+        raw.push({ structuredResponse: { orderUpdate: item } })
         continue
       }
-      this.items!.push(item)
+      if (item instanceof ImmersiveResponse) {
+        raw.push({ immersiveResponse: item })
+        continue
+      }
+      raw.push(item)
     }
     return this
   }
