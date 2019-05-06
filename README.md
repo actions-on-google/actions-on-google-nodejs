@@ -15,6 +15,14 @@ supports Dialogflow, Actions SDK, and Smart Home fulfillment.
 
 Install the library with either `npm install actions-on-google` or `yarn add actions-on-google` if you use yarn.
 
+### Developer Preview
+
+To support features under Developer Preview, the library has a special [`preview`](https://github.com/actions-on-google/actions-on-google-nodejs/tree/preview) branch which can be installed using the `@preview` tag.
+
+This is installed with either `npm install actions-on-google@preview` or `yarn add actions-on-google@preview`.
+
+The `preview` tag will be kept up to date with every new version of the library.
+
 ### Conversational Services
 
 #### Dialogflow
