@@ -107,8 +107,8 @@ const deserializeData = <TContexts extends Contexts, TConvData>(
 
 /** @public */
 export class DialogflowConversation<
-  TConvData = {},
-  TUserStorage = {},
+  TConvData = JsonObject,
+  TUserStorage = JsonObject,
   TContexts extends Contexts = Contexts,
 > extends Conversation<TUserStorage> {
   /** @public */

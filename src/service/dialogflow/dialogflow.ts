@@ -62,14 +62,7 @@ export interface DialogflowIntentHandler<
 
 /** @hidden */
 export interface DialogflowIntentHandlers {
-  [event: string]: DialogflowIntentHandler<
-    Contexts,
-    {},
-    {},
-    DialogflowConversation<{}, {}>,
-    Parameters,
-    Argument
-  > | string | undefined
+  [event: string]: Function | string | undefined
 }
 
 /** @hidden */
@@ -81,29 +74,22 @@ export interface DialogflowHandlers<
 > {
   intents: DialogflowIntentHandlers
   catcher: ExceptionHandler<TUserStorage, TConversation>
-  fallback?: DialogflowIntentHandler<
-    Contexts,
-    {},
-    {},
-    DialogflowConversation<{}, {}>,
-    Parameters,
-    Argument
-  > | string
+  fallback?: Function | string
 }
 
 /** @public */
 export interface DialogflowMiddleware<
-  TConversationPlugin extends DialogflowConversation<{}, {}, Contexts>
+  TConversationPlugin extends DialogflowConversation
 > {
   (
     /** @public */
-    conv: DialogflowConversation<{}, {}, Contexts>,
+    conv: DialogflowConversation,
 
     /** @public */
     framework: BuiltinFrameworkMetadata,
-  ): (DialogflowConversation<{}, {}, Contexts> & TConversationPlugin) |
+  ): (DialogflowConversation & TConversationPlugin) |
     void |
-    Promise<DialogflowConversation<{}, {}, Contexts> & TConversationPlugin> |
+    Promise<DialogflowConversation & TConversationPlugin> |
     Promise<void>
 }
 
@@ -499,7 +485,8 @@ export const dialogflow: Dialogflow = <
       await conv.user._verifyProfile(this._client!, this.auth!.client.id)
     }
     for (const middleware of this._middlewares) {
-      const result = middleware(conv, metadata)
+      // tslint:disable-next-line:no-any genericize Conversation type
+      const result = middleware(conv as any, metadata)
       conv = (result instanceof DialogflowConversation ? result : ((await result) || conv)) as (
         DialogflowConversation<TConvData, TUserStorage, TContexts>
       )

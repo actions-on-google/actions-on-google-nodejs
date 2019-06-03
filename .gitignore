@@ -8,3 +8,4 @@ dist
 package
 package-lock.json
 docs
+yarn.lock

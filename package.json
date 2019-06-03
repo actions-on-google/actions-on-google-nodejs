@@ -43,6 +43,7 @@
     "client library"
   ],
   "devDependencies": {
+    "@gerrit0/typedoc": "^0.15.0",
     "@types/sinon": "^4.3.3",
     "ava": "^1.4.1",
     "concurrently": "^3.5.1",
@@ -51,10 +52,8 @@
     "sinon": "^6.0.0",
     "tslint": "^5.9.1",
     "tslint-eslint-rules": "^5.1.0",
-    "typedoc": "^0.14.2",
-    "typedoc-neo-theme": "^1.0.0",
-    "typedoc-plugin-external-module-map": "^0.1.0",
-    "typescript": "^3.2.0"
+    "typedoc-neo-theme": "^1.0.1",
+    "typescript": "~3.5.1"
   },
   "dependencies": {
     "@types/aws-lambda": "^0.0.33",
@@ -62,7 +61,7 @@
     "@types/express": "^4.11.1",
     "@types/node": "^9.4.6",
     "debug": "^3.1.0",
-    "google-auth-library": "^1.3.2",
+    "google-auth-library": "^1.6.1",
     "googleapis": "^27.0.0"
   }
 }
