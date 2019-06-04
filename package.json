@@ -16,7 +16,7 @@
     "build": "tsc",
     "build:watch": "tsc -w",
     "build:clean": "yarn clean:pack && yarn clean && yarn build",
-    "package": "yarn build:clean && yarn pack",
+    "package": "yarn build:clean && npm pack",
     "test": "yarn build:clean && yarn lint && nyc ava --fail-fast",
     "test:watch": "yarn build:clean && concurrently -rk \"yarn build:watch\" \"ava -w --fail-fast\"",
     "test:ci": "yarn audit && yarn test",
