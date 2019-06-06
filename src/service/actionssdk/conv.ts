@@ -15,6 +15,7 @@
  */
 
 import * as Api from './api/v2'
+import { JsonObject } from '../../common'
 import { Conversation, ConversationBaseOptions, ConversationOptionsInit } from './conversation'
 
 /** @public */
@@ -41,8 +42,8 @@ const deserializeData = <TConvData>(
 
 /** @public */
 export class ActionsSdkConversation<
-  TConvData = {},
-  TUserStorage = {}
+  TConvData = JsonObject,
+  TUserStorage = JsonObject
 > extends Conversation<TUserStorage> {
   /** @public */
   body: Api.GoogleActionsV2AppRequest

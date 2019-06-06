@@ -13,3 +13,5 @@ script
 package
 .nycrc.json
 typedoc.json
+package-lock.json
+yarn.lock

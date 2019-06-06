@@ -112,20 +112,24 @@ export class ContextValues<TContexts extends Contexts> {
       const parameters = context.parameters!
       if (isV1(context)) {
         const lifespan = context.lifespan!
-        this.input[name] = {
-          name,
-          lifespan,
-          parameters,
-        }
+        Object.assign(this.input, {
+          [name]: {
+            name,
+            lifespan,
+            parameters,
+          },
+        })
         continue
       }
       const lifespanCount = context.lifespanCount!
       const find = /([^/]+)?$/.exec(name)
-      this.input[find ? find[0] : name] = {
-        name,
-        lifespan: lifespanCount!,
-        parameters,
-      }
+      Object.assign(this.input, {
+        [find ? find[0] : name]: {
+          name,
+          lifespan: lifespanCount!,
+          parameters,
+        },
+      })
     }
     this.output = {}
   }

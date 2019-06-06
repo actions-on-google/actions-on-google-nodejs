@@ -162,3 +162,5 @@ export {
 } from './service/smarthome'
 
 export * from './service/smarthome/api/v1'
+
+export { JsonObject } from './common'

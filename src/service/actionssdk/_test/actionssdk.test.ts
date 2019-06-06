@@ -21,7 +21,7 @@ import {
   ActionsSdkMiddleware,
   ActionsSdkIntentHandler,
 } from '../actionssdk'
-import { Conversation, ActionsSdkConversation, Argument } from '..'
+import { ActionsSdkConversation, Argument } from '..'
 import * as Api from '../api/v2'
 import { OAuth2Client } from 'google-auth-library'
 import { clone } from '../../../common'
@@ -89,11 +89,10 @@ test('intent handler is invoked', (t) => {
   const app = actionssdk()
   let invoked = false
 
-  const intentHandler = (conv: Conversation<{}>) => {
+  app.intent('intent.foo', (conv) => {
     invoked = true
     return conv.ask('hello')
-  }
-  app.intent('intent.foo', intentHandler)
+  })
 
   const promise = app.handler(buildRequest('NEW', 'intent.foo'), {})
 
@@ -108,18 +107,18 @@ test('fallback handler is invoked', t => {
   let intentInvoked = false
   let fallbackInvoked = false
 
-  const intentHandler = (conv: Conversation<{}>) => {
+  app.intent('intent.foo', (conv) => {
     intentInvoked = true
     return conv.ask('hello')
-  }
-  const fallbackHandler = (conv: Conversation<{}>) => {
+  })
+  app.intent('intent.bar', (conv) => {
+    intentInvoked = true
+    return conv.ask('hello')
+  })
+  app.fallback((conv) => {
     fallbackInvoked = true
     return conv.ask('fallback')
-  }
-
-  app.intent('intent.foo', intentHandler)
-  app.intent('intent.bar', intentHandler)
-  app.fallback(fallbackHandler)
+  })
 
   const promise = app.handler(buildRequest('NEW', 'some.other.intent'), {})
 

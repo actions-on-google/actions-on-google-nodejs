@@ -40,7 +40,7 @@ debug.log = info
 export const deprecate = (feature: string, alternative: string) =>
   info(`${feature} is *DEPRECATED*: ${alternative}`)
 
-/** @hidden */
+/** @public */
 export interface JsonObject {
   // tslint:disable-next-line:no-any JSON value can be anything
   [key: string]: any
