@@ -109,7 +109,7 @@ export interface SmartHomeV1SyncDeviceInfo {
 }
 
 export interface SmartHomeV1SyncOtherDeviceIds {
-  agentId: string
+  agentId?: string
   deviceId: string
 }
 
