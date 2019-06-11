@@ -108,6 +108,9 @@ export type GoogleActionsV2UiElementsCarouselBrowseImageDisplayOptions = 'DEFAUL
 export type GoogleActionsV2UiElementsCarouselSelectImageDisplayOptions = 'DEFAULT' | 'WHITE' | 'CROPPED'
 
 
+export type GoogleActionsV2UiElementsCollectionSelectImageDisplayOptions = 'DEFAULT' | 'WHITE' | 'CROPPED'
+
+
 export type GoogleActionsV2UiElementsOpenUrlActionUrlTypeHint = 'URL_TYPE_HINT_UNSPECIFIED' | 'AMP_CONTENT'
 
 
@@ -451,7 +454,9 @@ export interface GoogleActionsV2DeliveryAddressValueSpecAddressOptions {
 export interface GoogleActionsV2Device {
   /**
    * Represents actual device location such as latitude, longitude, and
-   * formatted address. Requires the DEVICE_COARSE_LOCATION or
+   * formatted address. Requires the
+   * DEVICE_COARSE_LOCATION
+   * or
    * DEVICE_PRECISE_LOCATION
    * permission.
    */
@@ -770,9 +775,13 @@ export interface GoogleActionsV2OptionInfo {
 
 export interface GoogleActionsV2OptionValueSpec {
   /**
-   * A select with a card carousel GUI
+   * A select with a card carousel GUI, use collection_select instead.
    */
   carouselSelect?: GoogleActionsV2UiElementsCarouselSelect
+  /**
+   * A select with a card collection GUI
+   */
+  collectionSelect?: GoogleActionsV2UiElementsCollectionSelect
   /**
    * A select with a list card GUI
    */
@@ -994,8 +1003,11 @@ export interface GoogleActionsV2OrdersMerchant {
 
 export interface GoogleActionsV2OrdersOrder {
   /**
-   * User-visible order id. Must be set on the initial synchronous
-   * OrderUpdate/confirmation.
+   * Required: Merchant assigned internal order id. This id must be unique, and
+   * is required for subsequent order update operations. This id may be set to
+   * the provided google_order_id, or any other unique value. Note that the id
+   * presented to users is the user_visible_order_id, which may be a different,
+   * more user-friendly value.
    */
   actionOrderId?: string
   /**
@@ -1494,7 +1506,7 @@ export interface GoogleActionsV2RichResponseItem {
    */
   basicCard?: GoogleActionsV2UiElementsBasicCard
   /**
-   * Carousel browse card.
+   * Carousel browse card, use collection_browse instead..
    */
   carouselBrowse?: GoogleActionsV2UiElementsCarouselBrowse
   /**
@@ -1823,6 +1835,49 @@ export interface GoogleActionsV2UiElementsCarouselSelectCarouselItem {
    * Title of the carousel item. When tapped, this text will be
    * posted back to the conversation verbatim as if the user had typed it.
    * Each title must be unique among the set of carousel items.
+   * Required.
+   */
+  title?: string
+}
+
+export interface GoogleActionsV2UiElementsCollectionSelect {
+  /**
+   * Type of image display option. Optional.
+   */
+  imageDisplayOptions?: GoogleActionsV2UiElementsCollectionSelectImageDisplayOptions
+  /**
+   * min: 2 max: 10
+   */
+  items?: GoogleActionsV2UiElementsCollectionSelectCollectionItem[]
+  /**
+   * Subtitle of the collection. Optional.
+   */
+  subtitle?: string
+  /**
+   * Title of the collection. Optional.
+   */
+  title?: string
+}
+
+export interface GoogleActionsV2UiElementsCollectionSelectCollectionItem {
+  /**
+   * Body text of the card.
+   */
+  description?: string
+  /**
+   * Optional.
+   */
+  image?: GoogleActionsV2UiElementsImage
+  /**
+   * See google.actions.v2.OptionInfo
+   * for details.
+   * Required.
+   */
+  optionInfo?: GoogleActionsV2OptionInfo
+  /**
+   * Title of the collection item. When tapped, this text will be
+   * posted back to the conversation verbatim as if the user had typed it.
+   * Each title must be unique among the set of collection items.
    * Required.
    */
   title?: string
