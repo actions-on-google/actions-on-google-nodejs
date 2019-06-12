@@ -31,6 +31,31 @@ export class Surface {
   constructor(surface: Api.GoogleActionsV2Surface = {}) {
     this.capabilities = new Capabilities(surface.capabilities)
   }
+
+  /**
+   * Checks if surface has an attribute like a capability
+   *
+   * @example
+   * ```javascript
+   *
+   * app.intent('Default Welcome Intent', conv => {
+   *   if (conv.surface.has('actions.capability.AUDIO_OUTPUT')) {
+   *     conv.ask('You can hear me! How are you?')
+   *   } else {
+   *     conv.ask('You can read this! How are you?')
+   *   }
+   * })
+   * ```
+   *
+   * @param attribute An attribute like SurfaceCapability
+   * @public
+   */
+  has(attribute: SurfaceCapability) {
+    if (this.capabilities.has(attribute)) {
+      return true
+    }
+    return false
+  }
 }
 
 export class Capabilities {
@@ -85,6 +110,31 @@ export class AvailableSurfaces {
   constructor(list: Api.GoogleActionsV2Surface[]) {
     this.list = list.map(surface => new Surface(surface))
     this.capabilities = new AvailableSurfacesCapabilities(this.list)
+  }
+
+  /**
+   * Checks if available surfaces has an attribute like a capability
+   *
+   * @example
+   * ```javascript
+   *
+   * app.intent('Default Welcome Intent', conv => {
+   *   if (conv.available.surfaces.has('actions.capability.SCREEN_OUTPUT')) {
+   *     conv.ask('You have a device that can view images! How are you?')
+   *   } else {
+   *     conv.ask('You do not have a device that can view images! How are you?')
+   *   }
+   * })
+   * ```
+   *
+   * @param attribute An attribute like SurfaceCapability
+   * @public
+   */
+  has(attribute: SurfaceCapability) {
+    if (this.capabilities.has(attribute)) {
+      return true
+    }
+    return false
   }
 }
 

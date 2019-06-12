@@ -603,3 +603,53 @@ test('conv does not enforce simple response for raw RichResponse item', t => {
   conv.ask({ basicCard: {} })
   t.is(typeof conv.response(), 'object')
 })
+
+test('surface capability shortcut works', t => {
+  const conv = new Conversation({
+    request: {
+      surface: {
+        capabilities: [
+          {
+            name: 'actions.capability.SCREEN_OUTPUT',
+          },
+          {
+            name: 'actions.capability.MEDIA_RESPONSE_AUDIO',
+          },
+          {
+            name: 'actions.capability.AUDIO_OUTPUT',
+          },
+        ],
+      },
+    },
+  })
+  t.true(conv.surface.has('actions.capability.AUDIO_OUTPUT'))
+  t.false(conv.surface.has('actions.capability.WEB_BROWSER'))
+})
+
+test('available surface capability shortcut works', t => {
+  const conv = new Conversation({
+    request: {
+      availableSurfaces: [
+        {
+          capabilities: [
+            {
+              name: 'actions.capability.SCREEN_OUTPUT',
+            },
+            {
+              name: 'actions.capability.MEDIA_RESPONSE_AUDIO',
+            },
+          ],
+        },
+        {
+          capabilities: [
+            {
+              name: 'actions.capability.AUDIO_OUTPUT',
+            },
+          ],
+        },
+      ],
+    },
+  })
+  t.true(conv.available.surfaces.has('actions.capability.AUDIO_OUTPUT'))
+  t.false(conv.available.surfaces.has('actions.capability.WEB_BROWSER'))
+})
