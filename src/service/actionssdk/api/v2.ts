@@ -120,6 +120,9 @@ export type GoogleActionsV2UiElementsTableCardColumnPropertiesHorizontalAlignmen
 export type GoogleActionsV2UserPermissions = 'UNSPECIFIED_PERMISSION' | 'NAME' | 'DEVICE_PRECISE_LOCATION' | 'DEVICE_COARSE_LOCATION' | 'UPDATE'
 
 
+export type GoogleActionsV2UserUserVerificationStatus = 'UNKNOWN' | 'GUEST' | 'VERIFIED'
+
+
 
 export interface GoogleActionsTransactionsV3CompletePurchaseValue {
   /**
@@ -2125,6 +2128,10 @@ export interface GoogleActionsV2User {
    * The maximum size of the string is 10k characters.
    */
   userStorage?: string
+  /**
+   * Indicates the verification status of the user.
+   */
+  userVerificationStatus?: GoogleActionsV2UserUserVerificationStatus
 }
 
 export interface GoogleActionsV2UserNotification {
