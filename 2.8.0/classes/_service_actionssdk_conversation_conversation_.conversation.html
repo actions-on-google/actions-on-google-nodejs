@@ -1,0 +1,871 @@
+<!doctype html>
+<html class="default no-js">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>Conversation | actions-on-google</title>
+	<meta name="description" content="">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="../assets/css/main.css">
+</head>
+<body>
+<header>
+	<div class="tsd-page-toolbar">
+		<div class="container">
+			<div class="table-wrap">
+				<div class="table-cell" id="tsd-search" data-index="../assets/js/search.js" data-base="..">
+					<div class="field">
+						<label for="tsd-search-field" class="tsd-widget search no-caption">Search</label>
+						<input id="tsd-search-field" type="text" />
+					</div>
+					<ul class="results">
+						<li class="state loading">Preparing search index...</li>
+						<li class="state failure">The search index is not available</li>
+					</ul>
+					<ul class="results-priority" style="display:none">
+						<li data-name=".*Conversation.data" data-subtitle="Session data"></li>
+						<li data-name="conversation/response.*" data-subtitle="Rich response"></li>
+						<li data-name=".*\.User.storage" data-subtitle="Persistent storage"></li>
+					</ul>
+					<a href="../index.html" class="title">actions-on-google</a>
+					&emsp;<a href="https://developers.google.com/actions/extending-the-assistant" class="title">Guides</a>
+					&emsp;<a href="https://developers.google.com/actions/reference/nodejsv2/overview" class="title">Reference</a>
+					&emsp;<a href="https://developers.google.com/actions/codelabs/index" class="title">Codelabs</a>
+					&emsp;<a href="https://developers.google.com/actions/samples/index" class="title">Samples</a>
+					&emsp;<a href="https://developers.google.com/actions/glossary" class="title">Glossary</a>
+				</div>
+				<div class="table-cell" id="tsd-widgets">
+					<div id="tsd-filter">
+						<a href="#" class="tsd-widget options no-caption" data-toggle="options">Options</a>
+						<div class="tsd-filter-group">
+							<div class="tsd-select" id="tsd-filter-visibility">
+								<span class="tsd-select-label">All</span>
+								<ul class="tsd-select-list">
+									<li data-value="public">Public</li>
+									<li data-value="protected">Public/Protected</li>
+									<li data-value="private" class="selected">All</li>
+								</ul>
+							</div>
+							<input type="checkbox" id="tsd-filter-inherited" checked />
+							<label class="tsd-widget" for="tsd-filter-inherited">Inherited</label>
+						</div>
+					</div>
+					<a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="tsd-page-title">
+		<div class="container">
+			<ul class="tsd-breadcrumb">
+				<li>
+					<a href="../modules/_service_actionssdk_conversation_conversation_.html">service/actionssdk/conversation/conversation</a>
+				</li>
+				<li>
+					<a href="_service_actionssdk_conversation_conversation_.conversation.html">Conversation</a>
+				</li>
+			</ul>
+		</div>
+	</div>
+</header>
+<div class="container container-main">
+	<div class="row">
+		<div class="col-3 col-menu menu-sticky-wrap menu-highlight">
+			<nav class="tsd-navigation outline primary">
+				<a style="margin-left:0em" href="../globals.html">Globals</a>
+				<ul style="display:none">
+					{&quot;Actions SDK&quot;:{&quot;Overview&quot;:&quot;modules/_service_actionssdk_actionssdk_&quot;,&quot;Conversation&quot;:&quot;classes/_service_actionssdk_conv_.actionssdkconversation&quot;,&quot;api/v2&quot;:&quot;modules/_service_actionssdk_api_v2_&quot;},&quot;Dialogflow&quot;:{&quot;Overview&quot;:&quot;modules/_service_dialogflow_dialogflow_&quot;,&quot;Conversation&quot;:&quot;classes/_service_dialogflow_conv_.dialogflowconversation&quot;,&quot;api/v1&quot;:&quot;modules/_service_dialogflow_api_v1_&quot;,&quot;api/v2&quot;:&quot;modules/_service_dialogflow_api_v2_&quot;},&quot;Smart Home&quot;:{&quot;Overview&quot;:&quot;modules/_service_smarthome_smarthome_&quot;,&quot;Smart Home App&quot;:&quot;interfaces/_service_smarthome_smarthome_.smarthomeapp&quot;,&quot;api/v1&quot;:&quot;modules/_service_smarthome_api_v1_&quot;},&quot;Framework&quot;:{&quot;Overview&quot;:&quot;modules/_framework_framework_&quot;,&quot;Assistant&quot;:&quot;modules/_assistant_&quot;,&quot;Rich Responses&quot;:&quot;modules/_service_actionssdk_conversation_conversation_&quot;}}
+				</ul>
+			</nav>
+		</div>
+		<div class="col-7 offset-3 col-content">
+			<h1>Class Conversation&lt;TUserStorage&gt;</h1>
+			<section class="tsd-panel tsd-comment"></section>
+			<section class="tsd-panel tsd-type-parameters">
+				<h3>Type parameters</h3>
+				<ul class="tsd-type-parameters">
+					<li>
+						<h4>TUserStorage</h4>
+					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel tsd-hierarchy">
+				<h3>Hierarchy</h3>
+				<ul class="tsd-hierarchy">
+					<li>
+						<span class="target">Conversation</span>
+						<ul class="tsd-hierarchy">
+							<li>
+								<a href="_service_actionssdk_conv_.actionssdkconversation.html" class="tsd-signature-type">ActionsSdkConversation</a>
+							</li>
+							<li>
+								<a href="_service_dialogflow_conv_.dialogflowconversation.html" class="tsd-signature-type">DialogflowConversation</a>
+							</li>
+						</ul>
+					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel-group tsd-index-group">
+				<section class="tsd-panel tsd-index-panel">
+					<div class="tsd-index-content">
+						<section class="tsd-index-section ">
+							<h3>Properties</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_service_actionssdk_conversation_conversation_.conversation.html#arguments" class="tsd-kind-icon">arguments</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_service_actionssdk_conversation_conversation_.conversation.html#available" class="tsd-kind-icon">available</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_service_actionssdk_conversation_conversation_.conversation.html#device" class="tsd-kind-icon">device</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_service_actionssdk_conversation_conversation_.conversation.html#digested" class="tsd-kind-icon">digested</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_service_actionssdk_conversation_conversation_.conversation.html#expectuserresponse" class="tsd-kind-icon">expectUserResponse</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_service_actionssdk_conversation_conversation_.conversation.html#headers" class="tsd-kind-icon">headers</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_service_actionssdk_conversation_conversation_.conversation.html#id" class="tsd-kind-icon">id</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_service_actionssdk_conversation_conversation_.conversation.html#input" class="tsd-kind-icon">input</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_service_actionssdk_conversation_conversation_.conversation.html#noinputs" class="tsd-kind-icon">noInputs</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_service_actionssdk_conversation_conversation_.conversation.html#request" class="tsd-kind-icon">request</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_service_actionssdk_conversation_conversation_.conversation.html#responses" class="tsd-kind-icon">responses</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_service_actionssdk_conversation_conversation_.conversation.html#sandbox" class="tsd-kind-icon">sandbox</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_service_actionssdk_conversation_conversation_.conversation.html#screen" class="tsd-kind-icon">screen</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_service_actionssdk_conversation_conversation_.conversation.html#speechbiasing" class="tsd-kind-icon">speechBiasing</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_service_actionssdk_conversation_conversation_.conversation.html#surface" class="tsd-kind-icon">surface</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_service_actionssdk_conversation_conversation_.conversation.html#type" class="tsd-kind-icon">type</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_service_actionssdk_conversation_conversation_.conversation.html#user" class="tsd-kind-icon">user</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section ">
+							<h3>Methods</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_service_actionssdk_conversation_conversation_.conversation.html#add" class="tsd-kind-icon">add</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_service_actionssdk_conversation_conversation_.conversation.html#ask" class="tsd-kind-icon">ask</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_service_actionssdk_conversation_conversation_.conversation.html#close" class="tsd-kind-icon">close</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter"><a href="_service_actionssdk_conversation_conversation_.conversation.html#json" class="tsd-kind-icon">json</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_service_actionssdk_conversation_conversation_.conversation.html#response" class="tsd-kind-icon">response</a></li>
+							</ul>
+						</section>
+					</div>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Properties</h2>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="arguments" class="tsd-anchor"></a>
+					<h3>arguments</h3>
+					<div class="tsd-signature tsd-kind-icon">arguments<span class="tsd-signature-symbol">:</span> <a href="_service_actionssdk_conversation_argument_argument_.arguments.html" class="tsd-signature-type">Arguments</a></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in
+								<a href="https://github.com/actions-on-google/actions-on-google-nodejs/blob/master/src/service/actionssdk/conversation/conversation.ts#L210">
+									service/actionssdk/conversation/conversation.ts:210
+								</a>
+							</li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="available" class="tsd-anchor"></a>
+					<h3>available</h3>
+					<div class="tsd-signature tsd-kind-icon">available<span class="tsd-signature-symbol">:</span> <a href="_service_actionssdk_conversation_surface_.available.html" class="tsd-signature-type">Available</a></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in
+								<a href="https://github.com/actions-on-google/actions-on-google-nodejs/blob/master/src/service/actionssdk/conversation/conversation.ts#L184">
+									service/actionssdk/conversation/conversation.ts:184
+								</a>
+							</li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="device" class="tsd-anchor"></a>
+					<h3>device</h3>
+					<div class="tsd-signature tsd-kind-icon">device<span class="tsd-signature-symbol">:</span> <a href="_service_actionssdk_conversation_device_.device.html" class="tsd-signature-type">Device</a></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in
+								<a href="https://github.com/actions-on-google/actions-on-google-nodejs/blob/master/src/service/actionssdk/conversation/conversation.ts#L213">
+									service/actionssdk/conversation/conversation.ts:213
+								</a>
+							</li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="digested" class="tsd-anchor"></a>
+					<h3>digested</h3>
+					<div class="tsd-signature tsd-kind-icon">digested<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> =&nbsp;false</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in
+								<a href="https://github.com/actions-on-google/actions-on-google-nodejs/blob/master/src/service/actionssdk/conversation/conversation.ts#L187">
+									service/actionssdk/conversation/conversation.ts:187
+								</a>
+							</li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="expectuserresponse" class="tsd-anchor"></a>
+					<h3>expect<wbr>User<wbr>Response</h3>
+					<div class="tsd-signature tsd-kind-icon">expect<wbr>User<wbr>Response<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> =&nbsp;true</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in
+								<a href="https://github.com/actions-on-google/actions-on-google-nodejs/blob/master/src/service/actionssdk/conversation/conversation.ts#L178">
+									service/actionssdk/conversation/conversation.ts:178
+								</a>
+							</li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="headers" class="tsd-anchor"></a>
+					<h3>headers</h3>
+					<div class="tsd-signature tsd-kind-icon">headers<span class="tsd-signature-symbol">:</span> <a href="../interfaces/_framework_framework_.headers.html" class="tsd-signature-type">Headers</a></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in
+								<a href="https://github.com/actions-on-google/actions-on-google-nodejs/blob/master/src/service/actionssdk/conversation/conversation.ts#L172">
+									service/actionssdk/conversation/conversation.ts:172
+								</a>
+							</li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="id" class="tsd-anchor"></a>
+					<h3>id</h3>
+					<div class="tsd-signature tsd-kind-icon">id<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in
+								<a href="https://github.com/actions-on-google/actions-on-google-nodejs/blob/master/src/service/actionssdk/conversation/conversation.ts#L229">
+									service/actionssdk/conversation/conversation.ts:229
+								</a>
+							</li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography tsd-comment-shorttext">
+						<div class="lead">
+							<p>Gets the unique conversation ID. It&#39;s a new ID for the initial query,
+							and stays the same until the end of the conversation.</p>
+							</div><dl class="tsd-comment-tags"><dt>example</dt>
+							<dd><pre><code class="language-javascript">
+app.intent(<span class="hljs-string">'actions.intent.MAIN'</span>, conv =&gt; {
+  <span class="hljs-keyword">const</span> conversationId = conv.id
+})</code></pre>
+						</dd></dl></div><div class="tsd-comment tsd-typography tsd-comment-tags">
+						<dl class="tsd-comment-tags"><dt>example</dt>
+							<dd><pre><code class="language-javascript">
+app.intent(<span class="hljs-string">'actions.intent.MAIN'</span>, conv =&gt; {
+  <span class="hljs-keyword">const</span> conversationId = conv.id
+})</code></pre>
+						</dd></dl>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="input" class="tsd-anchor"></a>
+					<h3>input</h3>
+					<div class="tsd-signature tsd-kind-icon">input<span class="tsd-signature-symbol">:</span> <a href="_service_actionssdk_conversation_input_.input.html" class="tsd-signature-type">Input</a></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in
+								<a href="https://github.com/actions-on-google/actions-on-google-nodejs/blob/master/src/service/actionssdk/conversation/conversation.ts#L198">
+									service/actionssdk/conversation/conversation.ts:198
+								</a>
+							</li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="noinputs" class="tsd-anchor"></a>
+					<h3>no<wbr>Inputs</h3>
+					<div class="tsd-signature tsd-kind-icon">no<wbr>Inputs<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><a href="_service_actionssdk_conversation_response_simple_.simpleresponse.html" class="tsd-signature-type">SimpleResponse</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> =&nbsp;[]</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in
+								<a href="https://github.com/actions-on-google/actions-on-google-nodejs/blob/master/src/service/actionssdk/conversation/conversation.ts#L266">
+									service/actionssdk/conversation/conversation.ts:266
+								</a>
+							</li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography tsd-comment-shorttext">
+						<div class="lead">
+							<p>Set reprompts when users don&#39;t provide input to this action (no-input errors).
+								Each reprompt represents as the <a href="_service_actionssdk_conversation_response_simple_.simpleresponse.html">SimpleResponse</a>, but raw strings also can be specified
+								for convenience (they&#39;re passed to the constructor of <a href="_service_actionssdk_conversation_response_simple_.simpleresponse.html">SimpleResponse</a>).
+								Notice that this value is not kept over conversations. Thus, it is necessary to set
+							the reprompts per each conversation response.</p>
+							</div><dl class="tsd-comment-tags"><dt>example</dt>
+							<dd><pre><code class="language-javascript">
+app.intent('actions.intent.MAIN', conv =&gt; {
+  conv.noInputs = [
+    'Are you still there?',
+    'Hello?',
+    new SimpleResponse({
+      text: 'Talk to you later. Bye!',
+      speech: '&lt;speak&gt;Talk to you later. Bye!&lt;/speak&gt;'
+    })
+  ]
+  conv.ask('What's your favorite color?')
+})</code></pre>
+						</dd></dl></div><div class="tsd-comment tsd-typography tsd-comment-tags">
+						<dl class="tsd-comment-tags"><dt>example</dt>
+							<dd><pre><code class="language-javascript">
+app.intent('actions.intent.MAIN', conv =&gt; {
+  conv.noInputs = [
+    'Are you still there?',
+    'Hello?',
+    new SimpleResponse({
+      text: 'Talk to you later. Bye!',
+      speech: '&lt;speak&gt;Talk to you later. Bye!&lt;/speak&gt;'
+    })
+  ]
+  conv.ask('What's your favorite color?')
+})</code></pre>
+						</dd></dl>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="request" class="tsd-anchor"></a>
+					<h3>request</h3>
+					<div class="tsd-signature tsd-kind-icon">request<span class="tsd-signature-symbol">:</span> <a href="../interfaces/_service_actionssdk_api_v2_.googleactionsv2apprequest.html" class="tsd-signature-type">GoogleActionsV2AppRequest</a></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in
+								<a href="https://github.com/actions-on-google/actions-on-google-nodejs/blob/master/src/service/actionssdk/conversation/conversation.ts#L169">
+									service/actionssdk/conversation/conversation.ts:169
+								</a>
+							</li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="responses" class="tsd-anchor"></a>
+					<h3>responses</h3>
+					<div class="tsd-signature tsd-kind-icon">responses<span class="tsd-signature-symbol">:</span> <a href="../modules/_service_actionssdk_conversation_conversation_.html#response" class="tsd-signature-type">Response</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> =&nbsp;[]</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in
+								<a href="https://github.com/actions-on-google/actions-on-google-nodejs/blob/master/src/service/actionssdk/conversation/conversation.ts#L175">
+									service/actionssdk/conversation/conversation.ts:175
+								</a>
+							</li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="sandbox" class="tsd-anchor"></a>
+					<h3>sandbox</h3>
+					<div class="tsd-signature tsd-kind-icon">sandbox<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in
+								<a href="https://github.com/actions-on-google/actions-on-google-nodejs/blob/master/src/service/actionssdk/conversation/conversation.ts#L195">
+									service/actionssdk/conversation/conversation.ts:195
+								</a>
+							</li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography tsd-comment-shorttext">
+						<div class="lead">
+							<p>True if the app is being tested in sandbox mode. Enable sandbox
+								mode in the <a href="console.actions.google.com">Actions console</a> to test
+							transactions.</p>
+					</div></div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="screen" class="tsd-anchor"></a>
+					<h3>screen</h3>
+					<div class="tsd-signature tsd-kind-icon">screen<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in
+								<a href="https://github.com/actions-on-google/actions-on-google-nodejs/blob/master/src/service/actionssdk/conversation/conversation.ts#L239">
+									service/actionssdk/conversation/conversation.ts:239
+								</a>
+							</li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography tsd-comment-shorttext">
+						<div class="lead">
+							<p>Shortcut for
+							<a href="_service_actionssdk_conversation_surface_.capabilities.html">conv.surface.capabilities.has(&#39;actions.capability.SCREEN_OUTPUT&#39;)</a></p>
+					</div></div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="speechbiasing" class="tsd-anchor"></a>
+					<h3>speech<wbr>Biasing</h3>
+					<div class="tsd-signature tsd-kind-icon">speech<wbr>Biasing<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> =&nbsp;[]</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in
+								<a href="https://github.com/actions-on-google/actions-on-google-nodejs/blob/master/src/service/actionssdk/conversation/conversation.ts#L282">
+									service/actionssdk/conversation/conversation.ts:282
+								</a>
+							</li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography tsd-comment-shorttext">
+						<div class="lead">
+							<p>Sets speech biasing options.</p>
+							</div><dl class="tsd-comment-tags"><dt>example</dt>
+							<dd><pre><code class="language-javascript">
+app.intent(<span class="hljs-string">'actions.intent.MAIN'</span>, conv =&gt; {
+  conv.speechBiasing = [<span class="hljs-string">'red'</span>, <span class="hljs-string">'blue'</span>, <span class="hljs-string">'green'</span>]
+  conv.ask(<span class="hljs-string">'What is your favorite color out of red, blue, and green?'</span>)
+})</code></pre>
+						</dd></dl></div><div class="tsd-comment tsd-typography tsd-comment-tags">
+						<dl class="tsd-comment-tags"><dt>example</dt>
+							<dd><pre><code class="language-javascript">
+app.intent(<span class="hljs-string">'actions.intent.MAIN'</span>, conv =&gt; {
+  conv.speechBiasing = [<span class="hljs-string">'red'</span>, <span class="hljs-string">'blue'</span>, <span class="hljs-string">'green'</span>]
+  conv.ask(<span class="hljs-string">'What is your favorite color out of red, blue, and green?'</span>)
+})</code></pre>
+						</dd></dl>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="surface" class="tsd-anchor"></a>
+					<h3>surface</h3>
+					<div class="tsd-signature tsd-kind-icon">surface<span class="tsd-signature-symbol">:</span> <a href="_service_actionssdk_conversation_surface_.surface.html" class="tsd-signature-type">Surface</a></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in
+								<a href="https://github.com/actions-on-google/actions-on-google-nodejs/blob/master/src/service/actionssdk/conversation/conversation.ts#L181">
+									service/actionssdk/conversation/conversation.ts:181
+								</a>
+							</li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="type" class="tsd-anchor"></a>
+					<h3>type</h3>
+					<div class="tsd-signature tsd-kind-icon">type<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Api.GoogleActionsV2ConversationType</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in
+								<a href="https://github.com/actions-on-google/actions-on-google-nodejs/blob/master/src/service/actionssdk/conversation/conversation.ts#L232">
+									service/actionssdk/conversation/conversation.ts:232
+								</a>
+							</li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="user" class="tsd-anchor"></a>
+					<h3>user</h3>
+					<div class="tsd-signature tsd-kind-icon">user<span class="tsd-signature-symbol">:</span> <a href="_service_actionssdk_conversation_user_.user.html" class="tsd-signature-type">User</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TUserStorage</span><span class="tsd-signature-symbol">&gt;</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in
+								<a href="https://github.com/actions-on-google/actions-on-google-nodejs/blob/master/src/service/actionssdk/conversation/conversation.ts#L207">
+									service/actionssdk/conversation/conversation.ts:207
+								</a>
+							</li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography tsd-comment-shorttext">
+						<div class="lead">
+							<p>Gets the <a href="_service_actionssdk_conversation_user_.user.html">User</a> object.
+								The user object contains information about the user, including
+								a string identifier and personal information (requires requesting permissions,
+							see <a href="_service_actionssdk_conversation_helper_permission_permission_.permission.html">conv.ask(new Permission)</a>).</p>
+					</div></div>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Methods</h2>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="add" class="tsd-anchor"></a>
+					<h3>add</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">add<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">...</span>responses<span class="tsd-signature-symbol">: </span><a href="../modules/_service_actionssdk_conversation_conversation_.html#response" class="tsd-signature-type">Response</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">this</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in
+										<a href="https://github.com/actions-on-google/actions-on-google-nodejs/blob/master/src/service/actionssdk/conversation/conversation.ts#L332">
+											service/actionssdk/conversation/conversation.ts:332
+										</a>
+									</li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5><span class="tsd-flag ts-flagRest">Rest</span> <span class="tsd-signature-symbol">...</span>responses: <a href="../modules/_service_actionssdk_conversation_conversation_.html#response" class="tsd-signature-type">Response</a><span class="tsd-signature-symbol">[]</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">this</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="ask" class="tsd-anchor"></a>
+					<h3>ask</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">ask<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">...</span>responses<span class="tsd-signature-symbol">: </span><a href="../modules/_service_actionssdk_conversation_conversation_.html#response" class="tsd-signature-type">Response</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">this</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in
+										<a href="https://github.com/actions-on-google/actions-on-google-nodejs/blob/master/src/service/actionssdk/conversation/conversation.ts#L384">
+											service/actionssdk/conversation/conversation.ts:384
+										</a>
+									</li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography tsd-comment-shorttext">
+								<div class="lead">
+									<p>Asks to collect user&#39;s input. All user&#39;s queries need to be sent to the app.
+									<a href="https://developers.google.com/actions/policies/general-policies#user_experience" class="external">     The guidelines when prompting the user for a response must be followed at all times</a>.</p>
+									</div><dl class="tsd-comment-tags"><dt>example</dt>
+									<dd><pre><code class="language-javascript">
+<span class="hljs-comment">// Actions SDK</span>
+<span class="hljs-keyword">const</span> app = actionssdk()
+
+app.intent(<span class="hljs-string">'actions.intent.MAIN'</span>, conv =&gt; {
+  <span class="hljs-keyword">const</span> ssml = <span class="hljs-string">'&lt;speak&gt;Hi! &lt;break time="1"/&gt; '</span> +
+    <span class="hljs-string">'I can read out an ordinal like &lt;say-as interpret-as="ordinal"&gt;123&lt;/say-as&gt;. '</span> +
+    <span class="hljs-string">'Say a number.&lt;/speak&gt;'</span>
+  conv.ask(ssml)
+})
+
+app.intent(<span class="hljs-string">'actions.intent.TEXT'</span>, (conv, input) =&gt; {
+  <span class="hljs-keyword">if</span> (input === <span class="hljs-string">'bye'</span>) {
+    <span class="hljs-keyword">return</span> conv.close(<span class="hljs-string">'Goodbye!'</span>)
+  }
+  <span class="hljs-keyword">const</span> ssml = <span class="hljs-string">`&lt;speak&gt;You said, &lt;say-as interpret-as="ordinal"&gt;<span class="hljs-subst">${input}</span>&lt;/say-as&gt;&lt;/speak&gt;`</span>
+  conv.ask(ssml)
+})
+
+<span class="hljs-comment">// Dialogflow</span>
+<span class="hljs-keyword">const</span> app = dialogflow()
+
+app.intent(<span class="hljs-string">'Default Welcome Intent'</span>, conv =&gt; {
+  conv.ask(<span class="hljs-string">'Welcome to action snippets! Say a number.'</span>)
+})
+
+app.intent(<span class="hljs-string">'Number Input'</span>, (conv, {num}) =&gt; {
+  conv.close(<span class="hljs-string">`You said <span class="hljs-subst">${num}</span>`</span>)
+})</code></pre>
+								</dd></dl></div><div class="tsd-comment tsd-typography tsd-comment-tags">
+								<dl class="tsd-comment-tags"><dt>example</dt>
+									<dd><pre><code class="language-javascript">
+<span class="hljs-comment">// Actions SDK</span>
+<span class="hljs-keyword">const</span> app = actionssdk()
+
+app.intent(<span class="hljs-string">'actions.intent.MAIN'</span>, conv =&gt; {
+  <span class="hljs-keyword">const</span> ssml = <span class="hljs-string">'&lt;speak&gt;Hi! &lt;break time="1"/&gt; '</span> +
+    <span class="hljs-string">'I can read out an ordinal like &lt;say-as interpret-as="ordinal"&gt;123&lt;/say-as&gt;. '</span> +
+    <span class="hljs-string">'Say a number.&lt;/speak&gt;'</span>
+  conv.ask(ssml)
+})
+
+app.intent(<span class="hljs-string">'actions.intent.TEXT'</span>, (conv, input) =&gt; {
+  <span class="hljs-keyword">if</span> (input === <span class="hljs-string">'bye'</span>) {
+    <span class="hljs-keyword">return</span> conv.close(<span class="hljs-string">'Goodbye!'</span>)
+  }
+  <span class="hljs-keyword">const</span> ssml = <span class="hljs-string">`&lt;speak&gt;You said, &lt;say-as interpret-as="ordinal"&gt;<span class="hljs-subst">${input}</span>&lt;/say-as&gt;&lt;/speak&gt;`</span>
+  conv.ask(ssml)
+})
+
+<span class="hljs-comment">// Dialogflow</span>
+<span class="hljs-keyword">const</span> app = dialogflow()
+
+app.intent(<span class="hljs-string">'Default Welcome Intent'</span>, conv =&gt; {
+  conv.ask(<span class="hljs-string">'Welcome to action snippets! Say a number.'</span>)
+})
+
+app.intent(<span class="hljs-string">'Number Input'</span>, (conv, {num}) =&gt; {
+  conv.close(<span class="hljs-string">`You said <span class="hljs-subst">${num}</span>`</span>)
+})</code></pre>
+								</dd></dl>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5><span class="tsd-flag ts-flagRest">Rest</span> <span class="tsd-signature-symbol">...</span>responses: <a href="../modules/_service_actionssdk_conversation_conversation_.html#response" class="tsd-signature-type">Response</a><span class="tsd-signature-symbol">[]</span></h5>
+									<div class="tsd-comment tsd-typography tsd-comment-text">
+										<p>A response fragment for the library to construct a single complete response</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">this</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="close" class="tsd-anchor"></a>
+					<h3>close</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">close<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">...</span>responses<span class="tsd-signature-symbol">: </span><a href="../modules/_service_actionssdk_conversation_conversation_.html#response" class="tsd-signature-type">Response</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">this</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in
+										<a href="https://github.com/actions-on-google/actions-on-google-nodejs/blob/master/src/service/actionssdk/conversation/conversation.ts#L428">
+											service/actionssdk/conversation/conversation.ts:428
+										</a>
+									</li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography tsd-comment-shorttext">
+								<div class="lead">
+									<p>Have Assistant render the speech response and close the mic.</p>
+									</div><dl class="tsd-comment-tags"><dt>example</dt>
+									<dd><pre><code class="language-javascript">
+<span class="hljs-comment">// Actions SDK</span>
+<span class="hljs-keyword">const</span> app = actionssdk()
+
+app.intent(<span class="hljs-string">'actions.intent.MAIN'</span>, conv =&gt; {
+  <span class="hljs-keyword">const</span> ssml = <span class="hljs-string">'&lt;speak&gt;Hi! &lt;break time="1"/&gt; '</span> +
+    <span class="hljs-string">'I can read out an ordinal like &lt;say-as interpret-as="ordinal"&gt;123&lt;/say-as&gt;. '</span> +
+    <span class="hljs-string">'Say a number.&lt;/speak&gt;'</span>
+  conv.ask(ssml)
+})
+
+app.intent(<span class="hljs-string">'actions.intent.TEXT'</span>, (conv, input) =&gt; {
+  <span class="hljs-keyword">if</span> (input === <span class="hljs-string">'bye'</span>) {
+    <span class="hljs-keyword">return</span> conv.close(<span class="hljs-string">'Goodbye!'</span>)
+  }
+  <span class="hljs-keyword">const</span> ssml = <span class="hljs-string">`&lt;speak&gt;You said, &lt;say-as interpret-as="ordinal"&gt;<span class="hljs-subst">${input}</span>&lt;/say-as&gt;&lt;/speak&gt;`</span>
+  conv.ask(ssml)
+})
+
+<span class="hljs-comment">// Dialogflow</span>
+<span class="hljs-keyword">const</span> app = dialogflow()
+
+app.intent(<span class="hljs-string">'Default Welcome Intent'</span>, conv =&gt; {
+  conv.ask(<span class="hljs-string">'Welcome to action snippets! Say a number.'</span>)
+})
+
+app.intent(<span class="hljs-string">'Number Input'</span>, (conv, {num}) =&gt; {
+  conv.close(<span class="hljs-string">`You said <span class="hljs-subst">${num}</span>`</span>)
+})</code></pre>
+								</dd></dl></div><div class="tsd-comment tsd-typography tsd-comment-tags">
+								<dl class="tsd-comment-tags"><dt>example</dt>
+									<dd><pre><code class="language-javascript">
+<span class="hljs-comment">// Actions SDK</span>
+<span class="hljs-keyword">const</span> app = actionssdk()
+
+app.intent(<span class="hljs-string">'actions.intent.MAIN'</span>, conv =&gt; {
+  <span class="hljs-keyword">const</span> ssml = <span class="hljs-string">'&lt;speak&gt;Hi! &lt;break time="1"/&gt; '</span> +
+    <span class="hljs-string">'I can read out an ordinal like &lt;say-as interpret-as="ordinal"&gt;123&lt;/say-as&gt;. '</span> +
+    <span class="hljs-string">'Say a number.&lt;/speak&gt;'</span>
+  conv.ask(ssml)
+})
+
+app.intent(<span class="hljs-string">'actions.intent.TEXT'</span>, (conv, input) =&gt; {
+  <span class="hljs-keyword">if</span> (input === <span class="hljs-string">'bye'</span>) {
+    <span class="hljs-keyword">return</span> conv.close(<span class="hljs-string">'Goodbye!'</span>)
+  }
+  <span class="hljs-keyword">const</span> ssml = <span class="hljs-string">`&lt;speak&gt;You said, &lt;say-as interpret-as="ordinal"&gt;<span class="hljs-subst">${input}</span>&lt;/say-as&gt;&lt;/speak&gt;`</span>
+  conv.ask(ssml)
+})
+
+<span class="hljs-comment">// Dialogflow</span>
+<span class="hljs-keyword">const</span> app = dialogflow()
+
+app.intent(<span class="hljs-string">'Default Welcome Intent'</span>, conv =&gt; {
+  conv.ask(<span class="hljs-string">'Welcome to action snippets! Say a number.'</span>)
+})
+
+app.intent(<span class="hljs-string">'Number Input'</span>, (conv, {num}) =&gt; {
+  conv.close(<span class="hljs-string">`You said <span class="hljs-subst">${num}</span>`</span>)
+})</code></pre>
+								</dd></dl>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5><span class="tsd-flag ts-flagRest">Rest</span> <span class="tsd-signature-symbol">...</span>responses: <a href="../modules/_service_actionssdk_conversation_conversation_.html#response" class="tsd-signature-type">Response</a><span class="tsd-signature-symbol">[]</span></h5>
+									<div class="tsd-comment tsd-typography tsd-comment-text">
+										<p>A response fragment for the library to construct a single complete response</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">this</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter">
+					<a name="json" class="tsd-anchor"></a>
+					<h3>json</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter">
+						<li class="tsd-signature tsd-kind-icon">json&lt;T&gt;<span class="tsd-signature-symbol">(</span>json<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">this</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in
+										<a href="https://github.com/actions-on-google/actions-on-google-nodejs/blob/master/src/service/actionssdk/conversation/conversation.ts#L325">
+											service/actionssdk/conversation/conversation.ts:325
+										</a>
+									</li>
+								</ul>
+							</aside>
+							<h4 class="tsd-type-parameters-title">Type parameters</h4>
+							<ul class="tsd-type-parameters">
+								<li>
+									<h4>T</h4>
+								</li>
+							</ul>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>json: <span class="tsd-signature-type">T</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">this</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="response" class="tsd-anchor"></a>
+					<h3>response</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">response<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">ConversationResponse</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in
+										<a href="https://github.com/actions-on-google/actions-on-google-nodejs/blob/master/src/service/actionssdk/conversation/conversation.ts#L434">
+											service/actionssdk/conversation/conversation.ts:434
+										</a>
+									</li>
+								</ul>
+							</aside>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">ConversationResponse</span></h4>
+						</li>
+					</ul>
+				</section>
+			</section>
+			<!--{&quot;options&quot;:&quot;typedoc.json&quot;,&quot;theme&quot;:&quot;node_modules/typedoc-neo-theme/bin/default&quot;,&quot;out&quot;:&quot;docs&quot;,&quot;exclude&quot;:[&quot;**/_test/**/*.*&quot;,&quot;**/index.ts&quot;,&quot;**/common.ts&quot;],&quot;ignoreCompilerErrors&quot;:true,&quot;disableOutputCheck&quot;:true,&quot;excludeExternals&quot;:true,&quot;excludePrivate&quot;:true,&quot;excludeNotExported&quot;:true,&quot;links&quot;:[{&quot;label&quot;:&quot;Guides&quot;,&quot;url&quot;:&quot;https://developers.google.com/actions/extending-the-assistant&quot;},{&quot;label&quot;:&quot;Reference&quot;,&quot;url&quot;:&quot;https://developers.google.com/actions/reference/nodejsv2/overview&quot;},{&quot;label&quot;:&quot;Codelabs&quot;,&quot;url&quot;:&quot;https://developers.google.com/actions/codelabs/index&quot;},{&quot;label&quot;:&quot;Samples&quot;,&quot;url&quot;:&quot;https://developers.google.com/actions/samples/index&quot;},{&quot;label&quot;:&quot;Glossary&quot;,&quot;url&quot;:&quot;https://developers.google.com/actions/glossary&quot;}],&quot;outline&quot;:[{&quot;Actions SDK&quot;:{&quot;Overview&quot;:&quot;modules/_service_actionssdk_actionssdk_&quot;,&quot;Conversation&quot;:&quot;classes/_service_actionssdk_conv_.actionssdkconversation&quot;,&quot;api/v2&quot;:&quot;modules/_service_actionssdk_api_v2_&quot;},&quot;Dialogflow&quot;:{&quot;Overview&quot;:&quot;modules/_service_dialogflow_dialogflow_&quot;,&quot;Conversation&quot;:&quot;classes/_service_dialogflow_conv_.dialogflowconversation&quot;,&quot;api/v1&quot;:&quot;modules/_service_dialogflow_api_v1_&quot;,&quot;api/v2&quot;:&quot;modules/_service_dialogflow_api_v2_&quot;},&quot;Smart Home&quot;:{&quot;Overview&quot;:&quot;modules/_service_smarthome_smarthome_&quot;,&quot;Smart Home App&quot;:&quot;interfaces/_service_smarthome_smarthome_.smarthomeapp&quot;,&quot;api/v1&quot;:&quot;modules/_service_smarthome_api_v1_&quot;},&quot;Framework&quot;:{&quot;Overview&quot;:&quot;modules/_framework_framework_&quot;,&quot;Assistant&quot;:&quot;modules/_assistant_&quot;,&quot;Rich Responses&quot;:&quot;modules/_service_actionssdk_conversation_conversation_&quot;}}],&quot;search&quot;:[{&quot;name&quot;:&quot;.*Conversation.data&quot;,&quot;subtitle&quot;:&quot;Session data&quot;},{&quot;name&quot;:&quot;conversation/response.*&quot;,&quot;subtitle&quot;:&quot;Rich response&quot;},{&quot;name&quot;:&quot;.*\\.User.storage&quot;,&quot;subtitle&quot;:&quot;Persistent storage&quot;}],&quot;source&quot;:[{&quot;path&quot;:&quot;https://github.com/actions-on-google/actions-on-google-nodejs/blob/master/src/&quot;,&quot;line&quot;:&quot;L&quot;}]}-->
+		</div>
+		<div class="col-2 col-menu secondary-menu">
+			<nav class="tsd-navigation secondary menu-sticky">
+				<ul class="before-current">
+				</ul>
+				<ul class="current">
+					<li class="current tsd-kind-class tsd-parent-kind-external-module tsd-has-type-parameter root">
+						<a href="_service_actionssdk_conversation_conversation_.conversation.html" class="tsd-kind-icon">Conversation</a>
+						<ul>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="_service_actionssdk_conversation_conversation_.conversation.html#arguments" class="tsd-kind-icon">arguments</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="_service_actionssdk_conversation_conversation_.conversation.html#available" class="tsd-kind-icon">available</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="_service_actionssdk_conversation_conversation_.conversation.html#device" class="tsd-kind-icon">device</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="_service_actionssdk_conversation_conversation_.conversation.html#digested" class="tsd-kind-icon">digested</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="_service_actionssdk_conversation_conversation_.conversation.html#expectuserresponse" class="tsd-kind-icon">expect<wbr>User<wbr>Response</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="_service_actionssdk_conversation_conversation_.conversation.html#headers" class="tsd-kind-icon">headers</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="_service_actionssdk_conversation_conversation_.conversation.html#id" class="tsd-kind-icon">id</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="_service_actionssdk_conversation_conversation_.conversation.html#input" class="tsd-kind-icon">input</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="_service_actionssdk_conversation_conversation_.conversation.html#noinputs" class="tsd-kind-icon">no<wbr>Inputs</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="_service_actionssdk_conversation_conversation_.conversation.html#request" class="tsd-kind-icon">request</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="_service_actionssdk_conversation_conversation_.conversation.html#responses" class="tsd-kind-icon">responses</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="_service_actionssdk_conversation_conversation_.conversation.html#sandbox" class="tsd-kind-icon">sandbox</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="_service_actionssdk_conversation_conversation_.conversation.html#screen" class="tsd-kind-icon">screen</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="_service_actionssdk_conversation_conversation_.conversation.html#speechbiasing" class="tsd-kind-icon">speech<wbr>Biasing</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="_service_actionssdk_conversation_conversation_.conversation.html#surface" class="tsd-kind-icon">surface</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="_service_actionssdk_conversation_conversation_.conversation.html#type" class="tsd-kind-icon">type</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="_service_actionssdk_conversation_conversation_.conversation.html#user" class="tsd-kind-icon">user</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="_service_actionssdk_conversation_conversation_.conversation.html#add" class="tsd-kind-icon">add</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="_service_actionssdk_conversation_conversation_.conversation.html#ask" class="tsd-kind-icon">ask</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="_service_actionssdk_conversation_conversation_.conversation.html#close" class="tsd-kind-icon">close</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter">
+								<a href="_service_actionssdk_conversation_conversation_.conversation.html#json" class="tsd-kind-icon">json</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="_service_actionssdk_conversation_conversation_.conversation.html#response" class="tsd-kind-icon">response</a>
+							</li>
+						</ul>
+					</li>
+				</ul>
+				<ul class="after-current">
+					<li class=" tsd-kind-class tsd-parent-kind-external-module root">
+						<a href="_service_actionssdk_conversation_conversation_.unauthorizederror.html" class="tsd-kind-icon">Unauthorized<wbr>Error</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module tsd-has-type-parameter root">
+						<a href="../interfaces/_service_actionssdk_conversation_conversation_.conversationapp.html" class="tsd-kind-icon">Conversation<wbr>App</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module tsd-has-type-parameter root">
+						<a href="../interfaces/_service_actionssdk_conversation_conversation_.conversationoptionsinit.html" class="tsd-kind-icon">Conversation<wbr>Options<wbr>Init</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module tsd-has-type-parameter root">
+						<a href="../interfaces/_service_actionssdk_conversation_conversation_.exceptionhandler.html" class="tsd-kind-icon">Exception<wbr>Handler</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module root">
+						<a href="../interfaces/_service_actionssdk_conversation_conversation_.oauth2config.html" class="tsd-kind-icon">OAuth2<wbr>Config</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module root">
+						<a href="../interfaces/_service_actionssdk_conversation_conversation_.oauth2configclient.html" class="tsd-kind-icon">OAuth2<wbr>Config<wbr>Client</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-parent-kind-external-module root">
+						<a href="../modules/_service_actionssdk_conversation_conversation_.html#intent" class="tsd-kind-icon">Intent</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-parent-kind-external-module root">
+						<a href="../modules/_service_actionssdk_conversation_conversation_.html#response" class="tsd-kind-icon">Response</a>
+					</li>
+				</ul>
+			</nav>
+		</div>
+	</div>
+</div>
+<footer class="with-border-bottom">
+</footer>
+<div class="container tsd-generator">
+	<p>Generated using <a href="http://typedoc.org/" target="_blank">TypeDoc</a></p>
+</div>
+<div class="overlay"></div>
+<script src="../assets/js/main.js"></script>
+<script>if (location.protocol == 'file:') document.write('<script src="../assets/js/search.js"><' + '/script>');</script>
+</body>
+</html>
