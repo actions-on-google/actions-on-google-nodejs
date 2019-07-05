@@ -16,7 +16,8 @@
 
 import * as Api from '../../api/v2'
 import { Helper } from './helper'
-import { ProtoAny, deprecate } from '../../../../common'
+import { ProtoAny } from '../../../../common'
+import { logger } from '../../../../logging'
 import { DialogSpec } from '../conversation'
 
 /**
@@ -114,7 +115,7 @@ export class DeepLink extends Helper<
    * @public
    */
   constructor(options: DeepLinkOptions) {
-    deprecate('DeepLink', 'Access will be by request only')
+    logger.deprecate('DeepLink', 'Access will be by request only')
 
     const extension: ProtoAny<DialogSpec, Api.GoogleActionsV2LinkValueSpecLinkDialogSpec> = {
       '@type': 'type.googleapis.com/google.actions.v2.LinkValueSpec.LinkDialogSpec',

@@ -17,8 +17,8 @@
 import ava, { TestInterface } from 'ava'
 import * as sinon from 'sinon'
 
-import * as common from '../../common'
 import { JsonObject } from '../../common'
+import { logger } from '../../logging'
 
 import { Express } from '../express'
 import { StandardResponse, Headers } from '../framework'
@@ -112,7 +112,7 @@ test.serial('handles error', async t => {
   let receivedStatus = -1
   let receivedBody: JsonObject | null = null
   let promise: Promise<StandardResponse> | null = null
-  const stub = sinon.stub(common, 'error')
+  const stub = sinon.stub(logger, 'error')
   t.context.express.handle((body, headers) => {
     t.is(body, sentBody)
     t.is(headers, sentHeaders)
@@ -157,7 +157,7 @@ test.serial('handles string error', async t => {
   let receivedStatus = -1
   let receivedBody: JsonObject | null = null
   let promise: Promise<StandardResponse> | null = null
-  const stub = sinon.stub(common, 'error')
+  const stub = sinon.stub(logger, 'error')
   t.context.express.handle((body, headers) => {
     t.is(body, sentBody)
     t.is(headers, sentHeaders)

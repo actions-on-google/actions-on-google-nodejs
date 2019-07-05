@@ -17,7 +17,7 @@
 import test from 'ava'
 import * as sinon from 'sinon'
 
-import * as common from '../../../../common'
+import { logger } from '../../../../logging'
 
 import { User, Profile } from '../user'
 
@@ -47,7 +47,7 @@ test('user reads userId', t => {
   const user = new User({
     userId: id,
   })
-  const stub = sinon.stub(common, 'deprecate')
+  const stub = sinon.stub(logger, 'deprecate')
   t.is(user.id, id)
   t.true(stub.called)
   stub.restore()

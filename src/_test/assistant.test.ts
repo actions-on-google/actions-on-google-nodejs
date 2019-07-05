@@ -17,7 +17,7 @@
 import ava, { TestInterface } from 'ava'
 import * as sinon from 'sinon'
 
-import * as common from '../common'
+import { logger } from '../logging'
 import { JsonObject } from '../common'
 
 import { attach, AppHandler } from '../assistant'
@@ -42,7 +42,7 @@ test('app.frameworks is an object', t => {
 })
 
 test('app.handler throws error by default', async t => {
-  const stub = sinon.stub(common, 'error')
+  const stub = sinon.stub(logger, 'error')
   await t.throwsAsync(t.context.app.handler({}, {}))
   t.true(stub.called)
   stub.restore()
@@ -175,7 +175,7 @@ test('app is callable as a StandardHandler when debug is true', async t => {
     debug: true,
   })
   t.is(typeof app, 'function')
-  const stub = sinon.stub(common, 'info')
+  const stub = sinon.stub(logger, 'info')
   const res = await app(body, headers)
   t.true(stub.called)
   stub.restore()

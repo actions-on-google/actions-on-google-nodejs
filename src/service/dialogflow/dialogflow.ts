@@ -26,6 +26,7 @@ import {
   UnauthorizedError,
 } from '../actionssdk'
 import * as common from '../../common'
+import { logger } from '../../logging'
 import { Contexts, Parameters } from './context'
 import { DialogflowConversation } from './conv'
 import { OAuth2Client } from 'google-auth-library'
@@ -491,7 +492,7 @@ export const dialogflow: Dialogflow = <
         DialogflowConversation<TConvData, TUserStorage, TContexts>
       )
     }
-    const log = debug ? common.info : common.debug
+    const log = debug ? logger.info.bind(logger) : logger.debug.bind(logger)
     log('Conversation', common.stringify(conv, 'request', 'headers', 'body'))
     const { intent } = conv
     const traversed: Traversed = {}

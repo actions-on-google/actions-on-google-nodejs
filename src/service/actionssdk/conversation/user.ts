@@ -17,7 +17,7 @@
 import * as Api from '../api/v2'
 import { OAuth2Client } from 'google-auth-library'
 import { LoginTicket, TokenPayload } from 'google-auth-library/build/src/auth/loginticket'
-import * as common from '../../../common'
+import { logger } from '../../../logging'
 
 export class Last {
   /**
@@ -310,7 +310,7 @@ export class User<TUserStorage> {
    * @public
    */
   get id() {
-    common.deprecate('conv.user.id', 'Use conv.user.storage to store data instead')
+    logger.deprecate('conv.user.id', 'Use conv.user.storage to store data instead')
     return this._id
   }
 

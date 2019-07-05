@@ -28,6 +28,7 @@ import {
 import { ActionsSdkConversation } from './conv'
 import { OAuth2Client } from 'google-auth-library'
 import * as common from '../../common'
+import { logger } from '../../logging'
 import { BuiltinFrameworkMetadata } from '../../framework'
 
 /** @public */
@@ -346,7 +347,7 @@ export const actionssdk: ActionsSdk = <
         ActionsSdkConversation<TConvData, TUserStorage>
       )
     }
-    const log = debug ? common.info : common.debug
+    const log = debug ? logger.info.bind(logger) : logger.debug.bind(logger)
     log('Conversation', common.stringify(conv, 'request', 'headers', 'body'))
     const { intent } = conv
     const traversed: Traversed = {}

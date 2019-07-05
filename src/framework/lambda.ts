@@ -20,7 +20,7 @@
 
 import { Framework, StandardHandler, Headers } from './framework'
 import { JsonObject } from '../common'
-import * as common from '../common'
+import { logger } from '../logging'
 import { Context, Callback } from 'aws-lambda'
 
 export interface LambdaHandler {
@@ -55,7 +55,7 @@ export class Lambda implements Framework<LambdaHandler> {
         (typeof event.body === 'string' ? JSON.parse(event.body) : event.body)
       const result = await standard(body, headers, { lambda: metadata })
       .catch((e: Error) => {
-        common.error(e.stack || e)
+        logger.error(e.stack || e)
         callback(e)
       })
       if (!result) {

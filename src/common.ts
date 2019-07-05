@@ -14,31 +14,7 @@
  * limitations under the License.
  */
 
-import * as Debug from 'debug'
 import * as https from 'https'
-
-const name = 'actions-on-google'
-
-/** @hidden */
-export const debug = Debug(`${name}:debug`)
-
-/** @hidden */
-export const warn = Debug(`${name}:warn`)
-
-/** @hidden */
-// tslint:disable-next-line:no-console Allow console binding
-export const error = console.error.bind(console) as typeof console.error
-
-/** @hidden */
-// tslint:disable-next-line:no-console Allow console binding
-export const info = console.log.bind(console) as typeof console.log
-
-warn.log = error
-debug.log = info
-
-/** @hidden */
-export const deprecate = (feature: string, alternative: string) =>
-  info(`${feature} is *DEPRECATED*: ${alternative}`)
 
 /** @public */
 export interface JsonObject {
