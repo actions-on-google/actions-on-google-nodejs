@@ -17,7 +17,7 @@
 import ava, { TestInterface } from 'ava'
 import * as sinon from 'sinon'
 
-import { logger } from '../logging'
+import { logger, Logger } from '../logging'
 import { JsonObject } from '../common'
 
 import { attach, AppHandler } from '../assistant'
@@ -150,7 +150,7 @@ test('app is callable as a StandardHandler', async t => {
   t.is(res.body.mock, mock)
 })
 
-test('app is callable as a StandardHandler when debug is true', async t => {
+test.serial('app is callable as a StandardHandler when debug is true', async t => {
   const mock = {
     key: 'value',
   }
@@ -176,6 +176,45 @@ test('app is callable as a StandardHandler when debug is true', async t => {
   })
   t.is(typeof app, 'function')
   const stub = sinon.stub(logger, 'info')
+  const res = await app(body, headers)
+  t.true(stub.called)
+  stub.restore()
+  t.is(res.status, 123)
+  t.is(res.body.body, body)
+  t.is(res.body.headers, headers)
+  t.is(res.body.mock, mock)
+})
+
+test.serial('app is callable as a StandardHandler when custom logger is set', async t => {
+  const customLogger = {
+    // tslint:disable-next-line:no-any automatically detect any inputs
+    debug(message?: any, ...optionalParams: any[]): void {},
+  } as Logger
+  const mock = {
+    key: 'value',
+  }
+  const body = {
+    body1: 'body2',
+  }
+  const headers = {
+    headers1: 'headers2',
+  }
+  const app = attach({
+    handler: async (body: JsonObject, headers: Headers): Promise<StandardResponse> => {
+      return {
+        body: {
+          body,
+          headers,
+          mock,
+        },
+        status: 123,
+      }
+    },
+  }, {
+    logger: customLogger,
+  })
+  t.is(typeof app, 'function')
+  const stub = sinon.stub(customLogger, 'debug')
   const res = await app(body, headers)
   t.true(stub.called)
   stub.restore()

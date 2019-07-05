@@ -16,7 +16,7 @@
 
 import { OmniHandler, StandardHandler, BuiltinFrameworks, builtin } from './framework'
 import * as common from './common'
-import { logger } from './logging'
+import { logger, Logger } from './logging'
 
 /** @public */
 export type AppHandler = OmniHandler & BaseApp
@@ -25,6 +25,8 @@ export type AppHandler = OmniHandler & BaseApp
 export interface AppOptions {
   /** @public */
   debug?: boolean
+  /** @public */
+  logger?: Logger
 }
 
 /** @hidden */
@@ -68,6 +70,9 @@ export const attach = <TService>(
   service: TService,
   options?: AppOptions,
 ): AppHandler & TService => {
+  if (options && options.logger) {
+    logger.customLogger = options.logger
+  }
   let app: (BaseApp & TService) | (AppHandler & TService) = Object.assign(create(options), service)
   // tslint:disable-next-line:no-any automatically detect any inputs
   const omni: OmniHandler = (...args: any[]) => {

@@ -69,41 +69,40 @@ class DefaultLogger implements Logger {
   }
 }
 
-// class LoggingProxy {
-//   private logger: Logger
+class LoggingProxy {
+  private logger: Logger
 
-//   constructor() {
-//     this.logger = new DefaultLogger()
-//   }
+  constructor() {
+    this.logger = new DefaultLogger()
+  }
 
-//   setCustomLogger(customLogger: Logger): void {
-//     this.logger = customLogger
-//   }
+  set customLogger(customLogger: Logger) {
+    this.logger = customLogger
+  }
 
-//   // tslint:disable-next-line:no-any automatically detect any inputs
-//   debug(message?: any, ...optionalParams: any[]): void {
-//     this.logger.debug(message, ...optionalParams)
-//   }
+  // tslint:disable-next-line:no-any automatically detect any inputs
+  debug(message?: any, ...optionalParams: any[]): void {
+    this.logger.debug(message, ...optionalParams)
+  }
 
-//   // tslint:disable-next-line:no-any automatically detect any inputs
-//   warn(message?: any, ...optionalParams: any[]): void {
-//     this.logger.warn(message, ...optionalParams)
-//   }
+  // tslint:disable-next-line:no-any automatically detect any inputs
+  warn(message?: any, ...optionalParams: any[]): void {
+    this.logger.warn(message, ...optionalParams)
+  }
 
-//   // tslint:disable-next-line:no-any automatically detect any inputs
-//   info(message?: any, ...optionalParams: any[]): void {
-//     console.log('LoggingProxy.info')
-//     this.logger.info(message, ...optionalParams)
-//   }
+  // tslint:disable-next-line:no-any automatically detect any inputs
+  info(message?: any, ...optionalParams: any[]): void {
+    this.logger.info(message, ...optionalParams)
+  }
 
-//   // tslint:disable-next-line:no-any automatically detect any inputs
-//   error(message?: any, ...optionalParams: any[]): void {
-//     this.logger.error(message, ...optionalParams)
-//   }
+  // tslint:disable-next-line:no-any automatically detect any inputs
+  error(message?: any, ...optionalParams: any[]): void {
+    this.logger.error(message, ...optionalParams)
+  }
 
-//   deprecate(feature: string, alternative: string): void {
-//     this.logger.deprecate(feature, alternative)
-//   }
-// }
+  deprecate(feature: string, alternative: string): void {
+    this.logger.deprecate(feature, alternative)
+  }
+}
 
-export const logger = new DefaultLogger()
+export const logger = new LoggingProxy()
