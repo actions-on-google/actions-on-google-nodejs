@@ -70,38 +70,42 @@ class DefaultLogger implements Logger {
 }
 
 class LoggingProxy {
-  private logger: Logger
+  private logger_: Logger
 
   constructor() {
-    this.logger = new DefaultLogger()
+    this.logger_ = new DefaultLogger()
   }
 
   set customLogger(customLogger: Logger) {
-    this.logger = customLogger
+    this.logger_ = customLogger
+  }
+
+  get customLogger(): Logger {
+    return this.logger_
   }
 
   // tslint:disable-next-line:no-any automatically detect any inputs
   debug(message?: any, ...optionalParams: any[]): void {
-    this.logger.debug(message, ...optionalParams)
+    this.logger_.debug(message, ...optionalParams)
   }
 
   // tslint:disable-next-line:no-any automatically detect any inputs
   warn(message?: any, ...optionalParams: any[]): void {
-    this.logger.warn(message, ...optionalParams)
+    this.logger_.warn(message, ...optionalParams)
   }
 
   // tslint:disable-next-line:no-any automatically detect any inputs
   info(message?: any, ...optionalParams: any[]): void {
-    this.logger.info(message, ...optionalParams)
+    this.logger_.info(message, ...optionalParams)
   }
 
   // tslint:disable-next-line:no-any automatically detect any inputs
   error(message?: any, ...optionalParams: any[]): void {
-    this.logger.error(message, ...optionalParams)
+    this.logger_.error(message, ...optionalParams)
   }
 
   deprecate(feature: string, alternative: string): void {
-    this.logger.deprecate(feature, alternative)
+    this.logger_.deprecate(feature, alternative)
   }
 }
 

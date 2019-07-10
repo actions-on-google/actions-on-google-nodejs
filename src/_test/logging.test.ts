@@ -18,6 +18,13 @@ import test from 'ava'
 import * as sinon from 'sinon'
 import { Logger, logger } from '../logging'
 
+test.serial('the default logger is used when calling each log method', t => {
+  const stub = sinon.stub(logger.customLogger, 'error')
+  logger.error('message1')
+  t.true(stub.called)
+  stub.restore()
+})
+
 test.serial('the custom logger is used when calling each log method', t => {
   const customLogger = {
     // tslint:disable-next-line:no-any automatically detect any inputs
