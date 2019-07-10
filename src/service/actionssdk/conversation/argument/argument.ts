@@ -30,6 +30,7 @@ import {
   RegisterUpdateArgument,
   UpdatePermissionUserIdArgument,
   CompletePurchaseArgument,
+  DigitalPurchaseCheckArgument,
 } from '..'
 import {
   RepromptArgument,
@@ -96,6 +97,12 @@ export interface ArgumentsNamed {
    * @public
    */
   COMPLETE_PURCHASE_VALUE?: CompletePurchaseArgument
+
+  /**
+   * Only use after calling {@link DigitalPurchaseCheck|conv.ask(new DigitalPurchaseCheck)}.
+   * @public
+   */
+  DIGITAL_PURCHASE_CHECK_RESULT?: DigitalPurchaseCheckArgument
 
   /**
    * The confirmation decision.

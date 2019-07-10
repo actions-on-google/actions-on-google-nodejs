@@ -60,7 +60,8 @@ export type Intent =
   'actions.intent.PLACE' |
   'actions.intent.LINK' |
   'actions.intent.MEDIA_STATUS' |
-  'actions.intent.COMPLETE_PURCHASE'
+  'actions.intent.COMPLETE_PURCHASE' |
+  'actions.intent.DIGITAL_PURCHASE_CHECK'
 
 /** @hidden */
 export type InputValueSpec =
@@ -76,7 +77,8 @@ export type InputValueSpec =
   'type.googleapis.com/google.actions.v2.SignInValueSpec' |
   'type.googleapis.com/google.actions.v2.PlaceValueSpec' |
   'type.googleapis.com/google.actions.v2.LinkValueSpec' |
-  'type.googleapis.com/google.actions.transactions.v3.CompletePurchaseValueSpec'
+  'type.googleapis.com/google.actions.transactions.v3.CompletePurchaseValueSpec' |
+  'type.googleapis.com/google.actions.transactions.v3.DigitalPurchaseCheckSpec'
 
 /** @hidden */
 export type DialogSpec =

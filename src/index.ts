@@ -109,6 +109,8 @@ export {
   DeliveryAddress,
   CompletePurchaseArgument,
   CompletePurchase,
+  DigitalPurchaseCheckArgument,
+  DigitalPurchaseCheck,
   MediaStatusArgument,
   HelperOptions,
   Helper,

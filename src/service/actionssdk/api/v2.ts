@@ -24,6 +24,9 @@ import { ApiClientObjectMap } from '../../../common'
 export type GoogleActionsTransactionsV3CompletePurchaseValuePurchaseStatus = 'PURCHASE_STATUS_UNSPECIFIED' | 'PURCHASE_STATUS_OK' | 'PURCHASE_STATUS_ERROR' | 'PURCHASE_STATUS_USER_CANCELLED' | 'PURCHASE_STATUS_ALREADY_OWNED' | 'PURCHASE_STATUS_ITEM_UNAVAILABLE' | 'PURCHASE_STATUS_ITEM_CHANGE_REQUESTED'
 
 
+export type GoogleActionsTransactionsV3DigitalPurchaseCheckResultResultType = 'RESULT_TYPE_UNSPECIFIED' | 'CAN_PURCHASE' | 'CANNOT_PURCHASE'
+
+
 export type GoogleActionsTransactionsV3SkuIdSkuType = 'SKU_TYPE_UNSPECIFIED' | 'SKU_TYPE_IN_APP' | 'SKU_TYPE_SUBSCRIPTION'
 
 
@@ -152,6 +155,16 @@ export interface GoogleActionsTransactionsV3CompletePurchaseValueSpec {
    */
   skuId?: GoogleActionsTransactionsV3SkuId
 }
+
+export interface GoogleActionsTransactionsV3DigitalPurchaseCheckResult {
+  /**
+   * Result type for digital purchase check result.
+   */
+  resultType?: GoogleActionsTransactionsV3DigitalPurchaseCheckResultResultType
+}
+
+export interface GoogleActionsTransactionsV3DigitalPurchaseCheckSpec {
+  }
 
 export interface GoogleActionsTransactionsV3SkuId {
   /**
@@ -1086,8 +1099,7 @@ export interface GoogleActionsV2OrdersOrderState {
 
 export interface GoogleActionsV2OrdersOrderUpdate {
   /**
-   * Required.
-   * The canonical order id referencing this order.
+   * Required. The canonical order id referencing this order.
    * If integrators don't generate the canonical order id in their system,
    * they can simply copy over google_order_id included in order.
    */
@@ -1342,14 +1354,13 @@ export interface GoogleActionsV2OrdersReceipt {
    */
   confirmedActionOrderId?: string
   /**
-   * Optional.
-   * The user facing id referencing to current order, which will show up in the
-   * receipt card if present. This should be the id that usually appears on
-   * a printed receipt or receipt sent to user's email.
-   * User should be able to use this id referencing her order for customer
-   * service provided by integrators.
-   * Note that this field must be populated if integrator does generate
-   * user facing id for an order with a printed receipt / email receipt.
+   * Optional. The user facing id referencing to current order, which will show
+   * up in the receipt card if present. This should be the id that usually
+   * appears on a printed receipt or receipt sent to user's email. User should
+   * be able to use this id referencing her order for customer service provided
+   * by integrators. Note that this field must be populated if integrator does
+   * generate user facing id for an order with a printed receipt / email
+   * receipt.
    */
   userVisibleOrderId?: string
 }
