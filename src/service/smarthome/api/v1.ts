@@ -108,6 +108,11 @@ export interface SmartHomeV1SyncDeviceInfo {
   swVersion: string
 }
 
+export interface SmartHomeV1SyncOtherDeviceIds {
+  agentId?: string
+  deviceId: string
+}
+
 export interface SmartHomeV1SyncDevices {
   id: string,
   type: string,
@@ -117,7 +122,8 @@ export interface SmartHomeV1SyncDevices {
   deviceInfo?: SmartHomeV1SyncDeviceInfo,
   attributes?: ApiClientObjectMap<any>,
   customData?: ApiClientObjectMap<any>,
-  roomHint?: string
+  roomHint?: string,
+  otherDeviceIds?: SmartHomeV1SyncOtherDeviceIds[],
 }
 
 export interface SmartHomeV1SyncPayload {

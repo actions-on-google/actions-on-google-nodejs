@@ -3,7 +3,7 @@
   "description": "Actions on Google Client Library for Node.js",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
-  "version": "2.7.1-preview.1",
+  "version": "2.9.0",
   "license": "Apache-2.0",
   "author": "Google Inc.",
   "engines": {
@@ -52,7 +52,7 @@
     "sinon": "^6.0.0",
     "tslint": "^5.9.1",
     "tslint-eslint-rules": "^5.1.0",
-    "typedoc-neo-theme": "^1.0.1",
+    "typedoc-neo-theme": "^1.0.2",
     "typescript": "~3.5.1"
   },
   "dependencies": {

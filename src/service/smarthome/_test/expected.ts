@@ -85,6 +85,43 @@ export const SYNC_RESPONSE: Api.SmartHomeV1SyncResponse = {
         bazValue: 'bar',
       },
       roomHint: 'Kitchen',
+    }, {
+      id: '789',
+      type: 'action.devices.types.LIGHT',
+      traits: [
+        'action.devices.traits.OnOff',
+        'action.devices.traits.Brightness',
+        'action.devices.traits.ColorSetting',
+      ],
+      name: {
+        defaultNames: ['lights out inc. bulb A20 color hyperglow'],
+        name: 'lamp2',
+        nicknames: ['writing lamp'],
+      },
+      willReportState: false,
+      attributes: {
+        colorModel: 'rgb',
+        colorTemperatureRange: {
+          temperatureMinK: 2000,
+          temperatureMaxK: 9000,
+        },
+        commandOnlyColorSetting: false,
+      },
+      deviceInfo: {
+        manufacturer: 'lights out inc.',
+        model: 'hg11',
+        hwVersion: '1.2',
+        swVersion: '5.4',
+      },
+      customData: {
+        fooValue: 12,
+        barValue: false,
+        bazValue: 'baz',
+      },
+      roomHint: 'Living Room',
+      otherDeviceIds: [{
+        deviceId: '789-but-local',
+      }],
     }],
   },
 }

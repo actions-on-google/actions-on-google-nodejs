@@ -24,6 +24,9 @@ import { ApiClientObjectMap } from '../../../common'
 export type GoogleActionsTransactionsV3CompletePurchaseValuePurchaseStatus = 'PURCHASE_STATUS_UNSPECIFIED' | 'PURCHASE_STATUS_OK' | 'PURCHASE_STATUS_ERROR' | 'PURCHASE_STATUS_USER_CANCELLED' | 'PURCHASE_STATUS_ALREADY_OWNED' | 'PURCHASE_STATUS_ITEM_UNAVAILABLE' | 'PURCHASE_STATUS_ITEM_CHANGE_REQUESTED'
 
 
+export type GoogleActionsTransactionsV3DigitalPurchaseCheckResultResultType = 'RESULT_TYPE_UNSPECIFIED' | 'CAN_PURCHASE' | 'CANNOT_PURCHASE'
+
+
 export type GoogleActionsTransactionsV3SkuIdSkuType = 'SKU_TYPE_UNSPECIFIED' | 'SKU_TYPE_IN_APP' | 'SKU_TYPE_SUBSCRIPTION'
 
 
@@ -108,6 +111,9 @@ export type GoogleActionsV2UiElementsCarouselBrowseImageDisplayOptions = 'DEFAUL
 export type GoogleActionsV2UiElementsCarouselSelectImageDisplayOptions = 'DEFAULT' | 'WHITE' | 'CROPPED'
 
 
+export type GoogleActionsV2UiElementsCollectionSelectImageDisplayOptions = 'DEFAULT' | 'WHITE' | 'CROPPED'
+
+
 export type GoogleActionsV2UiElementsOpenUrlActionUrlTypeHint = 'URL_TYPE_HINT_UNSPECIFIED' | 'AMP_CONTENT'
 
 
@@ -115,6 +121,9 @@ export type GoogleActionsV2UiElementsTableCardColumnPropertiesHorizontalAlignmen
 
 
 export type GoogleActionsV2UserPermissions = 'UNSPECIFIED_PERMISSION' | 'NAME' | 'DEVICE_PRECISE_LOCATION' | 'DEVICE_COARSE_LOCATION' | 'UPDATE'
+
+
+export type GoogleActionsV2UserUserVerificationStatus = 'UNKNOWN' | 'GUEST' | 'VERIFIED'
 
 
 
@@ -146,6 +155,16 @@ export interface GoogleActionsTransactionsV3CompletePurchaseValueSpec {
    */
   skuId?: GoogleActionsTransactionsV3SkuId
 }
+
+export interface GoogleActionsTransactionsV3DigitalPurchaseCheckResult {
+  /**
+   * Result type for digital purchase check result.
+   */
+  resultType?: GoogleActionsTransactionsV3DigitalPurchaseCheckResultResultType
+}
+
+export interface GoogleActionsTransactionsV3DigitalPurchaseCheckSpec {
+  }
 
 export interface GoogleActionsTransactionsV3SkuId {
   /**
@@ -772,9 +791,13 @@ export interface GoogleActionsV2OptionInfo {
 
 export interface GoogleActionsV2OptionValueSpec {
   /**
-   * A select with a card carousel GUI
+   * A select with a card carousel GUI, use collection_select instead.
    */
   carouselSelect?: GoogleActionsV2UiElementsCarouselSelect
+  /**
+   * A select with a card collection GUI
+   */
+  collectionSelect?: GoogleActionsV2UiElementsCollectionSelect
   /**
    * A select with a list card GUI
    */
@@ -996,8 +1019,11 @@ export interface GoogleActionsV2OrdersMerchant {
 
 export interface GoogleActionsV2OrdersOrder {
   /**
-   * User-visible order id. Must be set on the initial synchronous
-   * OrderUpdate/confirmation.
+   * Required: Merchant assigned internal order id. This id must be unique, and
+   * is required for subsequent order update operations. This id may be set to
+   * the provided google_order_id, or any other unique value. Note that the id
+   * presented to users is the user_visible_order_id, which may be a different,
+   * more user-friendly value.
    */
   actionOrderId?: string
   /**
@@ -1073,8 +1099,7 @@ export interface GoogleActionsV2OrdersOrderState {
 
 export interface GoogleActionsV2OrdersOrderUpdate {
   /**
-   * Required.
-   * The canonical order id referencing this order.
+   * Required. The canonical order id referencing this order.
    * If integrators don't generate the canonical order id in their system,
    * they can simply copy over google_order_id included in order.
    */
@@ -1329,14 +1354,13 @@ export interface GoogleActionsV2OrdersReceipt {
    */
   confirmedActionOrderId?: string
   /**
-   * Optional.
-   * The user facing id referencing to current order, which will show up in the
-   * receipt card if present. This should be the id that usually appears on
-   * a printed receipt or receipt sent to user's email.
-   * User should be able to use this id referencing her order for customer
-   * service provided by integrators.
-   * Note that this field must be populated if integrator does generate
-   * user facing id for an order with a printed receipt / email receipt.
+   * Optional. The user facing id referencing to current order, which will show
+   * up in the receipt card if present. This should be the id that usually
+   * appears on a printed receipt or receipt sent to user's email. User should
+   * be able to use this id referencing her order for customer service provided
+   * by integrators. Note that this field must be populated if integrator does
+   * generate user facing id for an order with a printed receipt / email
+   * receipt.
    */
   userVisibleOrderId?: string
 }
@@ -1496,7 +1520,7 @@ export interface GoogleActionsV2RichResponseItem {
    */
   basicCard?: GoogleActionsV2UiElementsBasicCard
   /**
-   * Carousel browse card.
+   * Carousel browse card, use collection_browse instead..
    */
   carouselBrowse?: GoogleActionsV2UiElementsCarouselBrowse
   /**
@@ -1834,6 +1858,49 @@ export interface GoogleActionsV2UiElementsCarouselSelectCarouselItem {
   title?: string
 }
 
+export interface GoogleActionsV2UiElementsCollectionSelect {
+  /**
+   * Type of image display option. Optional.
+   */
+  imageDisplayOptions?: GoogleActionsV2UiElementsCollectionSelectImageDisplayOptions
+  /**
+   * min: 2 max: 10
+   */
+  items?: GoogleActionsV2UiElementsCollectionSelectCollectionItem[]
+  /**
+   * Subtitle of the collection. Optional.
+   */
+  subtitle?: string
+  /**
+   * Title of the collection. Optional.
+   */
+  title?: string
+}
+
+export interface GoogleActionsV2UiElementsCollectionSelectCollectionItem {
+  /**
+   * Body text of the card.
+   */
+  description?: string
+  /**
+   * Optional.
+   */
+  image?: GoogleActionsV2UiElementsImage
+  /**
+   * See google.actions.v2.OptionInfo
+   * for details.
+   * Required.
+   */
+  optionInfo?: GoogleActionsV2OptionInfo
+  /**
+   * Title of the collection item. When tapped, this text will be
+   * posted back to the conversation verbatim as if the user had typed it.
+   * Each title must be unique among the set of collection items.
+   * Required.
+   */
+  title?: string
+}
+
 export interface GoogleActionsV2UiElementsImage {
   /**
    * A text description of the image to be used for accessibility, e.g. screen
@@ -2092,6 +2159,10 @@ export interface GoogleActionsV2User {
    * The maximum size of the string is 10k characters.
    */
   userStorage?: string
+  /**
+   * Indicates the verification status of the user.
+   */
+  userVerificationStatus?: GoogleActionsV2UserUserVerificationStatus
 }
 
 export interface GoogleActionsV2UserNotification {

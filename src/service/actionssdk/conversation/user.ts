@@ -262,6 +262,12 @@ export class User<TUserStorage> {
    */
   email?: string
 
+  /**
+   * Determine if the user is 'GUEST' or 'VERIFIED'
+   * @public
+   */
+  verification?: Api.GoogleActionsV2UserUserVerificationStatus
+
   /** @hidden */
   constructor(public raw: Api.GoogleActionsV2User = {}, initial?: TUserStorage) {
     const { userStorage } = this.raw
@@ -269,6 +275,8 @@ export class User<TUserStorage> {
 
     this.id = this.raw.userId!
     this.locale = this.raw.locale!
+
+    this.verification = this.raw.userVerificationStatus
 
     this.permissions = this.raw.permissions || []
 
