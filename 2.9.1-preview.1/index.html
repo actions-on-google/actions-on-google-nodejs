@@ -1,0 +1,344 @@
+<!doctype html>
+<html class="default no-js">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>actions-on-google</title>
+	<meta name="description" content="">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="assets/css/main.css">
+</head>
+<body>
+<header>
+	<div class="tsd-page-toolbar">
+		<div class="container">
+			<div class="table-wrap">
+				<div class="table-cell" id="tsd-search" data-index="assets/js/search.js" data-base=".">
+					<div class="field">
+						<label for="tsd-search-field" class="tsd-widget search no-caption">Search</label>
+						<input id="tsd-search-field" type="text" />
+					</div>
+					<ul class="results">
+						<li class="state loading">Preparing search index...</li>
+						<li class="state failure">The search index is not available</li>
+					</ul>
+					<ul class="results-priority" style="display:none">
+						<li data-name=".*Conversation.data" data-subtitle="Session data"></li>
+						<li data-name="conversation/response.*" data-subtitle="Rich response"></li>
+						<li data-name="conversation.User.storage" data-subtitle="Persistent storage"></li>
+					</ul>
+					<a href="index.html" class="title">actions-on-google</a>
+					&emsp;<a href="https://developers.google.com/actions/extending-the-assistant" class="title">Guides</a>
+					&emsp;<a href="https://developers.google.com/actions/reference/nodejsv2/overview" class="title">Reference</a>
+					&emsp;<a href="https://developers.google.com/actions/codelabs/index" class="title">Codelabs</a>
+					&emsp;<a href="https://developers.google.com/actions/samples/index" class="title">Samples</a>
+					&emsp;<a href="https://developers.google.com/actions/glossary" class="title">Glossary</a>
+				</div>
+				<div class="table-cell" id="tsd-widgets">
+					<div id="tsd-filter">
+						<a href="#" class="tsd-widget options no-caption" data-toggle="options">Options</a>
+						<div class="tsd-filter-group">
+							<div class="tsd-select" id="tsd-filter-visibility">
+								<span class="tsd-select-label">All</span>
+								<ul class="tsd-select-list">
+									<li data-value="public">Public</li>
+									<li data-value="protected">Public/Protected</li>
+									<li data-value="private" class="selected">All</li>
+								</ul>
+							</div>
+							<input type="checkbox" id="tsd-filter-inherited" checked />
+							<label class="tsd-widget" for="tsd-filter-inherited">Inherited</label>
+						</div>
+					</div>
+					<a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="tsd-page-title">
+		<div class="container">
+			<ul class="tsd-breadcrumb">
+			</ul>
+		</div>
+	</div>
+</header>
+<div class="container container-main">
+	<div class="row">
+		<div class="col-3 col-menu menu-sticky-wrap menu-highlight">
+			<nav class="tsd-navigation outline primary">
+				<a style="margin-left:0em" href="globals.html">Globals</a>
+				<ul style="display:none">
+					{&quot;Actions SDK&quot;:{&quot;Overview&quot;:&quot;actionssdk&quot;,&quot;Conversation&quot;:&quot;classes/actionssdk.actionssdkconversation&quot;,&quot;api/v2&quot;:&quot;actionssdk_api_v2&quot;},&quot;Dialogflow&quot;:{&quot;Overview&quot;:&quot;dialogflow&quot;,&quot;Conversation&quot;:&quot;classes/dialogflow.dialogflowconversation&quot;,&quot;api/v1&quot;:&quot;dialogflow_api_v1&quot;,&quot;api/v2&quot;:&quot;dialogflow_api_v2&quot;},&quot;Smart Home&quot;:{&quot;Overview&quot;:&quot;smarthome&quot;,&quot;Smart Home App&quot;:&quot;interfaces/smarthome.smarthomeapp&quot;,&quot;api/v1&quot;:&quot;smarthome_api_v1&quot;},&quot;Framework&quot;:{&quot;Overview&quot;:&quot;framework&quot;,&quot;Assistant&quot;:&quot;assistant&quot;,&quot;Rich Responses&quot;:&quot;conversation_response&quot;}}
+				</ul>
+			</nav>
+		</div>
+		<div class="col-7 offset-3 col-content">
+			<h1> actions-on-google</h1>
+			<div class="tsd-panel tsd-typography">
+				<a href="#actions-on-google-client-library" id="actions-on-google-client-library" style="color: inherit; text-decoration: none;">
+					<h1>Actions on Google Client Library</h1>
+				</a>
+				<p>This client library makes it easy to create Actions for the Google Assistant and
+				supports Dialogflow, Actions SDK, and Smart Home fulfillment.</p>
+				<ul>
+					<li><a href="https://github.com/actions-on-google/actions-on-google-nodejs">Client Library GitHub repo</a></li>
+					<li><a href="https://actions-on-google.github.io/actions-on-google-nodejs/">Client Library reference docs</a></li>
+					<li><a href="https://developers.google.com/actions/">Actions on Google docs</a></li>
+					<li><a href="https://developers.google.com/actions/samples/">Actions on Google samples</a></li>
+				</ul>
+				<p><a href="https://www.npmjs.org/package/actions-on-google"><img src="https://img.shields.io/npm/v/actions-on-google.svg" alt="NPM Version"></a>
+				<a href="https://travis-ci.org/actions-on-google/actions-on-google-nodejs"><img src="https://travis-ci.org/actions-on-google/actions-on-google-nodejs.svg?branch=master" alt="Build Status"></a></p>
+				<a href="#setup-instructions" id="setup-instructions" style="color: inherit; text-decoration: none;">
+					<h2>Setup Instructions</h2>
+				</a>
+				<p>Install the library with either <code>npm install actions-on-google</code> or <code>yarn add actions-on-google</code> if you use yarn.</p>
+				<a href="#developer-preview" id="developer-preview" style="color: inherit; text-decoration: none;">
+					<h3>Developer Preview</h3>
+				</a>
+				<p>To support features under Developer Preview, the library has a special <a href="https://github.com/actions-on-google/actions-on-google-nodejs/tree/preview"><code>preview</code></a> branch which can be installed using the <code>@preview</code> tag.</p>
+				<p>This is installed with either <code>npm install actions-on-google@preview</code> or <code>yarn add actions-on-google@preview</code>.</p>
+				<p>The <code>preview</code> tag will be kept up to date with every new version of the library.</p>
+				<p>You can use the Developer Preview version to experience exciting new features that we’re still testing to make sure we have the best developer experience, and help us providing feedback on the API design and feature set.</p>
+				<p>The APIs offered in Developer Preview have not matured to General Availability yet, which means:</p>
+				<ul>
+					<li><strong>You can’t publish Actions</strong> that use features in Developer Preview.</li>
+					<li>The APIs are <strong>potentially subject to backwards incompatible changes</strong>.</li>
+				</ul>
+				<a href="#conversational-services" id="conversational-services" style="color: inherit; text-decoration: none;">
+					<h3>Conversational Services</h3>
+				</a>
+				<a href="#dialogflow" id="dialogflow" style="color: inherit; text-decoration: none;">
+					<h4>Dialogflow</h4>
+				</a>
+				<pre><code class="language-javascript"><span class="hljs-comment">// Import the appropriate service and chosen wrappers</span>
+<span class="hljs-keyword">const</span> {
+  dialogflow,
+  Image,
+} = <span class="hljs-built_in">require</span>(<span class="hljs-string">'actions-on-google'</span>)
+
+<span class="hljs-comment">// Create an app instance</span>
+<span class="hljs-keyword">const</span> app = dialogflow()
+
+<span class="hljs-comment">// Register handlers for Dialogflow intents</span>
+
+app.intent(<span class="hljs-string">'Default Welcome Intent'</span>, conv =&gt; {
+  conv.ask(<span class="hljs-string">'Hi, how is it going?'</span>)
+  conv.ask(<span class="hljs-string">`Here's a picture of a cat`</span>)
+  conv.ask(<span class="hljs-keyword">new</span> Image({
+    <span class="hljs-attr">url</span>: <span class="hljs-string">'https://developers.google.com/web/fundamentals/accessibility/semantics-builtin/imgs/160204193356-01-cat-500.jpg'</span>,
+    <span class="hljs-attr">alt</span>: <span class="hljs-string">'A cat'</span>,
+  }))
+})
+
+<span class="hljs-comment">// Intent in Dialogflow called `Goodbye`</span>
+app.intent(<span class="hljs-string">'Goodbye'</span>, conv =&gt; {
+  conv.close(<span class="hljs-string">'See you later!'</span>)
+})
+
+app.intent(<span class="hljs-string">'Default Fallback Intent'</span>, conv =&gt; {
+  conv.ask(<span class="hljs-string">`I didn't understand. Can you tell me something else?`</span>)
+})</code></pre>
+				<a href="#actions-sdk" id="actions-sdk" style="color: inherit; text-decoration: none;">
+					<h4>Actions SDK</h4>
+				</a>
+				<pre><code class="language-javascript"><span class="hljs-comment">// Import the appropriate service and chosen wrappers</span>
+<span class="hljs-keyword">const</span> {
+  actionssdk,
+  Image,
+} = <span class="hljs-built_in">require</span>(<span class="hljs-string">'actions-on-google'</span>)
+
+<span class="hljs-comment">// Create an app instance</span>
+<span class="hljs-keyword">const</span> app = actionssdk()
+
+<span class="hljs-comment">// Register handlers for Actions SDK intents</span>
+
+app.intent(<span class="hljs-string">'actions.intent.MAIN'</span>, conv =&gt; {
+  conv.ask(<span class="hljs-string">'Hi, how is it going?'</span>)
+  conv.ask(<span class="hljs-string">`Here's a picture of a cat`</span>)
+  conv.ask(<span class="hljs-keyword">new</span> Image({
+    <span class="hljs-attr">url</span>: <span class="hljs-string">'https://developers.google.com/web/fundamentals/accessibility/semantics-builtin/imgs/160204193356-01-cat-500.jpg'</span>,
+    <span class="hljs-attr">alt</span>: <span class="hljs-string">'A cat'</span>,
+  }))
+})
+
+app.intent(<span class="hljs-string">'actions.intent.TEXT'</span>, (conv, input) =&gt; {
+  <span class="hljs-keyword">if</span> (input === <span class="hljs-string">'bye'</span> || input === <span class="hljs-string">'goodbye'</span>) {
+    <span class="hljs-keyword">return</span> conv.close(<span class="hljs-string">'See you later!'</span>)
+  }
+  conv.ask(<span class="hljs-string">`I didn't understand. Can you tell me something else?`</span>)
+})</code></pre>
+				<a href="#notes-about-the-code-snippet" id="notes-about-the-code-snippet" style="color: inherit; text-decoration: none;">
+					<h4>Notes about the code snippet</h4>
+				</a>
+				<ul>
+					<li><a href="https://actions-on-google.github.io/actions-on-google-nodejs/classes/conversation.conversation-1.html#ask"><code>conv.ask</code></a>/<a href="https://actions-on-google.github.io/actions-on-google-nodejs/classes/conversation.conversation-1.html#close"><code>conv.close</code></a>
+					can be called with any of the <a href="https://actions-on-google.github.io/actions-on-google-nodejs/modules/conversation.html#response"><code>Response</code></a> types.</li>
+					<li>All <a href="https://actions-on-google.github.io/actions-on-google-nodejs/modules/conversation_helper.html"><code>Helper</code></a> classes are of the <code>Response</code> type.</li>
+				</ul>
+				<a href="#dialogflow-1" id="dialogflow-1" style="color: inherit; text-decoration: none;">
+					<h5>Dialogflow</h5>
+				</a>
+				<ul>
+					<li><code>app</code> is an instance of type <a href="https://actions-on-google.github.io/actions-on-google-nodejs/interfaces/dialogflow.dialogflowapp.html#catch"><code>DialogflowApp</code></a>.</li>
+					<li><code>app</code> accepts options of type <a href="https://actions-on-google.github.io/actions-on-google-nodejs/interfaces/dialogflow.dialogflowoptions.html#clientid"><code>DialogflowOptions</code></a>.</li>
+					<li><code>conv</code> is an instance of type <a href="https://actions-on-google.github.io/actions-on-google-nodejs/classes/dialogflow.dialogflowconversation.html"><code>DialogflowConversation</code></a>.</li>
+				</ul>
+				<a href="#actions-sdk-1" id="actions-sdk-1" style="color: inherit; text-decoration: none;">
+					<h5>Actions SDK</h5>
+				</a>
+				<ul>
+					<li><code>app</code> is an instance of type <a href="https://actions-on-google.github.io/actions-on-google-nodejs/interfaces/actionssdk.actionssdkapp.html#catch"><code>ActionsSdkApp</code></a>.</li>
+					<li><code>app</code> accepts options of type <a href="https://actions-on-google.github.io/actions-on-google-nodejs/interfaces/actionssdk.actionssdkoptions.html#clientid"><code>ActionsSdkOptions</code></a>.</li>
+					<li><code>conv</code> is an instance of type <a href="https://actions-on-google.github.io/actions-on-google-nodejs/classes/actionssdk.actionssdkconversation.html"><code>ActionsSdkConversation</code></a>.</li>
+				</ul>
+				<a href="#smart-home" id="smart-home" style="color: inherit; text-decoration: none;">
+					<h3>Smart Home</h3>
+				</a>
+				<pre><code class="language-javascript"><span class="hljs-comment">// Import the appropriate service</span>
+<span class="hljs-keyword">const</span> { smarthome } = <span class="hljs-built_in">require</span>(<span class="hljs-string">'actions-on-google'</span>)
+
+<span class="hljs-comment">// Create an app instance</span>
+<span class="hljs-keyword">const</span> app = smarthome()
+
+<span class="hljs-comment">// Register handlers for Smart Home intents</span>
+
+app.onExecute(<span class="hljs-function">(<span class="hljs-params">body, headers</span>) =&gt;</span> {
+  <span class="hljs-keyword">return</span> {
+    <span class="hljs-attr">requestId</span>: <span class="hljs-string">'ff36...'</span>,
+    <span class="hljs-attr">payload</span>: {
+      <span class="hljs-comment">// ...</span>
+    },
+  }
+})
+
+app.onQuery(<span class="hljs-function">(<span class="hljs-params">body, headers</span>) =&gt;</span> {
+  <span class="hljs-keyword">return</span> {
+    <span class="hljs-attr">requestId</span>: <span class="hljs-string">'ff36...'</span>,
+    <span class="hljs-attr">payload</span>: {
+      <span class="hljs-comment">// ...</span>
+    },
+  }
+})
+
+app.onSync(<span class="hljs-function">(<span class="hljs-params">body, headers</span>) =&gt;</span> {
+  <span class="hljs-keyword">return</span> {
+    <span class="hljs-attr">requestId</span>: <span class="hljs-string">'ff36...'</span>,
+    <span class="hljs-attr">payload</span>: {
+      <span class="hljs-comment">// ...</span>
+    },
+  }
+})</code></pre>
+				<a href="#notes-about-the-code-snippet-1" id="notes-about-the-code-snippet-1" style="color: inherit; text-decoration: none;">
+					<h4>Notes about the code snippet</h4>
+				</a>
+				<ul>
+					<li><code>app</code> is an instance of type <a href="https://actions-on-google.github.io/actions-on-google-nodejs/interfaces/smarthome.smarthomeapp.html#onexecute"><code>SmartHomeApp</code></a>.</li>
+					<li><code>app</code> accepts options of type <a href="https://actions-on-google.github.io/actions-on-google-nodejs/interfaces/smarthome.smarthomeoptions.html#debug"><code>SmartHomeOptions</code></a>.</li>
+				</ul>
+				<a href="#frameworks" id="frameworks" style="color: inherit; text-decoration: none;">
+					<h3>Frameworks</h3>
+				</a>
+				<p>Export or run for your appropriate framework:</p>
+				<a href="#firebase-functions" id="firebase-functions" style="color: inherit; text-decoration: none;">
+					<h4>Firebase Functions</h4>
+				</a>
+				<pre><code class="language-javascript"><span class="hljs-keyword">const</span> functions = <span class="hljs-built_in">require</span>(<span class="hljs-string">'firebase-functions'</span>)
+
+<span class="hljs-comment">// ... app code here</span>
+
+exports.fulfillment = functions.https.onRequest(app)</code></pre>
+				<a href="#dialogflow-inline-editor" id="dialogflow-inline-editor" style="color: inherit; text-decoration: none;">
+					<h4>Dialogflow Inline Editor</h4>
+				</a>
+				<pre><code class="language-javascript"><span class="hljs-keyword">const</span> functions = <span class="hljs-built_in">require</span>(<span class="hljs-string">'firebase-functions'</span>)
+
+<span class="hljs-comment">// ... app code here</span>
+
+<span class="hljs-comment">// name has to be `dialogflowFirebaseFulfillment`</span>
+exports.dialogflowFirebaseFulfillment = functions.https.onRequest(app)</code></pre>
+				<a href="#self-hosted-express-server" id="self-hosted-express-server" style="color: inherit; text-decoration: none;">
+					<h4>Self Hosted Express Server</h4>
+				</a>
+				<pre><code class="language-javascript"><span class="hljs-keyword">const</span> express = <span class="hljs-built_in">require</span>(<span class="hljs-string">'express'</span>)
+<span class="hljs-keyword">const</span> bodyParser = <span class="hljs-built_in">require</span>(<span class="hljs-string">'body-parser'</span>)
+
+<span class="hljs-comment">// ... app code here</span>
+
+<span class="hljs-keyword">const</span> expressApp = express().use(bodyParser.json())
+
+expressApp.post(<span class="hljs-string">'/fulfillment'</span>, app)
+
+expressApp.listen(<span class="hljs-number">3000</span>)</code></pre>
+				<a href="#aws-lambda-api-gateway" id="aws-lambda-api-gateway" style="color: inherit; text-decoration: none;">
+					<h4>AWS Lambda API Gateway</h4>
+				</a>
+				<pre><code class="language-javascript"><span class="hljs-comment">// ... app code here</span>
+
+exports.fulfillment = app</code></pre>
+				<a href="#next-steps" id="next-steps" style="color: inherit; text-decoration: none;">
+					<h3>Next Steps</h3>
+				</a>
+				<p>Take a look at the docs and samples linked at the top to get to know the platform and supported functionalities.</p>
+				<a href="#library-development-instructions" id="library-development-instructions" style="color: inherit; text-decoration: none;">
+					<h2>Library Development Instructions</h2>
+				</a>
+				<p>This library uses <code>yarn</code> to run commands. Install yarn using instructions from <a href="https://yarnpkg.com/en/docs/install">https://yarnpkg.com/en/docs/install</a> or with npm: <code>npm i -g yarn</code>.</p>
+				<p>Install the library dependencies with <code>yarn</code>. If you want to run any of the sample apps, follow the instructions in the sample README.</p>
+				<a href="#functionality" id="functionality" style="color: inherit; text-decoration: none;">
+					<h2>Functionality</h2>
+				</a>
+				<p>Public interfaces, classes, functions, objects, and properties are labeled with the JSDoc <code>@public</code> tag and exported at the top level. Everything else that is not labeled <code>@public</code> and exported at the top level is considered internal and may be changed.</p>
+				<p>This library supports the following Services:</p>
+				<ul>
+					<li><a href="https://dialogflow.com/docs/fulfillment">Dialogflow</a> v1 and v2</li>
+					<li><a href="https://developers.google.com/actions/sdk/fulfillment">Actions SDK</a> <strong>v2 only</strong></li>
+					<li><a href="https://developers.google.com/actions/smarthome/create-app#provide-fulfillment">Smart Home</a></li>
+				</ul>
+				<a href="#actions-sdk-2" id="actions-sdk-2" style="color: inherit; text-decoration: none;">
+					<h3>Actions SDK</h3>
+				</a>
+				<p>This library supports only Actions SDK fulfillment version 2.</p>
+				<p>To ensure that your fulfillment uses version 2, set the <a href="https://github.com/actions-on-google/actionssdk-eliza-nodejs/blob/a44a1b0ef0026ce2b0e525ce38bebbf8540ce344/eliza.json#L41"><code>&quot;fulfillmentApiVersion&quot;: 2</code></a> property in your action package.</p>
+				<a href="#references-amp-issues" id="references-amp-issues" style="color: inherit; text-decoration: none;">
+					<h2>References &amp; Issues</h2>
+				</a>
+				<ul>
+					<li>Questions? Go to <a href="https://stackoverflow.com/questions/tagged/actions-on-google">StackOverflow</a>, <a href="https://www.reddit.com/r/GoogleAssistantDev/">Assistant Developer Community on Reddit</a> or <a href="https://developers.google.com/actions/support/">Support</a>.</li>
+					<li>For bugs, please report an issue on Github.</li>
+					<li>Actions on Google <a href="https://developers.google.com/actions/extending-the-assistant">Documentation</a></li>
+					<li>Actions on Google <a href="https://codelabs.developers.google.com/?cat=Assistant">Codelabs</a>.</li>
+					<li><a href="https://github.com/actions-on-google/dialogflow-webhook-boilerplate-nodejs">Webhook Boilerplate Template</a> for Actions on Google.</li>
+				</ul>
+				<a href="#make-contributions" id="make-contributions" style="color: inherit; text-decoration: none;">
+					<h2>Make Contributions</h2>
+				</a>
+				<p>Please read and follow the steps in the <a href="CONTRIBUTING.md">CONTRIBUTING.md</a>.</p>
+				<a href="#license" id="license" style="color: inherit; text-decoration: none;">
+					<h2>License</h2>
+				</a>
+				<p>See <a href="LICENSE">LICENSE</a>.</p>
+				<a href="#terms" id="terms" style="color: inherit; text-decoration: none;">
+					<h2>Terms</h2>
+				</a>
+				<p>Your use of this sample is subject to, and by using or downloading the sample files you agree to comply with, the <a href="https://developers.google.com/terms/">Google APIs Terms of Service</a>.</p>
+			</div>
+			<!--{&quot;options&quot;:&quot;typedoc.json&quot;,&quot;theme&quot;:&quot;node_modules/typedoc-neo-theme/bin/default&quot;,&quot;out&quot;:&quot;docs&quot;,&quot;exclude&quot;:[&quot;**/_test/**/*.*&quot;,&quot;**/index.ts&quot;,&quot;**/common.ts&quot;],&quot;ignoreCompilerErrors&quot;:true,&quot;disableOutputCheck&quot;:true,&quot;excludeExternals&quot;:true,&quot;excludePrivate&quot;:true,&quot;excludeNotExported&quot;:true,&quot;links&quot;:[{&quot;label&quot;:&quot;Guides&quot;,&quot;url&quot;:&quot;https://developers.google.com/actions/extending-the-assistant&quot;},{&quot;label&quot;:&quot;Reference&quot;,&quot;url&quot;:&quot;https://developers.google.com/actions/reference/nodejsv2/overview&quot;},{&quot;label&quot;:&quot;Codelabs&quot;,&quot;url&quot;:&quot;https://developers.google.com/actions/codelabs/index&quot;},{&quot;label&quot;:&quot;Samples&quot;,&quot;url&quot;:&quot;https://developers.google.com/actions/samples/index&quot;},{&quot;label&quot;:&quot;Glossary&quot;,&quot;url&quot;:&quot;https://developers.google.com/actions/glossary&quot;}],&quot;outline&quot;:[{&quot;Actions SDK&quot;:{&quot;Overview&quot;:&quot;actionssdk&quot;,&quot;Conversation&quot;:&quot;classes/actionssdk.actionssdkconversation&quot;,&quot;api/v2&quot;:&quot;actionssdk_api_v2&quot;},&quot;Dialogflow&quot;:{&quot;Overview&quot;:&quot;dialogflow&quot;,&quot;Conversation&quot;:&quot;classes/dialogflow.dialogflowconversation&quot;,&quot;api/v1&quot;:&quot;dialogflow_api_v1&quot;,&quot;api/v2&quot;:&quot;dialogflow_api_v2&quot;},&quot;Smart Home&quot;:{&quot;Overview&quot;:&quot;smarthome&quot;,&quot;Smart Home App&quot;:&quot;interfaces/smarthome.smarthomeapp&quot;,&quot;api/v1&quot;:&quot;smarthome_api_v1&quot;},&quot;Framework&quot;:{&quot;Overview&quot;:&quot;framework&quot;,&quot;Assistant&quot;:&quot;assistant&quot;,&quot;Rich Responses&quot;:&quot;conversation_response&quot;}}],&quot;search&quot;:[{&quot;name&quot;:&quot;.*Conversation.data&quot;,&quot;subtitle&quot;:&quot;Session data&quot;},{&quot;name&quot;:&quot;conversation/response.*&quot;,&quot;subtitle&quot;:&quot;Rich response&quot;},{&quot;name&quot;:&quot;conversation.User.storage&quot;,&quot;subtitle&quot;:&quot;Persistent storage&quot;}],&quot;source&quot;:[{&quot;path&quot;:&quot;https://github.com/actions-on-google/actions-on-google-nodejs/blob/master/src/&quot;,&quot;line&quot;:&quot;L&quot;}]}-->
+		</div>
+		<div class="col-2 col-menu secondary-menu">
+			<nav class="tsd-navigation secondary menu-sticky">
+				<ul class="before-current">
+				</ul>
+			</nav>
+		</div>
+	</div>
+</div>
+<footer class="with-border-bottom">
+</footer>
+<div class="container tsd-generator">
+	<p>Generated using <a href="http://typedoc.org/" target="_blank">TypeDoc</a></p>
+</div>
+<div class="overlay"></div>
+<script src="assets/js/main.js"></script>
+<script>if (location.protocol == 'file:') document.write('<script src="assets/js/search.js"><' + '/script>');</script>
+</body>
+</html>
