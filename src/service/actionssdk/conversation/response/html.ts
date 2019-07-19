@@ -18,17 +18,16 @@ import * as Api from '../../api/v2'
 import { JsonObject } from '../../../../common'
 
 /** @public */
-export interface ImmersiveResponseOptions<TState extends JsonObject = JsonObject> {
+export interface HtmlResponseOptions<TData extends JsonObject = JsonObject> {
   /**
    * The url of the web app.
    *
-   * Alias of `loadImmersiveUrl`
    * @public
    */
   url?: string
 
   /**
-   * Configure if the mic is closed after this immersive response.
+   * Configure if the mic is closed after this html response.
    *
    * Alias of `suppressMic`
    * @public
@@ -41,38 +40,28 @@ export interface ImmersiveResponseOptions<TState extends JsonObject = JsonObject
    * Alias of `updatedState`
    * @public
    */
-  state?: TState
+  data?: TData
 }
 
 /**
- * Immersive Canvas Response
+ * Html Canvas Response
  * @public
  */
-export interface ImmersiveResponse extends Api.GoogleActionsV2UiElementsImmersiveResponse { }
-export class ImmersiveResponse<TState extends JsonObject = JsonObject>
-  implements Api.GoogleActionsV2UiElementsImmersiveResponse {
+export interface HtmlResponse extends Api.GoogleActionsV2UiElementsHtmlResponse { }
+export class HtmlResponse<TData extends JsonObject = JsonObject>
+  implements Api.GoogleActionsV2UiElementsHtmlResponse {
   /**
    * @param options Canvas options
    * @public
    */
-  constructor(options: ImmersiveResponseOptions<TState> |
-      Api.GoogleActionsV2UiElementsImmersiveResponse = {}) {
-    const abstracted = options as ImmersiveResponseOptions
-    const raw = options as Api.GoogleActionsV2UiElementsImmersiveResponse
-    this.loadImmersiveUrl = raw.loadImmersiveUrl || abstracted.url
+  constructor(options: HtmlResponseOptions<TData> |
+      Api.GoogleActionsV2UiElementsHtmlResponse = {}) {
+    const abstracted = options as HtmlResponseOptions
+    const raw = options as Api.GoogleActionsV2UiElementsHtmlResponse
+    this.url = options.url
     this.suppressMic = typeof raw.suppressMic !== 'undefined' ?
       raw.suppressMic : abstracted.suppress
-    this.updatedState = raw.updatedState || abstracted.state
-  }
-
-  /** @public */
-  get url() {
-    return this.loadImmersiveUrl
-  }
-
-  /** @public */
-  set url(url) {
-    this.loadImmersiveUrl = url
+    this.updatedState = raw.updatedState || abstracted.data
   }
 
   /** @public */
@@ -86,12 +75,12 @@ export class ImmersiveResponse<TState extends JsonObject = JsonObject>
   }
 
   /** @public */
-  get state() {
-    return this.updatedState as TState
+  get data() {
+    return this.updatedState as TData
   }
 
   /** @public */
-  set state(state) {
-    this.updatedState = state
+  set data(data) {
+    this.updatedState = data
   }
 }

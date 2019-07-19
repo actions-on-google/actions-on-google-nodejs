@@ -1524,9 +1524,9 @@ export interface GoogleActionsV2RichResponseItem {
    */
   carouselBrowse?: GoogleActionsV2UiElementsCarouselBrowse
   /**
-   * Immersive response used to render on Canvas.
+   * Html response used to render on Canvas.
    */
-  immersiveResponse?: GoogleActionsV2UiElementsImmersiveResponse
+  htmlResponse?: GoogleActionsV2UiElementsHtmlResponse
   /**
    * Response indicating a set of media to be played.
    */
@@ -1901,6 +1901,22 @@ export interface GoogleActionsV2UiElementsCollectionSelectCollectionItem {
   title?: string
 }
 
+export interface GoogleActionsV2UiElementsHtmlResponse {
+  /**
+   * Provide an option so that mic won't be opened after this immersive
+   * response.
+   */
+  suppressMic?: boolean
+  /**
+   * Communicate the following JSON object to the app.
+   */
+  updatedState?: ApiClientObjectMap<any>
+  /**
+   * The url of the application.
+   */
+  url?: string
+}
+
 export interface GoogleActionsV2UiElementsImage {
   /**
    * A text description of the image to be used for accessibility, e.g. screen
@@ -1923,22 +1939,6 @@ export interface GoogleActionsV2UiElementsImage {
    * Optional.
    */
   width?: number
-}
-
-export interface GoogleActionsV2UiElementsImmersiveResponse {
-  /**
-   * The url of the application.
-   */
-  loadImmersiveUrl?: string
-  /**
-   * Provide an option so that mic won't be opened after this immersive
-   * response.
-   */
-  suppressMic?: boolean
-  /**
-   * Communicate the following JSON object to the app.
-   */
-  updatedState?: ApiClientObjectMap<any>
 }
 
 export interface GoogleActionsV2UiElementsLinkOutSuggestion {

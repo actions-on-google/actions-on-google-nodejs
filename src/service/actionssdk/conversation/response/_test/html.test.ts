@@ -17,19 +17,19 @@
 import test from 'ava'
 import * as Api from '../../../api/v2'
 import * as common from '../../../../../common'
-import { ImmersiveResponse } from '../canvas'
+import { HtmlResponse } from '../html'
 import { RichResponse } from '../rich'
 import { DialogflowConversation } from '../../../../dialogflow'
 import { ActionsSdkConversation } from '../../../conv'
 
 test('basic complete use case works', t => {
-  const immersive = new ImmersiveResponse({
+  const immersive = new HtmlResponse({
     url: 'https://example.com',
-    state: { test: 'abc' },
+    data: { test: 'abc' },
     suppress: true,
   })
-  const raw: Api.GoogleActionsV2UiElementsImmersiveResponse = {
-    loadImmersiveUrl: 'https://example.com',
+  const raw: Api.GoogleActionsV2UiElementsHtmlResponse = {
+    url: 'https://example.com',
     updatedState: { test: 'abc' },
     suppressMic: true,
   }
@@ -37,13 +37,13 @@ test('basic complete use case works', t => {
 })
 
 test('basic complete non aliased use case works', t => {
-  const immersive = new ImmersiveResponse({
-    loadImmersiveUrl: 'https://example.com',
+  const immersive = new HtmlResponse({
+    url: 'https://example.com',
     updatedState: { test: 'abc' },
     suppressMic: true,
   })
-  const raw: Api.GoogleActionsV2UiElementsImmersiveResponse = {
-    loadImmersiveUrl: 'https://example.com',
+  const raw: Api.GoogleActionsV2UiElementsHtmlResponse = {
+    url: 'https://example.com',
     updatedState: { test: 'abc' },
     suppressMic: true,
   }
@@ -51,53 +51,42 @@ test('basic complete non aliased use case works', t => {
 })
 
 test('only url works', t => {
-  const immersive = new ImmersiveResponse({
+  const immersive = new HtmlResponse({
     url: 'https://example.com',
   })
-  const raw: Api.GoogleActionsV2UiElementsImmersiveResponse = {
-    loadImmersiveUrl: 'https://example.com',
+  const raw: Api.GoogleActionsV2UiElementsHtmlResponse = {
+    url: 'https://example.com',
   }
   t.deepEqual(common.clone(immersive), raw)
 })
 
-test('only state works', t => {
-  const immersive = new ImmersiveResponse({
-    state: { test: 'abc' },
+test('only data works', t => {
+  const immersive = new HtmlResponse({
+    data: { test: 'abc' },
   })
-  const raw: Api.GoogleActionsV2UiElementsImmersiveResponse = {
+  const raw: Api.GoogleActionsV2UiElementsHtmlResponse = {
     updatedState: { test: 'abc' },
   }
   t.deepEqual(common.clone(immersive), raw)
 })
 
-test('changing aliased url works', t => {
-  const immersive = new ImmersiveResponse()
-  immersive.url = 'https://example.com'
-  t.is(immersive.url, 'https://example.com')
-
-  const raw: Api.GoogleActionsV2UiElementsImmersiveResponse = {
-    loadImmersiveUrl: 'https://example.com',
-  }
-  t.deepEqual(common.clone(immersive), raw)
-})
-
 test('changing aliased suppress works', t => {
-  const immersive = new ImmersiveResponse()
+  const immersive = new HtmlResponse()
   immersive.suppress = true
   t.is(immersive.suppress, true)
 
-  const raw: Api.GoogleActionsV2UiElementsImmersiveResponse = {
+  const raw: Api.GoogleActionsV2UiElementsHtmlResponse = {
     suppressMic: true,
   }
   t.deepEqual(common.clone(immersive), raw)
 })
 
-test('changing aliased state works', t => {
-  const immersive = new ImmersiveResponse()
-  immersive.state = { test: 'abc' }
-  t.deepEqual(immersive.state, { test: 'abc' })
+test('changing aliased data works', t => {
+  const immersive = new HtmlResponse()
+  immersive.data = { test: 'abc' }
+  t.deepEqual(immersive.data, { test: 'abc' })
 
-  const raw: Api.GoogleActionsV2UiElementsImmersiveResponse = {
+  const raw: Api.GoogleActionsV2UiElementsHtmlResponse = {
     updatedState: { test: 'abc' },
   }
   t.deepEqual(common.clone(immersive), raw)
@@ -106,15 +95,15 @@ test('changing aliased state works', t => {
 test('works in RichResponse', t => {
   const rich = new RichResponse()
 
-  rich.add(new ImmersiveResponse({
+  rich.add(new HtmlResponse({
     url: 'https://example.com',
   }))
 
   const raw: Api.GoogleActionsV2RichResponse = {
     items: [
       {
-        immersiveResponse: {
-          loadImmersiveUrl: 'https://example.com',
+        htmlResponse: {
+          url: 'https://example.com',
         },
       },
     ],
@@ -126,7 +115,7 @@ test('works in RichResponse', t => {
 test('DialogflowConversation serialized correctly', t => {
   const conv = new DialogflowConversation()
 
-  conv.ask(new ImmersiveResponse({
+  conv.ask(new HtmlResponse({
     url: 'https://example.com',
   }))
 
@@ -137,8 +126,8 @@ test('DialogflowConversation serialized correctly', t => {
         richResponse: {
           items: [
             {
-              immersiveResponse: {
-                loadImmersiveUrl: 'https://example.com',
+              htmlResponse: {
+                url: 'https://example.com',
               },
             },
           ],
@@ -153,7 +142,7 @@ test('DialogflowConversation serialized correctly', t => {
 test('ActionsSdkConversation serialized correctly', t => {
   const conv = new ActionsSdkConversation()
 
-  conv.ask(new ImmersiveResponse({
+  conv.ask(new HtmlResponse({
     url: 'https://example.com',
   }))
 
@@ -170,8 +159,8 @@ test('ActionsSdkConversation serialized correctly', t => {
           richInitialPrompt: {
             items: [
               {
-                immersiveResponse: {
-                  loadImmersiveUrl: 'https://example.com',
+                htmlResponse: {
+                  url: 'https://example.com',
                 },
               },
             ],

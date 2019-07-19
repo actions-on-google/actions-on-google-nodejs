@@ -22,7 +22,7 @@ export type SurfaceCapability =
   'actions.capability.SCREEN_OUTPUT' |
   'actions.capability.MEDIA_RESPONSE_AUDIO' |
   'actions.capability.WEB_BROWSER' |
-  'actions.capability.CUSTOM_STAGE'
+  'actions.capability.INTERACTIVE_CANVAS'
 
 export class Surface {
   /** @public */

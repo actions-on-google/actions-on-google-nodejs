@@ -22,7 +22,7 @@ import { MediaResponse } from './media'
 import { OrderUpdate } from './order'
 import { LinkOutSuggestion } from './linkout'
 import { Suggestions } from './suggestion'
-import { ImmersiveResponse } from './canvas'
+import { HtmlResponse } from './html'
 
 /** @public */
 export type RichResponseItem =
@@ -34,7 +34,7 @@ export type RichResponseItem =
   MediaResponse |
   OrderUpdate |
   LinkOutSuggestion |
-  ImmersiveResponse |
+  HtmlResponse |
   Api.GoogleActionsV2RichResponseItem
 
 /** @public */
@@ -159,8 +159,8 @@ export class RichResponse implements Api.GoogleActionsV2RichResponse {
         raw.push({ structuredResponse: { orderUpdate: item } })
         continue
       }
-      if (item instanceof ImmersiveResponse) {
-        raw.push({ immersiveResponse: item })
+      if (item instanceof HtmlResponse) {
+        raw.push({ htmlResponse: item })
         continue
       }
       raw.push(item)
