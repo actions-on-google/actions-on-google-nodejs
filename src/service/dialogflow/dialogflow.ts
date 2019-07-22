@@ -30,6 +30,7 @@ import { Contexts, Parameters } from './context'
 import { DialogflowConversation } from './conv'
 import { OAuth2Client } from 'google-auth-library'
 import { BuiltinFrameworkMetadata } from '../../framework'
+import {JsonObject} from '../../common'
 
 /** @public */
 export interface DialogflowIntentHandler<
@@ -79,17 +80,21 @@ export interface DialogflowHandlers<
 
 /** @public */
 export interface DialogflowMiddleware<
-  TConversationPlugin extends DialogflowConversation
+  TConvData = JsonObject,
+  TUserStorage = JsonObject,
+  TContexts extends Contexts = Contexts,
+  TConversation extends DialogflowConversation<TConvData, TUserStorage, TContexts> =
+    DialogflowConversation<TConvData, TUserStorage, TContexts>,
 > {
   (
     /** @public */
-    conv: DialogflowConversation,
+    conv: TConversation,
 
     /** @public */
     framework: BuiltinFrameworkMetadata,
-  ): (DialogflowConversation & TConversationPlugin) |
+  ): TConversation |
     void |
-    Promise<DialogflowConversation & TConversationPlugin> |
+    Promise<TConversation> |
     Promise<void>
 }
 
@@ -260,11 +265,21 @@ export interface DialogflowApp<
   ): this
 
   /** @hidden */
-  _middlewares: DialogflowMiddleware<DialogflowConversation<{}, {}, Contexts>>[]
+  _middlewares: DialogflowMiddleware<
+    TConvData,
+    TUserStorage,
+    TContexts,
+    TConversation
+  >[]
 
   /** @public */
-  middleware<TConversationPlugin extends DialogflowConversation<{}, {}, Contexts>>(
-    middleware: DialogflowMiddleware<TConversationPlugin>,
+  middleware(
+    middleware: DialogflowMiddleware<
+      TConvData,
+      TUserStorage,
+      TContexts,
+      TConversation
+    >,
   ): this
 
   /** @public */
