@@ -21,7 +21,8 @@ export type SurfaceCapability =
   'actions.capability.AUDIO_OUTPUT' |
   'actions.capability.SCREEN_OUTPUT' |
   'actions.capability.MEDIA_RESPONSE_AUDIO' |
-  'actions.capability.WEB_BROWSER'
+  'actions.capability.WEB_BROWSER' |
+  'actions.capability.INTERACTIVE_CANVAS'
 
 export class Surface {
   /** @public */

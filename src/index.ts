@@ -57,6 +57,8 @@ export {
   MediaResponseOptions,
   MediaResponse,
   OrderUpdate,
+  HtmlResponse,
+  HtmlResponseOptions,
   RichResponseItem,
   RichResponseOptions,
   RichResponse,
