@@ -61,5 +61,8 @@
     "debug": "^3.1.0",
     "google-auth-library": "^1.6.1",
     "googleapis": "^39.2.0"
+  },
+  "resolutions": {
+    "@gerrit0/typedoc-default-themes": "0.6.0"
   }
 }
