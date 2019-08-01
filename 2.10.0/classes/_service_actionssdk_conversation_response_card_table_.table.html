@@ -1,0 +1,456 @@
+<!doctype html>
+<html class="default no-js">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>Table | actions-on-google</title>
+	<meta name="description" content="">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="../assets/css/main.css">
+</head>
+<body>
+<header>
+	<div class="tsd-page-toolbar">
+		<div class="container">
+			<div class="table-wrap">
+				<div class="table-cell" id="tsd-search" data-index="../assets/js/search.js" data-base="..">
+					<div class="field">
+						<label for="tsd-search-field" class="tsd-widget search no-caption">Search</label>
+						<input id="tsd-search-field" type="text" />
+					</div>
+					<ul class="results">
+						<li class="state loading">Preparing search index...</li>
+						<li class="state failure">The search index is not available</li>
+					</ul>
+					<ul class="results-priority" style="display:none">
+						<li data-name=".*Conversation.data" data-subtitle="Session data"></li>
+						<li data-name="conversation/response.*" data-subtitle="Rich response"></li>
+						<li data-name=".*\.User.storage" data-subtitle="Persistent storage"></li>
+					</ul>
+					<a href="../index.html" class="title">actions-on-google</a>
+					&emsp;<a href="https://developers.google.com/actions/extending-the-assistant" class="title">Guides</a>
+					&emsp;<a href="https://developers.google.com/actions/reference/nodejsv2/overview" class="title">Reference</a>
+					&emsp;<a href="https://developers.google.com/actions/codelabs/index" class="title">Codelabs</a>
+					&emsp;<a href="https://developers.google.com/actions/samples/index" class="title">Samples</a>
+					&emsp;<a href="https://developers.google.com/actions/glossary" class="title">Glossary</a>
+				</div>
+				<div class="table-cell" id="tsd-widgets">
+					<div id="tsd-filter">
+						<a href="#" class="tsd-widget options no-caption" data-toggle="options">Options</a>
+						<div class="tsd-filter-group">
+							<div class="tsd-select" id="tsd-filter-visibility">
+								<span class="tsd-select-label">All</span>
+								<ul class="tsd-select-list">
+									<li data-value="public">Public</li>
+									<li data-value="protected">Public/Protected</li>
+									<li data-value="private" class="selected">All</li>
+								</ul>
+							</div>
+							<input type="checkbox" id="tsd-filter-inherited" checked />
+							<label class="tsd-widget" for="tsd-filter-inherited">Inherited</label>
+						</div>
+					</div>
+					<a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="tsd-page-title">
+		<div class="container">
+			<ul class="tsd-breadcrumb">
+				<li>
+					<a href="../modules/_service_actionssdk_conversation_response_card_table_.html">service/actionssdk/conversation/response/card/table</a>
+				</li>
+				<li>
+					<a href="_service_actionssdk_conversation_response_card_table_.table.html">Table</a>
+				</li>
+			</ul>
+		</div>
+	</div>
+</header>
+<div class="container container-main">
+	<div class="row">
+		<div class="col-3 col-menu menu-sticky-wrap menu-highlight">
+			<nav class="tsd-navigation outline primary">
+				<a style="margin-left:0em" href="../globals.html">Globals</a>
+				<ul style="display:none">
+					{&quot;Actions SDK&quot;:{&quot;Overview&quot;:&quot;modules/_service_actionssdk_actionssdk_&quot;,&quot;Conversation&quot;:&quot;classes/_service_actionssdk_conv_.actionssdkconversation&quot;,&quot;api/v2&quot;:&quot;modules/_service_actionssdk_api_v2_&quot;},&quot;Dialogflow&quot;:{&quot;Overview&quot;:&quot;modules/_service_dialogflow_dialogflow_&quot;,&quot;Conversation&quot;:&quot;classes/_service_dialogflow_conv_.dialogflowconversation&quot;,&quot;api/v1&quot;:&quot;modules/_service_dialogflow_api_v1_&quot;,&quot;api/v2&quot;:&quot;modules/_service_dialogflow_api_v2_&quot;},&quot;Smart Home&quot;:{&quot;Overview&quot;:&quot;modules/_service_smarthome_smarthome_&quot;,&quot;Smart Home App&quot;:&quot;interfaces/_service_smarthome_smarthome_.smarthomeapp&quot;,&quot;api/v1&quot;:&quot;modules/_service_smarthome_api_v1_&quot;},&quot;Framework&quot;:{&quot;Overview&quot;:&quot;modules/_framework_framework_&quot;,&quot;Assistant&quot;:&quot;modules/_assistant_&quot;,&quot;Rich Responses&quot;:&quot;modules/_service_actionssdk_conversation_conversation_&quot;}}
+				</ul>
+			</nav>
+		</div>
+		<div class="col-7 offset-3 col-content">
+			<h1>Class Table</h1>
+			<section class="tsd-panel tsd-comment"><div class="tsd-comment tsd-typography tsd-comment-shorttext">
+					<div class="lead">
+						<p>Creates a Table card.</p>
+						</div><dl class="tsd-comment-tags"><dt>example</dt>
+						<dd><pre><code class="language-javascript">
+<span class="hljs-comment">// Simple table</span>
+conv.ask(<span class="hljs-string">'Simple Response'</span>)
+conv.ask(<span class="hljs-keyword">new</span> Table({
+  <span class="hljs-attr">dividers</span>: <span class="hljs-literal">true</span>,
+  <span class="hljs-attr">columns</span>: [<span class="hljs-string">'header 1'</span>, <span class="hljs-string">'header 2'</span>, <span class="hljs-string">'header 3'</span>],
+  <span class="hljs-attr">rows</span>: [
+    [<span class="hljs-string">'row 1 item 1'</span>, <span class="hljs-string">'row 1 item 2'</span>, <span class="hljs-string">'row 1 item 3'</span>],
+    [<span class="hljs-string">'row 2 item 1'</span>, <span class="hljs-string">'row 2 item 2'</span>, <span class="hljs-string">'row 2 item 3'</span>],
+  ],
+}))
+
+<span class="hljs-comment">// All fields</span>
+conv.ask(<span class="hljs-string">'Simple Response'</span>)
+conv.ask(<span class="hljs-keyword">new</span> Table({
+  <span class="hljs-attr">title</span>: <span class="hljs-string">'Table Title'</span>,
+  <span class="hljs-attr">subtitle</span>: <span class="hljs-string">'Table Subtitle'</span>,
+  <span class="hljs-attr">image</span>: <span class="hljs-keyword">new</span> Image({
+    <span class="hljs-attr">url</span>: <span class="hljs-string">'https://avatars0.githubusercontent.com/u/23533486'</span>,
+    <span class="hljs-attr">alt</span>: <span class="hljs-string">'Actions on Google'</span>
+  }),
+  <span class="hljs-attr">columns</span>: [
+    {
+      <span class="hljs-attr">header</span>: <span class="hljs-string">'header 1'</span>,
+      <span class="hljs-attr">align</span>: <span class="hljs-string">'CENTER'</span>,
+    },
+    {
+      <span class="hljs-attr">header</span>: <span class="hljs-string">'header 2'</span>,
+      <span class="hljs-attr">align</span>: <span class="hljs-string">'LEADING'</span>,
+    },
+    {
+      <span class="hljs-attr">header</span>: <span class="hljs-string">'header 3'</span>,
+      <span class="hljs-attr">align</span>: <span class="hljs-string">'TRAILING'</span>,
+    },
+  ],
+  <span class="hljs-attr">rows</span>: [
+    {
+      <span class="hljs-attr">cells</span>: [<span class="hljs-string">'row 1 item 1'</span>, <span class="hljs-string">'row 1 item 2'</span>, <span class="hljs-string">'row 1 item 3'</span>],
+      <span class="hljs-attr">dividerAfter</span>: <span class="hljs-literal">false</span>,
+    },
+    {
+      <span class="hljs-attr">cells</span>: [<span class="hljs-string">'row 2 item 1'</span>, <span class="hljs-string">'row 2 item 2'</span>, <span class="hljs-string">'row 2 item 3'</span>],
+      <span class="hljs-attr">dividerAfter</span>: <span class="hljs-literal">true</span>,
+    },
+    {
+      <span class="hljs-attr">cells</span>: [<span class="hljs-string">'row 3 item 1'</span>, <span class="hljs-string">'row 3 item 2'</span>, <span class="hljs-string">'row 3 item 3'</span>],
+    },
+  ],
+  <span class="hljs-attr">buttons</span>: <span class="hljs-keyword">new</span> Button({
+    <span class="hljs-attr">title</span>: <span class="hljs-string">'Button Title'</span>,
+    <span class="hljs-attr">url</span>: <span class="hljs-string">'https://github.com/actions-on-google'</span>
+  }),
+}))</code></pre>
+					</dd></dl></div><div class="tsd-comment tsd-typography tsd-comment-tags">
+					<dl class="tsd-comment-tags"><dt>example</dt>
+						<dd><pre><code class="language-javascript">
+<span class="hljs-comment">// Simple table</span>
+conv.ask(<span class="hljs-string">'Simple Response'</span>)
+conv.ask(<span class="hljs-keyword">new</span> Table({
+  <span class="hljs-attr">dividers</span>: <span class="hljs-literal">true</span>,
+  <span class="hljs-attr">columns</span>: [<span class="hljs-string">'header 1'</span>, <span class="hljs-string">'header 2'</span>, <span class="hljs-string">'header 3'</span>],
+  <span class="hljs-attr">rows</span>: [
+    [<span class="hljs-string">'row 1 item 1'</span>, <span class="hljs-string">'row 1 item 2'</span>, <span class="hljs-string">'row 1 item 3'</span>],
+    [<span class="hljs-string">'row 2 item 1'</span>, <span class="hljs-string">'row 2 item 2'</span>, <span class="hljs-string">'row 2 item 3'</span>],
+  ],
+}))
+
+<span class="hljs-comment">// All fields</span>
+conv.ask(<span class="hljs-string">'Simple Response'</span>)
+conv.ask(<span class="hljs-keyword">new</span> Table({
+  <span class="hljs-attr">title</span>: <span class="hljs-string">'Table Title'</span>,
+  <span class="hljs-attr">subtitle</span>: <span class="hljs-string">'Table Subtitle'</span>,
+  <span class="hljs-attr">image</span>: <span class="hljs-keyword">new</span> Image({
+    <span class="hljs-attr">url</span>: <span class="hljs-string">'https://avatars0.githubusercontent.com/u/23533486'</span>,
+    <span class="hljs-attr">alt</span>: <span class="hljs-string">'Actions on Google'</span>
+  }),
+  <span class="hljs-attr">columns</span>: [
+    {
+      <span class="hljs-attr">header</span>: <span class="hljs-string">'header 1'</span>,
+      <span class="hljs-attr">align</span>: <span class="hljs-string">'CENTER'</span>,
+    },
+    {
+      <span class="hljs-attr">header</span>: <span class="hljs-string">'header 2'</span>,
+      <span class="hljs-attr">align</span>: <span class="hljs-string">'LEADING'</span>,
+    },
+    {
+      <span class="hljs-attr">header</span>: <span class="hljs-string">'header 3'</span>,
+      <span class="hljs-attr">align</span>: <span class="hljs-string">'TRAILING'</span>,
+    },
+  ],
+  <span class="hljs-attr">rows</span>: [
+    {
+      <span class="hljs-attr">cells</span>: [<span class="hljs-string">'row 1 item 1'</span>, <span class="hljs-string">'row 1 item 2'</span>, <span class="hljs-string">'row 1 item 3'</span>],
+      <span class="hljs-attr">dividerAfter</span>: <span class="hljs-literal">false</span>,
+    },
+    {
+      <span class="hljs-attr">cells</span>: [<span class="hljs-string">'row 2 item 1'</span>, <span class="hljs-string">'row 2 item 2'</span>, <span class="hljs-string">'row 2 item 3'</span>],
+      <span class="hljs-attr">dividerAfter</span>: <span class="hljs-literal">true</span>,
+    },
+    {
+      <span class="hljs-attr">cells</span>: [<span class="hljs-string">'row 3 item 1'</span>, <span class="hljs-string">'row 3 item 2'</span>, <span class="hljs-string">'row 3 item 3'</span>],
+    },
+  ],
+  <span class="hljs-attr">buttons</span>: <span class="hljs-keyword">new</span> Button({
+    <span class="hljs-attr">title</span>: <span class="hljs-string">'Button Title'</span>,
+    <span class="hljs-attr">url</span>: <span class="hljs-string">'https://github.com/actions-on-google'</span>
+  }),
+}))</code></pre>
+					</dd></dl>
+			</div></section>
+			<section class="tsd-panel tsd-hierarchy">
+				<h3>Hierarchy</h3>
+				<ul class="tsd-hierarchy">
+					<li>
+						<a href="../interfaces/_service_actionssdk_api_v2_.googleactionsv2uielementstablecard.html" class="tsd-signature-type">GoogleActionsV2UiElementsTableCard</a>
+						<ul class="tsd-hierarchy">
+							<li>
+								<span class="target">Table</span>
+							</li>
+						</ul>
+					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel">
+				<h3>Implements</h3>
+				<ul class="tsd-hierarchy">
+					<li><a href="../interfaces/_service_actionssdk_api_v2_.googleactionsv2uielementstablecard.html" class="tsd-signature-type">GoogleActionsV2UiElementsTableCard</a></li>
+				</ul>
+			</section>
+			<section class="tsd-panel-group tsd-index-group">
+				<section class="tsd-panel tsd-index-panel">
+					<div class="tsd-index-content">
+						<section class="tsd-index-section ">
+							<h3>Constructors</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-constructor tsd-parent-kind-class"><a href="_service_actionssdk_conversation_response_card_table_.table.html#constructor" class="tsd-kind-icon">constructor</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section tsd-is-inherited">
+							<h3>Properties</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><a href="_service_actionssdk_conversation_response_card_table_.table.html#buttons" class="tsd-kind-icon">buttons</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><a href="_service_actionssdk_conversation_response_card_table_.table.html#columnproperties" class="tsd-kind-icon">columnProperties</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><a href="_service_actionssdk_conversation_response_card_table_.table.html#image" class="tsd-kind-icon">image</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><a href="_service_actionssdk_conversation_response_card_table_.table.html#rows" class="tsd-kind-icon">rows</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><a href="_service_actionssdk_conversation_response_card_table_.table.html#subtitle" class="tsd-kind-icon">subtitle</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><a href="_service_actionssdk_conversation_response_card_table_.table.html#title" class="tsd-kind-icon">title</a></li>
+							</ul>
+						</section>
+					</div>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Constructors</h2>
+				<section class="tsd-panel tsd-member tsd-kind-constructor tsd-parent-kind-class">
+					<a name="constructor" class="tsd-anchor"></a>
+					<h3>constructor</h3>
+					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Table<span class="tsd-signature-symbol">(</span>options<span class="tsd-signature-symbol">: </span><a href="../interfaces/_service_actionssdk_conversation_response_card_table_.tableoptions.html" class="tsd-signature-type">TableOptions</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_service_actionssdk_conversation_response_card_table_.table.html" class="tsd-signature-type">Table</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in
+										<a href="https://github.com/actions-on-google/actions-on-google-nodejs/blob/master/src/service/actionssdk/conversation/response/card/table.ts#L194">
+											service/actionssdk/conversation/response/card/table.ts:194
+										</a>
+									</li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>options: <a href="../interfaces/_service_actionssdk_conversation_response_card_table_.tableoptions.html" class="tsd-signature-type">TableOptions</a></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="_service_actionssdk_conversation_response_card_table_.table.html" class="tsd-signature-type">Table</a></h4>
+						</li>
+					</ul>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group tsd-is-inherited">
+				<h2>Properties</h2>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited">
+					<a name="buttons" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> buttons</h3>
+					<div class="tsd-signature tsd-kind-icon">buttons<span class="tsd-signature-symbol">:</span> <a href="../interfaces/_service_actionssdk_api_v2_.googleactionsv2uielementsbutton.html" class="tsd-signature-type">GoogleActionsV2UiElementsButton</a><span class="tsd-signature-symbol">[]</span></div>
+					<aside class="tsd-sources">
+						<p>Implementation of <a href="../interfaces/_service_actionssdk_api_v2_.googleactionsv2uielementstablecard.html">GoogleActionsV2UiElementsTableCard</a>.<a href="../interfaces/_service_actionssdk_api_v2_.googleactionsv2uielementstablecard.html#buttons">buttons</a></p>
+						<p>Inherited from <a href="../interfaces/_service_actionssdk_api_v2_.googleactionsv2uielementstablecard.html">GoogleActionsV2UiElementsTableCard</a>.<a href="../interfaces/_service_actionssdk_api_v2_.googleactionsv2uielementstablecard.html#buttons">buttons</a></p>
+						<ul>
+							<li>Defined in
+								<a href="https://github.com/actions-on-google/actions-on-google-nodejs/blob/master/src/service/actionssdk/api/v2.ts#L2043">
+									service/actionssdk/api/v2.ts:2043
+								</a>
+							</li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography tsd-comment-shorttext">
+						<div class="lead">
+							<p>Buttons.
+								Currently at most 1 button is supported.
+							Optional.</p>
+					</div></div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited">
+					<a name="columnproperties" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> column<wbr>Properties</h3>
+					<div class="tsd-signature tsd-kind-icon">column<wbr>Properties<span class="tsd-signature-symbol">:</span> <a href="../interfaces/_service_actionssdk_api_v2_.googleactionsv2uielementstablecardcolumnproperties.html" class="tsd-signature-type">GoogleActionsV2UiElementsTableCardColumnProperties</a><span class="tsd-signature-symbol">[]</span></div>
+					<aside class="tsd-sources">
+						<p>Implementation of <a href="../interfaces/_service_actionssdk_api_v2_.googleactionsv2uielementstablecard.html">GoogleActionsV2UiElementsTableCard</a>.<a href="../interfaces/_service_actionssdk_api_v2_.googleactionsv2uielementstablecard.html#columnproperties">columnProperties</a></p>
+						<p>Inherited from <a href="../interfaces/_service_actionssdk_api_v2_.googleactionsv2uielementstablecard.html">GoogleActionsV2UiElementsTableCard</a>.<a href="../interfaces/_service_actionssdk_api_v2_.googleactionsv2uielementstablecard.html#columnproperties">columnProperties</a></p>
+						<ul>
+							<li>Defined in
+								<a href="https://github.com/actions-on-google/actions-on-google-nodejs/blob/master/src/service/actionssdk/api/v2.ts#L2047">
+									service/actionssdk/api/v2.ts:2047
+								</a>
+							</li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography tsd-comment-shorttext">
+						<div class="lead">
+							<p>Headers and alignment of columns.</p>
+					</div></div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited">
+					<a name="image" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> image</h3>
+					<div class="tsd-signature tsd-kind-icon">image<span class="tsd-signature-symbol">:</span> <a href="../interfaces/_service_actionssdk_api_v2_.googleactionsv2uielementsimage.html" class="tsd-signature-type">GoogleActionsV2UiElementsImage</a></div>
+					<aside class="tsd-sources">
+						<p>Implementation of <a href="../interfaces/_service_actionssdk_api_v2_.googleactionsv2uielementstablecard.html">GoogleActionsV2UiElementsTableCard</a>.<a href="../interfaces/_service_actionssdk_api_v2_.googleactionsv2uielementstablecard.html#image">image</a></p>
+						<p>Inherited from <a href="../interfaces/_service_actionssdk_api_v2_.googleactionsv2uielementstablecard.html">GoogleActionsV2UiElementsTableCard</a>.<a href="../interfaces/_service_actionssdk_api_v2_.googleactionsv2uielementstablecard.html#image">image</a></p>
+						<ul>
+							<li>Defined in
+								<a href="https://github.com/actions-on-google/actions-on-google-nodejs/blob/master/src/service/actionssdk/api/v2.ts#L2051">
+									service/actionssdk/api/v2.ts:2051
+								</a>
+							</li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography tsd-comment-shorttext">
+						<div class="lead">
+							<p>Image associated with the table. Optional.</p>
+					</div></div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited">
+					<a name="rows" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> rows</h3>
+					<div class="tsd-signature tsd-kind-icon">rows<span class="tsd-signature-symbol">:</span> <a href="../interfaces/_service_actionssdk_api_v2_.googleactionsv2uielementstablecardrow.html" class="tsd-signature-type">GoogleActionsV2UiElementsTableCardRow</a><span class="tsd-signature-symbol">[]</span></div>
+					<aside class="tsd-sources">
+						<p>Implementation of <a href="../interfaces/_service_actionssdk_api_v2_.googleactionsv2uielementstablecard.html">GoogleActionsV2UiElementsTableCard</a>.<a href="../interfaces/_service_actionssdk_api_v2_.googleactionsv2uielementstablecard.html#rows">rows</a></p>
+						<p>Inherited from <a href="../interfaces/_service_actionssdk_api_v2_.googleactionsv2uielementstablecard.html">GoogleActionsV2UiElementsTableCard</a>.<a href="../interfaces/_service_actionssdk_api_v2_.googleactionsv2uielementstablecard.html#rows">rows</a></p>
+						<ul>
+							<li>Defined in
+								<a href="https://github.com/actions-on-google/actions-on-google-nodejs/blob/master/src/service/actionssdk/api/v2.ts#L2059">
+									service/actionssdk/api/v2.ts:2059
+								</a>
+							</li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography tsd-comment-shorttext">
+						<div class="lead">
+							<p>Row data of the table. The first 3 rows are guaranteed to be shown but
+								others might be cut on certain surfaces. Please test with the simulator to
+								see which rows will be shown for a given surface. On surfaces that support
+								the WEB_BROWSER capability, you can point the user to
+							a web page with more data.</p>
+					</div></div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited">
+					<a name="subtitle" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> subtitle</h3>
+					<div class="tsd-signature tsd-kind-icon">subtitle<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></div>
+					<aside class="tsd-sources">
+						<p>Implementation of <a href="../interfaces/_service_actionssdk_api_v2_.googleactionsv2uielementstablecard.html">GoogleActionsV2UiElementsTableCard</a>.<a href="../interfaces/_service_actionssdk_api_v2_.googleactionsv2uielementstablecard.html#subtitle">subtitle</a></p>
+						<p>Inherited from <a href="../interfaces/_service_actionssdk_api_v2_.googleactionsv2uielementstablecard.html">GoogleActionsV2UiElementsTableCard</a>.<a href="../interfaces/_service_actionssdk_api_v2_.googleactionsv2uielementstablecard.html#subtitle">subtitle</a></p>
+						<ul>
+							<li>Defined in
+								<a href="https://github.com/actions-on-google/actions-on-google-nodejs/blob/master/src/service/actionssdk/api/v2.ts#L2063">
+									service/actionssdk/api/v2.ts:2063
+								</a>
+							</li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography tsd-comment-shorttext">
+						<div class="lead">
+							<p>Subtitle for the table. Optional.</p>
+					</div></div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited">
+					<a name="title" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> title</h3>
+					<div class="tsd-signature tsd-kind-icon">title<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></div>
+					<aside class="tsd-sources">
+						<p>Implementation of <a href="../interfaces/_service_actionssdk_api_v2_.googleactionsv2uielementstablecard.html">GoogleActionsV2UiElementsTableCard</a>.<a href="../interfaces/_service_actionssdk_api_v2_.googleactionsv2uielementstablecard.html#title">title</a></p>
+						<p>Inherited from <a href="../interfaces/_service_actionssdk_api_v2_.googleactionsv2uielementstablecard.html">GoogleActionsV2UiElementsTableCard</a>.<a href="../interfaces/_service_actionssdk_api_v2_.googleactionsv2uielementstablecard.html#title">title</a></p>
+						<ul>
+							<li>Defined in
+								<a href="https://github.com/actions-on-google/actions-on-google-nodejs/blob/master/src/service/actionssdk/api/v2.ts#L2067">
+									service/actionssdk/api/v2.ts:2067
+								</a>
+							</li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography tsd-comment-shorttext">
+						<div class="lead">
+							<p>Overall title of the table. Optional but must be set if subtitle is set.</p>
+					</div></div>
+				</section>
+			</section>
+			<!--{&quot;options&quot;:&quot;typedoc.json&quot;,&quot;theme&quot;:&quot;node_modules/typedoc-neo-theme/bin/default&quot;,&quot;out&quot;:&quot;docs&quot;,&quot;exclude&quot;:[&quot;**/_test/**/*.*&quot;,&quot;**/index.ts&quot;,&quot;**/common.ts&quot;],&quot;ignoreCompilerErrors&quot;:true,&quot;disableOutputCheck&quot;:true,&quot;excludeExternals&quot;:true,&quot;excludePrivate&quot;:true,&quot;excludeNotExported&quot;:true,&quot;links&quot;:[{&quot;label&quot;:&quot;Guides&quot;,&quot;url&quot;:&quot;https://developers.google.com/actions/extending-the-assistant&quot;},{&quot;label&quot;:&quot;Reference&quot;,&quot;url&quot;:&quot;https://developers.google.com/actions/reference/nodejsv2/overview&quot;},{&quot;label&quot;:&quot;Codelabs&quot;,&quot;url&quot;:&quot;https://developers.google.com/actions/codelabs/index&quot;},{&quot;label&quot;:&quot;Samples&quot;,&quot;url&quot;:&quot;https://developers.google.com/actions/samples/index&quot;},{&quot;label&quot;:&quot;Glossary&quot;,&quot;url&quot;:&quot;https://developers.google.com/actions/glossary&quot;}],&quot;outline&quot;:[{&quot;Actions SDK&quot;:{&quot;Overview&quot;:&quot;modules/_service_actionssdk_actionssdk_&quot;,&quot;Conversation&quot;:&quot;classes/_service_actionssdk_conv_.actionssdkconversation&quot;,&quot;api/v2&quot;:&quot;modules/_service_actionssdk_api_v2_&quot;},&quot;Dialogflow&quot;:{&quot;Overview&quot;:&quot;modules/_service_dialogflow_dialogflow_&quot;,&quot;Conversation&quot;:&quot;classes/_service_dialogflow_conv_.dialogflowconversation&quot;,&quot;api/v1&quot;:&quot;modules/_service_dialogflow_api_v1_&quot;,&quot;api/v2&quot;:&quot;modules/_service_dialogflow_api_v2_&quot;},&quot;Smart Home&quot;:{&quot;Overview&quot;:&quot;modules/_service_smarthome_smarthome_&quot;,&quot;Smart Home App&quot;:&quot;interfaces/_service_smarthome_smarthome_.smarthomeapp&quot;,&quot;api/v1&quot;:&quot;modules/_service_smarthome_api_v1_&quot;},&quot;Framework&quot;:{&quot;Overview&quot;:&quot;modules/_framework_framework_&quot;,&quot;Assistant&quot;:&quot;modules/_assistant_&quot;,&quot;Rich Responses&quot;:&quot;modules/_service_actionssdk_conversation_conversation_&quot;}}],&quot;search&quot;:[{&quot;name&quot;:&quot;.*Conversation.data&quot;,&quot;subtitle&quot;:&quot;Session data&quot;},{&quot;name&quot;:&quot;conversation/response.*&quot;,&quot;subtitle&quot;:&quot;Rich response&quot;},{&quot;name&quot;:&quot;.*\\.User.storage&quot;,&quot;subtitle&quot;:&quot;Persistent storage&quot;}],&quot;source&quot;:[{&quot;path&quot;:&quot;https://github.com/actions-on-google/actions-on-google-nodejs/blob/master/src/&quot;,&quot;line&quot;:&quot;L&quot;}]}-->
+		</div>
+		<div class="col-2 col-menu secondary-menu">
+			<nav class="tsd-navigation secondary menu-sticky">
+				<ul class="before-current">
+				</ul>
+				<ul class="current">
+					<li class="current tsd-kind-class tsd-parent-kind-external-module root">
+						<a href="_service_actionssdk_conversation_response_card_table_.table.html" class="tsd-kind-icon">Table</a>
+						<ul>
+							<li class=" tsd-kind-constructor tsd-parent-kind-class">
+								<a href="_service_actionssdk_conversation_response_card_table_.table.html#constructor" class="tsd-kind-icon">constructor</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited">
+								<a href="_service_actionssdk_conversation_response_card_table_.table.html#buttons" class="tsd-kind-icon">buttons</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited">
+								<a href="_service_actionssdk_conversation_response_card_table_.table.html#columnproperties" class="tsd-kind-icon">column<wbr>Properties</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited">
+								<a href="_service_actionssdk_conversation_response_card_table_.table.html#image" class="tsd-kind-icon">image</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited">
+								<a href="_service_actionssdk_conversation_response_card_table_.table.html#rows" class="tsd-kind-icon">rows</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited">
+								<a href="_service_actionssdk_conversation_response_card_table_.table.html#subtitle" class="tsd-kind-icon">subtitle</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited">
+								<a href="_service_actionssdk_conversation_response_card_table_.table.html#title" class="tsd-kind-icon">title</a>
+							</li>
+						</ul>
+					</li>
+				</ul>
+				<ul class="after-current">
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module root">
+						<a href="../interfaces/_service_actionssdk_conversation_response_card_table_.tablecolumn.html" class="tsd-kind-icon">Table<wbr>Column</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module root">
+						<a href="../interfaces/_service_actionssdk_conversation_response_card_table_.tableoptions.html" class="tsd-kind-icon">Table<wbr>Options</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module root">
+						<a href="../interfaces/_service_actionssdk_conversation_response_card_table_.tablerow.html" class="tsd-kind-icon">Table<wbr>Row</a>
+					</li>
+				</ul>
+			</nav>
+		</div>
+	</div>
+</div>
+<footer class="with-border-bottom">
+</footer>
+<div class="container tsd-generator">
+	<p>Generated using <a href="http://typedoc.org/" target="_blank">TypeDoc</a></p>
+</div>
+<div class="overlay"></div>
+<script src="../assets/js/main.js"></script>
+<script>if (location.protocol == 'file:') document.write('<script src="../assets/js/search.js"><' + '/script>');</script>
+</body>
+</html>

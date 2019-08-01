@@ -1,0 +1,591 @@
+<!doctype html>
+<html class="default no-js">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>User | actions-on-google</title>
+	<meta name="description" content="">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="../assets/css/main.css">
+</head>
+<body>
+<header>
+	<div class="tsd-page-toolbar">
+		<div class="container">
+			<div class="table-wrap">
+				<div class="table-cell" id="tsd-search" data-index="../assets/js/search.js" data-base="..">
+					<div class="field">
+						<label for="tsd-search-field" class="tsd-widget search no-caption">Search</label>
+						<input id="tsd-search-field" type="text" />
+					</div>
+					<ul class="results">
+						<li class="state loading">Preparing search index...</li>
+						<li class="state failure">The search index is not available</li>
+					</ul>
+					<ul class="results-priority" style="display:none">
+						<li data-name=".*Conversation.data" data-subtitle="Session data"></li>
+						<li data-name="conversation/response.*" data-subtitle="Rich response"></li>
+						<li data-name=".*\.User.storage" data-subtitle="Persistent storage"></li>
+					</ul>
+					<a href="../index.html" class="title">actions-on-google</a>
+					&emsp;<a href="https://developers.google.com/actions/extending-the-assistant" class="title">Guides</a>
+					&emsp;<a href="https://developers.google.com/actions/reference/nodejsv2/overview" class="title">Reference</a>
+					&emsp;<a href="https://developers.google.com/actions/codelabs/index" class="title">Codelabs</a>
+					&emsp;<a href="https://developers.google.com/actions/samples/index" class="title">Samples</a>
+					&emsp;<a href="https://developers.google.com/actions/glossary" class="title">Glossary</a>
+				</div>
+				<div class="table-cell" id="tsd-widgets">
+					<div id="tsd-filter">
+						<a href="#" class="tsd-widget options no-caption" data-toggle="options">Options</a>
+						<div class="tsd-filter-group">
+							<div class="tsd-select" id="tsd-filter-visibility">
+								<span class="tsd-select-label">All</span>
+								<ul class="tsd-select-list">
+									<li data-value="public">Public</li>
+									<li data-value="protected">Public/Protected</li>
+									<li data-value="private" class="selected">All</li>
+								</ul>
+							</div>
+							<input type="checkbox" id="tsd-filter-inherited" checked />
+							<label class="tsd-widget" for="tsd-filter-inherited">Inherited</label>
+						</div>
+					</div>
+					<a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="tsd-page-title">
+		<div class="container">
+			<ul class="tsd-breadcrumb">
+				<li>
+					<a href="../modules/_service_actionssdk_conversation_user_.html">service/actionssdk/conversation/user</a>
+				</li>
+				<li>
+					<a href="_service_actionssdk_conversation_user_.user.html">User</a>
+				</li>
+			</ul>
+		</div>
+	</div>
+</header>
+<div class="container container-main">
+	<div class="row">
+		<div class="col-3 col-menu menu-sticky-wrap menu-highlight">
+			<nav class="tsd-navigation outline primary">
+				<a style="margin-left:0em" href="../globals.html">Globals</a>
+				<ul style="display:none">
+					{&quot;Actions SDK&quot;:{&quot;Overview&quot;:&quot;modules/_service_actionssdk_actionssdk_&quot;,&quot;Conversation&quot;:&quot;classes/_service_actionssdk_conv_.actionssdkconversation&quot;,&quot;api/v2&quot;:&quot;modules/_service_actionssdk_api_v2_&quot;},&quot;Dialogflow&quot;:{&quot;Overview&quot;:&quot;modules/_service_dialogflow_dialogflow_&quot;,&quot;Conversation&quot;:&quot;classes/_service_dialogflow_conv_.dialogflowconversation&quot;,&quot;api/v1&quot;:&quot;modules/_service_dialogflow_api_v1_&quot;,&quot;api/v2&quot;:&quot;modules/_service_dialogflow_api_v2_&quot;},&quot;Smart Home&quot;:{&quot;Overview&quot;:&quot;modules/_service_smarthome_smarthome_&quot;,&quot;Smart Home App&quot;:&quot;interfaces/_service_smarthome_smarthome_.smarthomeapp&quot;,&quot;api/v1&quot;:&quot;modules/_service_smarthome_api_v1_&quot;},&quot;Framework&quot;:{&quot;Overview&quot;:&quot;modules/_framework_framework_&quot;,&quot;Assistant&quot;:&quot;modules/_assistant_&quot;,&quot;Rich Responses&quot;:&quot;modules/_service_actionssdk_conversation_conversation_&quot;}}
+				</ul>
+			</nav>
+		</div>
+		<div class="col-7 offset-3 col-content">
+			<h1>Class User&lt;TUserStorage&gt;</h1>
+			<section class="tsd-panel tsd-type-parameters">
+				<h3>Type parameters</h3>
+				<ul class="tsd-type-parameters">
+					<li>
+						<h4>TUserStorage</h4>
+					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel tsd-hierarchy">
+				<h3>Hierarchy</h3>
+				<ul class="tsd-hierarchy">
+					<li>
+						<span class="target">User</span>
+					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel-group tsd-index-group">
+				<section class="tsd-panel tsd-index-panel">
+					<div class="tsd-index-content">
+						<section class="tsd-index-section ">
+							<h3>Properties</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_service_actionssdk_conversation_user_.user.html#access" class="tsd-kind-icon">access</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_service_actionssdk_conversation_user_.user.html#email" class="tsd-kind-icon">email</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_service_actionssdk_conversation_user_.user.html#entitlements" class="tsd-kind-icon">entitlements</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_service_actionssdk_conversation_user_.user.html#last" class="tsd-kind-icon">last</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_service_actionssdk_conversation_user_.user.html#locale" class="tsd-kind-icon">locale</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_service_actionssdk_conversation_user_.user.html#name" class="tsd-kind-icon">name</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_service_actionssdk_conversation_user_.user.html#permissions" class="tsd-kind-icon">permissions</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_service_actionssdk_conversation_user_.user.html#profile" class="tsd-kind-icon">profile</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_service_actionssdk_conversation_user_.user.html#raw" class="tsd-kind-icon">raw</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_service_actionssdk_conversation_user_.user.html#storage" class="tsd-kind-icon">storage</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_service_actionssdk_conversation_user_.user.html#verification" class="tsd-kind-icon">verification</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section ">
+							<h3>Accessors</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-accessor tsd-parent-kind-class"><a href="_service_actionssdk_conversation_user_.user.html#id" class="tsd-kind-icon">id</a></li>
+							</ul>
+						</section>
+					</div>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Properties</h2>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="access" class="tsd-anchor"></a>
+					<h3>access</h3>
+					<div class="tsd-signature tsd-kind-icon">access<span class="tsd-signature-symbol">:</span> <a href="_service_actionssdk_conversation_user_.access.html" class="tsd-signature-type">Access</a></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in
+								<a href="https://github.com/actions-on-google/actions-on-google-nodejs/blob/master/src/service/actionssdk/conversation/user.ts#L206">
+									service/actionssdk/conversation/user.ts:206
+								</a>
+							</li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="email" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> email</h3>
+					<div class="tsd-signature tsd-kind-icon">email<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in
+								<a href="https://github.com/actions-on-google/actions-on-google-nodejs/blob/master/src/service/actionssdk/conversation/user.ts#L263">
+									service/actionssdk/conversation/user.ts:263
+								</a>
+							</li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography tsd-comment-shorttext">
+						<div class="lead">
+							<p>Gets the user profile email.
+							Only retrievable with &quot;Google Sign In&quot; linking type set up for account linking in the console.</p>
+						</div><p>See {@link Profile#payload|conv.user.profile.payload} for all the payload properties.</p>
+						<dl class="tsd-comment-tags"><dt>example</dt>
+							<dd><pre><code class="language-javascript">
+<span class="hljs-comment">// Dialogflow</span>
+<span class="hljs-keyword">const</span> app = dialogflow({
+  <span class="hljs-attr">clientId</span>: CLIENT_ID,
+})
+
+app.intent(<span class="hljs-string">'Default Welcome Intent'</span>, conv =&gt; {
+  conv.ask(<span class="hljs-keyword">new</span> SignIn(<span class="hljs-string">'To get your account details'</span>))
+})
+
+<span class="hljs-comment">// Create a Dialogflow intent with the `actions_intent_SIGN_IN` event</span>
+app.intent(<span class="hljs-string">'Get Signin'</span>, (conv, params, signin) =&gt; {
+  <span class="hljs-keyword">if</span> (signin.status === <span class="hljs-string">'OK'</span>) {
+    <span class="hljs-keyword">const</span> email = conv.user.email
+    conv.ask(<span class="hljs-string">`I got your email as <span class="hljs-subst">${email}</span>. What do you want to do next?`</span>)
+  } <span class="hljs-keyword">else</span> {
+    conv.ask(<span class="hljs-string">`I won't be able to save your data, but what do you want to next?`</span>)
+  }
+})
+
+<span class="hljs-comment">// Actions SDK</span>
+<span class="hljs-keyword">const</span> app = actionssdk({
+  <span class="hljs-attr">clientId</span>: CLIENT_ID,
+})
+
+app.intent(<span class="hljs-string">'actions.intent.MAIN'</span>, conv =&gt; {
+  conv.ask(<span class="hljs-keyword">new</span> SignIn(<span class="hljs-string">'To get your account details'</span>))
+})
+
+app.intent(<span class="hljs-string">'actions.intent.SIGN_IN'</span>, (conv, input, signin) =&gt; {
+  <span class="hljs-keyword">if</span> (signin.status === <span class="hljs-string">'OK'</span>) {
+    <span class="hljs-keyword">const</span> email = conv.user.email
+    conv.ask(<span class="hljs-string">`I got your email as <span class="hljs-subst">${email}</span>. What do you want to do next?`</span>)
+  } <span class="hljs-keyword">else</span> {
+    conv.ask(<span class="hljs-string">`I won't be able to save your data, but what do you want to next?`</span>)
+  }
+})</code></pre>
+						</dd></dl></div><div class="tsd-comment tsd-typography tsd-comment-text">
+						<p>See {@link Profile#payload|conv.user.profile.payload} for all the payload properties.</p>
+						<dl class="tsd-comment-tags"><dt>example</dt>
+							<dd><pre><code class="language-javascript">
+<span class="hljs-comment">// Dialogflow</span>
+<span class="hljs-keyword">const</span> app = dialogflow({
+  <span class="hljs-attr">clientId</span>: CLIENT_ID,
+})
+
+app.intent(<span class="hljs-string">'Default Welcome Intent'</span>, conv =&gt; {
+  conv.ask(<span class="hljs-keyword">new</span> SignIn(<span class="hljs-string">'To get your account details'</span>))
+})
+
+<span class="hljs-comment">// Create a Dialogflow intent with the `actions_intent_SIGN_IN` event</span>
+app.intent(<span class="hljs-string">'Get Signin'</span>, (conv, params, signin) =&gt; {
+  <span class="hljs-keyword">if</span> (signin.status === <span class="hljs-string">'OK'</span>) {
+    <span class="hljs-keyword">const</span> email = conv.user.email
+    conv.ask(<span class="hljs-string">`I got your email as <span class="hljs-subst">${email}</span>. What do you want to do next?`</span>)
+  } <span class="hljs-keyword">else</span> {
+    conv.ask(<span class="hljs-string">`I won't be able to save your data, but what do you want to next?`</span>)
+  }
+})
+
+<span class="hljs-comment">// Actions SDK</span>
+<span class="hljs-keyword">const</span> app = actionssdk({
+  <span class="hljs-attr">clientId</span>: CLIENT_ID,
+})
+
+app.intent(<span class="hljs-string">'actions.intent.MAIN'</span>, conv =&gt; {
+  conv.ask(<span class="hljs-keyword">new</span> SignIn(<span class="hljs-string">'To get your account details'</span>))
+})
+
+app.intent(<span class="hljs-string">'actions.intent.SIGN_IN'</span>, (conv, input, signin) =&gt; {
+  <span class="hljs-keyword">if</span> (signin.status === <span class="hljs-string">'OK'</span>) {
+    <span class="hljs-keyword">const</span> email = conv.user.email
+    conv.ask(<span class="hljs-string">`I got your email as <span class="hljs-subst">${email}</span>. What do you want to do next?`</span>)
+  } <span class="hljs-keyword">else</span> {
+    conv.ask(<span class="hljs-string">`I won't be able to save your data, but what do you want to next?`</span>)
+  }
+})</code></pre>
+						</dd></dl></div><div class="tsd-comment tsd-typography tsd-comment-tags">
+						<dl class="tsd-comment-tags"><dt>example</dt>
+							<dd><pre><code class="language-javascript">
+<span class="hljs-comment">// Dialogflow</span>
+<span class="hljs-keyword">const</span> app = dialogflow({
+  <span class="hljs-attr">clientId</span>: CLIENT_ID,
+})
+
+app.intent(<span class="hljs-string">'Default Welcome Intent'</span>, conv =&gt; {
+  conv.ask(<span class="hljs-keyword">new</span> SignIn(<span class="hljs-string">'To get your account details'</span>))
+})
+
+<span class="hljs-comment">// Create a Dialogflow intent with the `actions_intent_SIGN_IN` event</span>
+app.intent(<span class="hljs-string">'Get Signin'</span>, (conv, params, signin) =&gt; {
+  <span class="hljs-keyword">if</span> (signin.status === <span class="hljs-string">'OK'</span>) {
+    <span class="hljs-keyword">const</span> email = conv.user.email
+    conv.ask(<span class="hljs-string">`I got your email as <span class="hljs-subst">${email}</span>. What do you want to do next?`</span>)
+  } <span class="hljs-keyword">else</span> {
+    conv.ask(<span class="hljs-string">`I won't be able to save your data, but what do you want to next?`</span>)
+  }
+})
+
+<span class="hljs-comment">// Actions SDK</span>
+<span class="hljs-keyword">const</span> app = actionssdk({
+  <span class="hljs-attr">clientId</span>: CLIENT_ID,
+})
+
+app.intent(<span class="hljs-string">'actions.intent.MAIN'</span>, conv =&gt; {
+  conv.ask(<span class="hljs-keyword">new</span> SignIn(<span class="hljs-string">'To get your account details'</span>))
+})
+
+app.intent(<span class="hljs-string">'actions.intent.SIGN_IN'</span>, (conv, input, signin) =&gt; {
+  <span class="hljs-keyword">if</span> (signin.status === <span class="hljs-string">'OK'</span>) {
+    <span class="hljs-keyword">const</span> email = conv.user.email
+    conv.ask(<span class="hljs-string">`I got your email as <span class="hljs-subst">${email}</span>. What do you want to do next?`</span>)
+  } <span class="hljs-keyword">else</span> {
+    conv.ask(<span class="hljs-string">`I won't be able to save your data, but what do you want to next?`</span>)
+  }
+})</code></pre>
+						</dd></dl>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="entitlements" class="tsd-anchor"></a>
+					<h3>entitlements</h3>
+					<div class="tsd-signature tsd-kind-icon">entitlements<span class="tsd-signature-symbol">:</span> <a href="../interfaces/_service_actionssdk_api_v2_.googleactionsv2packageentitlement.html" class="tsd-signature-type">GoogleActionsV2PackageEntitlement</a><span class="tsd-signature-symbol">[]</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in
+								<a href="https://github.com/actions-on-google/actions-on-google-nodejs/blob/master/src/service/actionssdk/conversation/user.ts#L203">
+									service/actionssdk/conversation/user.ts:203
+								</a>
+							</li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography tsd-comment-shorttext">
+						<div class="lead">
+							<p>The list of all digital goods that your user purchased from
+								your published Android apps. To enable this feature, see the instructions
+							in the <a href="https://developers.google.com/actions/identity/digital-goods" class="external">documentation</a>.</p>
+					</div></div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="last" class="tsd-anchor"></a>
+					<h3>last</h3>
+					<div class="tsd-signature tsd-kind-icon">last<span class="tsd-signature-symbol">:</span> <a href="_service_actionssdk_conversation_user_.last.html" class="tsd-signature-type">Last</a></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in
+								<a href="https://github.com/actions-on-google/actions-on-google-nodejs/blob/master/src/service/actionssdk/conversation/user.ts#L185">
+									service/actionssdk/conversation/user.ts:185
+								</a>
+							</li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="locale" class="tsd-anchor"></a>
+					<h3>locale</h3>
+					<div class="tsd-signature tsd-kind-icon">locale<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in
+								<a href="https://github.com/actions-on-google/actions-on-google-nodejs/blob/master/src/service/actionssdk/conversation/user.ts#L182">
+									service/actionssdk/conversation/user.ts:182
+								</a>
+							</li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography tsd-comment-shorttext">
+						<div class="lead">
+							<p>The user locale. String represents the regional language
+								information of the user set in their Assistant settings.
+							For example, &#39;en-US&#39; represents US English.</p>
+					</div></div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="name" class="tsd-anchor"></a>
+					<h3>name</h3>
+					<div class="tsd-signature tsd-kind-icon">name<span class="tsd-signature-symbol">:</span> <a href="_service_actionssdk_conversation_user_.name.html" class="tsd-signature-type">Name</a></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in
+								<a href="https://github.com/actions-on-google/actions-on-google-nodejs/blob/master/src/service/actionssdk/conversation/user.ts#L195">
+									service/actionssdk/conversation/user.ts:195
+								</a>
+							</li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography tsd-comment-shorttext">
+						<div class="lead">
+							<p>User&#39;s permissioned name info.
+							Properties will be undefined if not request with <a href="_service_actionssdk_conversation_helper_permission_permission_.permission.html">conv.ask(new Permission)</a></p>
+					</div></div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="permissions" class="tsd-anchor"></a>
+					<h3>permissions</h3>
+					<div class="tsd-signature tsd-kind-icon">permissions<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Api.GoogleActionsV2UserPermissions</span><span class="tsd-signature-symbol">[]</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in
+								<a href="https://github.com/actions-on-google/actions-on-google-nodejs/blob/master/src/service/actionssdk/conversation/user.ts#L188">
+									service/actionssdk/conversation/user.ts:188
+								</a>
+							</li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="profile" class="tsd-anchor"></a>
+					<h3>profile</h3>
+					<div class="tsd-signature tsd-kind-icon">profile<span class="tsd-signature-symbol">:</span> <a href="_service_actionssdk_conversation_user_.profile.html" class="tsd-signature-type">Profile</a></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in
+								<a href="https://github.com/actions-on-google/actions-on-google-nodejs/blob/master/src/service/actionssdk/conversation/user.ts#L209">
+									service/actionssdk/conversation/user.ts:209
+								</a>
+							</li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="raw" class="tsd-anchor"></a>
+					<h3>raw</h3>
+					<div class="tsd-signature tsd-kind-icon">raw<span class="tsd-signature-symbol">:</span> <a href="../interfaces/_service_actionssdk_api_v2_.googleactionsv2user.html" class="tsd-signature-type">GoogleActionsV2User</a></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in
+								<a href="https://github.com/actions-on-google/actions-on-google-nodejs/blob/master/src/service/actionssdk/conversation/user.ts#L272">
+									service/actionssdk/conversation/user.ts:272
+								</a>
+							</li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="storage" class="tsd-anchor"></a>
+					<h3>storage</h3>
+					<div class="tsd-signature tsd-kind-icon">storage<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">TUserStorage</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in
+								<a href="https://github.com/actions-on-google/actions-on-google-nodejs/blob/master/src/service/actionssdk/conversation/user.ts#L174">
+									service/actionssdk/conversation/user.ts:174
+								</a>
+							</li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography tsd-comment-shorttext">
+						<div class="lead">
+							<p>The data persistent across sessions in JSON format.
+							It exists in the same context as <code>conv.user.id</code></p>
+							</div><dl class="tsd-comment-tags"><dt>example</dt>
+							<dd><pre><code class="language-javascript">
+<span class="hljs-comment">// Actions SDK</span>
+app.intent(<span class="hljs-string">'actions.intent.MAIN'</span>, conv =&gt; {
+  conv.user.storage.someProperty = <span class="hljs-string">'someValue'</span>
+})
+
+<span class="hljs-comment">// Dialogflow</span>
+app.intent(<span class="hljs-string">'Default Welcome Intent'</span>, conv =&gt; {
+  conv.user.storage.someProperty = <span class="hljs-string">'someValue'</span>
+})</code></pre>
+						</dd></dl></div><div class="tsd-comment tsd-typography tsd-comment-tags">
+						<dl class="tsd-comment-tags"><dt>example</dt>
+							<dd><pre><code class="language-javascript">
+<span class="hljs-comment">// Actions SDK</span>
+app.intent(<span class="hljs-string">'actions.intent.MAIN'</span>, conv =&gt; {
+  conv.user.storage.someProperty = <span class="hljs-string">'someValue'</span>
+})
+
+<span class="hljs-comment">// Dialogflow</span>
+app.intent(<span class="hljs-string">'Default Welcome Intent'</span>, conv =&gt; {
+  conv.user.storage.someProperty = <span class="hljs-string">'someValue'</span>
+})</code></pre>
+						</dd></dl>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="verification" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> verification</h3>
+					<div class="tsd-signature tsd-kind-icon">verification<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Api.GoogleActionsV2UserUserVerificationStatus</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in
+								<a href="https://github.com/actions-on-google/actions-on-google-nodejs/blob/master/src/service/actionssdk/conversation/user.ts#L269">
+									service/actionssdk/conversation/user.ts:269
+								</a>
+							</li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography tsd-comment-shorttext">
+						<div class="lead">
+							<p>Determine if the user is &#39;GUEST&#39; or &#39;VERIFIED&#39;</p>
+					</div></div>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Accessors</h2>
+				<section class="tsd-panel tsd-member tsd-kind-accessor tsd-parent-kind-class">
+					<a name="id" class="tsd-anchor"></a>
+					<h3>id</h3>
+					<ul class="tsd-signatures tsd-kind-accessor tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> id<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></li>
+						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">set</span> id<span class="tsd-signature-symbol">(</span>value<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in
+										<a href="https://github.com/actions-on-google/actions-on-google-nodejs/blob/master/src/service/actionssdk/conversation/user.ts#L312">
+											service/actionssdk/conversation/user.ts:312
+										</a>
+									</li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography tsd-comment-shorttext">
+								<div class="lead">
+									<p>Random string ID for Google user.</p>
+									</div><dl class="tsd-comment-tags"><dt>deprecated</dt>
+									<dd><p>Use {@link User#storage|conv.user.storage} instead.</p>
+								</dd></dl></div><div class="tsd-comment tsd-typography tsd-comment-tags">
+								<dl class="tsd-comment-tags"><dt>deprecated</dt>
+									<dd><p>Use {@link User#storage|conv.user.storage} instead.</p>
+								</dd></dl>
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
+						</li>
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in
+										<a href="https://github.com/actions-on-google/actions-on-google-nodejs/blob/master/src/service/actionssdk/conversation/user.ts#L317">
+											service/actionssdk/conversation/user.ts:317
+										</a>
+									</li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography tsd-comment-shorttext">
+								<div class="lead">
+									<p>Random string ID for Google user.</p>
+							</div></div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>value: <span class="tsd-signature-type">string</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+			</section>
+			<!--{&quot;options&quot;:&quot;typedoc.json&quot;,&quot;theme&quot;:&quot;node_modules/typedoc-neo-theme/bin/default&quot;,&quot;out&quot;:&quot;docs&quot;,&quot;exclude&quot;:[&quot;**/_test/**/*.*&quot;,&quot;**/index.ts&quot;,&quot;**/common.ts&quot;],&quot;ignoreCompilerErrors&quot;:true,&quot;disableOutputCheck&quot;:true,&quot;excludeExternals&quot;:true,&quot;excludePrivate&quot;:true,&quot;excludeNotExported&quot;:true,&quot;links&quot;:[{&quot;label&quot;:&quot;Guides&quot;,&quot;url&quot;:&quot;https://developers.google.com/actions/extending-the-assistant&quot;},{&quot;label&quot;:&quot;Reference&quot;,&quot;url&quot;:&quot;https://developers.google.com/actions/reference/nodejsv2/overview&quot;},{&quot;label&quot;:&quot;Codelabs&quot;,&quot;url&quot;:&quot;https://developers.google.com/actions/codelabs/index&quot;},{&quot;label&quot;:&quot;Samples&quot;,&quot;url&quot;:&quot;https://developers.google.com/actions/samples/index&quot;},{&quot;label&quot;:&quot;Glossary&quot;,&quot;url&quot;:&quot;https://developers.google.com/actions/glossary&quot;}],&quot;outline&quot;:[{&quot;Actions SDK&quot;:{&quot;Overview&quot;:&quot;modules/_service_actionssdk_actionssdk_&quot;,&quot;Conversation&quot;:&quot;classes/_service_actionssdk_conv_.actionssdkconversation&quot;,&quot;api/v2&quot;:&quot;modules/_service_actionssdk_api_v2_&quot;},&quot;Dialogflow&quot;:{&quot;Overview&quot;:&quot;modules/_service_dialogflow_dialogflow_&quot;,&quot;Conversation&quot;:&quot;classes/_service_dialogflow_conv_.dialogflowconversation&quot;,&quot;api/v1&quot;:&quot;modules/_service_dialogflow_api_v1_&quot;,&quot;api/v2&quot;:&quot;modules/_service_dialogflow_api_v2_&quot;},&quot;Smart Home&quot;:{&quot;Overview&quot;:&quot;modules/_service_smarthome_smarthome_&quot;,&quot;Smart Home App&quot;:&quot;interfaces/_service_smarthome_smarthome_.smarthomeapp&quot;,&quot;api/v1&quot;:&quot;modules/_service_smarthome_api_v1_&quot;},&quot;Framework&quot;:{&quot;Overview&quot;:&quot;modules/_framework_framework_&quot;,&quot;Assistant&quot;:&quot;modules/_assistant_&quot;,&quot;Rich Responses&quot;:&quot;modules/_service_actionssdk_conversation_conversation_&quot;}}],&quot;search&quot;:[{&quot;name&quot;:&quot;.*Conversation.data&quot;,&quot;subtitle&quot;:&quot;Session data&quot;},{&quot;name&quot;:&quot;conversation/response.*&quot;,&quot;subtitle&quot;:&quot;Rich response&quot;},{&quot;name&quot;:&quot;.*\\.User.storage&quot;,&quot;subtitle&quot;:&quot;Persistent storage&quot;}],&quot;source&quot;:[{&quot;path&quot;:&quot;https://github.com/actions-on-google/actions-on-google-nodejs/blob/master/src/&quot;,&quot;line&quot;:&quot;L&quot;}]}-->
+		</div>
+		<div class="col-2 col-menu secondary-menu">
+			<nav class="tsd-navigation secondary menu-sticky">
+				<ul class="before-current">
+					<li class=" tsd-kind-class tsd-parent-kind-external-module root">
+						<a href="_service_actionssdk_conversation_user_.access.html" class="tsd-kind-icon">Access</a>
+					</li>
+					<li class=" tsd-kind-class tsd-parent-kind-external-module root">
+						<a href="_service_actionssdk_conversation_user_.last.html" class="tsd-kind-icon">Last</a>
+					</li>
+					<li class=" tsd-kind-class tsd-parent-kind-external-module root">
+						<a href="_service_actionssdk_conversation_user_.name.html" class="tsd-kind-icon">Name</a>
+					</li>
+					<li class=" tsd-kind-class tsd-parent-kind-external-module root">
+						<a href="_service_actionssdk_conversation_user_.profile.html" class="tsd-kind-icon">Profile</a>
+					</li>
+				</ul>
+				<ul class="current">
+					<li class="current tsd-kind-class tsd-parent-kind-external-module tsd-has-type-parameter root">
+						<a href="_service_actionssdk_conversation_user_.user.html" class="tsd-kind-icon">User</a>
+						<ul>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="_service_actionssdk_conversation_user_.user.html#access" class="tsd-kind-icon">access</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="_service_actionssdk_conversation_user_.user.html#email" class="tsd-kind-icon">email</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="_service_actionssdk_conversation_user_.user.html#entitlements" class="tsd-kind-icon">entitlements</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="_service_actionssdk_conversation_user_.user.html#last" class="tsd-kind-icon">last</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="_service_actionssdk_conversation_user_.user.html#locale" class="tsd-kind-icon">locale</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="_service_actionssdk_conversation_user_.user.html#name" class="tsd-kind-icon">name</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="_service_actionssdk_conversation_user_.user.html#permissions" class="tsd-kind-icon">permissions</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="_service_actionssdk_conversation_user_.user.html#profile" class="tsd-kind-icon">profile</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="_service_actionssdk_conversation_user_.user.html#raw" class="tsd-kind-icon">raw</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="_service_actionssdk_conversation_user_.user.html#storage" class="tsd-kind-icon">storage</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="_service_actionssdk_conversation_user_.user.html#verification" class="tsd-kind-icon">verification</a>
+							</li>
+							<li class=" tsd-kind-accessor tsd-parent-kind-class">
+								<a href="_service_actionssdk_conversation_user_.user.html#id" class="tsd-kind-icon">id</a>
+							</li>
+						</ul>
+					</li>
+				</ul>
+				<ul class="after-current">
+				</ul>
+			</nav>
+		</div>
+	</div>
+</div>
+<footer class="with-border-bottom">
+</footer>
+<div class="container tsd-generator">
+	<p>Generated using <a href="http://typedoc.org/" target="_blank">TypeDoc</a></p>
+</div>
+<div class="overlay"></div>
+<script src="../assets/js/main.js"></script>
+<script>if (location.protocol == 'file:') document.write('<script src="../assets/js/search.js"><' + '/script>');</script>
+</body>
+</html>
