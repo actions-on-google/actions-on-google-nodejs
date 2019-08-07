@@ -32,7 +32,7 @@ import {
   OrderUpdate,
   LinkOutSuggestion,
 } from './response'
-import { Helper, SoloHelper } from './helper'
+import { Helper, SoloHelper, TransactionDecision, TransactionRequirements } from './helper'
 import { Arguments } from './argument'
 import { Device } from './device'
 import { Input } from './input'
@@ -78,6 +78,8 @@ export type InputValueSpec =
   'type.googleapis.com/google.actions.v2.PlaceValueSpec' |
   'type.googleapis.com/google.actions.v2.LinkValueSpec' |
   'type.googleapis.com/google.actions.transactions.v3.CompletePurchaseValueSpec' |
+  'type.googleapis.com/google.actions.transactions.v3.TransactionDecisionValueSpec' |
+  'type.googleapis.com/google.actions.transactions.v3.TransactionRequirementsCheckSpec' |
   'type.googleapis.com/google.actions.transactions.v3.DigitalPurchaseCheckSpec'
 
 /** @hidden */
@@ -122,6 +124,9 @@ export interface ConversationBaseOptions<TConvData, TUserStorage> {
 
   /** @public */
   debug?: boolean
+
+  /** @public */
+  ordersv3?: boolean
 }
 
 /** @hidden */
@@ -134,6 +139,9 @@ export interface ConversationOptions<TUserStorage> {
 
   /** @public */
   init?: ConversationOptionsInit<{}, TUserStorage>
+
+  /** @public */
+  ordersv3?: boolean
 }
 
 /**
@@ -293,12 +301,16 @@ export class Conversation<TUserStorage> {
   _init: ConversationOptionsInit<{}, TUserStorage>
 
   /** @hidden */
+  _ordersv3 = false
+
+  /** @hidden */
   constructor(options: ConversationOptions<TUserStorage> = {}) {
-    const { request = {}, headers = {}, init = {} } = options
+    const { request = {}, headers = {}, init = {}, ordersv3 = false } = options
 
     this.request = request
     this.headers = headers
     this._init = init
+    this._ordersv3 = ordersv3
 
     this.sandbox = !!this.request.isInSandbox
 
@@ -453,10 +465,22 @@ export class Conversation<TUserStorage> {
         continue
       }
       if (response instanceof Helper) {
-        expectedIntent = response
         if (!(response instanceof SoloHelper)) {
           requireSimpleResponse = true
         }
+        if (this._ordersv3) {
+          let type: InputValueSpec | null = null
+          if (response instanceof TransactionDecision) {
+            type = 'type.googleapis.com/google.actions.transactions.v3.TransactionDecisionValueSpec'
+          } else if (response instanceof TransactionRequirements) {
+            type =
+              'type.googleapis.com/google.actions.transactions.v3.TransactionRequirementsCheckSpec'
+          }
+          if (type !== null) {
+            response.inputValueData['@type'] = type
+          }
+        }
+        expectedIntent = response
         continue
       }
       if (response instanceof RichResponse) {
@@ -491,6 +515,14 @@ export class Conversation<TUserStorage> {
         continue
       }
       richResponse.add(response)
+    }
+    if (this._ordersv3) {
+      for (const response of richResponse.items!) {
+        const { structuredResponse } = response
+        if (structuredResponse && structuredResponse.orderUpdate) {
+          response.structuredResponse = { orderUpdateV3: structuredResponse.orderUpdate }
+        }
+      }
     }
     let hasSimpleResponse = false
     for (const response of richResponse.items!) {
@@ -548,6 +580,9 @@ export interface ConversationAppOptions<TConvData, TUserStorage> extends AppOpti
    * @public
    */
   clientId?: string
+
+  /** @public */
+  ordersv3?: boolean
 }
 
 export interface OAuth2ConfigClient {
@@ -566,6 +601,9 @@ export interface ConversationApp<TConvData, TUserStorage> extends ServiceBaseApp
 
   /** @public */
   auth?: OAuth2Config
+
+  /** @public */
+  ordersv3: boolean
 
   /** @hidden */
   _client?: OAuth2Client

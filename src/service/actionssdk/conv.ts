@@ -89,6 +89,7 @@ export class ActionsSdkConversation<
       request: body,
       headers: options.headers,
       init: options.init,
+      ordersv3: options.ordersv3,
     })
 
     this.body = body

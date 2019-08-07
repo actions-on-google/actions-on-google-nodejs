@@ -18,7 +18,9 @@ import * as Api from '../../../api/v2'
 import { SoloHelper } from '../helper'
 
 /** @public */
-export type TransactionRequirementsArgument = Api.GoogleActionsV2TransactionRequirementsCheckResult
+export type TransactionRequirementsArgument =
+  Api.GoogleActionsV2TransactionRequirementsCheckResult |
+  Api.GoogleActionsTransactionsV3TransactionRequirementsCheckResult
 
 /**
  * Checks whether user is in transactable state.
@@ -26,13 +28,17 @@ export type TransactionRequirementsArgument = Api.GoogleActionsV2TransactionRequ
  */
 export class TransactionRequirements extends SoloHelper<
   'actions.intent.TRANSACTION_REQUIREMENTS_CHECK',
-  Api.GoogleActionsV2TransactionRequirementsCheckSpec
+  Api.GoogleActionsV2TransactionRequirementsCheckSpec |
+    Api.GoogleActionsTransactionsV3TransactionRequirementsCheckSpec
 > {
   /**
    * @param options The raw {@link GoogleActionsV2TransactionRequirementsCheckSpec}
+   *     or {@link GoogleActionsTransactionsV3TransactionRequirementsCheckSpec}
+   *     if using ordersv3
    * @public
    */
-  constructor(options?: Api.GoogleActionsV2TransactionRequirementsCheckSpec) {
+  constructor(options?: Api.GoogleActionsV2TransactionRequirementsCheckSpec |
+      Api.GoogleActionsTransactionsV3TransactionRequirementsCheckSpec) {
     super({
       intent: 'actions.intent.TRANSACTION_REQUIREMENTS_CHECK',
       type: 'type.googleapis.com/google.actions.v2.TransactionRequirementsCheckSpec',

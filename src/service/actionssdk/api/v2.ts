@@ -21,13 +21,79 @@
 import { ApiClientObjectMap } from '../../../common'
 
 
+export type GoogleActionsOrdersV3ActionType = 'TYPE_UNSPECIFIED' | 'VIEW_DETAILS' | 'MODIFY' | 'CANCEL' | 'RETURN' | 'EXCHANGE' | 'EMAIL' | 'CALL' | 'REORDER' | 'REVIEW' | 'CUSTOMER_SERVICE' | 'FIX_ISSUE' | 'DIRECTION'
+
+
+export type GoogleActionsOrdersV3OrderUpdateType = 'TYPE_UNSPECIFIED' | 'ORDER_STATUS' | 'SNAPSHOT'
+
+
+export type GoogleActionsOrdersV3PriceAttributeState = 'STATE_UNSPECIFIED' | 'ESTIMATE' | 'ACTUAL'
+
+
+export type GoogleActionsOrdersV3PriceAttributeType = 'TYPE_UNSPECIFIED' | 'REGULAR' | 'DISCOUNT' | 'TAX' | 'DELIVERY' | 'SUBTOTAL' | 'FEE' | 'GRATUITY' | 'TOTAL'
+
+
+export type GoogleActionsOrdersV3VerticalsPurchaseMerchantUnitMeasureUnit = 'UNIT_UNSPECIFIED' | 'MILLIGRAM' | 'GRAM' | 'KILOGRAM' | 'OUNCE' | 'POUND'
+
+
+export type GoogleActionsOrdersV3VerticalsPurchasePickupInfoCurbsideInfoCurbsideFulfillmentType = 'UNSPECIFIED' | 'VEHICLE_DETAIL'
+
+
+export type GoogleActionsOrdersV3VerticalsPurchasePickupInfoPickupType = 'UNSPECIFIED' | 'INSTORE' | 'CURBSIDE'
+
+
+export type GoogleActionsOrdersV3VerticalsPurchasePurchaseErrorType = 'ERROR_TYPE_UNSPECIFIED' | 'NOT_FOUND' | 'INVALID' | 'AVAILABILITY_CHANGED' | 'PRICE_CHANGED' | 'INCORRECT_PRICE' | 'REQUIREMENTS_NOT_MET' | 'TOO_LATE' | 'NO_CAPACITY' | 'INELIGIBLE' | 'OUT_OF_SERVICE_AREA' | 'CLOSED' | 'PROMO_NOT_APPLICABLE' | 'PROMO_NOT_RECOGNIZED' | 'PROMO_EXPIRED' | 'PROMO_USER_INELIGIBLE' | 'PROMO_ORDER_INELIGIBLE' | 'UNAVAILABLE_SLOT' | 'FAILED_PRECONDITION' | 'PAYMENT_DECLINED'
+
+
+export type GoogleActionsOrdersV3VerticalsPurchasePurchaseFulfillmentInfoFulfillmentType = 'TYPE_UNSPECIFIED' | 'DELIVERY' | 'PICKUP'
+
+
+export type GoogleActionsOrdersV3VerticalsPurchasePurchaseItemExtensionStatus = 'PURCHASE_STATUS_UNSPECIFIED' | 'READY_FOR_PICKUP' | 'SHIPPED' | 'DELIVERED' | 'OUT_OF_STOCK' | 'IN_PREPARATION' | 'CREATED' | 'CONFIRMED' | 'REJECTED' | 'RETURNED' | 'CANCELLED' | 'CHANGE_REQUESTED'
+
+
+export type GoogleActionsOrdersV3VerticalsPurchasePurchaseItemExtensionType = 'PURCHASE_TYPE_UNSPECIFIED' | 'RETAIL' | 'FOOD' | 'GROCERY'
+
+
+export type GoogleActionsOrdersV3VerticalsPurchasePurchaseOrderExtensionPurchaseLocationType = 'UNSPECIFIED_LOCATION' | 'ONLINE_PURCHASE' | 'INSTORE_PURCHASE'
+
+
+export type GoogleActionsOrdersV3VerticalsPurchasePurchaseOrderExtensionStatus = 'PURCHASE_STATUS_UNSPECIFIED' | 'READY_FOR_PICKUP' | 'SHIPPED' | 'DELIVERED' | 'OUT_OF_STOCK' | 'IN_PREPARATION' | 'CREATED' | 'CONFIRMED' | 'REJECTED' | 'RETURNED' | 'CANCELLED' | 'CHANGE_REQUESTED'
+
+
+export type GoogleActionsOrdersV3VerticalsPurchasePurchaseOrderExtensionType = 'PURCHASE_TYPE_UNSPECIFIED' | 'RETAIL' | 'FOOD' | 'GROCERY'
+
+
+export type GoogleActionsOrdersV3VerticalsTicketEventCharacterType = 'TYPE_UNKNOWN' | 'ACTOR' | 'PERFORMER' | 'DIRECTOR' | 'ORGANIZER'
+
+
+export type GoogleActionsOrdersV3VerticalsTicketTicketEventType = 'EVENT_TYPE_UNKNOWN' | 'MOVIE' | 'CONCERT' | 'SPORTS'
+
+
 export type GoogleActionsTransactionsV3CompletePurchaseValuePurchaseStatus = 'PURCHASE_STATUS_UNSPECIFIED' | 'PURCHASE_STATUS_OK' | 'PURCHASE_STATUS_ERROR' | 'PURCHASE_STATUS_USER_CANCELLED' | 'PURCHASE_STATUS_ALREADY_OWNED' | 'PURCHASE_STATUS_ITEM_UNAVAILABLE' | 'PURCHASE_STATUS_ITEM_CHANGE_REQUESTED'
 
 
 export type GoogleActionsTransactionsV3DigitalPurchaseCheckResultResultType = 'RESULT_TYPE_UNSPECIFIED' | 'CAN_PURCHASE' | 'CANNOT_PURCHASE'
 
 
+export type GoogleActionsTransactionsV3PaymentInfoPaymentMethodProvenance = 'PAYMENT_METHOD_PROVENANCE_UNSPECIFIED' | 'PAYMENT_METHOD_PROVENANCE_GOOGLE' | 'PAYMENT_METHOD_PROVENANCE_MERCHANT'
+
+
+export type GoogleActionsTransactionsV3PaymentMethodDisplayInfoPaymentType = 'PAYMENT_TYPE_UNSPECIFIED' | 'PAYMENT_CARD' | 'BANK' | 'LOYALTY_PROGRAM' | 'CASH' | 'GIFT_CARD' | 'WALLET'
+
+
+export type GoogleActionsTransactionsV3PaymentMethodStatusStatus = 'STATUS_UNSPECIFIED' | 'STATUS_OK' | 'STATUS_REQUIRE_FIX' | 'STATUS_INAPPLICABLE'
+
+
 export type GoogleActionsTransactionsV3SkuIdSkuType = 'SKU_TYPE_UNSPECIFIED' | 'SKU_TYPE_IN_APP' | 'SKU_TYPE_SUBSCRIPTION'
+
+
+export type GoogleActionsTransactionsV3TransactionDecisionValueTransactionDecision = 'TRANSACTION_DECISION_UNSPECIFIED' | 'USER_CANNOT_TRANSACT' | 'ORDER_ACCEPTED' | 'ORDER_REJECTED' | 'DELIVERY_ADDRESS_UPDATED' | 'CART_CHANGE_REQUESTED'
+
+
+export type GoogleActionsTransactionsV3TransactionRequirementsCheckResultResultType = 'RESULT_TYPE_UNSPECIFIED' | 'CAN_TRANSACT' | 'CANNOT_TRANSACT'
+
+
+export type GoogleActionsTransactionsV3UserInfoOptionsUserInfoProperties = 'USER_INFO_PROPERTY_UNSPECIFIED' | 'EMAIL'
 
 
 export type GoogleActionsV2ConversationType = 'TYPE_UNSPECIFIED' | 'NEW' | 'ACTIVE'
@@ -127,6 +193,758 @@ export type GoogleActionsV2UserUserVerificationStatus = 'UNKNOWN' | 'GUEST' | 'V
 
 
 
+export interface GoogleActionsOrdersV3Action {
+  /**
+   * Metadata associated with an action.
+   */
+  actionMetadata?: GoogleActionsOrdersV3ActionActionMetadata
+  /**
+   * Action to take.
+   */
+  openUrlAction?: GoogleActionsV2UiElementsOpenUrlAction
+  /**
+   * Title or label of the action, displayed to the user.
+   * Max allowed length is 100 chars.
+   */
+  title?: string
+  /**
+   * Required: Type of action.
+   */
+  type?: GoogleActionsOrdersV3ActionType
+}
+
+export interface GoogleActionsOrdersV3ActionActionMetadata {
+  /**
+   * Time when this action will expire.
+   */
+  expireTime?: string
+}
+
+export interface GoogleActionsOrdersV3LineItem {
+  /**
+   * Line item description.
+   */
+  description?: string
+  /**
+   * Follow up actions at line item.
+   */
+  followUpActions?: GoogleActionsOrdersV3Action[]
+  /**
+   * Required: Merchant assigned identifier for line item.
+   * Used for identifying existing line item in applying partial updates.
+   * Max allowed length is 64 chars.
+   */
+  id?: string
+  /**
+   * Small image associated with this item, if any.
+   */
+  image?: GoogleActionsV2UiElementsImage
+  /**
+   * Name of line item as displayed on the receipt.
+   * Max allowed length is 100 chars.
+   */
+  name?: string
+  /**
+   * Additional notes applicable to this particular line item, for example
+   * cancellation policy.
+   */
+  notes?: string[]
+  /**
+   * Line item level price and adjustments.
+   */
+  priceAttributes?: GoogleActionsOrdersV3PriceAttribute[]
+  /**
+   * The provider of the particular line item, if different from the overall
+   * order. Example: Expedia Order with line item provider ANA.
+   */
+  provider?: GoogleActionsOrdersV3Merchant
+  /**
+   * Purchase orders like goods, food etc.
+   */
+  purchase?: GoogleActionsOrdersV3VerticalsPurchasePurchaseItemExtension
+  /**
+   * Line item level customers, this could be different from Order level buyer.
+   * Example: User X made restaurant reservation under name of user Y.
+   */
+  recipients?: GoogleActionsOrdersV3UserInfo[]
+  /**
+   * Deprecated. Use vertical level status instead. For example, for purchases,
+   * use PurchaseOrderExtension.status.
+   * User visible label for the state of this line item.
+   */
+  userVisibleStateLabel?: string
+  /**
+   * Deprecated: Use verticals instead.
+   * Required: Semantic Contents of line item based on its type/vertical.
+   * Every vertical should include its own fulfillment details.
+   * Must be either one of the following values:
+   * google.actions.orders.v3.verticals.purchase.PurchaseItemExtension
+   * [] google.actions.orders.v3.verticals.ticket.TicketItemExtension
+   */
+  vertical?: ApiClientObjectMap<any>
+}
+
+export interface GoogleActionsOrdersV3Merchant {
+  /**
+   * Merchant's address.
+   */
+  address?: GoogleActionsV2Location
+  /**
+   * Optional ID assigned to merchant if any.
+   */
+  id?: string
+  /**
+   * The image associated with the merchant.
+   */
+  image?: GoogleActionsV2UiElementsImage
+  /**
+   * The name of the merchant like \"Panera Bread\".
+   */
+  name?: string
+  /**
+   * Merchant's phone numbers.
+   */
+  phoneNumbers?: GoogleActionsOrdersV3PhoneNumber[]
+}
+
+export interface GoogleActionsOrdersV3Money {
+  /**
+   * Amount in micros.
+   * For example, this field should be set as 1990000 for $1.99.
+   */
+  amountInMicros?: string
+  /**
+   * The 3-letter currency code defined in ISO 4217.
+   */
+  currencyCode?: string
+}
+
+export interface GoogleActionsOrdersV3Order {
+  /**
+   * Info about the buyer.
+   */
+  buyerInfo?: GoogleActionsOrdersV3UserInfo
+  /**
+   * Required: Order contents which is a group of line items.
+   */
+  contents?: GoogleActionsOrdersV3OrderContents
+  /**
+   * Required: Date and time the order was created.
+   */
+  createTime?: string
+  /**
+   * Follow up actions at order level.
+   */
+  followUpActions?: GoogleActionsOrdersV3Action[]
+  /**
+   * Google assigned order id.
+   */
+  googleOrderId?: string
+  /**
+   * Image associated with the order.
+   */
+  image?: GoogleActionsV2UiElementsImage
+  /**
+   * Date and time the order was last updated.
+   * Required for OrderUpdate.
+   */
+  lastUpdateTime?: string
+  /**
+   * Required: Merchant assigned internal order id. This id must be unique, and
+   * is required for subsequent order update operations. This id may be set to
+   * the provided google_order_id, or any other unique value. Note that the id
+   * presented to users is the user_visible_order_id, which may be a different,
+   * more user-friendly value.
+   * Max allowed length is 64 chars.
+   */
+  merchantOrderId?: string
+  /**
+   * Notes attached to an order.
+   */
+  note?: string
+  /**
+   * Payment related data for the order.
+   */
+  paymentData?: GoogleActionsTransactionsV3PaymentData
+  /**
+   * Price, discounts, taxes and so on.
+   */
+  priceAttributes?: GoogleActionsOrdersV3PriceAttribute[]
+  /**
+   * All promotions that are associated with this order.
+   */
+  promotions?: GoogleActionsOrdersV3Promotion[]
+  /**
+   * Purchase order
+   */
+  purchase?: GoogleActionsOrdersV3VerticalsPurchasePurchaseOrderExtension
+  /**
+   * A link to the terms of service that apply to order/proposed order.
+   */
+  termsOfServiceUrl?: string
+  /**
+   * Ticket order
+   */
+  ticket?: GoogleActionsOrdersV3VerticalsTicketTicketOrderExtension
+  /**
+   * Merchant that facilitated the checkout. This could be different from
+   * a line item level provider. Example: Expedia Order with line item from ANA.
+   */
+  transactionMerchant?: GoogleActionsOrdersV3Merchant
+  /**
+   * The user facing id referencing to current order. This id should be
+   * consistent with the id displayed for this order in other contexts,
+   * including websites, apps and email.
+   */
+  userVisibleOrderId?: string
+  /**
+   * Deprecated: Use OrderExtensions status instead.
+   * User visible label for the state of this order.
+   */
+  userVisibleStateLabel?: string
+  /**
+   * Deprecated: Use verticals instead.
+   * These properties will apply to all line items, unless overridden in
+   * some line item. This vertical must match the line item level vertical type.
+   * Possible values:
+   * google.actions.orders.v3.verticals.purchase.PurchaseOrderExtension
+   * google.actions.orders.v3.verticals.ticket.TicketOrderExtension
+   */
+  vertical?: ApiClientObjectMap<any>
+}
+
+export interface GoogleActionsOrdersV3OrderContents {
+  /**
+   * List of order line items.
+   * At least 1 line_item is required and at-most 50 is allowed.
+   * All line items must belong to same vertical.
+   */
+  lineItems?: GoogleActionsOrdersV3LineItem[]
+}
+
+export interface GoogleActionsOrdersV3OrderUpdate {
+  order?: GoogleActionsOrdersV3Order
+  /**
+   * Reason for the change/update.
+   */
+  reason?: string
+  /**
+   * Deprecated: Use OrderUpdate.update_mask instead.
+   * If type = SNAPSHOT, OrderUpdate.order should be the entire order.
+   * If type = ORDER_STATUS, this is the order level status change. Only
+   * order.last_update_time and this vertical status are picked up.
+   * Note: type.ORDER_STATUS only supports PurcahaseOrderExtension status
+   * updates and there is no plan to extend this support. Instead, we recommend
+   * using update_mask as it is more generic, extensible and can be used for all
+   * verticals.
+   */
+  type?: GoogleActionsOrdersV3OrderUpdateType
+  /**
+   * Note: There are following consideration/recommendations for following
+   * special fields:
+   * 1. order.last_update_time will always be updated as part of the update
+   * request.
+   * 2. order.create_time, order.google_order_id and order.merchant_order_id
+   * will be ignored if provided as part of the update_mask.
+   */
+  updateMask?: string
+  /**
+   * If specified, displays a notification to the user with the specified
+   * title and text. Specifying a notification is a suggestion to
+   * notify and is not guaranteed to result in a notification.
+   */
+  userNotification?: GoogleActionsOrdersV3OrderUpdateUserNotification
+}
+
+export interface GoogleActionsOrdersV3OrderUpdateUserNotification {
+  /**
+   * The contents of the notification.
+   * Max allowed length is 100 chars.
+   */
+  text?: string
+  /**
+   * The title for the user notification.
+   * Max allowed length is 30 chars.
+   */
+  title?: string
+}
+
+export interface GoogleActionsOrdersV3PhoneNumber {
+  /**
+   * Phone number in E.164 format, as defined in International
+   * Telecommunication Union (ITU) Recommendation E.164.
+   * wiki link: https://en.wikipedia.org/wiki/E.164
+   */
+  e164PhoneNumber?: string
+  /**
+   * Extension is not standardized in ITU recommendations, except for being
+   * defined as a series of numbers with a maximum length of 40 digits. It is
+   * defined as a string here to accommodate for the possible use of a leading
+   * zero in the extension (organizations have complete freedom to do so, as
+   * there is no standard defined). Other than digits, some other dialling
+   * characters such as \",\" (indicating a wait) may be stored here.
+   * For example, in xxx-xxx-xxxx ext. 123, \"123\" is the extension.
+   */
+  extension?: string
+  /**
+   * The carrier selection code that is preferred when calling this phone number
+   * domestically. This also includes codes that need to be dialed in some
+   * countries when calling from landlines to mobiles or vice versa. For
+   * example, in Columbia, a \"3\" needs to be dialed before the phone number
+   * itself when calling from a mobile phone to a domestic landline phone and
+   * vice versa. https://en.wikipedia.org/wiki/Telephone_numbers_in_Colombia
+   * https://en.wikipedia.org/wiki/Brazilian_Carrier_Selection_Code
+   *
+   * Note this is the \"preferred\" code, which means other codes may work as
+   * well.
+   */
+  preferredDomesticCarrierCode?: string
+}
+
+export interface GoogleActionsOrdersV3PriceAttribute {
+  /**
+   * Monetary amount.
+   */
+  amount?: GoogleActionsOrdersV3Money
+  /**
+   * The percentage spec, to 1/1000th of a percent.
+   * Eg: 8.750% is represented as 8750, negative percentages represent
+   * percentage discounts.
+   * Deprecating this field. Can consider adding back when a solid usecase is
+   * required.
+   */
+  amountMillipercentage?: number
+  /**
+   * Required: User displayed string of the price attribute. This is sent and
+   * localized by merchant.
+   */
+  name?: string
+  /**
+   * Required: State of the price: Estimate vs Actual.
+   */
+  state?: GoogleActionsOrdersV3PriceAttributeState
+  /**
+   * Whether the price is tax included.
+   */
+  taxIncluded?: boolean
+  /**
+   * Required: Type of money attribute.
+   */
+  type?: GoogleActionsOrdersV3PriceAttributeType
+}
+
+export interface GoogleActionsOrdersV3Promotion {
+  /**
+   * Required: Coupon code applied to this offer.
+   */
+  coupon?: string
+}
+
+export interface GoogleActionsOrdersV3Time {
+  /**
+   * Represents an order-event time like reservation time, delivery time and so
+   * on. Could be a duration (start & end time), just the date, date time etc.
+   * Refer https://en.wikipedia.org/wiki/ISO_8601 for all supported formats.
+   */
+  timeIso8601?: string
+}
+
+export interface GoogleActionsOrdersV3UserInfo {
+  /**
+   * Display name of the user, might be different from first or last name.
+   */
+  displayName?: string
+  /**
+   * User email, Eg: janedoe@gmail.com.
+   */
+  email?: string
+  /**
+   * First name of the user.
+   */
+  firstName?: string
+  /**
+   * Last name of the user.
+   */
+  lastName?: string
+  /**
+   * Phone numbers of the user.
+   */
+  phoneNumbers?: GoogleActionsOrdersV3PhoneNumber[]
+}
+
+export interface GoogleActionsOrdersV3VerticalsCommonVehicle {
+  /**
+   * Vehicle color name, eg. black
+   * Optional.
+   */
+  colorName?: string
+  /**
+   * URL to a photo of the vehicle.
+   * The photo will be displayed at approximately 256x256px.
+   * Must be a jpg or png.
+   * Optional.
+   */
+  image?: GoogleActionsV2UiElementsImage
+  /**
+   * Vehicle license plate number (e.g. \"1ABC234\").
+   * Required.
+   */
+  licensePlate?: string
+  /**
+   * Vehicle make (e.g. \"Honda\").
+   * This is displayed to the user and must be localized.
+   * Required.
+   */
+  make?: string
+  /**
+   * Vehicle model (e.g. \"Grom\").
+   * This is displayed to the user and must be localized.
+   * Required.
+   */
+  model?: string
+}
+
+export interface GoogleActionsOrdersV3VerticalsPurchaseMerchantUnitMeasure {
+  /**
+   * Value: Example 1.2.
+   */
+  measure?: number
+  /**
+   * Unit: Example POUND, GRAM.
+   */
+  unit?: GoogleActionsOrdersV3VerticalsPurchaseMerchantUnitMeasureUnit
+}
+
+export interface GoogleActionsOrdersV3VerticalsPurchasePickupInfo {
+  /**
+   * Details specific to the curbside information. If pickup_type is not
+   * \"CURBSIDE\", this field would be ignored.
+   */
+  curbsideInfo?: GoogleActionsOrdersV3VerticalsPurchasePickupInfoCurbsideInfo
+  /**
+   * Pick up method, such as INSTORE, CURBSIDE etc.
+   */
+  pickupType?: GoogleActionsOrdersV3VerticalsPurchasePickupInfoPickupType
+}
+
+export interface GoogleActionsOrdersV3VerticalsPurchasePickupInfoCurbsideInfo {
+  /**
+   * Partners need additional information to facilitate curbside pickup
+   * orders. Depending upon what fulfillment type is chosen, corresponding
+   * details would be collected from the user.
+   */
+  curbsideFulfillmentType?: GoogleActionsOrdersV3VerticalsPurchasePickupInfoCurbsideInfoCurbsideFulfillmentType
+  /**
+   * Vehicle details of the user placing the order.
+   */
+  userVehicle?: GoogleActionsOrdersV3VerticalsCommonVehicle
+}
+
+export interface GoogleActionsOrdersV3VerticalsPurchaseProductDetails {
+  /**
+   * Global Trade Item Number of the product.
+   * Useful if offerId is not present in Merchant Center. Optional.
+   */
+  gtin?: string
+  /**
+   * Price look-up codes, commonly called PLU codes, PLU numbers, PLUs,
+   * produce codes, or produce labels, are a system of numbers that
+   * uniquely identify bulk produce sold in grocery stores and supermarkets.
+   */
+  plu?: string
+  /**
+   * Merchant-provided details about the product,
+   * e.g. { \"allergen\": \"peanut\" }.
+   * Useful if offerId is not present in Merchant Center. Optional.
+   */
+  productAttributes?: ApiClientObjectMap<string>
+  /**
+   * Product or offer id associated with this line item.
+   */
+  productId?: string
+  /**
+   * Product category defined by the merchant.
+   * E.g. \"Home > Grocery > Dairy & Eggs > Milk > Whole Milk\"
+   */
+  productType?: string
+}
+
+export interface GoogleActionsOrdersV3VerticalsPurchasePurchaseError {
+  /**
+   * Available quantity now. Applicable in case of AVAILABILITY_CHANGED.
+   */
+  availableQuantity?: number
+  /**
+   * Additional error description.
+   */
+  description?: string
+  /**
+   * Entity Id that corresponds to the error. Example this can correspond to
+   * LineItemId / ItemOptionId.
+   */
+  entityId?: string
+  /**
+   * Required: This represents the granular reason why an order gets rejected by
+   * the merchant.
+   */
+  type?: GoogleActionsOrdersV3VerticalsPurchasePurchaseErrorType
+  /**
+   * Relevant in case of PRICE_CHANGED / INCORRECT_PRICE error type.
+   */
+  updatedPrice?: GoogleActionsOrdersV3PriceAttribute
+}
+
+export interface GoogleActionsOrdersV3VerticalsPurchasePurchaseFulfillmentInfo {
+  /**
+   * A window if a time-range is specified or ETA if single time specified.
+   * Expected delivery or pickup time.
+   */
+  expectedFulfillmentTime?: GoogleActionsOrdersV3Time
+  /**
+   * A window if a time-range is specified or ETA if single time specified.
+   * Expected time to prepare the food. Single-time preferred.
+   */
+  expectedPreparationTime?: GoogleActionsOrdersV3Time
+  /**
+   * Time at which this fulfillment option expires.
+   */
+  expireTime?: string
+  /**
+   * User contact for this fulfillment.
+   */
+  fulfillmentContact?: GoogleActionsOrdersV3UserInfo
+  /**
+   * Required: The type of fulfillment.
+   */
+  fulfillmentType?: GoogleActionsOrdersV3VerticalsPurchasePurchaseFulfillmentInfoFulfillmentType
+  /**
+   * Unique identifier for this service option.
+   */
+  id?: string
+  /**
+   * Pickup or delivery location.
+   */
+  location?: GoogleActionsV2Location
+  /**
+   * Additional information regarding how order would be picked. This field
+   * would only be applicable when fulfillment type is PICKUP.
+   */
+  pickupInfo?: GoogleActionsOrdersV3VerticalsPurchasePickupInfo
+  /**
+   * Cost of this option.
+   */
+  price?: GoogleActionsOrdersV3PriceAttribute
+  /**
+   * Name of the shipping method selected by the user.
+   */
+  shippingMethodName?: string
+  /**
+   * StoreCode of the location.
+   * Example: Walmart is the merchant and store_code is the walmart store
+   * where fulfillment happened.
+   * https://support.google.com/business/answer/3370250?hl=en&ref_topic=4596653.
+   */
+  storeCode?: string
+}
+
+export interface GoogleActionsOrdersV3VerticalsPurchasePurchaseItemExtension {
+  /**
+   * Any extra fields exchanged between merchant and google.
+   */
+  extension?: ApiClientObjectMap<any>
+  /**
+   * Fulfillment info for this line item. If unset, this line item
+   * inherits order level fulfillment info.
+   */
+  fulfillmentInfo?: GoogleActionsOrdersV3VerticalsPurchasePurchaseFulfillmentInfo
+  /**
+   * Additional add-ons or sub-items.
+   */
+  itemOptions?: GoogleActionsOrdersV3VerticalsPurchasePurchaseItemExtensionItemOption[]
+  /**
+   * Details about the product.
+   */
+  productDetails?: GoogleActionsOrdersV3VerticalsPurchaseProductDetails
+  /**
+   * Product or offer id associated with this line item.
+   */
+  productId?: string
+  /**
+   * Quantity of the item.
+   */
+  quantity?: number
+  /**
+   * Returns info for this line item. If unset, this line item
+   * inherits order level returns info.
+   */
+  returnsInfo?: GoogleActionsOrdersV3VerticalsPurchasePurchaseReturnsInfo
+  /**
+   * Required: Line item level status.
+   */
+  status?: GoogleActionsOrdersV3VerticalsPurchasePurchaseItemExtensionStatus
+  /**
+   * Required: Type of purchase.
+   */
+  type?: GoogleActionsOrdersV3VerticalsPurchasePurchaseItemExtensionType
+  /**
+   * Unit measure.
+   * Specifies the size of the item in chosen units. The size, together with
+   * the active price is used to determine the unit price.
+   */
+  unitMeasure?: GoogleActionsOrdersV3VerticalsPurchaseMerchantUnitMeasure
+  /**
+   * Required: User visible label/string for the status.
+   * Max allowed length is 50 chars.
+   */
+  userVisibleStatusLabel?: string
+}
+
+export interface GoogleActionsOrdersV3VerticalsPurchasePurchaseItemExtensionItemOption {
+  /**
+   * For options that are items, unique item id.
+   */
+  id?: string
+  /**
+   * Option name.
+   */
+  name?: string
+  /**
+   * Note related to the option.
+   */
+  note?: string
+  /**
+   * Option total price.
+   */
+  prices?: GoogleActionsOrdersV3PriceAttribute[]
+  /**
+   * Product or offer id associated with this option.
+   */
+  productId?: string
+  /**
+   * For options that are items, quantity.
+   */
+  quantity?: number
+  /**
+   * To define other nested sub options.
+   */
+  subOptions?: GoogleActionsOrdersV3VerticalsPurchasePurchaseItemExtensionItemOption[]
+}
+
+export interface GoogleActionsOrdersV3VerticalsPurchasePurchaseOrderExtension {
+  /**
+   * Optional: Errors because of which this order was rejected.
+   */
+  errors?: GoogleActionsOrdersV3VerticalsPurchasePurchaseError[]
+  /**
+   * Any extra fields exchanged between merchant and google.
+   */
+  extension?: ApiClientObjectMap<any>
+  /**
+   * Fulfillment info for the order.
+   */
+  fulfillmentInfo?: GoogleActionsOrdersV3VerticalsPurchasePurchaseFulfillmentInfo
+  /**
+   * Location of the purchase (in-store / online)
+   */
+  purchaseLocationType?: GoogleActionsOrdersV3VerticalsPurchasePurchaseOrderExtensionPurchaseLocationType
+  /**
+   * Return info for the order.
+   */
+  returnsInfo?: GoogleActionsOrdersV3VerticalsPurchasePurchaseReturnsInfo
+  /**
+   * Required: Overall Status for the order.
+   */
+  status?: GoogleActionsOrdersV3VerticalsPurchasePurchaseOrderExtensionStatus
+  /**
+   * Required: Type of purchase.
+   */
+  type?: GoogleActionsOrdersV3VerticalsPurchasePurchaseOrderExtensionType
+  /**
+   * User visible label/string for the status.
+   * Max allowed length is 50 chars.
+   */
+  userVisibleStatusLabel?: string
+}
+
+export interface GoogleActionsOrdersV3VerticalsPurchasePurchaseReturnsInfo {
+  /**
+   * Return is allowed within that many days.
+   */
+  daysToReturn?: number
+  /**
+   * If true, return is allowed.
+   */
+  isReturnable?: boolean
+  /**
+   * Link to the return policy.
+   */
+  policyUrl?: string
+}
+
+export interface GoogleActionsOrdersV3VerticalsTicketEventCharacter {
+  /**
+   * Character's images.
+   */
+  image?: GoogleActionsV2UiElementsImage
+  /**
+   * Name of the character.
+   */
+  name?: string
+  /**
+   * Type of the event character, e.g. actor or director.
+   */
+  type?: GoogleActionsOrdersV3VerticalsTicketEventCharacterType
+}
+
+export interface GoogleActionsOrdersV3VerticalsTicketTicketEvent {
+  /**
+   * Description of the event.
+   */
+  description?: string
+  /**
+   * Entry time, which might be different from the event start time. e.g. the
+   * event starts at 9am, but entry time is 8:30am.
+   */
+  doorTime?: GoogleActionsOrdersV3Time
+  /**
+   * End time.
+   */
+  endDate?: GoogleActionsOrdersV3Time
+  /**
+   * The characters related to this event. It can be directors or actors of a
+   * movie event, or performers of a concert, etc.
+   */
+  eventCharacters?: GoogleActionsOrdersV3VerticalsTicketEventCharacter[]
+  /**
+   * The location where the event is happening, or an organization is located.
+   */
+  location?: GoogleActionsV2Location
+  /**
+   * Required: Name of the event. For example, if the event is a movie, this
+   * should be the movie name.
+   */
+  name?: string
+  /**
+   * Start time.
+   */
+  startDate?: GoogleActionsOrdersV3Time
+  /**
+   * Required: Type of the ticket event, e.g. movie, concert.
+   */
+  type?: GoogleActionsOrdersV3VerticalsTicketTicketEventType
+  /**
+   * Url to the event info.
+   */
+  url?: string
+}
+
+export interface GoogleActionsOrdersV3VerticalsTicketTicketOrderExtension {
+  /**
+   * The event applied to all line item tickets.
+   */
+  ticketEvent?: GoogleActionsOrdersV3VerticalsTicketTicketEvent
+}
+
 export interface GoogleActionsTransactionsV3CompletePurchaseValue {
   /**
    * A unique order identifier for the transaction. This identifier corresponds
@@ -166,6 +984,194 @@ export interface GoogleActionsTransactionsV3DigitalPurchaseCheckResult {
 export interface GoogleActionsTransactionsV3DigitalPurchaseCheckSpec {
   }
 
+export interface GoogleActionsTransactionsV3GooglePaymentOption {
+  /**
+   * This JSON blob captures the specification for how Google facilitates
+   * the payment for integrators, which is the PaymentDataRequest object
+   * as defined in
+   * https://developers.google.com/pay/api/web/reference/object#PaymentDataRequest
+   * Example:
+   *  {
+   *  \"apiVersion\": 2,
+   *  \"apiVersionMinor\": 0,
+   *  \"merchantInfo\": {
+   *    \"merchantName\": \"Example Merchant\"
+   *  },
+   *  \"allowedPaymentMethods\": [
+   *    {
+   *    \"type\": \"CARD\",
+   *    \"parameters\": {
+   *      \"allowedAuthMethods\": [\"PAN_ONLY\", \"CRYPTOGRAM_3DS\"],
+   *      \"allowedCardNetworks\": [\"AMEX\", \"DISCOVER\", \"JCB\",
+   * \"MASTERCARD\",
+   *      \"VISA\"]
+   *    },
+   *    \"tokenizationSpecification\": {
+   *      \"type\": \"PAYMENT_GATEWAY\",
+   *      \"parameters\": {
+   *      \"gateway\": \"example\",
+   *      \"gatewayMerchantId\": \"exampleGatewayMerchantId\"
+   *      }
+   *    }
+   *    }
+   *  ],
+   *  \"transactionInfo\": {
+   *    \"totalPriceStatus\": \"ESTIMATED\",
+   *    \"totalPrice\": \"12.34\",
+   *    \"currencyCode\": \"USD\"
+   *  }
+   *  }
+   */
+  facilitationSpec?: string
+}
+
+export interface GoogleActionsTransactionsV3MerchantPaymentMethod {
+  /**
+   * Required. Display info of this payment method.
+   */
+  paymentMethodDisplayInfo?: GoogleActionsTransactionsV3PaymentMethodDisplayInfo
+  /**
+   * Optional. The group / profile name that the payment method belongs to.
+   */
+  paymentMethodGroup?: string
+  /**
+   * Required. Id of the payment method passed from merchant / action.
+   * Note this id is should be unique if multiple payment methods are sent from
+   * Merchant/Action.
+   */
+  paymentMethodId?: string
+  /**
+   * Optional. Status of the payment method.
+   * If not present, the payment method is assumed to be in OK status.
+   */
+  paymentMethodStatus?: GoogleActionsTransactionsV3PaymentMethodStatus
+}
+
+export interface GoogleActionsTransactionsV3MerchantPaymentOption {
+  /**
+   * Optional. Id of the default payment method, if any.
+   */
+  defaultMerchantPaymentMethodId?: string
+  /**
+   * Optional. A link to the action/merchant website for managing payment
+   * method.
+   */
+  managePaymentMethodUrl?: string
+  /**
+   * Required. List of payment methods provided by Action/Merchant.
+   */
+  merchantPaymentMethod?: GoogleActionsTransactionsV3MerchantPaymentMethod[]
+}
+
+export interface GoogleActionsTransactionsV3OrderOptions {
+  /**
+   * If true, delivery address is required for the associated order.
+   */
+  requestDeliveryAddress?: boolean
+  /**
+   * The app can request user info by setting this field.
+   * If set, the corresponding field will show up in ProposedOrderCard for
+   * user's confirmation.
+   */
+  userInfoOptions?: GoogleActionsTransactionsV3UserInfoOptions
+}
+
+export interface GoogleActionsTransactionsV3PaymentData {
+  /**
+   * Payment information regarding the order that's useful for user facing
+   * interaction.
+   */
+  paymentInfo?: GoogleActionsTransactionsV3PaymentInfo
+  /**
+   * Payment result that's used by integrator for completing a transaction.
+   * This field will be populated by Actions on Google if the checkout
+   * experience is managed by Actions-on-Google.
+   */
+  paymentResult?: GoogleActionsTransactionsV3PaymentResult
+}
+
+export interface GoogleActionsTransactionsV3PaymentInfo {
+  /**
+   * The display info of the payment method used for the transaction.
+   */
+  paymentMethodDisplayInfo?: GoogleActionsTransactionsV3PaymentMethodDisplayInfo
+  /**
+   * Provenance of the payment method used for the transaction.
+   * User may have registered the same payment method with both google and
+   * merchant.
+   */
+  paymentMethodProvenance?: GoogleActionsTransactionsV3PaymentInfoPaymentMethodProvenance
+}
+
+export interface GoogleActionsTransactionsV3PaymentMethodDisplayInfo {
+  /**
+   * User visible name of the payment method. For example,
+   * VISA **** 1234
+   * Checking acct **** 5678
+   */
+  paymentMethodDisplayName?: string
+  /**
+   * The type of the payment.
+   */
+  paymentType?: GoogleActionsTransactionsV3PaymentMethodDisplayInfoPaymentType
+}
+
+export interface GoogleActionsTransactionsV3PaymentMethodStatus {
+  status?: GoogleActionsTransactionsV3PaymentMethodStatusStatus
+  /**
+   * User facing message regarding the payment method status, i.e. \"Expired\".
+   * Only required when payment method requires fix or is inapplicable.
+   */
+  statusMessage?: string
+}
+
+export interface GoogleActionsTransactionsV3PaymentParameters {
+  /**
+   * Info for requesting payment info from google.
+   */
+  googlePaymentOption?: GoogleActionsTransactionsV3GooglePaymentOption
+  /**
+   * Info for payment methods provided by Action/Merchant.
+   */
+  merchantPaymentOption?: GoogleActionsTransactionsV3MerchantPaymentOption
+}
+
+export interface GoogleActionsTransactionsV3PaymentResult {
+  /**
+   * Google provided payment method data.
+   * If your payment processor is listed as Google supported payment processor
+   * here: https://developers.google.com/pay/api/ Navigate to your payment
+   * processor through the link to find out more details.
+   * Otherwise, refer to following documentation for payload details.
+   * https://developers.google.com/pay/api/payment-data-cryptography
+   */
+  googlePaymentData?: string
+  /**
+   * Merchant/Action provided payment method chosen by user.
+   */
+  merchantPaymentMethodId?: string
+}
+
+export interface GoogleActionsTransactionsV3PresentationOptions {
+  /**
+   * action_display_name can be one of the following values:
+   *
+   * `PLACE_ORDER`: Used for placing an order.
+   * `PAY`: Used for a payment.
+   * `BUY`: Used for a purchase.
+   * `SEND`: Used for a money transfer.
+   * `BOOK`: Used for a booking.
+   * `RESERVE`: Used for reservation.
+   * `SCHEDULE`: Used for scheduling an appointment.
+   * `SUBSCRIBE`: Used for subscription.
+   *
+   * action_display_name refers to the name of the action which best describes
+   * this order. This will be used in various places like prompt, suggestion
+   * chip etc while proposing the order to the user.
+   */
+  actionDisplayName?: string
+}
+
 export interface GoogleActionsTransactionsV3SkuId {
   /**
    * The identifier of the product SKU used for registration in the developer
@@ -180,6 +1186,60 @@ export interface GoogleActionsTransactionsV3SkuId {
    * The type of SKU.
    */
   skuType?: GoogleActionsTransactionsV3SkuIdSkuType
+}
+
+export interface GoogleActionsTransactionsV3TransactionDecisionValue {
+  /**
+   * If user requests for delivery address update, this field includes the
+   * new delivery address. This field will be present only when
+   * `transaction_decision` is `DELIVERY_ADDRESS_UPDATED`.
+   */
+  deliveryAddress?: GoogleActionsV2Location
+  /**
+   * The order that user has approved. This field will be present only when
+   * `transaction_decision` is `ORDER_ACCEPTED`.
+   */
+  order?: GoogleActionsOrdersV3Order
+  /**
+   * Decision regarding the order.
+   */
+  transactionDecision?: GoogleActionsTransactionsV3TransactionDecisionValueTransactionDecision
+}
+
+export interface GoogleActionsTransactionsV3TransactionDecisionValueSpec {
+  /**
+   * The order that's ready for user to approve.
+   */
+  order?: GoogleActionsOrdersV3Order
+  /**
+   * Options associated with the order.
+   */
+  orderOptions?: GoogleActionsTransactionsV3OrderOptions
+  /**
+   * Parameters for requesting payment for this order.
+   */
+  paymentParameters?: GoogleActionsTransactionsV3PaymentParameters
+  /**
+   * Options used to customize order presentation to the user.
+   */
+  presentationOptions?: GoogleActionsTransactionsV3PresentationOptions
+}
+
+export interface GoogleActionsTransactionsV3TransactionRequirementsCheckResult {
+  /**
+   * Result type for transaction requirements check.
+   */
+  resultType?: GoogleActionsTransactionsV3TransactionRequirementsCheckResultResultType
+}
+
+export interface GoogleActionsTransactionsV3TransactionRequirementsCheckSpec {
+  }
+
+export interface GoogleActionsTransactionsV3UserInfoOptions {
+  /**
+   * List of user info properties.
+   */
+  userInfoProperties?: GoogleActionsTransactionsV3UserInfoOptionsUserInfoProperties[]
 }
 
 export interface GoogleActionsV2AppRequest {
@@ -902,16 +1962,57 @@ export interface GoogleActionsV2OrdersGenericExtension {
 export interface GoogleActionsV2OrdersGoogleProvidedPaymentOptions {
   /**
    * If true, billing address will be returned.
+   * Deprecated: Use facilitation_specification field instead.
    */
   billingAddressRequired?: boolean
   /**
+   * This JSON blob captures the specification for how Google facilitates
+   * the payment for integrators, which is the PaymentDataRequest object
+   * as defined in
+   * https://developers.google.com/pay/api/web/reference/object#PaymentDataRequest
+   * Example:
+   *  {
+   *  \"apiVersion\": 2,
+   *  \"apiVersionMinor\": 0,
+   *  \"merchantInfo\": {
+   *    \"merchantName\": \"Example Merchant\"
+   *  },
+   *  \"allowedPaymentMethods\": [
+   *    {
+   *    \"type\": \"CARD\",
+   *    \"parameters\": {
+   *      \"allowedAuthMethods\": [\"PAN_ONLY\", \"CRYPTOGRAM_3DS\"],
+   *      \"allowedCardNetworks\": [\"AMEX\", \"DISCOVER\", \"JCB\",
+   * \"MASTERCARD\",
+   *      \"VISA\"]
+   *    },
+   *    \"tokenizationSpecification\": {
+   *      \"type\": \"PAYMENT_GATEWAY\",
+   *      \"parameters\": {
+   *      \"gateway\": \"example\",
+   *      \"gatewayMerchantId\": \"exampleGatewayMerchantId\"
+   *      }
+   *    }
+   *    }
+   *  ],
+   *  \"transactionInfo\": {
+   *    \"totalPriceStatus\": \"ESTIMATED\",
+   *    \"totalPrice\": \"12.34\",
+   *    \"currencyCode\": \"USD\"
+   *  }
+   *  }
+   */
+  facilitationSpecification?: string
+  /**
    * If true, disallow prepaid cards from being used in the transaction.
+   * Deprecated: Use facilitation_specification field instead.
    */
   prepaidCardDisallowed?: boolean
   /**
    * The app allows cards from any card network listed here being used in
    * transaction.
    * By default, Amex, Visa, MC and Discover are supported.
+   * Deprecated: Use facilitation_specification field instead.
    */
   supportedCardNetworks?: GoogleActionsV2OrdersGoogleProvidedPaymentOptionsSupportedCardNetworks[]
   /**
@@ -919,6 +2020,7 @@ export interface GoogleActionsV2OrdersGoogleProvidedPaymentOptions {
    * These tokenization parameters  will be used for generating payment token
    * for use in transaction. The app should get these parameters from their
    * payment gateway.
+   * Deprecated: Use facilitation_specification field instead.
    */
   tokenizationParameters?: GoogleActionsV2OrdersPaymentMethodTokenizationParameters
 }
@@ -1492,11 +2594,13 @@ export interface GoogleActionsV2RichResponse {
    * 1. The first item must be a
    * SimpleResponse
    * 2. At most two SimpleResponse
-   * 3. At most one card (e.g.
-   * BasicCard or
-   *  StructuredResponse or
-   *  MediaResponse
-   * 4. Cards may not be used if an actions.intent.OPTION intent is used
+   * 3. At most one rich response item (e.g.
+   * BasicCard,
+   *  StructuredResponse,
+   *  MediaResponse, or
+   *  HtmlResponse)
+   * 4. You cannot use a rich response item if you're using an
+   * actions.intent.OPTION intent
    *  ie ListSelect or
    *     CarouselSelect
    */
@@ -1640,6 +2744,10 @@ export interface GoogleActionsV2StructuredResponse {
    * Receipt) after receiving the order.
    */
   orderUpdate?: GoogleActionsV2OrdersOrderUpdate
+  /**
+   * App provides an order update in API v3 format after receiving the order.
+   */
+  orderUpdateV3?: GoogleActionsOrdersV3OrderUpdate
 }
 
 export interface GoogleActionsV2Surface {

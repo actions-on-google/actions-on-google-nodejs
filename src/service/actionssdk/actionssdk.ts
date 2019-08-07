@@ -302,13 +302,14 @@ export const actionssdk: ActionsSdk = <
       id: options.clientId,
     },
   } : undefined,
+  ordersv3: options.ordersv3 || false,
   async handler(
     this: AppHandler & ActionsSdkApp<TConvData, TUserStorage, TConversation>,
     body: Api.GoogleActionsV2AppRequest,
     headers,
     metadata = {},
   ) {
-    const { debug, init, verification } = this
+    const { debug, init, verification, ordersv3 } = this
     if (verification) {
       const {
         project,
@@ -336,6 +337,7 @@ export const actionssdk: ActionsSdk = <
       headers,
       init: init && init(),
       debug,
+      ordersv3,
     })
     if (conv.user.profile.token) {
       await conv.user._verifyProfile(this._client!, this.auth!.client.id)

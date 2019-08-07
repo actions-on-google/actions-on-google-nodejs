@@ -437,13 +437,14 @@ export const dialogflow: Dialogflow = <
       id: options.clientId,
     },
   } : undefined,
+  ordersv3: options.ordersv3 || false,
   async handler(
     this: AppHandler & DialogflowApp<TConvData, TUserStorage, TContexts, TConversation>,
     body: Api.GoogleCloudDialogflowV2WebhookRequest,
     headers,
     metadata = {},
   ) {
-    const { debug, init, verification } = this
+    const { debug, init, verification, ordersv3 } = this
     if (verification) {
       const {
         headers: verificationHeaders,
@@ -480,6 +481,7 @@ export const dialogflow: Dialogflow = <
       headers,
       init: init && init(),
       debug,
+      ordersv3,
     })
     if (conv.user.profile.token) {
       await conv.user._verifyProfile(this._client!, this.auth!.client.id)
