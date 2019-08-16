@@ -63,6 +63,12 @@ export type GoogleActionsOrdersV3VerticalsPurchasePurchaseOrderExtensionStatus =
 export type GoogleActionsOrdersV3VerticalsPurchasePurchaseOrderExtensionType = 'PURCHASE_TYPE_UNSPECIFIED' | 'RETAIL' | 'FOOD' | 'GROCERY'
 
 
+export type GoogleActionsOrdersV3VerticalsReservationReservationItemExtensionStatus = 'RESERVATION_STATUS_UNSPECIFIED' | 'PENDING' | 'CONFIRMED' | 'CANCELLED' | 'FULFILLED' | 'CHANGE_REQUESTED' | 'REJECTED'
+
+
+export type GoogleActionsOrdersV3VerticalsReservationReservationItemExtensionType = 'RESERVATION_TYPE_UNSPECIFIED' | 'RESTAURANT' | 'HAIRDRESSER'
+
+
 export type GoogleActionsOrdersV3VerticalsTicketEventCharacterType = 'TYPE_UNKNOWN' | 'ACTOR' | 'PERFORMER' | 'DIRECTOR' | 'ORGANIZER'
 
 
@@ -268,6 +274,10 @@ export interface GoogleActionsOrdersV3LineItem {
    */
   recipients?: GoogleActionsOrdersV3UserInfo[]
   /**
+   * Reservation orders like restaurant, haircut etc.
+   */
+  reservation?: GoogleActionsOrdersV3VerticalsReservationReservationItemExtension
+  /**
    * Deprecated. Use vertical level status instead. For example, for purchases,
    * use PurchaseOrderExtension.status.
    * User visible label for the state of this line item.
@@ -279,7 +289,8 @@ export interface GoogleActionsOrdersV3LineItem {
    * Every vertical should include its own fulfillment details.
    * Must be either one of the following values:
    * google.actions.orders.v3.verticals.purchase.PurchaseItemExtension
-   * [] google.actions.orders.v3.verticals.ticket.TicketItemExtension
+   * google.actions.orders.v3.verticals.reservation.ReservationItemExtension
+   * google.actions.orders.v3.verticals.ticket.TicketItemExtension
    */
   vertical?: ApiClientObjectMap<any>
 }
@@ -879,6 +890,64 @@ export interface GoogleActionsOrdersV3VerticalsPurchasePurchaseReturnsInfo {
    * Link to the return policy.
    */
   policyUrl?: string
+}
+
+export interface GoogleActionsOrdersV3VerticalsReservationReservationItemExtension {
+  /**
+   * Confirmation code for this reservation.
+   */
+  confirmationCode?: string
+  /**
+   * Any extra fields exchanged between merchant and google.
+   */
+  extension?: ApiClientObjectMap<any>
+  /**
+   * Location of the service/event.
+   */
+  location?: GoogleActionsV2Location
+  /**
+   * The number of people.
+   */
+  partySize?: number
+  /**
+   * Time when the service/event is scheduled to occur.
+   * Can be a time range, a date, or an exact date time.
+   */
+  reservationTime?: GoogleActionsOrdersV3Time
+  /**
+   * Staff facilitators who will be servicing the reservation.
+   * Ex. The hairstylist.
+   */
+  staffFacilitators?: GoogleActionsOrdersV3VerticalsReservationStaffFacilitator[]
+  /**
+   * Required: Reservation status.
+   */
+  status?: GoogleActionsOrdersV3VerticalsReservationReservationItemExtensionStatus
+  /**
+   * Type of reservation.
+   * May be unset if none of the type options is applicable.
+   */
+  type?: GoogleActionsOrdersV3VerticalsReservationReservationItemExtensionType
+  /**
+   * Time range that is acceptable to the user.
+   */
+  userAcceptableTimeRange?: GoogleActionsOrdersV3Time
+  /**
+   * Required: User visible label/string for the status.
+   * Max allowed length is 50 chars.
+   */
+  userVisibleStatusLabel?: string
+}
+
+export interface GoogleActionsOrdersV3VerticalsReservationStaffFacilitator {
+  /**
+   * Performer's images.
+   */
+  image?: GoogleActionsV2UiElementsImage
+  /**
+   * The staff facilitator's name. Ex. \"John Smith\"
+   */
+  name?: string
 }
 
 export interface GoogleActionsOrdersV3VerticalsTicketEventCharacter {
