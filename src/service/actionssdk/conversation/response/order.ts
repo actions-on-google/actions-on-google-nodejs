@@ -24,9 +24,12 @@ export interface OrderUpdate extends Api.GoogleActionsV2OrdersOrderUpdate { }
 export class OrderUpdate implements Api.GoogleActionsV2OrdersOrderUpdate {
   /**
    * @param options The raw {@link GoogleActionsV2OrdersOrderUpdate}
+   *     or {@link GoogleActionsOrdersV3OrderUpdate}
+   *     if using ordersv3
    * @public
    */
-  constructor(options: Api.GoogleActionsV2OrdersOrderUpdate) {
+  constructor(options: Api.GoogleActionsV2OrdersOrderUpdate |
+      Api.GoogleActionsOrdersV3OrderUpdate) {
     Object.assign(this, options)
   }
 }

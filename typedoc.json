@@ -28,25 +28,25 @@
   }],
   "outline": [{
     "Actions SDK": {
-      "Overview": "actionssdk",
-      "Conversation": "classes/actionssdk.actionssdkconversation",
-      "api/v2": "actionssdk_api_v2"
+      "Overview": "modules/_service_actionssdk_actionssdk_",
+      "Conversation": "classes/_service_actionssdk_conv_.actionssdkconversation",
+      "api/v2": "modules/_service_actionssdk_api_v2_"
     },
     "Dialogflow": {
-      "Overview": "dialogflow",
-      "Conversation": "classes/dialogflow.dialogflowconversation",
-      "api/v1": "dialogflow_api_v1",
-      "api/v2": "dialogflow_api_v2"
+      "Overview": "modules/_service_dialogflow_dialogflow_",
+      "Conversation": "classes/_service_dialogflow_conv_.dialogflowconversation",
+      "api/v1": "modules/_service_dialogflow_api_v1_",
+      "api/v2": "modules/_service_dialogflow_api_v2_"
     },
     "Smart Home": {
-      "Overview": "smarthome",
-      "Smart Home App": "interfaces/smarthome.smarthomeapp",
-      "api/v1": "smarthome_api_v1"
+      "Overview": "modules/_service_smarthome_smarthome_",
+      "Smart Home App": "interfaces/_service_smarthome_smarthome_.smarthomeapp",
+      "api/v1": "modules/_service_smarthome_api_v1_"
     },
     "Framework": {
-      "Overview": "framework",
-      "Assistant": "assistant",
-      "Rich Responses": "conversation_response"
+      "Overview": "modules/_framework_framework_",
+      "Assistant": "modules/_assistant_",
+      "Rich Responses": "modules/_service_actionssdk_conversation_conversation_"
     }
   }],
   "search": [{
@@ -56,7 +56,7 @@
     "name": "conversation/response.*",
     "subtitle": "Rich response"
   }, {
-    "name": "conversation.User.storage",
+    "name": ".*\\.User.storage",
     "subtitle": "Persistent storage"
   }],
   "source": [{
