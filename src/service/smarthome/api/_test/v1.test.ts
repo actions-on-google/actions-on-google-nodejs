@@ -22,8 +22,34 @@ test('api is an object', t => {
 })
 
 test('only command field is mandatory in SmartHomeV1ExecuteRequestExecution', t => {
-  const executeRequest: Api.SmartHomeV1ExecuteRequestExecution = {
-    command: 'some.command',
+  const dockExecuteRequest: Api.SmartHomeV1ExecuteRequest = {
+    requestId: 'ff36a3cc-ec34-11e6-b1a0-64510650abcf',
+    inputs: [
+      {
+        intent: 'action.devices.EXECUTE',
+        payload: {
+          commands: [
+            {
+              devices: [
+                {
+                  id: '123',
+                  customData: {
+                    fooValue: 74,
+                    barValue: true,
+                    bazValue: 'sheepdip',
+                  },
+                },
+              ],
+              execution: [
+                {
+                  command: 'action.devices.commands.Dock',
+                },
+              ],
+            },
+          ],
+        },
+      },
+    ],
   }
-  t.is(typeof executeRequest, 'object')
+  t.is(typeof dockExecuteRequest, 'object')
 })
