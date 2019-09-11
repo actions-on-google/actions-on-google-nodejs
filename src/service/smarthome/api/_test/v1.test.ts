@@ -20,3 +20,10 @@ import * as Api from '../v1'
 test('api is an object', t => {
   t.is(typeof Api, 'object')
 })
+
+test('only command field is mandatory in SmartHomeV1ExecuteRequestExecution', t => {
+  const executeRequest:Api.SmartHomeV1ExecuteRequestExecution = {
+    command: 'some.command',
+  }
+  t.is(typeof executeRequest, 'object')
+})
