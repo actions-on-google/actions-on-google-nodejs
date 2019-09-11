@@ -22,7 +22,7 @@ test('api is an object', t => {
 })
 
 test('only command field is mandatory in SmartHomeV1ExecuteRequestExecution', t => {
-  const executeRequest:Api.SmartHomeV1ExecuteRequestExecution = {
+  const executeRequest: Api.SmartHomeV1ExecuteRequestExecution = {
     command: 'some.command',
   }
   t.is(typeof executeRequest, 'object')
