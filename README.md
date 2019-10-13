@@ -23,7 +23,7 @@ This is installed with either `npm install actions-on-google@preview` or `yarn a
 
 The `preview` tag will be kept up to date with every new version of the library.
 
-You can use the Developer Preview version to experience exciting new features that we’re still testing to make sure we have the best developer experience, and help us providing feedback on the API design and feature set.
+You can use the Developer Preview version to experience exciting new features that we’re still testing to make sure we have the best developer experience and help us providing feedback on the API design and feature set.
 
 The APIs offered in Developer Preview have not matured to General Availability yet, which means:
   - **You can’t publish Actions** that use features in Developer Preview.
