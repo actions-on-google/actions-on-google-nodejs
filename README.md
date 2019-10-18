@@ -5,8 +5,8 @@ supports Dialogflow, Actions SDK, and Smart Home fulfillment.
 
 * [Client Library GitHub repo](https://github.com/actions-on-google/actions-on-google-nodejs)
 * [Client Library reference docs](https://actions-on-google.github.io/actions-on-google-nodejs/)
-* [Actions on Google docs](https://developers.google.com/actions/)
-* [Actions on Google samples](https://developers.google.com/actions/samples/)
+* [Actions on Google docs](https://developers.google.com/assistant)
+* [Actions on Google samples](https://developers.google.com/assistant/actions/samples)
 
 [![NPM Version](https://img.shields.io/npm/v/actions-on-google.svg)](https://www.npmjs.org/package/actions-on-google)
 [![Build Status](https://travis-ci.org/actions-on-google/actions-on-google-nodejs.svg?branch=master)](https://travis-ci.org/actions-on-google/actions-on-google-nodejs)
@@ -209,8 +209,8 @@ Public interfaces, classes, functions, objects, and properties are labeled with 
 
 This library supports the following Services:
 * [Dialogflow](https://dialogflow.com/docs/fulfillment) v1 and v2
-* [Actions SDK](https://developers.google.com/actions/sdk/fulfillment) **v2 only**
-* [Smart Home](https://developers.google.com/actions/smarthome/create-app#provide-fulfillment)
+* [Actions SDK](https://developers.google.com/assistant/actions/actions-sdk/fulfillment) **v2 only**
+* [Smart Home](https://developers.google.com/assistant/smarthome/develop/create#provide-fulfillment)
 
 ### Actions SDK
 This library supports only Actions SDK fulfillment version 2.
@@ -218,9 +218,9 @@ This library supports only Actions SDK fulfillment version 2.
 To ensure that your fulfillment uses version 2, set the [`"fulfillmentApiVersion": 2`](https://github.com/actions-on-google/actionssdk-eliza-nodejs/blob/a44a1b0ef0026ce2b0e525ce38bebbf8540ce344/eliza.json#L41) property in your action package.
 
 ## References & Issues
-+ Questions? Go to [StackOverflow](https://stackoverflow.com/questions/tagged/actions-on-google), [Assistant Developer Community on Reddit](https://www.reddit.com/r/GoogleAssistantDev/) or [Support](https://developers.google.com/actions/support/).
++ Questions? Go to [StackOverflow](https://stackoverflow.com/questions/tagged/actions-on-google), [Assistant Developer Community on Reddit](https://www.reddit.com/r/GoogleAssistantDev/) or [Support](https://developers.google.com/assistant/support).
 + For bugs, please report an issue on Github.
-+ Actions on Google [Documentation](https://developers.google.com/actions/extending-the-assistant)
++ Actions on Google [Documentation](https://developers.google.com/assistant)
 + Actions on Google [Codelabs](https://codelabs.developers.google.com/?cat=Assistant).
 + [Webhook Boilerplate Template](https://github.com/actions-on-google/dialogflow-webhook-boilerplate-nodejs) for Actions on Google.
  
