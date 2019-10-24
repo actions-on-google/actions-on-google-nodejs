@@ -41,7 +41,6 @@
     "client library"
   ],
   "devDependencies": {
-    "@gerrit0/typedoc": "^0.15.0",
     "@types/sinon": "^4.3.3",
     "ava": "^1.4.1",
     "concurrently": "^3.5.1",
@@ -50,7 +49,8 @@
     "sinon": "^6.0.0",
     "tslint": "^5.9.1",
     "tslint-eslint-rules": "^5.1.0",
-    "typedoc-neo-theme": "^1.0.2",
+    "typedoc": "^0.15.0",
+    "typedoc-neo-theme": "^1.0.3",
     "typescript": "~3.5.1"
   },
   "dependencies": {
@@ -61,8 +61,5 @@
     "debug": "^3.1.0",
     "google-auth-library": "^1.6.1",
     "googleapis": "^39.2.0"
-  },
-  "resolutions": {
-    "@gerrit0/typedoc-default-themes": "0.6.0"
   }
 }
