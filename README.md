@@ -11,6 +11,10 @@ supports Dialogflow, Actions SDK, and Smart Home fulfillment.
 [![NPM Version](https://img.shields.io/npm/v/actions-on-google.svg)](https://www.npmjs.org/package/actions-on-google)
 [![Build Status](https://travis-ci.org/actions-on-google/actions-on-google-nodejs.svg?branch=master)](https://travis-ci.org/actions-on-google/actions-on-google-nodejs)
 
+## Note's from Sam
+
+This fork allows middleware to be run before a user profile has been verified. Allowing developers to run multiple account-linking actions off of the same server.
+
 ## Setup Instructions
 
 Install the library with either `npm install actions-on-google` or `yarn add actions-on-google` if you use yarn.
