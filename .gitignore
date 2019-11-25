@@ -4,8 +4,6 @@ node_modules
 coverage
 *.log
 *.tgz
-dist
-package
 package-lock.json
 docs
 yarn.lock
