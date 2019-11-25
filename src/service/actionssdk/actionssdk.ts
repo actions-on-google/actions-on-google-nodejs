@@ -339,15 +339,16 @@ export const actionssdk: ActionsSdk = <
       debug,
       ordersv3,
     })
-    if (conv.user.profile.token) {
-      await conv.user._verifyProfile(this._client!, this.auth!.client.id)
-    }
     for (const middleware of this._middlewares) {
       const result = middleware(conv, metadata)
       conv = (result instanceof ActionsSdkConversation ? result : ((await result) || conv)) as (
         ActionsSdkConversation<TConvData, TUserStorage>
       )
     }
+    if (conv.user.profile.token) {
+      await conv.user._verifyProfile(new OAuth2Client(conv.clientId)!, conv.clientId)
+    }
+    
     const log = debug ? common.info : common.debug
     log('Conversation', common.stringify(conv, 'request', 'headers', 'body'))
     const { intent } = conv
