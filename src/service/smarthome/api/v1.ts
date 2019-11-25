@@ -59,7 +59,7 @@ export interface SmartHomeV1QueryRequest {
 
 export interface SmartHomeV1ExecuteRequestExecution {
   command: string,
-  params?: ApiClientObjectMap<any>,
+  params: ApiClientObjectMap<any>,
   challenge?: {
     pin?: string,
     ack?: boolean,
