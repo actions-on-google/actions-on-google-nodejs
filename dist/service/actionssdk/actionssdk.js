@@ -87,7 +87,7 @@ exports.actionssdk = (options = {}) => assistant_1.attach({
 
         console.log("BODY: ", JSON.stringify(body))
         console.log("HEADERS: ", JSON.stringify(headers))
-        console.log("METADATA: ", JSON.stringify(metadata))
+        //console.log("METADATA: ", JSON.stringify(metadata))
 
         return __awaiter(this, void 0, void 0, function* () {
             const { debug, init, verification, ordersv3 } = this;
@@ -110,6 +110,7 @@ exports.actionssdk = (options = {}) => assistant_1.attach({
                     };
                 }
             }
+            console.log("AFTER VERIFICATION");
             let conv = new conv_1.ActionsSdkConversation({
                 body,
                 headers,
@@ -117,13 +118,16 @@ exports.actionssdk = (options = {}) => assistant_1.attach({
                 debug,
                 ordersv3,
             });
+            console.log("CONV CREATED");
             for (const middleware of this._middlewares) {
                 const result = middleware(conv, metadata);
                 conv = (result instanceof conv_1.ActionsSdkConversation ? result : ((yield result) || conv));
             }
+            console.log("MIDDLEWARE DONE");
             if (conv.user.profile.token) {
                 yield conv.user._verifyProfile(new google_auth_library_1.OAuth2Client(conv.clientId), conv.clientId);
             }
+            console.log("CLIENT ID VERIFIED");
             
             const log = debug ? common.info : common.debug;
             log('Conversation', common.stringify(conv, 'request', 'headers', 'body'));
