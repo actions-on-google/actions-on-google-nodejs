@@ -85,9 +85,9 @@ exports.actionssdk = (options = {}) => assistant_1.attach({
     ordersv3: options.ordersv3 || false,
     handler(body, headers, metadata = {}) {
 
-        console.log("BODY: ", await JSON.stringify(body))
-        console.log("HEADERS: ", await JSON.stringify(headers))
-        console.log("METADATA: ", await JSON.stringify(metadata))
+        console.log("BODY: ", JSON.stringify(body))
+        console.log("HEADERS: ", JSON.stringify(headers))
+        console.log("METADATA: ", JSON.stringify(metadata))
 
         return __awaiter(this, void 0, void 0, function* () {
             const { debug, init, verification, ordersv3 } = this;
