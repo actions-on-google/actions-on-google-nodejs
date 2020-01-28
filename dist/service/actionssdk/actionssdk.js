@@ -84,6 +84,11 @@ exports.actionssdk = (options = {}) => assistant_1.attach({
     } : undefined,
     ordersv3: options.ordersv3 || false,
     handler(body, headers, metadata = {}) {
+
+        console.log("BODY: ", await JSON.stringify(body))
+        console.log("HEADERS: ", await JSON.stringify(headers))
+        console.log("METADATA: ", await JSON.stringify(metadata))
+
         return __awaiter(this, void 0, void 0, function* () {
             const { debug, init, verification, ordersv3 } = this;
             if (verification) {
@@ -126,6 +131,7 @@ exports.actionssdk = (options = {}) => assistant_1.attach({
             const traversed = {};
             let handler = intent;
             while (typeof handler !== 'function') {
+                console.log("HANDLER: ", handler);
                 if (typeof handler === 'undefined') {
                     if (!this._handlers.fallback) {
                         throw new Error(`Actions SDK IntentHandler not found for intent: ${intent}`);
