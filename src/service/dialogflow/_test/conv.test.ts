@@ -697,7 +697,7 @@ test('conv generates first conv.data mutated correctly', t => {
       session,
     }  as Api.GoogleCloudDialogflowV2WebhookRequest,
   })
-  t.deepEqual(conv.data, {})
+  t.deepEqual(conv.data, { a: '7' })
   conv.ask(response)
   conv.data.a = a
   t.deepEqual(clone(conv.serialize()), {
