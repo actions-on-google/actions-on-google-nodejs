@@ -22,8 +22,15 @@ import * as Api from './api/v1';
 import {google} from 'googleapis';
 
 const encoding = 'utf8';
+const homegraphWrapperDeprecationNotice = method =>
+  `SmartHomeApp.${method} homegraph wrapper method is deprecated. Use Google APIs Node.js Client: https://www.npmjs.com/package/googleapis bindings for Home Graph: https://googleapis.dev/nodejs/googleapis/latest/homegraph/classes/Homegraph.html`;
 
-/** @public */
+/**
+ *  @public
+ *  @deprecated Use Google APIs Node.js Client:
+ *  https://www.npmjs.com/package/googleapis bindings for Home Graph:
+ *  https://googleapis.dev/nodejs/googleapis/latest/homegraph/classes/Homegraph.html
+ */
 export interface SmartHomeJwt {
   type: 'service_account';
   project_id: string;
@@ -44,6 +51,9 @@ export interface SmartHomeOptions extends AppOptions {
    * https://console.cloud.google.com/apis/api/homegraph.googleapis.com/overview
    * to learn more.
    * @public
+   * @deprecated Use Google APIs Node.js Client:
+   * https://www.npmjs.com/package/googleapis bindings for Home Graph:
+   * https://googleapis.dev/nodejs/googleapis/latest/homegraph/classes/Homegraph.html
    */
   key?: string;
 
@@ -52,6 +62,9 @@ export interface SmartHomeOptions extends AppOptions {
    * This is used for report state. See https://jwt.io/. A JWT can be
    * created through the Google Cloud Console: https://console.cloud.google.com/apis/credentials
    * @public
+   * @deprecated Use Google APIs Node.js Client:
+   * https://www.npmjs.com/package/googleapis bindings for Home Graph:
+   * https://googleapis.dev/nodejs/googleapis/latest/homegraph/classes/Homegraph.html
    */
   jwt?: SmartHomeJwt;
 }
@@ -230,6 +243,9 @@ export interface SmartHomeApp extends ServiceBaseApp {
    * @param agentUserId The user identifier.
    *
    * @public
+   * @deprecated Use Google APIs Node.js Client:
+   * https://www.npmjs.com/package/googleapis bindings for Home Graph:
+   * https://googleapis.dev/nodejs/googleapis/latest/homegraph/classes/Homegraph.html
    */
   requestSync(agentUserId: string): Promise<string>;
 
@@ -273,15 +289,28 @@ export interface SmartHomeApp extends ServiceBaseApp {
    * @param reportedState A payload containing a device or set of devices with their states
    *
    * @public
+   * @deprecated Use Google APIs Node.js Client:
+   * https://www.npmjs.com/package/googleapis bindings for Home Graph:
+   * https://googleapis.dev/nodejs/googleapis/latest/homegraph/classes/Homegraph.html
    */
   reportState(
     reportedState: Api.SmartHomeV1ReportStateRequest
   ): Promise<string>;
 
-  /** @public */
+  /**
+   * @public
+   * @deprecated Use Google APIs Node.js Client:
+   * https://www.npmjs.com/package/googleapis bindings for Home Graph:
+   * https://googleapis.dev/nodejs/googleapis/latest/homegraph/classes/Homegraph.html
+   */
   key?: string;
 
-  /** @public */
+  /**
+   * @public
+   * @deprecated Use Google APIs Node.js Client:
+   * https://www.npmjs.com/package/googleapis bindings for Home Graph:
+   * https://googleapis.dev/nodejs/googleapis/latest/homegraph/classes/Homegraph.html
+   */
   jwt?: SmartHomeJwt;
 }
 
@@ -424,6 +453,7 @@ export const smarthome: SmartHome = (options = {}) =>
         return this._intent('action.devices.DISCONNECT', handler);
       },
       async requestSync(this: SmartHomeApp, agentUserId) {
+        common.warn.log(homegraphWrapperDeprecationNotice('requestSync'));
         if (this.jwt) {
           return await makeApiCall(
             '/v1/devices:requestSync',
@@ -447,6 +477,7 @@ export const smarthome: SmartHome = (options = {}) =>
         );
       },
       async reportState(this: SmartHomeApp, reportedState) {
+        common.warn.log(homegraphWrapperDeprecationNotice('reportState'));
         if (!this.jwt) {
           throw new Error(
             'A JWT was not specified. ' +

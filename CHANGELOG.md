@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Add CHANGELOG.md
 
+### Changed
+- Deprecate SmartHomeApp homegraph wrapper methods: use [Google APIs Node.js
+  Client](https://www.npmjs.com/package/googleapis) bindings for [Home Graph](https://googleapis.dev/nodejs/googleapis/latest/homegraph/classes/Homegraph.html).
+
 ## [2.13.0] - 2020-08-26
 ### Added
 - Add conv.canvas.state feature
