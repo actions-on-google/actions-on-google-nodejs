@@ -39,6 +39,7 @@ import { Input } from './input'
 import { JsonObject } from '../../../common'
 import { ServiceBaseApp, AppOptions } from '../../../assistant'
 import { OAuth2Client } from 'google-auth-library'
+import { Canvas } from './canvas'
 
 /** @public */
 export type Intent =
@@ -222,6 +223,9 @@ export class Conversation<TUserStorage> {
   /** @public */
   device: Device
 
+  /** @public */
+  canvas: Canvas
+
   /**
    * Gets the unique conversation ID. It's a new ID for the initial query,
    * and stays the same until the end of the conversation.
@@ -327,6 +331,8 @@ export class Conversation<TUserStorage> {
     this.arguments = new Arguments(input.arguments)
 
     this.device = new Device(this.request.device)
+
+    this.canvas = new Canvas(input)
 
     this.id = conversation.conversationId!
 

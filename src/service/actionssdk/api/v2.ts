@@ -1727,6 +1727,11 @@ export interface GoogleActionsV2Input {
    */
   arguments?: GoogleActionsV2Argument[]
   /**
+   * Opaque context set in the interactive canvas web app for all subsequent
+   * intents
+   */
+  canvasState?: ApiClientObjectMap<any>
+  /**
    * Indicates the user's intent. For the first conversation turn, the intent
    * will refer to the triggering intent for the Action. For
    * subsequent conversation turns, the intent will be a common Actions on
