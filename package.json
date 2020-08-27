@@ -60,8 +60,7 @@
     "@types/express-serve-static-core": "~4.17.7",
     "@types/node": "^9.4.6",
     "debug": "^3.1.0",
-    "google-auth-library": "^1.6.1",
-    "googleapis": "^39.2.0"
+    "google-auth-library": "^1.6.1"
   },
   "resolutions": {
     "typedoc-default-themes": "0.6.0"

@@ -19,7 +19,7 @@ import { JsonObject } from '../../common'
 import * as common from '../../common'
 import { Headers, BuiltinFrameworkMetadata } from '../../framework'
 import * as Api from './api/v1'
-import { google } from 'googleapis'
+import { JWT } from 'google-auth-library'
 
 const encoding = 'utf8'
 
@@ -329,7 +329,7 @@ const makeApiCall = (url: string, data: JsonObject, jwt?: SmartHomeJwt): Promise
         return
       }
       // Generate JWT, then make the API call if provided
-      const jwtClient = new google.auth.JWT(
+      const jwtClient = new JWT(
         jwt.client_email,
         undefined,
         jwt.private_key,
