@@ -283,6 +283,7 @@ test('app uses middleware using Object.assign', async t => {
     test(): void
   }
   const middleware: DialogflowMiddleware<
+    {}, {}, Contexts,
     TestMiddleware & DialogflowConversation<{}, {}, Contexts>
   > = conv => Object.assign(conv, {
     test() {
@@ -329,6 +330,7 @@ test('app uses async middleware using Object.assign', async t => {
     test(): void
   }
   const middleware: DialogflowMiddleware<
+    {}, {}, Contexts,
     TestMiddleware & DialogflowConversation<{}, {}, Contexts>
   > = async conv => Object.assign(conv, {
     test() {
@@ -367,6 +369,7 @@ test('app uses async middleware returning void', async t => {
     test(): void
   }
   const middleware: DialogflowMiddleware<
+    {}, {}, Contexts,
     TestMiddleware & DialogflowConversation<{}, {}, Contexts>
   > = async conv => {
     (conv as TestMiddleware & DialogflowConversation<{}, {}, Contexts>)
@@ -404,6 +407,7 @@ test('app uses async middleware returning promise', async t => {
     test(): void
   }
   const middleware: DialogflowMiddleware<
+    {}, {}, Contexts,
     TestMiddleware & DialogflowConversation<{}, {}, Contexts>
   > = conv => Promise.resolve(Object.assign(conv, {
     test() {
@@ -444,8 +448,8 @@ test('app gives middleware framework metadata', async t => {
   }
   const response = 'abcdefg1234567'
   let called = false
-  const middleware: DialogflowMiddleware<DialogflowConversation<{}, {}, Contexts>
-  > = (conv, framework) => {
+  const middleware: DialogflowMiddleware<{}, {}, Contexts> =
+    (conv, framework) => {
     called = true
     t.is(framework, metadata)
   }
