@@ -41,9 +41,10 @@ export interface BrowseCarouselItemOptions {
 
   /**
    * The URL of the link opened by clicking the BrowseCarouselItem.
+   * You should either set this field or `openUrlAction` but not both.
    * @public
    */
-  url: string
+  url?: string
 
   /**
    * Description text of the item.
@@ -62,6 +63,13 @@ export interface BrowseCarouselItemOptions {
    * @public
    */
   image?: Api.GoogleActionsV2UiElementsImage
+
+  /**
+   * The URL action that occurs by clicking the BrowseCarouselItem.
+   * You should either set this field or `url` but not both.
+   * @public
+   */
+  openUrlAction?: Api.GoogleActionsV2UiElementsOpenUrlAction
 }
 
 /**
@@ -76,8 +84,13 @@ export class BrowseCarouselItem implements Api.GoogleActionsV2UiElementsCarousel
    */
   constructor(options: BrowseCarouselItemOptions) {
     this.title = options.title
-    this.openUrlAction = {
-      url: options.url,
+    if (options.url) {
+      this.openUrlAction = {
+        url: options.url,
+      }
+    }
+    if (options.openUrlAction) {
+      this.openUrlAction = options.openUrlAction
     }
     this.description = options.description
     this.footer = options.footer
