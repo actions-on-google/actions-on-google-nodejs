@@ -57,7 +57,9 @@ export type DeepLinkArgument = undefined
 
 /**
  * Requests the user to transfer to a linked out Android app intent. Using this feature
- * requires verifying the linked app in the [Actions console](console.actions.google.com).
+ * requires verifying the linked app in the [Actions console](https://console.actions.google.com).
+ *
+ * This feature is deprecated. Access will be by request only.
  *
  * @deprecated Access will be by request only
  *
