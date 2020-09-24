@@ -19,10 +19,11 @@
     "package": "yarn build:clean && npm pack",
     "test": "yarn build:clean && yarn lint && nyc ava --fail-fast",
     "test:watch": "yarn build:clean && concurrently -rk \"yarn build:watch\" \"ava -w --fail-fast\"",
-    "test:ci": "yarn audit && bash script/ci.sh",
+    "test:ci": "yarn audit && script/ci.sh",
     "docs": "typedoc --options typedoc.json --theme node_modules/typedoc-neo-theme/bin/default && touch docs/.nojekyll",
     "docs:clean": "rm -rf docs && yarn docs",
     "docs:serve": "yarn docs:clean && hs docs -o",
+    "docs:deploy": "script/docs.sh",
     "coverage": "yarn coverage:serve",
     "coverage:serve": "yarn test && hs coverage -o"
   },
