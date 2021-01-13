@@ -237,7 +237,7 @@ test('conv generates first conv.data replaced correctly', t => {
 test('conv generates first conv.data mutated correctly', t => {
   const response = `What's up?`
   const a = '7'
-  const conv = new ActionsSdkConversation<{ a: string }>()
+  const conv = new ActionsSdkConversation<{ a?: string }>()
   t.deepEqual(conv.data, {})
   conv.ask(response)
   conv.data.a = a

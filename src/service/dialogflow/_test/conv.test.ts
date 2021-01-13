@@ -692,7 +692,7 @@ test('conv generates first conv.data mutated correctly', t => {
   const session = 'sessionId123'
   const response = `What's up?`
   const a = '7'
-  const conv = new DialogflowConversation<{ a: string }>({
+  const conv = new DialogflowConversation<{ a?: string }>({
     body: {
       session,
     }  as Api.GoogleCloudDialogflowV2WebhookRequest,
