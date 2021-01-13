@@ -28,6 +28,9 @@ set -e
 # Make sure we get the most recent commit hash
 curr_hash="$(git rev-parse HEAD)"
 git checkout HEAD~1
+# Clean up the working directory
+git clean -xfd
+yarn
 
 # We are in HEAD-1
 # Run coverage check and get it output as ./coverage/coverage-summary.json
@@ -39,6 +42,9 @@ prev_coverage=$(node -e $coverage_pct)
 
 # Now go to this commit
 git checkout "$curr_hash"
+# Clean up the working directory
+git clean -xfd
+yarn
 
 # Run coverage check and get it output as ./coverage/coverage-summary.json
 yarn test
