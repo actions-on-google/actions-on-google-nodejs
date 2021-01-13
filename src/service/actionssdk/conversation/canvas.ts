@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import * as Api from '../api/v2'
-import { JsonObject } from '../../../common'
+import * as Api from '../api/v2';
+import {JsonObject} from '../../../common';
 
 export class Canvas {
   /**
@@ -24,10 +24,10 @@ export class Canvas {
    * Accessible using `conv.canvas.state`
    * @public
    */
-  state?: JsonObject
+  state?: JsonObject;
 
   /** @hidden */
   constructor(user: Api.GoogleActionsV2Input) {
-    this.state = user.canvasState
+    this.state = user.canvasState;
   }
 }

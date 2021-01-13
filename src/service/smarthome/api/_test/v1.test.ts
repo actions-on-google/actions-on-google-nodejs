@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-import test from 'ava'
-import * as Api from '../v1'
+import test from 'ava';
+import * as Api from '../v1';
 
 test('api is an object', t => {
-  t.is(typeof Api, 'object')
-})
+  t.is(typeof Api, 'object');
+});
 
 test('only command field is mandatory in SmartHomeV1ExecuteRequestExecution', t => {
   const dockExecuteRequest: Api.SmartHomeV1ExecuteRequest = {
@@ -50,6 +50,6 @@ test('only command field is mandatory in SmartHomeV1ExecuteRequestExecution', t 
         },
       },
     ],
-  }
-  t.is(typeof dockExecuteRequest, 'object')
-})
+  };
+  t.is(typeof dockExecuteRequest, 'object');
+});

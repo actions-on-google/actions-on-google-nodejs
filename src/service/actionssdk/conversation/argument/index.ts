@@ -14,6 +14,6 @@
  * limitations under the License.
  */
 
-export * from './argument'
-export * from './noinput'
-export * from './media'
+export * from './argument';
+export * from './noinput';
+export * from './media';

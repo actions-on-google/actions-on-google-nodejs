@@ -14,12 +14,7 @@
  * limitations under the License.
  */
 
-export {
-  AppHandler,
-  AppOptions,
-  Plugin,
-  BaseApp,
-} from './assistant'
+export {AppHandler, AppOptions, Plugin, BaseApp} from './assistant';
 
 export {
   Framework,
@@ -27,7 +22,7 @@ export {
   StandardResponse,
   StandardHandler,
   Headers,
-} from './framework'
+} from './framework';
 
 export {
   Response,
@@ -64,7 +59,7 @@ export {
   RichResponse,
   Suggestions,
   SurfaceCapability,
-} from './service/actionssdk'
+} from './service/actionssdk';
 
 export {
   Argument,
@@ -120,7 +115,7 @@ export {
   Helper,
   SoloHelper,
   UnauthorizedError,
-} from './service/actionssdk'
+} from './service/actionssdk';
 
 export {
   Contexts,
@@ -138,10 +133,10 @@ export {
   Dialogflow,
   dialogflow,
   DefaultDialogflowIntent,
-} from './service/dialogflow'
+} from './service/dialogflow';
 
-export * from './service/dialogflow/api/v1'
-export * from './service/dialogflow/api/v2'
+export * from './service/dialogflow/api/v1';
+export * from './service/dialogflow/api/v2';
 
 export {
   Intent,
@@ -153,9 +148,9 @@ export {
   ActionsSdk,
   ActionsSdkOptions,
   actionssdk,
-} from './service/actionssdk'
+} from './service/actionssdk';
 
-export * from './service/actionssdk/api/v2'
+export * from './service/actionssdk/api/v2';
 
 export {
   SmartHomeJwt,
@@ -164,8 +159,8 @@ export {
   SmartHomeApp,
   SmartHome,
   smarthome,
-} from './service/smarthome'
+} from './service/smarthome';
 
-export * from './service/smarthome/api/v1'
+export * from './service/smarthome/api/v1';
 
-export { JsonObject } from './common'
+export {JsonObject} from './common';

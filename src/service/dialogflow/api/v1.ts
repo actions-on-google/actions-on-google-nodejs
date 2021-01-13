@@ -16,196 +16,212 @@
 
 /* tslint:disable:no-any max-line-length written like auto generated types from protobufs */
 
-import { ApiClientObjectMap, JsonObject } from '../../../common'
-import * as ActionsApi from '../../actionssdk/api/v2'
+import {ApiClientObjectMap, JsonObject} from '../../../common';
+import * as ActionsApi from '../../actionssdk/api/v2';
 
 export interface DialogflowV1OriginalRequest {
-  source?: string
-  version?: string
-  data?: ActionsApi.GoogleActionsV2AppRequest
+  source?: string;
+  version?: string;
+  data?: ActionsApi.GoogleActionsV2AppRequest;
 }
 
 export interface DialogflowV1Parameters {
-  [parameter: string]: string | Object | undefined
+  [parameter: string]: string | Object | undefined;
 }
 
 export interface DialogflowV1Context {
-  name?: string
-  parameters?: DialogflowV1Parameters
-  lifespan?: number
+  name?: string;
+  parameters?: DialogflowV1Parameters;
+  lifespan?: number;
 }
 
 export interface DialogflowV1Metadata {
-  intentId?: string
-  webhookUsed?: string
-  webhookForSlotFillingUsed?: string
-  nluResponseTime?: number
-  intentName?: string
+  intentId?: string;
+  webhookUsed?: string;
+  webhookForSlotFillingUsed?: string;
+  nluResponseTime?: number;
+  intentName?: string;
 }
 
 export interface DialogflowV1Button {
-  text?: string
-  postback?: string
+  text?: string;
+  postback?: string;
 }
 
 export interface DialogflowV1BaseMessage<TType extends number> {
-  platform?: 'facebook' | 'kik' | 'line' | 'skype' | 'slack' | 'telegram' | 'viber'
-  type?: TType
+  platform?:
+    | 'facebook'
+    | 'kik'
+    | 'line'
+    | 'skype'
+    | 'slack'
+    | 'telegram'
+    | 'viber';
+  type?: TType;
 }
 
 export interface DialogflowV1MessageText extends DialogflowV1BaseMessage<0> {
-  speech?: string
+  speech?: string;
 }
 
 export interface DialogflowV1MessageImage extends DialogflowV1BaseMessage<3> {
-  imageUrl?: string
+  imageUrl?: string;
 }
 
 export interface DialogflowV1MessageCard extends DialogflowV1BaseMessage<1> {
-  buttons?: DialogflowV1Button[]
-  imageUrl?: string
-  subtitle?: string
-  title?: string
+  buttons?: DialogflowV1Button[];
+  imageUrl?: string;
+  subtitle?: string;
+  title?: string;
 }
 
-export interface DialogflowV1MessageQuickReplies extends DialogflowV1BaseMessage<2> {
-  replies?: string[]
-  title?: string
+export interface DialogflowV1MessageQuickReplies
+  extends DialogflowV1BaseMessage<2> {
+  replies?: string[];
+  title?: string;
 }
 
-export interface DialogflowV1MessageCustomPayload extends DialogflowV1BaseMessage<4> {
-  payload?: JsonObject
+export interface DialogflowV1MessageCustomPayload
+  extends DialogflowV1BaseMessage<4> {
+  payload?: JsonObject;
 }
 
 export interface DialogflowV1BaseGoogleMessage<TType extends string> {
-  platform: 'google'
-  type?: TType
+  platform: 'google';
+  type?: TType;
 }
 
-export interface DialogflowV1MessageSimpleResponse extends DialogflowV1BaseGoogleMessage<'simple_response'> {
-  displayText?: string
-  textToSpeech?: string
+export interface DialogflowV1MessageSimpleResponse
+  extends DialogflowV1BaseGoogleMessage<'simple_response'> {
+  displayText?: string;
+  textToSpeech?: string;
 }
 
 export interface DialogflowV1MessageBasicCardButtonAction {
-  url?: string
+  url?: string;
 }
 
 export interface DialogflowV1MessageBasicCardButton {
-  openUrlAction?: DialogflowV1MessageBasicCardButtonAction
-  title?: string
+  openUrlAction?: DialogflowV1MessageBasicCardButtonAction;
+  title?: string;
 }
 
 export interface DialogflowV1MessageImage {
-  url?: string
+  url?: string;
 }
 
-export interface DialogflowV1MessageBasicCard extends DialogflowV1BaseGoogleMessage<'basic_card'> {
-  buttons?: DialogflowV1MessageBasicCardButton[]
-  formattedText?: string
-  image?: DialogflowV1MessageImage
-  subtitle?: string
-  title?: string
+export interface DialogflowV1MessageBasicCard
+  extends DialogflowV1BaseGoogleMessage<'basic_card'> {
+  buttons?: DialogflowV1MessageBasicCardButton[];
+  formattedText?: string;
+  image?: DialogflowV1MessageImage;
+  subtitle?: string;
+  title?: string;
 }
 
 export interface DialogflowV1MessageOptionInfo {
-  key?: string
-  synonyms?: string[]
+  key?: string;
+  synonyms?: string[];
 }
 
 export interface DialogflowV1MessageOptionItem {
-  description?: string
-  image?: DialogflowV1MessageImage
-  optionInfo?: DialogflowV1MessageOptionInfo
-  title?: string
+  description?: string;
+  image?: DialogflowV1MessageImage;
+  optionInfo?: DialogflowV1MessageOptionInfo;
+  title?: string;
 }
 
-export interface DialogflowV1MessageList extends DialogflowV1BaseGoogleMessage<'list_card'> {
-  items?: DialogflowV1MessageOptionItem[]
-  title?: string
+export interface DialogflowV1MessageList
+  extends DialogflowV1BaseGoogleMessage<'list_card'> {
+  items?: DialogflowV1MessageOptionItem[];
+  title?: string;
 }
 
 export interface DialogflowV1MessageSuggestion {
-  title?: string
+  title?: string;
 }
 
-export interface DialogflowV1MessageSuggestions extends DialogflowV1BaseGoogleMessage<'suggestion_chips'> {
-  suggestions?: DialogflowV1MessageSuggestion[]
+export interface DialogflowV1MessageSuggestions
+  extends DialogflowV1BaseGoogleMessage<'suggestion_chips'> {
+  suggestions?: DialogflowV1MessageSuggestion[];
 }
 
-export interface DialogflowV1MessageCarousel extends DialogflowV1BaseGoogleMessage<'carousel_card'> {
-  items?: DialogflowV1MessageOptionItem[]
+export interface DialogflowV1MessageCarousel
+  extends DialogflowV1BaseGoogleMessage<'carousel_card'> {
+  items?: DialogflowV1MessageOptionItem[];
 }
 
-export interface DialogflowV1MessageLinkOut extends DialogflowV1BaseGoogleMessage<'link_out_chip'> {
-  destinationName?: string
-  url?: string
+export interface DialogflowV1MessageLinkOut
+  extends DialogflowV1BaseGoogleMessage<'link_out_chip'> {
+  destinationName?: string;
+  url?: string;
 }
 
-export interface DialogflowV1MessageGooglePayload extends DialogflowV1BaseGoogleMessage<'custom_payload'> {
-  payload?: ApiClientObjectMap<any>
+export interface DialogflowV1MessageGooglePayload
+  extends DialogflowV1BaseGoogleMessage<'custom_payload'> {
+  payload?: ApiClientObjectMap<any>;
 }
 
 export type DialogflowV1Message =
-  DialogflowV1MessageText |
-  DialogflowV1MessageImage |
-  DialogflowV1MessageCard |
-  DialogflowV1MessageQuickReplies |
-  DialogflowV1MessageCustomPayload |
-  DialogflowV1MessageSimpleResponse |
-  DialogflowV1MessageBasicCard |
-  DialogflowV1MessageList |
-  DialogflowV1MessageSuggestions |
-  DialogflowV1MessageCarousel |
-  DialogflowV1MessageLinkOut |
-  DialogflowV1MessageGooglePayload
+  | DialogflowV1MessageText
+  | DialogflowV1MessageImage
+  | DialogflowV1MessageCard
+  | DialogflowV1MessageQuickReplies
+  | DialogflowV1MessageCustomPayload
+  | DialogflowV1MessageSimpleResponse
+  | DialogflowV1MessageBasicCard
+  | DialogflowV1MessageList
+  | DialogflowV1MessageSuggestions
+  | DialogflowV1MessageCarousel
+  | DialogflowV1MessageLinkOut
+  | DialogflowV1MessageGooglePayload;
 
 export interface DialogflowV1Fulfillment {
-  speech?: string
-  messages?: DialogflowV1Message[]
+  speech?: string;
+  messages?: DialogflowV1Message[];
 }
 
 export interface DialogflowV1Result {
-  source?: string
-  resolvedQuery?: string
-  speech?: string
-  action?: string
-  actionIncomplete?: boolean
-  parameters?: DialogflowV1Parameters
-  contexts?: DialogflowV1Context[]
-  metadata?: DialogflowV1Metadata
-  fulfillment?: DialogflowV1Fulfillment
-  score?: number
+  source?: string;
+  resolvedQuery?: string;
+  speech?: string;
+  action?: string;
+  actionIncomplete?: boolean;
+  parameters?: DialogflowV1Parameters;
+  contexts?: DialogflowV1Context[];
+  metadata?: DialogflowV1Metadata;
+  fulfillment?: DialogflowV1Fulfillment;
+  score?: number;
 }
 
 export interface DialogflowV1Status {
-  code?: number
-  errorType?: string
-  webhookTimedOut?: boolean
+  code?: number;
+  errorType?: string;
+  webhookTimedOut?: boolean;
 }
 
 export interface DialogflowV1WebhookRequest {
-  originalRequest?: DialogflowV1OriginalRequest
-  id?: string
-  sessionId?: string
-  timestamp?: string
-  timezone?: string
-  lang?: string
-  result?: DialogflowV1Result
-  status?: DialogflowV1Status
+  originalRequest?: DialogflowV1OriginalRequest;
+  id?: string;
+  sessionId?: string;
+  timestamp?: string;
+  timezone?: string;
+  lang?: string;
+  result?: DialogflowV1Result;
+  status?: DialogflowV1Status;
 }
 
 export interface DialogflowV1FollowupEvent {
-  name?: string
-  data?: DialogflowV1Parameters
+  name?: string;
+  data?: DialogflowV1Parameters;
 }
 
 export interface DialogflowV1WebhookResponse {
-  speech?: string
-  displayText?: string
-  messages?: DialogflowV1Message[]
-  data?: ApiClientObjectMap<any>
-  contextOut?: DialogflowV1Context[]
-  source?: string
-  followupEvent?: DialogflowV1FollowupEvent
+  speech?: string;
+  displayText?: string;
+  messages?: DialogflowV1Message[];
+  data?: ApiClientObjectMap<any>;
+  contextOut?: DialogflowV1Context[];
+  source?: string;
+  followupEvent?: DialogflowV1FollowupEvent;
 }

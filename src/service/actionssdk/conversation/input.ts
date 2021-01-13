@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import * as Api from '../api/v2'
+import * as Api from '../api/v2';
 
 export class Input {
   /**
@@ -38,17 +38,17 @@ export class Input {
    *
    * @public
    */
-  raw: string
+  raw: string;
 
   /**
    * Gets type of input used for this request.
    * @public
    */
-  type: Api.GoogleActionsV2RawInputInputType
+  type: Api.GoogleActionsV2RawInputInputType;
 
   /** @hidden */
   constructor(input: Api.GoogleActionsV2RawInput = {}) {
-    this.raw = input.query!
-    this.type = input.inputType!
+    this.raw = input.query!;
+    this.type = input.inputType!;
   }
 }

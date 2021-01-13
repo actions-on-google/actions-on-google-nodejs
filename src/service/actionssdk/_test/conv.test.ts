@@ -14,25 +14,25 @@
  * limitations under the License.
  */
 
-import test from 'ava'
-import * as sinon from 'sinon'
+import test from 'ava';
+import * as sinon from 'sinon';
 
-import * as common from '../../../common'
-import { clone } from '../../../common'
+import * as common from '../../../common';
+import {clone} from '../../../common';
 
-import * as Api from '../api/v2'
+import * as Api from '../api/v2';
 
-import {
-  ActionsSdkConversationOptions,
-  ActionsSdkConversation,
-} from '../conv'
-import { Permission } from '..'
+import {ActionsSdkConversationOptions, ActionsSdkConversation} from '../conv';
+import {Permission} from '..';
 
-const CONVERSATION_ID = '1234'
-const USER_ID = 'abcd'
+const CONVERSATION_ID = '1234';
+const USER_ID = 'abcd';
 
 function buildRequest(
-  convType: string, intent: string, data?: {}): Api.GoogleActionsV2AppRequest {
+  convType: string,
+  intent: string,
+  data?: {}
+): Api.GoogleActionsV2AppRequest {
   const appRequest = {
     conversation: {
       conversationId: CONVERSATION_ID,
@@ -82,68 +82,67 @@ function buildRequest(
         ],
       },
     ],
-  } as Api.GoogleActionsV2AppRequest
-  return appRequest
+  } as Api.GoogleActionsV2AppRequest;
+  return appRequest;
 }
 
 test('new conversation', t => {
-  const intent = 'actions.intent.MAIN'
-  const appRequest = buildRequest('NEW', intent, '')
+  const intent = 'actions.intent.MAIN';
+  const appRequest = buildRequest('NEW', intent, '');
   const options = {
     body: appRequest,
     headers: {},
-  } as ActionsSdkConversationOptions<{}, {}>
-  const conv = new ActionsSdkConversation(options)
+  } as ActionsSdkConversationOptions<{}, {}>;
+  const conv = new ActionsSdkConversation(options);
 
-  t.is(conv.body, appRequest)
-  t.is(conv.intent, intent)
-  t.is(conv.id, CONVERSATION_ID)
-  const stub = sinon.stub(common, 'deprecate')
-  t.is(conv.user.id, USER_ID)
-  t.true(stub.called)
-  stub.restore()
-  t.is(conv.type, 'NEW')
-  t.false(conv.digested)
+  t.is(conv.body, appRequest);
+  t.is(conv.intent, intent);
+  t.is(conv.id, CONVERSATION_ID);
+  const stub = sinon.stub(common, 'deprecate');
+  t.is(conv.user.id, USER_ID);
+  t.true(stub.called);
+  stub.restore();
+  t.is(conv.type, 'NEW');
+  t.false(conv.digested);
 
-  t.deepEqual(conv.data, {})
-})
+  t.deepEqual(conv.data, {});
+});
 
 test('data is parsed from init', t => {
-  const intent = 'example.intent.foo'
+  const intent = 'example.intent.foo';
   const sessionData = {
     foo: 'bar',
-  }
-  const appRequest = buildRequest('ACTIVE', intent)
+  };
+  const appRequest = buildRequest('ACTIVE', intent);
   const options = {
     body: appRequest,
     headers: {},
     init: {
       data: sessionData,
     },
-  } as ActionsSdkConversationOptions<{}, {}>
-  const conv = new ActionsSdkConversation(options)
+  } as ActionsSdkConversationOptions<{}, {}>;
+  const conv = new ActionsSdkConversation(options);
 
-  t.deepEqual(conv.data, sessionData)
-})
+  t.deepEqual(conv.data, sessionData);
+});
 
 test('data is parsed from conversation token', t => {
-  const intent = 'example.intent.foo'
+  const intent = 'example.intent.foo';
   const sessionData = {
     foo: 'bar',
-  }
+  };
   const data = {
     data: sessionData,
-  }
-  const appRequest = buildRequest('ACTIVE', intent,
-    JSON.stringify(data))
+  };
+  const appRequest = buildRequest('ACTIVE', intent, JSON.stringify(data));
   const options = {
     body: appRequest,
     headers: {},
-  } as ActionsSdkConversationOptions<{}, {}>
-  const conv = new ActionsSdkConversation(options)
+  } as ActionsSdkConversationOptions<{}, {}>;
+  const conv = new ActionsSdkConversation(options);
 
-  t.deepEqual(conv.data, sessionData)
-})
+  t.deepEqual(conv.data, sessionData);
+});
 
 test('conv.data is parsed correctly', t => {
   const data = {
@@ -153,22 +152,22 @@ test('conv.data is parsed correctly', t => {
       d: '3',
       e: '4',
     },
-  }
+  };
   const conv = new ActionsSdkConversation({
     body: {
       conversation: {
-        conversationToken: JSON.stringify({ data }),
+        conversationToken: JSON.stringify({data}),
       },
     } as Api.GoogleActionsV2AppRequest,
-  })
-  t.deepEqual(conv.data, data)
-})
+  });
+  t.deepEqual(conv.data, data);
+});
 
 test('conv generates no conversationToken from empty conv.data', t => {
-  const response = `What's up?`
-  const conv = new ActionsSdkConversation()
-  t.deepEqual(conv.data, {})
-  conv.ask(response)
+  const response = "What's up?";
+  const conv = new ActionsSdkConversation();
+  t.deepEqual(conv.data, {});
+  conv.ask(response);
   t.deepEqual(clone(conv.serialize()), {
     expectUserResponse: true,
     expectedInputs: [
@@ -191,11 +190,11 @@ test('conv generates no conversationToken from empty conv.data', t => {
         ],
       },
     ],
-  })
-})
+  });
+});
 
 test('conv generates first conv.data replaced correctly', t => {
-  const response = `What's up?`
+  const response = "What's up?";
   const data = {
     a: '1',
     b: '2',
@@ -203,11 +202,11 @@ test('conv generates first conv.data replaced correctly', t => {
       d: '3',
       e: '4',
     },
-  }
-  const conv = new ActionsSdkConversation()
-  t.deepEqual(conv.data, {})
-  conv.ask(response)
-  conv.data = data
+  };
+  const conv = new ActionsSdkConversation();
+  t.deepEqual(conv.data, {});
+  conv.ask(response);
+  conv.data = data;
   t.deepEqual(clone(conv.serialize()), {
     expectUserResponse: true,
     expectedInputs: [
@@ -230,17 +229,17 @@ test('conv generates first conv.data replaced correctly', t => {
         ],
       },
     ],
-    conversationToken: JSON.stringify({ data }),
-  })
-})
+    conversationToken: JSON.stringify({data}),
+  });
+});
 
 test('conv generates first conv.data mutated correctly', t => {
-  const response = `What's up?`
-  const a = '7'
-  const conv = new ActionsSdkConversation<{ a?: string }>()
-  t.deepEqual(conv.data, {})
-  conv.ask(response)
-  conv.data.a = a
+  const response = "What's up?";
+  const a = '7';
+  const conv = new ActionsSdkConversation<{a?: string}>();
+  t.deepEqual(conv.data, {});
+  conv.ask(response);
+  conv.data.a = a;
   t.deepEqual(clone(conv.serialize()), {
     expectUserResponse: true,
     expectedInputs: [
@@ -263,12 +262,12 @@ test('conv generates first conv.data mutated correctly', t => {
         ],
       },
     ],
-    conversationToken: JSON.stringify({ data: { a } }),
-  })
-})
+    conversationToken: JSON.stringify({data: {a}}),
+  });
+});
 
 test('conv generates different conv.data correctly', t => {
-  const response = `What's up?`
+  const response = "What's up?";
   const data = {
     a: '1',
     b: '2',
@@ -276,18 +275,18 @@ test('conv generates different conv.data correctly', t => {
       d: '3',
       e: '4',
     },
-  }
-  const e = '6'
+  };
+  const e = '6';
   const conv = new ActionsSdkConversation<typeof data>({
     body: {
       conversation: {
-        conversationToken: JSON.stringify({ data }),
+        conversationToken: JSON.stringify({data}),
       },
     } as Api.GoogleActionsV2AppRequest,
-  })
-  t.deepEqual(conv.data, data)
-  conv.ask(response)
-  conv.data.c.e = e
+  });
+  t.deepEqual(conv.data, data);
+  conv.ask(response);
+  conv.data.c.e = e;
   t.deepEqual(clone(conv.serialize()), {
     expectUserResponse: true,
     expectedInputs: [
@@ -320,11 +319,11 @@ test('conv generates different conv.data correctly', t => {
         },
       },
     }),
-  })
-})
+  });
+});
 
 test('conv generates different conv.data correctly when only with init data', t => {
-  const response = `What's up?`
+  const response = "What's up?";
   const data = {
     a: '1',
     b: '2',
@@ -332,21 +331,21 @@ test('conv generates different conv.data correctly when only with init data', t 
       d: '3',
       e: '4',
     },
-  }
-  const a = '7'
+  };
+  const a = '7';
   const conv = new ActionsSdkConversation<typeof data>({
     body: {
       conversation: {
-        conversationToken: JSON.stringify({ data }),
+        conversationToken: JSON.stringify({data}),
       },
     } as Api.GoogleActionsV2AppRequest,
     init: {
       data,
     },
-  })
-  t.deepEqual(conv.data, data)
-  conv.ask(response)
-  conv.data.a = a
+  });
+  t.deepEqual(conv.data, data);
+  conv.ask(response);
+  conv.data.a = a;
   t.deepEqual(clone(conv.serialize()), {
     expectUserResponse: true,
     expectedInputs: [
@@ -379,11 +378,11 @@ test('conv generates different conv.data correctly when only with init data', t 
         },
       },
     }),
-  })
-})
+  });
+});
 
 test('conv generates same conv.data persisted', t => {
-  const response = `What's up?`
+  const response = "What's up?";
   const data = {
     a: '1',
     b: '2',
@@ -391,16 +390,16 @@ test('conv generates same conv.data persisted', t => {
       d: '3',
       e: '4',
     },
-  }
+  };
   const conv = new ActionsSdkConversation<typeof data>({
     body: {
       conversation: {
-        conversationToken: JSON.stringify({ data }),
+        conversationToken: JSON.stringify({data}),
       },
     } as Api.GoogleActionsV2AppRequest,
-  })
-  t.deepEqual(conv.data, data)
-  conv.ask(response)
+  });
+  t.deepEqual(conv.data, data);
+  conv.ask(response);
   t.deepEqual(clone(conv.serialize()), {
     expectUserResponse: true,
     expectedInputs: [
@@ -423,12 +422,12 @@ test('conv generates same conv.data persisted', t => {
         ],
       },
     ],
-    conversationToken: JSON.stringify({ data }),
-  })
-})
+    conversationToken: JSON.stringify({data}),
+  });
+});
 
 test('conv sends userStorage when it is not empty', t => {
-  const response = `What's up?`
+  const response = "What's up?";
   const data = {
     a: '1',
     b: '2',
@@ -436,11 +435,11 @@ test('conv sends userStorage when it is not empty', t => {
       d: '3',
       e: '4',
     },
-  }
-  const conv = new ActionsSdkConversation()
-  t.deepEqual(conv.user.storage, {})
-  conv.user.storage = data
-  conv.ask(response)
+  };
+  const conv = new ActionsSdkConversation();
+  t.deepEqual(conv.user.storage, {});
+  conv.user.storage = data;
+  conv.ask(response);
   t.deepEqual(clone(conv.serialize()), {
     expectUserResponse: true,
     expectedInputs: [
@@ -463,15 +462,15 @@ test('conv sends userStorage when it is not empty', t => {
         ],
       },
     ],
-    userStorage: JSON.stringify({ data }),
-  })
-})
+    userStorage: JSON.stringify({data}),
+  });
+});
 
 test('conv does not send userStorage when it is empty', t => {
-  const response = `What's up?`
-  const conv = new ActionsSdkConversation()
-  t.deepEqual(conv.user.storage, {})
-  conv.ask(response)
+  const response = "What's up?";
+  const conv = new ActionsSdkConversation();
+  t.deepEqual(conv.user.storage, {});
+  conv.ask(response);
   t.deepEqual(clone(conv.serialize()), {
     expectUserResponse: true,
     expectedInputs: [
@@ -494,13 +493,13 @@ test('conv does not send userStorage when it is empty', t => {
         ],
       },
     ],
-  })
-})
+  });
+});
 
 test('conv sends correct ask response', t => {
-  const response = `What's up?`
-  const conv = new ActionsSdkConversation()
-  conv.ask(response)
+  const response = "What's up?";
+  const conv = new ActionsSdkConversation();
+  conv.ask(response);
   t.deepEqual(clone(conv.serialize()), {
     expectUserResponse: true,
     expectedInputs: [
@@ -523,13 +522,13 @@ test('conv sends correct ask response', t => {
         ],
       },
     ],
-  })
-})
+  });
+});
 
 test('conv sends correct close response', t => {
-  const response = 'Bye'
-  const conv = new ActionsSdkConversation()
-  conv.close(response)
+  const response = 'Bye';
+  const conv = new ActionsSdkConversation();
+  conv.close(response);
   t.deepEqual(clone(conv.serialize()), {
     expectUserResponse: false,
     finalResponse: {
@@ -543,15 +542,15 @@ test('conv sends correct close response', t => {
         ],
       },
     },
-  })
-})
+  });
+});
 
 test('conv sends speechBiasingHints when set', t => {
-  const response = 'What is your favorite color out of red, blue, and green?'
-  const biasing = ['red', 'blue', 'green']
-  const conv = new ActionsSdkConversation()
-  conv.speechBiasing = biasing
-  conv.ask(response)
+  const response = 'What is your favorite color out of red, blue, and green?';
+  const biasing = ['red', 'blue', 'green'];
+  const conv = new ActionsSdkConversation();
+  conv.speechBiasing = biasing;
+  conv.ask(response);
   t.deepEqual(clone(conv.serialize()), {
     expectUserResponse: true,
     expectedInputs: [
@@ -575,12 +574,12 @@ test('conv sends speechBiasingHints when set', t => {
         speechBiasingHints: biasing,
       },
     ],
-  })
-})
+  });
+});
 
 test('conv does not send inputPrompt when items are empty', t => {
-  const conv = new ActionsSdkConversation()
-  conv.ask(new Permission({ permissions: 'NAME' }))
+  const conv = new ActionsSdkConversation();
+  conv.ask(new Permission({permissions: 'NAME'}));
   t.deepEqual(clone(conv.serialize()), {
     expectUserResponse: true,
     expectedInputs: [
@@ -588,15 +587,14 @@ test('conv does not send inputPrompt when items are empty', t => {
         possibleIntents: [
           {
             inputValueData: {
-              '@type': 'type.googleapis.com/google.actions.v2.PermissionValueSpec',
-              permissions: [
-                'NAME',
-              ],
+              '@type':
+                'type.googleapis.com/google.actions.v2.PermissionValueSpec',
+              permissions: ['NAME'],
             },
             intent: 'actions.intent.PERMISSION',
           },
         ],
       },
     ],
-  })
-})
+  });
+});

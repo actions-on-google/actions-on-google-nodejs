@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 
-import * as Api from '../../../api/v2'
-import * as common from '../../../../../common'
+import * as Api from '../../../api/v2';
+import * as common from '../../../../../common';
 
 /** @public */
-export interface TableColumn extends Api.GoogleActionsV2UiElementsTableCardColumnProperties {
+export interface TableColumn
+  extends Api.GoogleActionsV2UiElementsTableCardColumnProperties {
   /**
    * Alias for `horizontalAlignment`
    *
@@ -26,7 +27,7 @@ export interface TableColumn extends Api.GoogleActionsV2UiElementsTableCardColum
    * will be aligned to the leading edge.
    * @public
    */
-  align?: Api.GoogleActionsV2UiElementsTableCardColumnPropertiesHorizontalAlignment
+  align?: Api.GoogleActionsV2UiElementsTableCardColumnPropertiesHorizontalAlignment;
 }
 
 /** @public */
@@ -39,14 +40,14 @@ export interface TableRow {
    * When provided as a string array, creates the cells as text.
    * @public
    */
-  cells?: (Api.GoogleActionsV2UiElementsTableCardCell | string)[]
+  cells?: (Api.GoogleActionsV2UiElementsTableCardCell | string)[];
   /**
    * Indicates whether there should be a divider after each row.
    *
    * Overrides top level `dividers` property for this specific row if set.
    * @public
    */
-  dividerAfter?: boolean
+  dividerAfter?: boolean;
 }
 
 /** @public */
@@ -57,19 +58,19 @@ export interface TableOptions {
    * Must be set if subtitle is set.
    * @public
    */
-  title?: string
+  title?: string;
 
   /**
    * Subtitle for the table.
    * @public
    */
-  subtitle?: string
+  subtitle?: string;
 
   /**
    * Image associated with the table.
    * @public
    */
-  image?: Api.GoogleActionsV2UiElementsImage
+  image?: Api.GoogleActionsV2UiElementsImage;
 
   /**
    * Headers and alignment of columns with shortened name.
@@ -81,7 +82,7 @@ export interface TableOptions {
    * When provided a number, it represents the number of elements per row.
    * @public
    */
-  columns?: (TableColumn | string)[] | number
+  columns?: (TableColumn | string)[] | number;
 
   /**
    * Headers and alignment of columns.
@@ -91,7 +92,7 @@ export interface TableOptions {
    * When provided as string array, just the header field is set per column.
    * @public
    */
-  columnProperties?: (TableColumn | string)[]
+  columnProperties?: (TableColumn | string)[];
 
   /**
    * Row data of the table.
@@ -103,30 +104,36 @@ export interface TableOptions {
    * a web page with more data.
    * @public
    */
-  rows: (TableRow | string[])[]
+  rows: (TableRow | string[])[];
 
   /**
    * Default dividerAfter for all rows.
    * Individual rows with `dividerAfter` set will override for that specific row.
    * @public
    */
-  dividers?: boolean
+  dividers?: boolean;
 
   /**
    * Buttons for the Table.
    * Currently at most 1 button is supported.
    * @public
    */
-  buttons?: Api.GoogleActionsV2UiElementsButton | Api.GoogleActionsV2UiElementsButton[]
+  buttons?:
+    | Api.GoogleActionsV2UiElementsButton
+    | Api.GoogleActionsV2UiElementsButton[];
 }
 
-const toColumnProperties = (columns: (TableColumn | string)[]) => columns.map(column =>
-  typeof column === 'string' ? {
-    header: column,
-  } : {
-    header: column.header,
-    horizontalAlignment: column.horizontalAlignment || column.align,
-  } as Api.GoogleActionsV2UiElementsTableCardColumnProperties)
+const toColumnProperties = (columns: (TableColumn | string)[]) =>
+  columns.map(column =>
+    typeof column === 'string'
+      ? {
+          header: column,
+        }
+      : ({
+          header: column.header,
+          horizontalAlignment: column.horizontalAlignment || column.align,
+        } as Api.GoogleActionsV2UiElementsTableCardColumnProperties)
+  );
 
 /**
  * Creates a Table card.
@@ -190,39 +197,51 @@ const toColumnProperties = (columns: (TableColumn | string)[]) => columns.map(co
  *
  * @public
  */
-export interface Table extends Api.GoogleActionsV2UiElementsTableCard { }
+export interface Table extends Api.GoogleActionsV2UiElementsTableCard {}
 export class Table implements Api.GoogleActionsV2UiElementsTableCard {
   /** @public */
   constructor(options: TableOptions) {
-    this.title = options.title
-    this.subtitle = options.subtitle
-    this.image = options.image
-    this.rows = options.rows.map(row => Array.isArray(row) ? {
-      cells: row.map(text => ({ text })),
-      dividerAfter: options.dividers,
-    } as Api.GoogleActionsV2UiElementsTableCardRow : {
-      cells: row.cells!.map(cell => typeof cell === 'string' ? { text: cell } : cell),
-      dividerAfter: typeof row.dividerAfter === 'undefined' ? options.dividers : row.dividerAfter,
-    } as Api.GoogleActionsV2UiElementsTableCardRow)
-    const { columnProperties, columns, buttons } = options
+    this.title = options.title;
+    this.subtitle = options.subtitle;
+    this.image = options.image;
+    this.rows = options.rows.map(row =>
+      Array.isArray(row)
+        ? ({
+            cells: row.map(text => ({text})),
+            dividerAfter: options.dividers,
+          } as Api.GoogleActionsV2UiElementsTableCardRow)
+        : ({
+            cells: row.cells!.map(cell =>
+              typeof cell === 'string' ? {text: cell} : cell
+            ),
+            dividerAfter:
+              typeof row.dividerAfter === 'undefined'
+                ? options.dividers
+                : row.dividerAfter,
+          } as Api.GoogleActionsV2UiElementsTableCardRow)
+    );
+    const {columnProperties, columns, buttons} = options;
     if (columnProperties) {
-      this.columnProperties = toColumnProperties(columnProperties)
+      this.columnProperties = toColumnProperties(columnProperties);
     }
     if (typeof columns !== 'undefined') {
       if (!this.columnProperties) {
-        this.columnProperties = []
+        this.columnProperties = [];
       }
-      const properties = typeof columns === 'number' ?
-        new Array<Api.GoogleActionsV2UiElementsTableCardColumnProperties>(columns).fill({}) :
-        toColumnProperties(columns)
+      const properties =
+        typeof columns === 'number'
+          ? new Array<Api.GoogleActionsV2UiElementsTableCardColumnProperties>(
+              columns
+            ).fill({})
+          : toColumnProperties(columns);
       properties.forEach((v, i) => {
         if (!this.columnProperties![i]) {
-          this.columnProperties![i] = properties[i]
+          this.columnProperties![i] = properties[i];
         }
-      })
+      });
     }
     if (buttons) {
-      this.buttons = common.toArray(buttons)
+      this.buttons = common.toArray(buttons);
     }
   }
 }

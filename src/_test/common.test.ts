@@ -14,21 +14,21 @@
  * limitations under the License.
  */
 
-import test from 'ava'
-import { values, clone, stringify, toArray } from '../common'
+import test from 'ava';
+import {values, clone, stringify, toArray} from '../common';
 
 test('values correctly gets the values of an object', t => {
-  const expected = [1, 2, 3]
-  expected.sort()
+  const expected = [1, 2, 3];
+  expected.sort();
   const obj = {
     a: 1,
     b: 2,
     c: 3,
-  }
-  const actual = values(obj)
-  actual.sort()
-  t.deepEqual(actual, expected)
-})
+  };
+  const actual = values(obj);
+  actual.sort();
+  t.deepEqual(actual, expected);
+});
 
 test('clone deepEquals original', t => {
   const original = {
@@ -38,10 +38,10 @@ test('clone deepEquals original', t => {
       d: 3,
       e: 4,
     },
-  }
-  const cloned = clone(original)
-  t.deepEqual(cloned, original)
-})
+  };
+  const cloned = clone(original);
+  t.deepEqual(cloned, original);
+});
 
 test('clone creates an object not the same ref as original', t => {
   const original = {
@@ -51,10 +51,10 @@ test('clone creates an object not the same ref as original', t => {
       d: 3,
       e: 4,
     },
-  }
-  const cloned = clone(original)
-  t.not(cloned, original)
-})
+  };
+  const cloned = clone(original);
+  t.not(cloned, original);
+});
 
 test('stringify results in a string', t => {
   const original = {
@@ -64,9 +64,9 @@ test('stringify results in a string', t => {
       d: 3,
       e: 4,
     },
-  }
-  t.is(typeof stringify(original), 'string')
-})
+  };
+  t.is(typeof stringify(original), 'string');
+});
 
 test('stringify parsed back is deepEqual to original', t => {
   const original = {
@@ -76,9 +76,9 @@ test('stringify parsed back is deepEqual to original', t => {
       d: 3,
       e: 4,
     },
-  }
-  t.deepEqual(JSON.parse(stringify(original)), original)
-})
+  };
+  t.deepEqual(JSON.parse(stringify(original)), original);
+});
 
 test('stringify returns pretty formatted string', t => {
   const original = {
@@ -88,53 +88,56 @@ test('stringify returns pretty formatted string', t => {
       d: 3,
       e: 4,
     },
-  }
-  t.is(stringify(original), `{
+  };
+  t.is(
+    stringify(original),
+    `{
   "a": 1,
   "b": 2,
   "c": {
     "d": 3,
     "e": 4
   }
-}`)
-})
+}`
+  );
+});
 
 test('stringify for top level circular reference works', t => {
   interface TestObject {
-    a: TestObject | null
-    c: { d: number }
+    a: TestObject | null;
+    c: {d: number};
   }
   const original: TestObject = {
     a: null,
     c: {
       d: 3,
     },
-  }
-  original.a = original
-  const parsed = JSON.parse(stringify(original))
-  t.is(parsed.a, '[Circular]')
-  t.is(parsed.c.d, 3)
-})
+  };
+  original.a = original;
+  const parsed = JSON.parse(stringify(original));
+  t.is(parsed.a, '[Circular]');
+  t.is(parsed.c.d, 3);
+});
 
 test('stringify for lower level circular reference works', t => {
   interface SubObject {
-    d: SubObject | null
+    d: SubObject | null;
   }
   interface TestObject {
-    a: number
-    c: SubObject
+    a: number;
+    c: SubObject;
   }
   const original: TestObject = {
     a: 2,
     c: {
       d: null,
     },
-  }
-  original.c.d = original.c
-  const parsed = JSON.parse(stringify(original))
-  t.is(parsed.c, '[Circular]')
-  t.is(parsed.a, 2)
-})
+  };
+  original.c.d = original.c;
+  const parsed = JSON.parse(stringify(original));
+  t.is(parsed.c, '[Circular]');
+  t.is(parsed.a, 2);
+});
 
 test('stringify for exclude works', t => {
   const original = {
@@ -144,9 +147,9 @@ test('stringify for exclude works', t => {
       d: 3,
       e: 4,
     },
-  }
-  const exclude = 'a'
-  const parsed = JSON.parse(stringify(original, exclude))
+  };
+  const exclude = 'a';
+  const parsed = JSON.parse(stringify(original, exclude));
   t.deepEqual(parsed, {
     a: '[Excluded]',
     b: 2,
@@ -154,8 +157,8 @@ test('stringify for exclude works', t => {
       d: 3,
       e: 4,
     },
-  })
-})
+  });
+});
 
 test('stringify for two exclude works', t => {
   const original = {
@@ -165,28 +168,28 @@ test('stringify for two exclude works', t => {
       d: 3,
       e: 4,
     },
-  }
-  const exclude = 'a'
-  const exclude2 = 'c'
-  const parsed = JSON.parse(stringify(original, exclude, exclude2))
+  };
+  const exclude = 'a';
+  const exclude2 = 'c';
+  const parsed = JSON.parse(stringify(original, exclude, exclude2));
   t.deepEqual(parsed, {
     a: '[Excluded]',
     b: 2,
     c: '[Excluded]',
-  })
-})
+  });
+});
 
 test('toArray results in same array when passed in array', t => {
-  const original = [1, 2, 3]
-  t.is(toArray(original), original)
-})
+  const original = [1, 2, 3];
+  t.is(toArray(original), original);
+});
 
 test('toArray results in an array when passed in a single element', t => {
-  const original = 1
-  t.true(Array.isArray(toArray(original)))
-})
+  const original = 1;
+  t.true(Array.isArray(toArray(original)));
+});
 
 test('toArray results in a correct array when passed in a single element', t => {
-  const original = 1
-  t.deepEqual(toArray(original), [1])
-})
+  const original = 1;
+  t.deepEqual(toArray(original), [1]);
+});

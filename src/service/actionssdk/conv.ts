@@ -14,31 +14,34 @@
  * limitations under the License.
  */
 
-import * as Api from './api/v2'
-import { JsonObject } from '../../common'
-import { Conversation, ConversationBaseOptions, ConversationOptionsInit } from './conversation'
+import * as Api from './api/v2';
+import {JsonObject} from '../../common';
+import {
+  Conversation,
+  ConversationBaseOptions,
+  ConversationOptionsInit,
+} from './conversation';
 
 /** @public */
-export interface ActionsSdkConversationOptions<
-  TConvData,
-  TUserStorage
-> extends ConversationBaseOptions<TConvData, TUserStorage> {
+export interface ActionsSdkConversationOptions<TConvData, TUserStorage>
+  extends ConversationBaseOptions<TConvData, TUserStorage> {
   /** @public */
-  body?: Api.GoogleActionsV2AppRequest
+  body?: Api.GoogleActionsV2AppRequest;
 }
 
-const serializeData = <TConvData>(data: TConvData) =>
-  JSON.stringify({ data })
+const serializeData = <TConvData>(data: TConvData) => JSON.stringify({data});
 
 const deserializeData = <TConvData>(
-  body: Api.GoogleActionsV2AppRequest, defaultData?: TConvData,
+  body: Api.GoogleActionsV2AppRequest,
+  defaultData?: TConvData
 ) => {
-  const { conversation = {} } = body
-  const { conversationToken } = conversation
-  const data: TConvData = conversationToken ?
-    JSON.parse(conversationToken).data : Object.assign({}, defaultData)
-  return data
-}
+  const {conversation = {}} = body;
+  const {conversationToken} = conversation;
+  const data: TConvData = conversationToken
+    ? JSON.parse(conversationToken).data
+    : Object.assign({}, defaultData);
+  return data;
+};
 
 /** @public */
 export class ActionsSdkConversation<
@@ -46,7 +49,7 @@ export class ActionsSdkConversation<
   TUserStorage = JsonObject
 > extends Conversation<TUserStorage> {
   /** @public */
-  body: Api.GoogleActionsV2AppRequest
+  body: Api.GoogleActionsV2AppRequest;
 
   /**
    * Get the current Actions SDK intent.
@@ -61,7 +64,7 @@ export class ActionsSdkConversation<
    *
    * @public
    */
-  intent: string
+  intent: string;
 
   /**
    * The session data in JSON format.
@@ -77,37 +80,39 @@ export class ActionsSdkConversation<
    *
    * @public
    */
-  data: TConvData
+  data: TConvData;
 
   /** @hidden */
-  _init: ConversationOptionsInit<TConvData, TUserStorage>
+  _init: ConversationOptionsInit<TConvData, TUserStorage>;
 
   /** @public */
-  constructor(options: ActionsSdkConversationOptions<TConvData, TUserStorage> = {}) {
-    const { body = {} } = options
+  constructor(
+    options: ActionsSdkConversationOptions<TConvData, TUserStorage> = {}
+  ) {
+    const {body = {}} = options;
     super({
       request: body,
       headers: options.headers,
       init: options.init,
       ordersv3: options.ordersv3,
-    })
+    });
 
-    this.body = body
+    this.body = body;
 
-    const { inputs = [] } = body
-    const [firstInput = {}] = inputs
+    const {inputs = []} = body;
+    const [firstInput = {}] = inputs;
 
-    const { intent = '' } = firstInput
+    const {intent = ''} = firstInput;
 
-    this.intent = intent
+    this.intent = intent;
 
-    this.data = deserializeData<TConvData>(this.body, this._init.data)
+    this.data = deserializeData<TConvData>(this.body, this._init.data);
   }
 
   /** @public */
   serialize(): Api.GoogleActionsV2AppResponse {
     if (this._raw) {
-      return this._raw
+      return this._raw;
     }
     const {
       richResponse,
@@ -116,42 +121,50 @@ export class ActionsSdkConversation<
       expectedIntent,
       noInputPrompts,
       speechBiasingHints,
-    } = this.response()
+    } = this.response();
     const inputPrompt: Api.GoogleActionsV2InputPrompt = {
       noInputPrompts,
-    }
+    };
     if (richResponse.items!.length) {
-      inputPrompt.richInitialPrompt = richResponse
+      inputPrompt.richInitialPrompt = richResponse;
     }
-    const possibleIntents: Api.GoogleActionsV2ExpectedIntent[] = [expectedIntent || {
-      intent: 'actions.intent.TEXT',
-    }]
+    const possibleIntents: Api.GoogleActionsV2ExpectedIntent[] = [
+      expectedIntent || {
+        intent: 'actions.intent.TEXT',
+      },
+    ];
     const expectedInput: Api.GoogleActionsV2ExpectedInput = {
       possibleIntents,
       speechBiasingHints,
-    }
+    };
     if (inputPrompt.richInitialPrompt || inputPrompt.noInputPrompts) {
-      expectedInput.inputPrompt = inputPrompt
+      expectedInput.inputPrompt = inputPrompt;
     }
     const response: Api.GoogleActionsV2AppResponse = {
       expectUserResponse,
-    }
+    };
     if (expectUserResponse) {
-      response.expectedInputs = [expectedInput]
+      response.expectedInputs = [expectedInput];
     } else {
-      response.finalResponse = { richResponse }
+      response.finalResponse = {richResponse};
     }
-    const convDataDefault = deserializeData<TConvData>({}, this._init.data)
-    const convDataDefaultSerialized = serializeData(convDataDefault)
-    const convDataDefaulted = deserializeData<TConvData>(this.body, this._init.data)
-    const convDataIn = serializeData(convDataDefaulted)
-    const convDataOut = serializeData(this.data)
-    if (convDataOut !== convDataDefaultSerialized || convDataOut !== convDataIn) {
-      response.conversationToken = convDataOut
+    const convDataDefault = deserializeData<TConvData>({}, this._init.data);
+    const convDataDefaultSerialized = serializeData(convDataDefault);
+    const convDataDefaulted = deserializeData<TConvData>(
+      this.body,
+      this._init.data
+    );
+    const convDataIn = serializeData(convDataDefaulted);
+    const convDataOut = serializeData(this.data);
+    if (
+      convDataOut !== convDataDefaultSerialized ||
+      convDataOut !== convDataIn
+    ) {
+      response.conversationToken = convDataOut;
     }
     if (userStorage) {
-      response.userStorage = userStorage
+      response.userStorage = userStorage;
     }
-    return response
+    return response;
   }
 }

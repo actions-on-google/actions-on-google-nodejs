@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-import * as Api from '../../api/v2'
+import * as Api from '../../api/v2';
 
 /**
  * Class for initializing and constructing OrderUpdate
  * @public
  */
-export interface OrderUpdate extends Api.GoogleActionsV2OrdersOrderUpdate { }
+export interface OrderUpdate extends Api.GoogleActionsV2OrdersOrderUpdate {}
 export class OrderUpdate implements Api.GoogleActionsV2OrdersOrderUpdate {
   /**
    * @param options The raw {@link GoogleActionsV2OrdersOrderUpdate}
@@ -28,8 +28,11 @@ export class OrderUpdate implements Api.GoogleActionsV2OrdersOrderUpdate {
    *     if using ordersv3
    * @public
    */
-  constructor(options: Api.GoogleActionsV2OrdersOrderUpdate |
-      Api.GoogleActionsOrdersV3OrderUpdate) {
-    Object.assign(this, options)
+  constructor(
+    options:
+      | Api.GoogleActionsV2OrdersOrderUpdate
+      | Api.GoogleActionsOrdersV3OrderUpdate
+  ) {
+    Object.assign(this, options);
   }
 }

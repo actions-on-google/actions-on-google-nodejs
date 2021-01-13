@@ -14,6 +14,6 @@
  * limitations under the License.
  */
 
-export * from './carousel'
-export * from './list'
-export * from './option'
+export * from './carousel';
+export * from './list';
+export * from './option';

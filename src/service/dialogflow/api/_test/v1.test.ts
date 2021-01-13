@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-import test from 'ava'
-import * as Api from '../v1'
+import test from 'ava';
+import * as Api from '../v1';
 
 test('api is an object', t => {
-  t.is(typeof Api, 'object')
-})
+  t.is(typeof Api, 'object');
+});

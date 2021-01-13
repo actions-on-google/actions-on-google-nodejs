@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-import * as Api from '../../api/v2'
-import { SoloHelper } from './helper'
-import { ProtoAny } from '../../../../common'
-import { DialogSpec } from '../conversation'
+import * as Api from '../../api/v2';
+import {SoloHelper} from './helper';
+import {ProtoAny} from '../../../../common';
+import {DialogSpec} from '../conversation';
 
 /** @public */
 export interface PlaceOptions {
@@ -26,7 +26,7 @@ export interface PlaceOptions {
    * For example: "Where do you want to get picked up?"
    * @public
    */
-  prompt: string
+  prompt: string;
 
   /**
    * This is the context for seeking permissions.
@@ -35,11 +35,11 @@ export interface PlaceOptions {
    *     Can I get that from Google?".
    * @public
    */
-  context: string
+  context: string;
 }
 
 /** @public */
-export type PlaceArgument = Api.GoogleActionsV2Location | undefined
+export type PlaceArgument = Api.GoogleActionsV2Location | undefined;
 
 /**
  * Asks user to provide a geo-located place, possibly using contextual information,
@@ -101,11 +101,15 @@ export class Place extends SoloHelper<
    * @public
    */
   constructor(options: PlaceOptions) {
-    const extension: ProtoAny<DialogSpec, Api.GoogleActionsV2PlaceValueSpecPlaceDialogSpec> = {
-      '@type': 'type.googleapis.com/google.actions.v2.PlaceValueSpec.PlaceDialogSpec',
+    const extension: ProtoAny<
+      DialogSpec,
+      Api.GoogleActionsV2PlaceValueSpecPlaceDialogSpec
+    > = {
+      '@type':
+        'type.googleapis.com/google.actions.v2.PlaceValueSpec.PlaceDialogSpec',
       permissionContext: options.context,
       requestPrompt: options.prompt,
-    }
+    };
 
     super({
       intent: 'actions.intent.PLACE',
@@ -115,6 +119,6 @@ export class Place extends SoloHelper<
           extension,
         },
       },
-    })
+    });
   }
 }

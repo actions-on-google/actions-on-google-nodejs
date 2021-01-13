@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
-export * from './rich'
+export * from './rich';
 
-export * from './card'
-export * from './image'
-export * from './linkout'
-export * from './media'
-export * from './browse'
-export * from './order'
-export * from './simple'
-export * from './suggestion'
-export * from './url'
-export * from './html'
+export * from './card';
+export * from './image';
+export * from './linkout';
+export * from './media';
+export * from './browse';
+export * from './order';
+export * from './simple';
+export * from './suggestion';
+export * from './url';
+export * from './html';

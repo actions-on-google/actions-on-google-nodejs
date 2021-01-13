@@ -1,0 +1,13 @@
+{
+  "extends": "./node_modules/gts/",
+  "rules": {
+    "no-prototype-builtins": "off",
+    "no-unused-vars": "off",
+    "require-yield": "off",
+    "node/no-deprecated-api": "off",
+    "@typescript-eslint/no-unused-vars": "off",
+    "@typescript-eslint/no-empty-interface": "off",
+    "@typescript-eslint/no-explicit-any": "off",
+    "@typescript-eslint/prefer-as-const": "off"
+  }
+}

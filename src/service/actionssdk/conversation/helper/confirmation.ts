@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-import * as Api from '../../api/v2'
-import { SoloHelper } from './helper'
+import * as Api from '../../api/v2';
+import {SoloHelper} from './helper';
 
 /** @public */
-export type ConfirmationArgument = boolean
+export type ConfirmationArgument = boolean;
 
 /**
  * Asks user for a confirmation.
@@ -78,6 +78,6 @@ export class Confirmation extends SoloHelper<
           requestConfirmationText: text,
         },
       },
-    })
+    });
   }
 }

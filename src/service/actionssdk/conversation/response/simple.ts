@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import * as Api from '../../api/v2'
+import * as Api from '../../api/v2';
 
 /** @public */
 export interface SimpleResponseOptions {
@@ -22,20 +22,20 @@ export interface SimpleResponseOptions {
    * Speech to be spoken to user. SSML allowed.
    * @public
    */
-  speech: string
+  speech: string;
 
   /**
    * Optional text to be shown to user
    * @public
    */
-  text?: string
+  text?: string;
 }
 
 /**
  * Simple Response type.
  * @public
  */
-export interface SimpleResponse extends Api.GoogleActionsV2SimpleResponse { }
+export interface SimpleResponse extends Api.GoogleActionsV2SimpleResponse {}
 export class SimpleResponse implements Api.GoogleActionsV2SimpleResponse {
   /**
    * @param options SimpleResponse options
@@ -43,10 +43,10 @@ export class SimpleResponse implements Api.GoogleActionsV2SimpleResponse {
    */
   constructor(options: SimpleResponseOptions | string) {
     if (typeof options === 'string') {
-      this.textToSpeech = options
-      return
+      this.textToSpeech = options;
+      return;
     }
-    this.textToSpeech = options.speech
-    this.displayText = options.text
+    this.textToSpeech = options.speech;
+    this.displayText = options.text;
   }
 }

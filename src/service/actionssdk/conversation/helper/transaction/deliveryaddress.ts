@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-import * as Api from '../../../api/v2'
-import { SoloHelper } from '../helper'
+import * as Api from '../../../api/v2';
+import {SoloHelper} from '../helper';
 
 /** @public */
-export type DeliveryAddressArgument = Api.GoogleActionsV2DeliveryAddressValue
+export type DeliveryAddressArgument = Api.GoogleActionsV2DeliveryAddressValue;
 
 /**
  * Asks user for delivery address.
@@ -37,6 +37,6 @@ export class DeliveryAddress extends SoloHelper<
       intent: 'actions.intent.DELIVERY_ADDRESS',
       type: 'type.googleapis.com/google.actions.v2.DeliveryAddressValueSpec',
       data: options,
-    })
+    });
   }
 }

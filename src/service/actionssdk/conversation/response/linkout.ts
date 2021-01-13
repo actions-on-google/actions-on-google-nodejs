@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import * as Api from '../../api/v2'
+import * as Api from '../../api/v2';
 
 /** @public */
 export interface LinkOutSuggestionOptions {
@@ -22,13 +22,13 @@ export interface LinkOutSuggestionOptions {
    * Text shown on the suggestion chip.
    * @public
    */
-  name: string
+  name: string;
 
   /**
    * String URL to open.
    * @public
    */
-  url: string
+  url: string;
 }
 
 /**
@@ -36,14 +36,16 @@ export interface LinkOutSuggestionOptions {
  * Used in rich response as a suggestion chip which, when selected, links out to external URL.
  * @public
  */
-export interface LinkOutSuggestion extends Api.GoogleActionsV2UiElementsLinkOutSuggestion { }
-export class LinkOutSuggestion implements Api.GoogleActionsV2UiElementsLinkOutSuggestion {
+export interface LinkOutSuggestion
+  extends Api.GoogleActionsV2UiElementsLinkOutSuggestion {}
+export class LinkOutSuggestion
+  implements Api.GoogleActionsV2UiElementsLinkOutSuggestion {
   /**
    * @param options LinkOutSuggestion options
    * @public
    */
   constructor(options: LinkOutSuggestionOptions) {
-    this.destinationName = options.name
-    this.url = options.url
+    this.destinationName = options.name;
+    this.url = options.url;
   }
 }

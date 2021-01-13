@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-import * as Api from '../../../api/v2'
-import { SoloHelper } from '../helper'
+import * as Api from '../../../api/v2';
+import {SoloHelper} from '../helper';
 
 /** @public */
-export type DigitalPurchaseCheckArgument = Api.GoogleActionsTransactionsV3DigitalPurchaseCheckResult
+export type DigitalPurchaseCheckArgument = Api.GoogleActionsTransactionsV3DigitalPurchaseCheckResult;
 
 /**
  * Check to confirm digital purchase eligibility.
@@ -50,11 +50,14 @@ export class DigitalPurchaseCheck extends SoloHelper<
    * @param options The raw {@link GoogleActionsTransactionsV3DigitalPurchaseCheckSpec}
    * @public
    */
-  constructor(options?: Api.GoogleActionsTransactionsV3DigitalPurchaseCheckSpec) {
+  constructor(
+    options?: Api.GoogleActionsTransactionsV3DigitalPurchaseCheckSpec
+  ) {
     super({
       intent: 'actions.intent.DIGITAL_PURCHASE_CHECK',
-      type: 'type.googleapis.com/google.actions.transactions.v3.DigitalPurchaseCheckSpec',
+      type:
+        'type.googleapis.com/google.actions.transactions.v3.DigitalPurchaseCheckSpec',
       data: options,
-    })
+    });
   }
 }

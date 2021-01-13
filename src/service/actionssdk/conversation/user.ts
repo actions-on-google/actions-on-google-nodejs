@@ -14,10 +14,13 @@
  * limitations under the License.
  */
 
-import * as Api from '../api/v2'
-import { OAuth2Client } from 'google-auth-library'
-import { LoginTicket, TokenPayload } from 'google-auth-library/build/src/auth/loginticket'
-import * as common from '../../../common'
+import * as Api from '../api/v2';
+import {OAuth2Client} from 'google-auth-library';
+import {
+  LoginTicket,
+  TokenPayload,
+} from 'google-auth-library/build/src/auth/loginticket';
+import * as common from '../../../common';
 
 export class Last {
   /**
@@ -25,12 +28,12 @@ export class Last {
    * Undefined if never seen.
    * @public
    */
-  seen?: Date
+  seen?: Date;
 
   /** @hidden */
   constructor(user: Api.GoogleActionsV2User) {
     if (user.lastSeen) {
-      this.seen = new Date(user.lastSeen)
+      this.seen = new Date(user.lastSeen);
     }
   }
 }
@@ -40,25 +43,25 @@ export class Name {
    * User's display name.
    * @public
    */
-  display?: string
+  display?: string;
 
   /**
    * User's family name.
    * @public
    */
-  family?: string
+  family?: string;
 
   /**
    * User's given name.
    * @public
    */
-  given?: string
+  given?: string;
 
   /** @hidden */
   constructor(profile: Api.GoogleActionsV2UserProfile) {
-    this.display = profile.displayName
-    this.family = profile.familyName
-    this.given = profile.givenName
+    this.display = profile.displayName;
+    this.family = profile.familyName;
+    this.given = profile.givenName;
   }
 }
 
@@ -67,11 +70,11 @@ export class Access {
    * Unique Oauth2 token. Only available with account linking.
    * @public
    */
-  token?: string
+  token?: string;
 
   /** @hidden */
   constructor(user: Api.GoogleActionsV2User) {
-    this.token = user.accessToken
+    this.token = user.accessToken;
   }
 }
 
@@ -125,28 +128,28 @@ export class Profile {
    *
    * @public
    */
-  payload?: TokenPayload
+  payload?: TokenPayload;
 
   /**
    * The `user.idToken` retrieved from account linking.
    * Only retrievable with "Google Sign In" linking type set up for account linking in the console.
    * @public
    */
-  token?: string
+  token?: string;
 
   /** @hidden */
   constructor(user: Api.GoogleActionsV2User) {
-    this.token = user.idToken
+    this.token = user.idToken;
   }
 
   /** @hidden */
   async _verify(client: OAuth2Client, id: string) {
-    const login = await client.verifyIdToken({
+    const login = (await client.verifyIdToken({
       idToken: this.token!,
       audience: id,
-    }) as LoginTicket
-    this.payload = login.getPayload()
-    return this.payload
+    })) as LoginTicket;
+    this.payload = login.getPayload();
+    return this.payload;
   }
 }
 
@@ -171,7 +174,7 @@ export class User<TUserStorage> {
    *
    * @public
    */
-  storage: TUserStorage
+  storage: TUserStorage;
 
   /**
    * The user locale. String represents the regional language
@@ -179,20 +182,20 @@ export class User<TUserStorage> {
    * For example, 'en-US' represents US English.
    * @public
    */
-  locale: string
+  locale: string;
 
   /** @public */
-  last: Last
+  last: Last;
 
   /** @public */
-  permissions: Api.GoogleActionsV2UserPermissions[]
+  permissions: Api.GoogleActionsV2UserPermissions[];
 
   /**
    * User's permissioned name info.
    * Properties will be undefined if not request with {@link Permission|conv.ask(new Permission)}
    * @public
    */
-  name: Name
+  name: Name;
 
   /**
    * The list of all digital goods that your user purchased from
@@ -200,16 +203,16 @@ export class User<TUserStorage> {
    * in the {@link https://developers.google.com/actions/identity/digital-goods|documentation}.
    * @public
    */
-  entitlements: Api.GoogleActionsV2PackageEntitlement[]
+  entitlements: Api.GoogleActionsV2PackageEntitlement[];
 
   /** @public */
-  access: Access
+  access: Access;
 
   /** @public */
-  profile: Profile
+  profile: Profile;
 
   /** @hidden */
-   _id: string
+  _id: string;
 
   /**
    * Gets the user profile email.
@@ -260,48 +263,51 @@ export class User<TUserStorage> {
    *
    * @public
    */
-  email?: string
+  email?: string;
 
   /**
    * Determine if the user is 'GUEST' or 'VERIFIED'
    * @public
    */
-  verification?: Api.GoogleActionsV2UserUserVerificationStatus
+  verification?: Api.GoogleActionsV2UserUserVerificationStatus;
 
   /** @hidden */
-  constructor(public raw: Api.GoogleActionsV2User = {}, initial?: TUserStorage) {
-    const { userStorage } = this.raw
-    this.storage = userStorage ? JSON.parse(userStorage).data : (initial || {})
+  constructor(
+    public raw: Api.GoogleActionsV2User = {},
+    initial?: TUserStorage
+  ) {
+    const {userStorage} = this.raw;
+    this.storage = userStorage ? JSON.parse(userStorage).data : initial || {};
 
-    this.id = this.raw.userId!
-    this.locale = this.raw.locale!
+    this.id = this.raw.userId!;
+    this.locale = this.raw.locale!;
 
-    this.verification = this.raw.userVerificationStatus
+    this.verification = this.raw.userVerificationStatus;
 
-    this.permissions = this.raw.permissions || []
+    this.permissions = this.raw.permissions || [];
 
-    this.last = new Last(this.raw)
+    this.last = new Last(this.raw);
 
-    const profile = this.raw.profile || {}
-    this.name = new Name(profile)
+    const profile = this.raw.profile || {};
+    this.name = new Name(profile);
 
-    this.entitlements = this.raw.packageEntitlements || []
+    this.entitlements = this.raw.packageEntitlements || [];
 
-    this.access = new Access(this.raw)
+    this.access = new Access(this.raw);
 
-    this.profile = new Profile(this.raw)
+    this.profile = new Profile(this.raw);
   }
 
   /** @hidden */
   _serialize() {
-    return JSON.stringify({ data: this.storage })
+    return JSON.stringify({data: this.storage});
   }
 
   /** @hidden */
   async _verifyProfile(client: OAuth2Client, id: string) {
-    const payload = await this.profile._verify(client, id)
-    this.email = payload!.email
-    return payload
+    const payload = await this.profile._verify(client, id);
+    this.email = payload!.email;
+    return payload;
   }
 
   /**
@@ -310,11 +316,14 @@ export class User<TUserStorage> {
    * @public
    */
   get id() {
-    common.deprecate('conv.user.id', 'Use conv.user.storage to store data instead')
-    return this._id
+    common.deprecate(
+      'conv.user.id',
+      'Use conv.user.storage to store data instead'
+    );
+    return this._id;
   }
 
   set id(value) {
-    this._id = value
+    this._id = value;
   }
 }

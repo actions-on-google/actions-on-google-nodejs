@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-import * as Api from '../../../api/v2'
-import { Permission } from './permission'
+import * as Api from '../../../api/v2';
+import {Permission} from './permission';
 
 /** @public */
-export type UpdatePermissionUserIdArgument = string
+export type UpdatePermissionUserIdArgument = string;
 
 /** @public */
 export interface UpdatePermissionOptions {
@@ -26,14 +26,14 @@ export interface UpdatePermissionOptions {
    * The Dialogflow/Actions SDK intent name to be triggered when the update is received.
    * @public
    */
-  intent: string
+  intent: string;
 
   /**
    * The necessary arguments to fulfill the intent triggered on update.
    * These can be retrieved using {@link Arguments#get|conv.arguments.get}.
    * @public
    */
-  arguments?: Api.GoogleActionsV2Argument[]
+  arguments?: Api.GoogleActionsV2Argument[];
 }
 
 /**
@@ -116,6 +116,6 @@ export class UpdatePermission extends Permission {
           intent: options.intent,
         },
       },
-    })
+    });
   }
 }

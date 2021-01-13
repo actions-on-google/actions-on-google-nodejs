@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import * as Api from './api/v2'
-import * as ApiV1 from './api/v1'
+import * as Api from './api/v2';
+import * as ApiV1 from './api/v1';
 import {
   Image,
   Suggestions,
@@ -25,43 +25,43 @@ import {
   List,
   Carousel,
   Button,
-} from '../actionssdk'
-import { JsonObject } from '../../common'
+} from '../actionssdk';
+import {JsonObject} from '../../common';
 
 export type IncomingMessage =
-  string |
-  Image |
-  Suggestions |
-  BasicCard |
-  SimpleResponse |
-  LinkOutSuggestion |
-  List |
-  Carousel |
-  JsonObject
+  | string
+  | Image
+  | Suggestions
+  | BasicCard
+  | SimpleResponse
+  | LinkOutSuggestion
+  | List
+  | Carousel
+  | JsonObject;
 
 const toImage = (imageUri: string | undefined) => {
   if (imageUri) {
     return new Image({
       url: imageUri,
       alt: '',
-    })
+    });
   }
-  return undefined
-}
+  return undefined;
+};
 
 export class Incoming {
   /** @public */
-  parsed: IncomingMessage[] = []
+  parsed: IncomingMessage[] = [];
 
   /** @hidden */
   constructor(
     fulfillment:
-      Api.GoogleCloudDialogflowV2IntentMessage[] |
-      ApiV1.DialogflowV1Fulfillment |
-      undefined,
+      | Api.GoogleCloudDialogflowV2IntentMessage[]
+      | ApiV1.DialogflowV1Fulfillment
+      | undefined
   ) {
     if (typeof fulfillment === 'undefined') {
-      return
+      return;
     }
     if (Array.isArray(fulfillment)) {
       // Dialogflow v2
@@ -79,192 +79,251 @@ export class Incoming {
           carouselSelect,
           platform,
           payload,
-        } = message
-        if (platform && platform !== 'ACTIONS_ON_GOOGLE' && platform !== 'PLATFORM_UNSPECIFIED') {
-          continue
+        } = message;
+        if (
+          platform &&
+          platform !== 'ACTIONS_ON_GOOGLE' &&
+          platform !== 'PLATFORM_UNSPECIFIED'
+        ) {
+          continue;
         }
         if (text) {
-          this.parsed.push(...text.text!)
-          continue
+          this.parsed.push(...text.text!);
+          continue;
         }
         if (image) {
-          this.parsed.push(new Image({
-            url: image.imageUri!,
-            alt: image.accessibilityText!,
-          }))
-          continue
-        }
-        if (quickReplies) {
-          this.parsed.push(new Suggestions(quickReplies.quickReplies!))
-          continue
-        }
-        if (card) {
-          const { buttons } = card
-          this.parsed.push(new BasicCard({
-            title: card.title,
-            subtitle: card.subtitle,
-            image: toImage(card.imageUri),
-            buttons: buttons ? buttons.map(b => new Button({
-              title: b.text!,
-              url: b.postback,
-            })) : undefined,
-          }))
-          continue
-        }
-        if (simpleResponses) {
-          this.parsed.push(...simpleResponses.simpleResponses!.map(s => new SimpleResponse({
-            speech: s.textToSpeech || s.ssml!,
-            text: s.displayText,
-          })))
-          continue
-        }
-        if (basicCard) {
-          const { image, buttons } = basicCard
-          this.parsed.push(new BasicCard({
-            title: basicCard.title,
-            subtitle: basicCard.subtitle,
-            text: basicCard.formattedText,
-            image: image ? new Image({
+          this.parsed.push(
+            new Image({
               url: image.imageUri!,
               alt: image.accessibilityText!,
-            }) : undefined,
-            buttons: buttons ? buttons.map(b => new Button({
-              title: b.title!,
-              url: b.openUriAction!.uri,
-            })) : undefined,
-          }))
-          continue
+            })
+          );
+          continue;
+        }
+        if (quickReplies) {
+          this.parsed.push(new Suggestions(quickReplies.quickReplies!));
+          continue;
+        }
+        if (card) {
+          const {buttons} = card;
+          this.parsed.push(
+            new BasicCard({
+              title: card.title,
+              subtitle: card.subtitle,
+              image: toImage(card.imageUri),
+              buttons: buttons
+                ? buttons.map(
+                    b =>
+                      new Button({
+                        title: b.text!,
+                        url: b.postback,
+                      })
+                  )
+                : undefined,
+            })
+          );
+          continue;
+        }
+        if (simpleResponses) {
+          this.parsed.push(
+            ...simpleResponses.simpleResponses!.map(
+              s =>
+                new SimpleResponse({
+                  speech: s.textToSpeech || s.ssml!,
+                  text: s.displayText,
+                })
+            )
+          );
+          continue;
+        }
+        if (basicCard) {
+          const {image, buttons} = basicCard;
+          this.parsed.push(
+            new BasicCard({
+              title: basicCard.title,
+              subtitle: basicCard.subtitle,
+              text: basicCard.formattedText,
+              image: image
+                ? new Image({
+                    url: image.imageUri!,
+                    alt: image.accessibilityText!,
+                  })
+                : undefined,
+              buttons: buttons
+                ? buttons.map(
+                    b =>
+                      new Button({
+                        title: b.title!,
+                        url: b.openUriAction!.uri,
+                      })
+                  )
+                : undefined,
+            })
+          );
+          continue;
         }
         if (suggestions) {
-          this.parsed.push(new Suggestions(suggestions.suggestions!.map(s => s.title!)))
-          continue
+          this.parsed.push(
+            new Suggestions(suggestions.suggestions!.map(s => s.title!))
+          );
+          continue;
         }
         if (linkOutSuggestion) {
-          this.parsed.push(new LinkOutSuggestion({
-            name: linkOutSuggestion.destinationName!,
-            url: linkOutSuggestion.uri!,
-          }))
-          continue
+          this.parsed.push(
+            new LinkOutSuggestion({
+              name: linkOutSuggestion.destinationName!,
+              url: linkOutSuggestion.uri!,
+            })
+          );
+          continue;
         }
         if (listSelect) {
-          this.parsed.push(new List({
-            title: listSelect.title,
-            items: listSelect.items!,
-          }))
-          continue
+          this.parsed.push(
+            new List({
+              title: listSelect.title,
+              items: listSelect.items!,
+            })
+          );
+          continue;
         }
         if (carouselSelect) {
-          this.parsed.push(new Carousel({
-            items: carouselSelect.items!,
-          }))
-          continue
+          this.parsed.push(
+            new Carousel({
+              items: carouselSelect.items!,
+            })
+          );
+          continue;
         }
         if (payload) {
-          this.parsed.push(payload)
-          continue
+          this.parsed.push(payload);
+          continue;
         }
       }
     } else {
       // Dialogflow v1
-      const { speech, messages } = fulfillment
+      const {speech, messages} = fulfillment;
       if (speech) {
-        this.parsed.push(speech)
+        this.parsed.push(speech);
       }
       if (typeof messages !== 'undefined') {
         for (const message of messages) {
-          const { platform, type } = message
+          const {platform, type} = message;
           if (platform && platform !== 'google') {
-            continue
+            continue;
           }
           if (type === 0) {
-            const assumed = message as ApiV1.DialogflowV1MessageText
-            this.parsed.push(assumed.speech!)
-            continue
+            const assumed = message as ApiV1.DialogflowV1MessageText;
+            this.parsed.push(assumed.speech!);
+            continue;
           }
           if (type === 3) {
-            const assumed = message as ApiV1.DialogflowV1MessageImage
-            this.parsed.push(toImage(assumed.imageUrl)!)
-            continue
+            const assumed = message as ApiV1.DialogflowV1MessageImage;
+            this.parsed.push(toImage(assumed.imageUrl)!);
+            continue;
           }
           if (type === 1) {
-            const assumed = message as ApiV1.DialogflowV1MessageCard
-            const { buttons } = assumed
-            this.parsed.push(new BasicCard({
-              title: assumed.title,
-              subtitle: assumed.subtitle,
-              image: toImage(assumed.imageUrl),
-              buttons: buttons ? buttons.map(b => new Button({
-                title: b.text!,
-                url: b.postback,
-              })) : undefined,
-            }))
-            continue
+            const assumed = message as ApiV1.DialogflowV1MessageCard;
+            const {buttons} = assumed;
+            this.parsed.push(
+              new BasicCard({
+                title: assumed.title,
+                subtitle: assumed.subtitle,
+                image: toImage(assumed.imageUrl),
+                buttons: buttons
+                  ? buttons.map(
+                      b =>
+                        new Button({
+                          title: b.text!,
+                          url: b.postback,
+                        })
+                    )
+                  : undefined,
+              })
+            );
+            continue;
           }
           if (type === 2) {
-            const assumed = message as ApiV1.DialogflowV1MessageQuickReplies
-            this.parsed.push(new Suggestions(assumed.replies!))
-            continue
+            const assumed = message as ApiV1.DialogflowV1MessageQuickReplies;
+            this.parsed.push(new Suggestions(assumed.replies!));
+            continue;
           }
           if (type === 4) {
-            const assumed = message as ApiV1.DialogflowV1MessageCustomPayload
-            this.parsed.push(assumed.payload!)
-            continue
+            const assumed = message as ApiV1.DialogflowV1MessageCustomPayload;
+            this.parsed.push(assumed.payload!);
+            continue;
           }
           if (type === 'simple_response') {
-            const assumed = message as ApiV1.DialogflowV1MessageSimpleResponse
-            this.parsed.push(new SimpleResponse({
-              text: assumed.displayText,
-              speech: assumed.textToSpeech!,
-            }))
-            continue
+            const assumed = message as ApiV1.DialogflowV1MessageSimpleResponse;
+            this.parsed.push(
+              new SimpleResponse({
+                text: assumed.displayText,
+                speech: assumed.textToSpeech!,
+              })
+            );
+            continue;
           }
           if (type === 'basic_card') {
-            const assumed = message as ApiV1.DialogflowV1MessageBasicCard
-            const { image = {}, buttons } = assumed
-            this.parsed.push(new BasicCard({
-              title: assumed.title,
-              subtitle: assumed.subtitle,
-              text: assumed.formattedText,
-              image: toImage(image.url),
-              buttons: buttons ? buttons.map(b => new Button({
-                title: b.title!,
-                url: b.openUrlAction!.url,
-              })) : undefined,
-            }))
-            continue
+            const assumed = message as ApiV1.DialogflowV1MessageBasicCard;
+            const {image = {}, buttons} = assumed;
+            this.parsed.push(
+              new BasicCard({
+                title: assumed.title,
+                subtitle: assumed.subtitle,
+                text: assumed.formattedText,
+                image: toImage(image.url),
+                buttons: buttons
+                  ? buttons.map(
+                      b =>
+                        new Button({
+                          title: b.title!,
+                          url: b.openUrlAction!.url,
+                        })
+                    )
+                  : undefined,
+              })
+            );
+            continue;
           }
           if (type === 'list_card') {
-            const assumed = message as ApiV1.DialogflowV1MessageList
-            this.parsed.push(new List({
-              title: assumed.title,
-              items: assumed.items!,
-            }))
-            continue
+            const assumed = message as ApiV1.DialogflowV1MessageList;
+            this.parsed.push(
+              new List({
+                title: assumed.title,
+                items: assumed.items!,
+              })
+            );
+            continue;
           }
           if (type === 'suggestion_chips') {
-            const assumed = message as ApiV1.DialogflowV1MessageSuggestions
-            this.parsed.push(new Suggestions(assumed.suggestions!.map(s => s.title!)))
-            continue
+            const assumed = message as ApiV1.DialogflowV1MessageSuggestions;
+            this.parsed.push(
+              new Suggestions(assumed.suggestions!.map(s => s.title!))
+            );
+            continue;
           }
           if (type === 'carousel_card') {
-            const assumed = message as ApiV1.DialogflowV1MessageCarousel
-            this.parsed.push(new Carousel({
-              items: assumed.items!,
-            }))
-            continue
+            const assumed = message as ApiV1.DialogflowV1MessageCarousel;
+            this.parsed.push(
+              new Carousel({
+                items: assumed.items!,
+              })
+            );
+            continue;
           }
           if (type === 'link_out_chip') {
-            const assumed = message as ApiV1.DialogflowV1MessageLinkOut
-            this.parsed.push(new LinkOutSuggestion({
-              name: assumed.destinationName!,
-              url: assumed.url!,
-            }))
-            continue
+            const assumed = message as ApiV1.DialogflowV1MessageLinkOut;
+            this.parsed.push(
+              new LinkOutSuggestion({
+                name: assumed.destinationName!,
+                url: assumed.url!,
+              })
+            );
+            continue;
           }
           if (type === 'custom_payload') {
-            const assumed = message as ApiV1.DialogflowV1MessageGooglePayload
-            this.parsed.push(assumed.payload!)
-            continue
+            const assumed = message as ApiV1.DialogflowV1MessageGooglePayload;
+            this.parsed.push(assumed.payload!);
+            continue;
           }
         }
       }
@@ -329,23 +388,27 @@ export class Incoming {
    * @public
    */
   // tslint:disable-next-line:no-any allow constructors with any type of arguments
-  get<TMessage extends IncomingMessage>(type: new (...args: any[]) => TMessage): TMessage
+  get<TMessage extends IncomingMessage>(
+    type: new (...args: any[]) => TMessage
+  ): TMessage;
   /** @public */
-  get(type: 'string'): string
+  get(type: 'string'): string;
   // tslint:disable-next-line:no-any allow constructors with any type of arguments
-  get<TMessage extends IncomingMessage>(type: 'string' | (new (...args: any[]) => TMessage)) {
+  get<TMessage extends IncomingMessage>(
+    type: 'string' | (new (...args: any[]) => TMessage)
+  ) {
     for (const message of this) {
       if (typeof type === 'string') {
         if (typeof message === type) {
-          return message
+          return message;
         }
-        continue
+        continue;
       }
       if (message instanceof type) {
-        return message
+        return message;
       }
     }
-    return null
+    return null;
   }
 
   /**
@@ -372,7 +435,7 @@ export class Incoming {
    * @public
    */
   [Symbol.iterator]() {
-    return this.parsed[Symbol.iterator]()
+    return this.parsed[Symbol.iterator]();
     // suppose to be Array.prototype.values(), but can't use because of bug:
     // https://bugs.chromium.org/p/chromium/issues/detail?id=615873
   }

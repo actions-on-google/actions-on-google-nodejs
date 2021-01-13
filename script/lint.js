@@ -14,18 +14,18 @@
  * limitations under the License.
  */
 
-'use strict'
+'use strict';
 
-const fs = require('fs')
-const path = require('path')
-const { execFile } = require('child_process')
+const fs = require('fs');
+const path = require('path');
+const {execFile} = require('child_process');
 
-const encoding = 'utf8'
+const encoding = 'utf8';
 
-const [node, script, file] = process.argv
+const [node, script, file] = process.argv;
 
-let last = ''
-let linted = fs.readFileSync(file, encoding)
+let last = '';
+let linted = fs.readFileSync(file, encoding);
 
 while (last !== linted) {
   execFile('node', [
@@ -33,7 +33,7 @@ while (last !== linted) {
     '-p',
     path.resolve(__dirname, '..'),
     '--fix',
-  ])
-  last = linted
-  linted = fs.readFileSync(file, encoding)
+  ]);
+  last = linted;
+  linted = fs.readFileSync(file, encoding);
 }

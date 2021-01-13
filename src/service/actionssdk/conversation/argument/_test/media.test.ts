@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-import test from 'ava'
-import * as module from '../media'
+import test from 'ava';
+import * as module from '../media';
 
 test('module is an object', t => {
-  t.is(typeof module, 'object')
-})
+  t.is(typeof module, 'object');
+});

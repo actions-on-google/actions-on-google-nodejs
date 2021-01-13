@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-import * as Api from '../../../api/v2'
-import { SoloHelper } from '../helper'
+import * as Api from '../../../api/v2';
+import {SoloHelper} from '../helper';
 
 /** @public */
 export type TransactionDecisionArgument =
-  Api.GoogleActionsV2TransactionDecisionValue |
-  Api.GoogleActionsTransactionsV3TransactionDecisionValue
+  | Api.GoogleActionsV2TransactionDecisionValue
+  | Api.GoogleActionsTransactionsV3TransactionDecisionValue;
 
 /**
  * Asks user to confirm transaction information.
@@ -28,8 +28,8 @@ export type TransactionDecisionArgument =
  */
 export class TransactionDecision extends SoloHelper<
   'actions.intent.TRANSACTION_DECISION',
-  Api.GoogleActionsV2TransactionDecisionValueSpec |
-    Api.GoogleActionsTransactionsV3TransactionDecisionValueSpec
+  | Api.GoogleActionsV2TransactionDecisionValueSpec
+  | Api.GoogleActionsTransactionsV3TransactionDecisionValueSpec
 > {
   /**
    * @param options The raw {@link GoogleActionsV2TransactionDecisionValueSpec}
@@ -37,12 +37,16 @@ export class TransactionDecision extends SoloHelper<
    *     if using ordersv3
    * @public
    */
-  constructor(options?: Api.GoogleActionsV2TransactionDecisionValueSpec |
-      Api.GoogleActionsTransactionsV3TransactionDecisionValueSpec) {
+  constructor(
+    options?:
+      | Api.GoogleActionsV2TransactionDecisionValueSpec
+      | Api.GoogleActionsTransactionsV3TransactionDecisionValueSpec
+  ) {
     super({
       intent: 'actions.intent.TRANSACTION_DECISION',
-      type: 'type.googleapis.com/google.actions.v2.TransactionDecisionValueSpec',
+      type:
+        'type.googleapis.com/google.actions.v2.TransactionDecisionValueSpec',
       data: options,
-    })
+    });
   }
 }

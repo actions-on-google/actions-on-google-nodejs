@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import * as Api from '../../api/v2'
+import * as Api from '../../api/v2';
 import {
   NewSurfaceArgument,
   PermissionArgument,
@@ -31,22 +31,17 @@ import {
   UpdatePermissionUserIdArgument,
   CompletePurchaseArgument,
   DigitalPurchaseCheckArgument,
-} from '..'
-import {
-  RepromptArgument,
-  FinalRepromptArgument,
-} from './noinput'
-import {
-  MediaStatusArgument,
-} from './media'
+} from '..';
+import {RepromptArgument, FinalRepromptArgument} from './noinput';
+import {MediaStatusArgument} from './media';
 
 // Need to import because of https://github.com/Microsoft/TypeScript/issues/9944
-import { ApiClientObjectMap } from '../../../../common'
+import {ApiClientObjectMap} from '../../../../common';
 // Need to use type to avoid unused local linter errors
-export { ApiClientObjectMap }
+export {ApiClientObjectMap};
 
 /** @public */
-export type Argument = Api.GoogleActionsV2Argument[keyof Api.GoogleActionsV2Argument]
+export type Argument = Api.GoogleActionsV2Argument[keyof Api.GoogleActionsV2Argument];
 
 export interface ArgumentsNamed {
   /**
@@ -57,7 +52,7 @@ export interface ArgumentsNamed {
    * or {@link UpdatePermission|conv.ask(new UpdatePermission)}.
    * @public
    */
-  PERMISSION?: PermissionArgument
+  PERMISSION?: PermissionArgument;
 
   /**
    * The option key user chose from options response.
@@ -65,7 +60,7 @@ export interface ArgumentsNamed {
    * or {@link Carousel|conv.ask(new Carousel)}.
    * @public
    */
-  OPTION?: OptionArgument
+  OPTION?: OptionArgument;
 
   /**
    * The transactability of user.
@@ -73,14 +68,14 @@ export interface ArgumentsNamed {
    * Undefined if no result given.
    * @public
    */
-  TRANSACTION_REQUIREMENTS_CHECK_RESULT?: TransactionRequirementsArgument
+  TRANSACTION_REQUIREMENTS_CHECK_RESULT?: TransactionRequirementsArgument;
 
   /**
    * The order delivery address.
    * Only use after calling {@link DeliveryAddress|conv.ask(new DeliveryAddress)}.
    * @public
    */
-  DELIVERY_ADDRESS_VALUE?: DeliveryAddressArgument
+  DELIVERY_ADDRESS_VALUE?: DeliveryAddressArgument;
 
   /**
    * The transaction decision information.
@@ -89,41 +84,41 @@ export interface ArgumentsNamed {
    * Only use after calling {@link TransactionDecision|conv.ask(new TransactionDecision)}.
    * @public
    */
-  TRANSACTION_DECISION_VALUE?: TransactionDecisionArgument
+  TRANSACTION_DECISION_VALUE?: TransactionDecisionArgument;
 
   /**
    * The complete purchase information.
    * Only use after calling {@link CompletePurchase|conv.ask(new CompletePurchase)}.
    * @public
    */
-  COMPLETE_PURCHASE_VALUE?: CompletePurchaseArgument
+  COMPLETE_PURCHASE_VALUE?: CompletePurchaseArgument;
 
   /**
    * Only use after calling {@link DigitalPurchaseCheck|conv.ask(new DigitalPurchaseCheck)}.
    * @public
    */
-  DIGITAL_PURCHASE_CHECK_RESULT?: DigitalPurchaseCheckArgument
+  DIGITAL_PURCHASE_CHECK_RESULT?: DigitalPurchaseCheckArgument;
 
   /**
    * The confirmation decision.
    * Use after {@link Confirmation|conv.ask(new Confirmation)}
    * @public
    */
-  CONFIRMATION?: ConfirmationArgument
+  CONFIRMATION?: ConfirmationArgument;
 
   /**
    * The user provided date and time.
    * Use after {@link DateTime|conv.ask(new DateTime)}
    * @public
    */
-  DATETIME?: DateTimeArgument
+  DATETIME?: DateTimeArgument;
 
   /**
    * The status of user sign in request.
    * Use after {@link SignIn|conv.ask(new SignIn)}
    * @public
    */
-  SIGN_IN?: SignInArgument
+  SIGN_IN?: SignInArgument;
 
   /**
    * The number of subsequent reprompts related to silent input from the user.
@@ -131,7 +126,7 @@ export interface ArgumentsNamed {
    * user for input in cases where the Google Assistant could not pick up any speech.
    * @public
    */
-  REPROMPT_COUNT?: RepromptArgument
+  REPROMPT_COUNT?: RepromptArgument;
 
   /**
    * True if it is the final reprompt related to silent input from the user.
@@ -140,7 +135,7 @@ export interface ArgumentsNamed {
    * which ends the conversation.
    * @public
    */
-  IS_FINAL_REPROMPT?: FinalRepromptArgument
+  IS_FINAL_REPROMPT?: FinalRepromptArgument;
 
   /**
    * The result of {@link NewSurface|conv.ask(new NewSurface)}
@@ -148,28 +143,28 @@ export interface ArgumentsNamed {
    * `actions.intent.NEW_SURFACE` intent.
    * @public
    */
-  NEW_SURFACE?: NewSurfaceArgument
+  NEW_SURFACE?: NewSurfaceArgument;
 
   /**
    * True if user accepted update registration request.
    * Used with {@link RegisterUpdate|conv.ask(new RegisterUpdate)}
    * @public
    */
-  REGISTER_UPDATE?: RegisterUpdateArgument
+  REGISTER_UPDATE?: RegisterUpdateArgument;
 
   /**
    * The updates user id.
    * Only use after calling {@link UpdatePermission|conv.ask(new UpdatePermission)}.
    * @public
    */
-  UPDATES_USER_ID?: UpdatePermissionUserIdArgument
+  UPDATES_USER_ID?: UpdatePermissionUserIdArgument;
 
   /**
    * The user provided place.
    * Use after {@link Place|conv.ask(new Place)}.
    * @public
    */
-  PLACE?: PlaceArgument
+  PLACE?: PlaceArgument;
 
   /**
    * The link non status argument.
@@ -178,131 +173,131 @@ export interface ArgumentsNamed {
    * @public
    * @deprecated
    */
-  LINK?: DeepLinkArgument
+  LINK?: DeepLinkArgument;
 
   /**
    * The status of MEDIA_STATUS intent.
    * @public
    */
-  MEDIA_STATUS?: MediaStatusArgument
+  MEDIA_STATUS?: MediaStatusArgument;
 }
 
 export interface ArgumentsParsed extends ArgumentsNamed {
   /** @public */
-  [name: string]: Argument | undefined
+  [name: string]: Argument | undefined;
 }
 
 /** @hidden */
 export interface ArgumentsIndexable {
-  [key: string]: Argument
+  [key: string]: Argument;
 }
 
 export interface ArgumentsStatus {
   /** @public */
-  [name: string]: Api.GoogleRpcStatus | undefined
+  [name: string]: Api.GoogleRpcStatus | undefined;
 }
 
 export interface ArgumentsRaw {
   /** @public */
-  [name: string]: Api.GoogleActionsV2Argument
+  [name: string]: Api.GoogleActionsV2Argument;
 }
 
 const getValue = (arg: Api.GoogleActionsV2Argument): Argument => {
   for (const key in arg) {
     if (key === 'name' || key === 'textValue' || key === 'status') {
-      continue
+      continue;
     }
-    return (arg as ArgumentsIndexable)[key]
+    return (arg as ArgumentsIndexable)[key];
   }
   // Manually handle the PERMISSION argument because of a bug not returning boolValue
   if (arg.name === 'PERMISSION') {
-    return !!arg.boolValue
+    return !!arg.boolValue;
   }
-  return arg.textValue
-}
+  return arg.textValue;
+};
 
 export class Parsed {
   /** @public */
-  list: Argument[]
+  list: Argument[];
 
   /** @public */
-  input: ArgumentsParsed = {}
+  input: ArgumentsParsed = {};
 
   /** @hidden */
   constructor(raw: Api.GoogleActionsV2Argument[]) {
     this.list = raw.map((arg, i) => {
-      const value = getValue(arg)
-      const name = arg.name!
-      this.input[name] = value
-      return value
-    })
+      const value = getValue(arg);
+      const name = arg.name!;
+      this.input[name] = value;
+      return value;
+    });
   }
 
   /** @public */
-  get<TName extends keyof ArgumentsNamed>(name: TName): ArgumentsNamed[TName]
+  get<TName extends keyof ArgumentsNamed>(name: TName): ArgumentsNamed[TName];
   /** @public */
-  get(name: string): Argument
+  get(name: string): Argument;
   get(name: string) {
-    return this.input[name]
+    return this.input[name];
   }
 }
 
 export class Status {
   /** @public */
-  list: (Api.GoogleRpcStatus | undefined)[]
+  list: (Api.GoogleRpcStatus | undefined)[];
 
   /** @public */
-  input: ArgumentsStatus = {}
+  input: ArgumentsStatus = {};
 
   /** @hidden */
   constructor(raw: Api.GoogleActionsV2Argument[]) {
     this.list = raw.map((arg, i) => {
-      const name = arg.name!
-      const status = arg.status
-      this.input[name] = status
-      return status
-    })
+      const name = arg.name!;
+      const status = arg.status;
+      this.input[name] = status;
+      return status;
+    });
   }
 
   /** @public */
   get(name: string) {
-    return this.input[name]
+    return this.input[name];
   }
 }
 
 export class Raw {
   /** @public */
-  input: ArgumentsRaw
+  input: ArgumentsRaw;
 
   /** @hidden */
   constructor(public list: Api.GoogleActionsV2Argument[]) {
     this.input = list.reduce((o, arg) => {
-      o[arg.name!] = arg
-      return o
-    }, {} as ArgumentsRaw)
+      o[arg.name!] = arg;
+      return o;
+    }, {} as ArgumentsRaw);
   }
 
   /** @public */
   get(name: string) {
-    return this.input[name]
+    return this.input[name];
   }
 }
 
 export class Arguments {
   /** @public */
-  parsed: Parsed
+  parsed: Parsed;
 
   /** @public */
-  status: Status
+  status: Status;
 
   /** @public */
-  raw: Raw
+  raw: Raw;
 
   /** @hidden */
   constructor(raw: Api.GoogleActionsV2Argument[] = []) {
-    this.parsed = new Parsed(raw)
-    this.status = new Status(raw)
-    this.raw = new Raw(raw)
+    this.parsed = new Parsed(raw);
+    this.status = new Status(raw);
+    this.raw = new Raw(raw);
   }
 
   /**
@@ -332,16 +327,16 @@ export class Arguments {
    *
    * @public
    */
-  get<TName extends keyof ArgumentsNamed>(name: TName): ArgumentsNamed[TName]
+  get<TName extends keyof ArgumentsNamed>(name: TName): ArgumentsNamed[TName];
   /** @public */
-  get(name: string): Argument
+  get(name: string): Argument;
   get(name: string) {
-    return this.parsed.get(name)
+    return this.parsed.get(name);
   }
 
   /** @public */
   [Symbol.iterator]() {
-    return this.raw.list[Symbol.iterator]()
+    return this.raw.list[Symbol.iterator]();
     // suppose to be Array.prototype.values(), but can't use because of bug:
     // https://bugs.chromium.org/p/chromium/issues/detail?id=615873
   }

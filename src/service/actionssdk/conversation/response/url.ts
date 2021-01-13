@@ -14,19 +14,21 @@
  * limitations under the License.
  */
 
-import * as Api from '../../api/v2'
+import * as Api from '../../api/v2';
 
 /** @public */
 export interface OpenUrlActionOptions {
   /** @public */
-  url: string
+  url: string;
 }
 
 /** @public */
-export interface OpenUrlAction extends Api.GoogleActionsV2UiElementsOpenUrlAction { }
-export class OpenUrlAction implements Api.GoogleActionsV2UiElementsOpenUrlAction {
+export interface OpenUrlAction
+  extends Api.GoogleActionsV2UiElementsOpenUrlAction {}
+export class OpenUrlAction
+  implements Api.GoogleActionsV2UiElementsOpenUrlAction {
   /** @public */
   constructor(options: OpenUrlActionOptions) {
-    this.url = options.url
+    this.url = options.url;
   }
 }

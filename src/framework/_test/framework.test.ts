@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
-import test from 'ava'
-import { builtin } from '../framework'
-import { Express } from '../express'
-import { Lambda } from '../lambda'
+import test from 'ava';
+import {builtin} from '../framework';
+import {Express} from '../express';
+import {Lambda} from '../lambda';
 
 test('express exists in builtin', t => {
-  t.true(builtin.express instanceof Express)
-})
+  t.true(builtin.express instanceof Express);
+});
 
 test('lambda exists in builtin', t => {
-  t.true(builtin.lambda instanceof Lambda)
-})
+  t.true(builtin.lambda instanceof Lambda);
+});

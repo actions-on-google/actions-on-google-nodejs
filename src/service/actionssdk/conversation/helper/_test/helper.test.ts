@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-import test from 'ava'
-import * as Api from '../../../api/v2'
-import { Helper } from '..'
-import { clone } from '../../../../../common'
+import test from 'ava';
+import * as Api from '../../../api/v2';
+import {Helper} from '..';
+import {clone} from '../../../../../common';
 
 test('Helper class creates an ExpectedIntent', t => {
   const helper = new Helper<
@@ -25,7 +25,8 @@ test('Helper class creates an ExpectedIntent', t => {
     Api.GoogleActionsTransactionsV3CompletePurchaseValueSpec
   >({
     intent: 'actions.intent.COMPLETE_PURCHASE',
-    type: 'type.googleapis.com/google.actions.transactions.v3.CompletePurchaseValueSpec',
+    type:
+      'type.googleapis.com/google.actions.transactions.v3.CompletePurchaseValueSpec',
     data: {
       developerPayload: 'test1',
       skuId: {
@@ -34,11 +35,12 @@ test('Helper class creates an ExpectedIntent', t => {
         skuType: 'SKU_TYPE_IN_APP',
       },
     },
-  })
+  });
   t.deepEqual(clone(helper), {
     intent: 'actions.intent.COMPLETE_PURCHASE',
     inputValueData: {
-      '@type': 'type.googleapis.com/google.actions.transactions.v3.CompletePurchaseValueSpec',
+      '@type':
+        'type.googleapis.com/google.actions.transactions.v3.CompletePurchaseValueSpec',
       developerPayload: 'test1',
       skuId: {
         id: 'test2',
@@ -46,5 +48,5 @@ test('Helper class creates an ExpectedIntent', t => {
         skuType: 'SKU_TYPE_IN_APP',
       },
     },
-  })
-})
+  });
+});

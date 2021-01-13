@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import * as Api from '../api/v2'
+import * as Api from '../api/v2';
 
 export class Device {
   /**
@@ -22,10 +22,10 @@ export class Device {
    * location (see {@link Permission|conv.ask(new Permission)}).
    * @public
    */
-  location?: Api.GoogleActionsV2Location
+  location?: Api.GoogleActionsV2Location;
 
   /** @hidden */
   constructor(device: Api.GoogleActionsV2Device = {}) {
-    this.location = device.location
+    this.location = device.location;
   }
 }

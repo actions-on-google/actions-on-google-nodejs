@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-import * as Api from './api/v2'
-import * as ActionsApi from '../actionssdk/api/v2'
-import { AppHandler, attach } from '../../assistant'
+import * as Api from './api/v2';
+import * as ActionsApi from '../actionssdk/api/v2';
+import {AppHandler, attach} from '../../assistant';
 import {
   ExceptionHandler,
   Traversed,
@@ -24,21 +24,25 @@ import {
   ConversationApp,
   ConversationAppOptions,
   UnauthorizedError,
-} from '../actionssdk'
-import * as common from '../../common'
-import { Contexts, Parameters } from './context'
-import { DialogflowConversation } from './conv'
-import { OAuth2Client } from 'google-auth-library'
-import { BuiltinFrameworkMetadata } from '../../framework'
+} from '../actionssdk';
+import * as common from '../../common';
+import {Contexts, Parameters} from './context';
+import {DialogflowConversation} from './conv';
+import {OAuth2Client} from 'google-auth-library';
+import {BuiltinFrameworkMetadata} from '../../framework';
 
 /** @public */
 export interface DialogflowIntentHandler<
   TConvData,
   TUserStorage,
   TContexts extends Contexts,
-  TConversation extends DialogflowConversation<TConvData, TUserStorage, TContexts>,
+  TConversation extends DialogflowConversation<
+    TConvData,
+    TUserStorage,
+    TContexts
+  >,
   TParameters extends Parameters,
-  TArgument extends Argument,
+  TArgument extends Argument
 > {
   /** @public */
   (
@@ -55,14 +59,14 @@ export interface DialogflowIntentHandler<
      * See {@link Arguments#status|Arguments.status}
      * Same as `conv.arguments.status.list[0]`
      */
-    status: ActionsApi.GoogleRpcStatus | undefined,
+    status: ActionsApi.GoogleRpcStatus | undefined
     // tslint:disable-next-line:no-any allow developer to return any just detect if is promise
-  ): Promise<any> | any
+  ): Promise<any> | any;
 }
 
 /** @hidden */
 export interface DialogflowIntentHandlers {
-  [event: string]: Function | string | undefined
+  [event: string]: Function | string | undefined;
 }
 
 /** @hidden */
@@ -70,11 +74,15 @@ export interface DialogflowHandlers<
   TConvData,
   TUserStorage,
   TContexts extends Contexts,
-  TConversation extends DialogflowConversation<TConvData, TUserStorage, TContexts>,
+  TConversation extends DialogflowConversation<
+    TConvData,
+    TUserStorage,
+    TContexts
+  >
 > {
-  intents: DialogflowIntentHandlers
-  catcher: ExceptionHandler<TUserStorage, TConversation>
-  fallback?: Function | string
+  intents: DialogflowIntentHandlers;
+  catcher: ExceptionHandler<TUserStorage, TConversation>;
+  fallback?: Function | string;
 }
 
 /** @public */
@@ -86,25 +94,37 @@ export interface DialogflowMiddleware<
     conv: DialogflowConversation,
 
     /** @public */
-    framework: BuiltinFrameworkMetadata,
-  ): (DialogflowConversation & TConversationPlugin) |
-    void |
-    Promise<DialogflowConversation & TConversationPlugin> |
-    Promise<void>
+    framework: BuiltinFrameworkMetadata
+  ):
+    | (DialogflowConversation & TConversationPlugin)
+    | void
+    | Promise<DialogflowConversation & TConversationPlugin>
+    | Promise<void>;
 }
 
 /** @public */
-export type DefaultDialogflowIntent = 'Default Welcome Intent' | 'Default Fallback Intent'
+export type DefaultDialogflowIntent =
+  | 'Default Welcome Intent'
+  | 'Default Fallback Intent';
 
 /** @public */
 export interface DialogflowApp<
   TConvData,
   TUserStorage,
   TContexts extends Contexts,
-  TConversation extends DialogflowConversation<TConvData, TUserStorage, TContexts>,
+  TConversation extends DialogflowConversation<
+    TConvData,
+    TUserStorage,
+    TContexts
+  >
 > extends ConversationApp<TConvData, TUserStorage> {
   /** @hidden */
-  _handlers: DialogflowHandlers<TConvData, TUserStorage, TContexts, TConversation>
+  _handlers: DialogflowHandlers<
+    TConvData,
+    TUserStorage,
+    TContexts,
+    TConversation
+  >;
 
   /**
    * Sets the IntentHandler to be execute when the fulfillment is called
@@ -119,15 +139,17 @@ export interface DialogflowApp<
    */
   intent<TParameters extends Parameters>(
     intent: DefaultDialogflowIntent | DefaultDialogflowIntent[],
-    handler: DialogflowIntentHandler<
-      TConvData,
-      TUserStorage,
-      TContexts,
-      TConversation,
-      TParameters,
-      Argument
-    > | string,
-  ): this
+    handler:
+      | DialogflowIntentHandler<
+          TConvData,
+          TUserStorage,
+          TContexts,
+          TConversation,
+          TParameters,
+          Argument
+        >
+      | string
+  ): this;
 
   /**
    * Sets the IntentHandler to be execute when the fulfillment is called
@@ -142,15 +164,17 @@ export interface DialogflowApp<
    */
   intent<TArgument extends Argument>(
     intent: DefaultDialogflowIntent | DefaultDialogflowIntent[],
-    handler: DialogflowIntentHandler<
-      TConvData,
-      TUserStorage,
-      TContexts,
-      TConversation,
-      Parameters,
-      TArgument
-    > | string,
-  ): this
+    handler:
+      | DialogflowIntentHandler<
+          TConvData,
+          TUserStorage,
+          TContexts,
+          TConversation,
+          Parameters,
+          TArgument
+        >
+      | string
+  ): this;
 
   /**
    * Sets the IntentHandler to be execute when the fulfillment is called
@@ -165,15 +189,17 @@ export interface DialogflowApp<
    */
   intent<TParameters extends Parameters, TArgument extends Argument>(
     intent: DefaultDialogflowIntent | DefaultDialogflowIntent[],
-    handler: DialogflowIntentHandler<
-      TConvData,
-      TUserStorage,
-      TContexts,
-      TConversation,
-      TParameters,
-      TArgument
-    > | string,
-  ): this
+    handler:
+      | DialogflowIntentHandler<
+          TConvData,
+          TUserStorage,
+          TContexts,
+          TConversation,
+          TParameters,
+          TArgument
+        >
+      | string
+  ): this;
 
   /**
    * Sets the IntentHandler to be execute when the fulfillment is called
@@ -188,15 +214,17 @@ export interface DialogflowApp<
    */
   intent<TParameters extends Parameters>(
     intent: string | string[],
-    handler: DialogflowIntentHandler<
-      TConvData,
-      TUserStorage,
-      TContexts,
-      TConversation,
-      TParameters,
-      Argument
-    > | string,
-  ): this
+    handler:
+      | DialogflowIntentHandler<
+          TConvData,
+          TUserStorage,
+          TContexts,
+          TConversation,
+          TParameters,
+          Argument
+        >
+      | string
+  ): this;
 
   /**
    * Sets the IntentHandler to be execute when the fulfillment is called
@@ -211,15 +239,17 @@ export interface DialogflowApp<
    */
   intent<TArgument extends Argument>(
     intent: string | string[],
-    handler: DialogflowIntentHandler<
-      TConvData,
-      TUserStorage,
-      TContexts,
-      TConversation,
-      Parameters,
-      TArgument
-    > | string,
-  ): this
+    handler:
+      | DialogflowIntentHandler<
+          TConvData,
+          TUserStorage,
+          TContexts,
+          TConversation,
+          Parameters,
+          TArgument
+        >
+      | string
+  ): this;
 
   /**
    * Sets the IntentHandler to be execute when the fulfillment is called
@@ -234,41 +264,49 @@ export interface DialogflowApp<
    */
   intent<TParameters extends Parameters, TArgument extends Argument>(
     intent: string | string[],
-    handler: DialogflowIntentHandler<
-      TConvData,
-      TUserStorage,
-      TContexts,
-      TConversation,
-      TParameters,
-      TArgument
-    > | string,
-  ): this
+    handler:
+      | DialogflowIntentHandler<
+          TConvData,
+          TUserStorage,
+          TContexts,
+          TConversation,
+          TParameters,
+          TArgument
+        >
+      | string
+  ): this;
 
   /** @public */
-  catch(catcher: ExceptionHandler<TUserStorage, TConversation>): this
+  catch(catcher: ExceptionHandler<TUserStorage, TConversation>): this;
 
   /** @public */
   fallback(
-    handler: DialogflowIntentHandler<
-      TConvData,
-      TUserStorage,
-      TContexts,
-      TConversation,
-      Parameters,
-      Argument
-    > | string,
-  ): this
+    handler:
+      | DialogflowIntentHandler<
+          TConvData,
+          TUserStorage,
+          TContexts,
+          TConversation,
+          Parameters,
+          Argument
+        >
+      | string
+  ): this;
 
   /** @hidden */
-  _middlewares: DialogflowMiddleware<DialogflowConversation<{}, {}, Contexts>>[]
+  _middlewares: DialogflowMiddleware<
+    DialogflowConversation<{}, {}, Contexts>
+  >[];
 
   /** @public */
-  middleware<TConversationPlugin extends DialogflowConversation<{}, {}, Contexts>>(
-    middleware: DialogflowMiddleware<TConversationPlugin>,
-  ): this
+  middleware<
+    TConversationPlugin extends DialogflowConversation<{}, {}, Contexts>
+  >(
+    middleware: DialogflowMiddleware<TConversationPlugin>
+  ): this;
 
   /** @public */
-  verification?: DialogflowVerification | DialogflowVerificationHeaders
+  verification?: DialogflowVerification | DialogflowVerificationHeaders;
 }
 
 /** @public */
@@ -277,7 +315,7 @@ export interface DialogflowVerificationHeaders {
    * A header key value pair to check against.
    * @public
    */
-  [key: string]: string
+  [key: string]: string;
 }
 
 /** @public */
@@ -286,13 +324,13 @@ export interface DialogflowVerification {
    * An object representing the header key to value map to check against,
    * @public
    */
-  headers: DialogflowVerificationHeaders
+  headers: DialogflowVerificationHeaders;
 
   /**
    * Custom status code to return on verification error.
    * @public
    */
-  status?: number
+  status?: number;
 
   /**
    * Custom error message as a string or a function that returns a string
@@ -301,14 +339,12 @@ export interface DialogflowVerification {
    * The message will get sent back in the JSON top level `error` property.
    * @public
    */
-  error?: string | ((error: string) => string)
+  error?: string | ((error: string) => string);
 }
 
 /** @public */
-export interface DialogflowOptions<
-  TConvData,
-  TUserStorage
-> extends ConversationAppOptions<TConvData, TUserStorage> {
+export interface DialogflowOptions<TConvData, TUserStorage>
+  extends ConversationAppOptions<TConvData, TUserStorage> {
   /**
    * Verifies whether the request comes from Dialogflow.
    * Uses header keys and values to check against ones specified by the developer
@@ -318,7 +354,7 @@ export interface DialogflowOptions<
    *
    * @public
    */
-  verification?: DialogflowVerification | DialogflowVerificationHeaders
+  verification?: DialogflowVerification | DialogflowVerificationHeaders;
 }
 
 /** @public */
@@ -328,41 +364,43 @@ export interface Dialogflow {
     TConvData,
     TUserStorage,
     TContexts extends Contexts = Contexts,
-    Conversation extends DialogflowConversation<TConvData, TUserStorage, TContexts> =
-      DialogflowConversation<TConvData, TUserStorage, TContexts>,
+    Conversation extends DialogflowConversation<
+      TConvData,
+      TUserStorage,
+      TContexts
+    > = DialogflowConversation<TConvData, TUserStorage, TContexts>
   >(
-    options?: DialogflowOptions<TConvData, TUserStorage>,
-  ): AppHandler & DialogflowApp<
-    TConvData,
-    TUserStorage,
-    TContexts,
-    Conversation
-  >
+    options?: DialogflowOptions<TConvData, TUserStorage>
+  ): AppHandler &
+    DialogflowApp<TConvData, TUserStorage, TContexts, Conversation>;
 
   /** @public */
   <
     TContexts extends Contexts,
-    Conversation extends DialogflowConversation<{}, {}, TContexts> =
-      DialogflowConversation<{}, {}, TContexts>,
+    Conversation extends DialogflowConversation<
+      {},
+      {},
+      TContexts
+    > = DialogflowConversation<{}, {}, TContexts>
   >(
-    options?: DialogflowOptions<{}, {}>,
-  ): AppHandler & DialogflowApp<
-    {},
-    {},
-    TContexts,
-    Conversation
-  >
+    options?: DialogflowOptions<{}, {}>
+  ): AppHandler & DialogflowApp<{}, {}, TContexts, Conversation>;
 
   /** @public */
-  <TConversation extends DialogflowConversation<{}, {}> = DialogflowConversation<{}, {}>>(
-    options?: DialogflowOptions<{}, {}>,
-  ): AppHandler & DialogflowApp<{}, {}, Contexts, TConversation>
+  <
+    TConversation extends DialogflowConversation<
+      {},
+      {}
+    > = DialogflowConversation<{}, {}>
+  >(
+    options?: DialogflowOptions<{}, {}>
+  ): AppHandler & DialogflowApp<{}, {}, Contexts, TConversation>;
 }
 
-const isVerification =
-  (verification: DialogflowVerification | DialogflowVerificationHeaders):
-    verification is DialogflowVerification =>
-      typeof (verification as DialogflowVerification).headers === 'object'
+const isVerification = (
+  verification: DialogflowVerification | DialogflowVerificationHeaders
+): verification is DialogflowVerification =>
+  typeof (verification as DialogflowVerification).headers === 'object';
 
 /**
  * This is the function that creates the app instance which on new requests,
@@ -386,160 +424,201 @@ export const dialogflow: Dialogflow = <
   TConvData,
   TUserStorage,
   TContexts extends Contexts,
-  TConversation extends DialogflowConversation<TConvData, TUserStorage, TContexts>
+  TConversation extends DialogflowConversation<
+    TConvData,
+    TUserStorage,
+    TContexts
+  >
 >(
-  options: DialogflowOptions<TConvData, TUserStorage> = {},
-) => attach<DialogflowApp<TConvData, TUserStorage, TContexts, TConversation>>({
-  _handlers: {
-    intents: {},
-    catcher: (conv, e) => {
-      throw e
-    },
-  },
-  _middlewares: [],
-  intent<TParameters extends Parameters, TArgument extends Argument>(
-    this: DialogflowApp<TConvData, TUserStorage, TContexts, TConversation>,
-    intents: string | string[],
-    handler: DialogflowIntentHandler<
-      TConvData,
-      TUserStorage,
-      TContexts,
-      TConversation,
-      TParameters,
-      TArgument
-    >,
-  ) {
-    for (const intent of common.toArray(intents)) {
-      this._handlers.intents[intent] = handler
-    }
-    return this
-  },
-  catch(this: DialogflowApp<TConvData, TUserStorage, TContexts, TConversation>, catcher) {
-    this._handlers.catcher = catcher
-    return this
-  },
-  fallback(this: DialogflowApp<TConvData, TUserStorage, TContexts, TConversation>, handler) {
-    this._handlers.fallback = handler
-    return this
-  },
-  middleware(
-    this: DialogflowApp<TConvData, TUserStorage, TContexts, TConversation>,
-    middleware,
-  ) {
-    this._middlewares.push(middleware)
-    return this
-  },
-  init: options.init,
-  verification: options.verification,
-  _client: options.clientId ? new OAuth2Client(options.clientId) : undefined,
-  auth: options.clientId ? {
-    client: {
-      id: options.clientId,
-    },
-  } : undefined,
-  ordersv3: options.ordersv3 || false,
-  async handler(
-    this: AppHandler & DialogflowApp<TConvData, TUserStorage, TContexts, TConversation>,
-    body: Api.GoogleCloudDialogflowV2WebhookRequest,
-    headers,
-    metadata = {},
-  ) {
-    const { debug, init, verification, ordersv3 } = this
-    if (verification) {
-      const {
-        headers: verificationHeaders,
-        status = 403,
-        error = (e: string) => e,
-      } = isVerification(verification) ? verification :
-        { headers: verification } as DialogflowVerification
-      for (const key in verification) {
-        const check = headers[key.toLowerCase()]
-        if (!check) {
-          return {
-            status,
-            body: {
-              error: typeof error === 'string' ? error :
-                error('A verification header key was not found'),
+  options: DialogflowOptions<TConvData, TUserStorage> = {}
+) =>
+  attach<DialogflowApp<TConvData, TUserStorage, TContexts, TConversation>>(
+    {
+      _handlers: {
+        intents: {},
+        catcher: (conv, e) => {
+          throw e;
+        },
+      },
+      _middlewares: [],
+      intent<TParameters extends Parameters, TArgument extends Argument>(
+        this: DialogflowApp<TConvData, TUserStorage, TContexts, TConversation>,
+        intents: string | string[],
+        handler: DialogflowIntentHandler<
+          TConvData,
+          TUserStorage,
+          TContexts,
+          TConversation,
+          TParameters,
+          TArgument
+        >
+      ) {
+        for (const intent of common.toArray(intents)) {
+          this._handlers.intents[intent] = handler;
+        }
+        return this;
+      },
+      catch(
+        this: DialogflowApp<TConvData, TUserStorage, TContexts, TConversation>,
+        catcher
+      ) {
+        this._handlers.catcher = catcher;
+        return this;
+      },
+      fallback(
+        this: DialogflowApp<TConvData, TUserStorage, TContexts, TConversation>,
+        handler
+      ) {
+        this._handlers.fallback = handler;
+        return this;
+      },
+      middleware(
+        this: DialogflowApp<TConvData, TUserStorage, TContexts, TConversation>,
+        middleware
+      ) {
+        this._middlewares.push(middleware);
+        return this;
+      },
+      init: options.init,
+      verification: options.verification,
+      _client: options.clientId
+        ? new OAuth2Client(options.clientId)
+        : undefined,
+      auth: options.clientId
+        ? {
+            client: {
+              id: options.clientId,
             },
           }
-        }
-        const value = verificationHeaders[key]
-        const checking = common.toArray(check)
-        if (checking.indexOf(value) < 0) {
-          return {
-            status,
-            body: {
-              error: typeof error === 'string' ? error :
-                error('A verification header value was invalid'),
-            },
+        : undefined,
+      ordersv3: options.ordersv3 || false,
+      async handler(
+        this: AppHandler &
+          DialogflowApp<TConvData, TUserStorage, TContexts, TConversation>,
+        body: Api.GoogleCloudDialogflowV2WebhookRequest,
+        headers,
+        metadata = {}
+      ) {
+        const {debug, init, verification, ordersv3} = this;
+        if (verification) {
+          const {
+            headers: verificationHeaders,
+            status = 403,
+            error = (e: string) => e,
+          } = isVerification(verification)
+            ? verification
+            : ({headers: verification} as DialogflowVerification);
+          for (const key in verification) {
+            const check = headers[key.toLowerCase()];
+            if (!check) {
+              return {
+                status,
+                body: {
+                  error:
+                    typeof error === 'string'
+                      ? error
+                      : error('A verification header key was not found'),
+                },
+              };
+            }
+            const value = verificationHeaders[key];
+            const checking = common.toArray(check);
+            if (checking.indexOf(value) < 0) {
+              return {
+                status,
+                body: {
+                  error:
+                    typeof error === 'string'
+                      ? error
+                      : error('A verification header value was invalid'),
+                },
+              };
+            }
           }
         }
-      }
-    }
-    let conv = new DialogflowConversation<TConvData, TUserStorage, TContexts>({
-      body,
-      headers,
-      init: init && init(),
-      debug,
-      ordersv3,
-    })
-    if (conv.user.profile.token) {
-      await conv.user._verifyProfile(this._client!, this.auth!.client.id)
-    }
-    for (const middleware of this._middlewares) {
-      // tslint:disable-next-line:no-any genericize Conversation type
-      const result = middleware(conv as any, metadata)
-      conv = (result instanceof DialogflowConversation ? result : ((await result) || conv)) as (
-        DialogflowConversation<TConvData, TUserStorage, TContexts>
-      )
-    }
-    const log = debug ? common.info : common.debug
-    log('Conversation', common.stringify(conv, 'request', 'headers', 'body'))
-    const { intent } = conv
-    const traversed: Traversed = {}
-    let handler: typeof this._handlers.intents[string] = intent
-    while (typeof handler !== 'function') {
-      if (typeof handler === 'undefined') {
-        if (!this._handlers.fallback) {
-          if (!intent) {
-            throw new Error('No intent was provided and fallback handler is not defined.')
-          }
-          throw new Error(`Dialogflow IntentHandler not found for intent: ${intent}`)
+        let conv = new DialogflowConversation<
+          TConvData,
+          TUserStorage,
+          TContexts
+        >({
+          body,
+          headers,
+          init: init && init(),
+          debug,
+          ordersv3,
+        });
+        if (conv.user.profile.token) {
+          await conv.user._verifyProfile(this._client!, this.auth!.client.id);
         }
-        handler = this._handlers.fallback
-        continue
-      }
-      if (traversed[handler]) {
-        throw new Error(`Circular intent map detected: "${handler}" traversed twice`)
-      }
-      traversed[handler] = true
-      handler = this._handlers.intents[handler]
-    }
-    try {
-      try {
-        await handler(
-          conv,
-          conv.parameters,
-          conv.arguments.parsed.list[0],
-          conv.arguments.status.list[0],
-        )
-      } catch (e) {
-        await this._handlers.catcher(conv as TConversation, e)
-      }
-    } catch (e) {
-      if (e instanceof UnauthorizedError) {
+        for (const middleware of this._middlewares) {
+          // tslint:disable-next-line:no-any genericize Conversation type
+          const result = middleware(conv as any, metadata);
+          conv = (result instanceof DialogflowConversation
+            ? result
+            : (await result) || conv) as DialogflowConversation<
+            TConvData,
+            TUserStorage,
+            TContexts
+          >;
+        }
+        const log = debug ? common.info : common.debug;
+        log(
+          'Conversation',
+          common.stringify(conv, 'request', 'headers', 'body')
+        );
+        const {intent} = conv;
+        const traversed: Traversed = {};
+        let handler: typeof this._handlers.intents[string] = intent;
+        while (typeof handler !== 'function') {
+          if (typeof handler === 'undefined') {
+            if (!this._handlers.fallback) {
+              if (!intent) {
+                throw new Error(
+                  'No intent was provided and fallback handler is not defined.'
+                );
+              }
+              throw new Error(
+                `Dialogflow IntentHandler not found for intent: ${intent}`
+              );
+            }
+            handler = this._handlers.fallback;
+            continue;
+          }
+          if (traversed[handler]) {
+            throw new Error(
+              `Circular intent map detected: "${handler}" traversed twice`
+            );
+          }
+          traversed[handler] = true;
+          handler = this._handlers.intents[handler];
+        }
+        try {
+          try {
+            await handler(
+              conv,
+              conv.parameters,
+              conv.arguments.parsed.list[0],
+              conv.arguments.status.list[0]
+            );
+          } catch (e) {
+            await this._handlers.catcher(conv as TConversation, e);
+          }
+        } catch (e) {
+          if (e instanceof UnauthorizedError) {
+            return {
+              status: 401,
+              headers: {},
+              body: {},
+            };
+          }
+          throw e;
+        }
         return {
-          status: 401,
+          status: 200,
           headers: {},
-          body: {},
-        }
-      }
-      throw e
-    }
-    return {
-      status: 200,
-      headers: {},
-      body: conv.serialize(),
-    }
-  },
-}, options)
+          body: conv.serialize(),
+        };
+      },
+    },
+    options
+  );

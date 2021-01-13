@@ -14,6 +14,6 @@
  * limitations under the License.
  */
 
-export * from './button'
-export * from './basic'
-export * from './table'
+export * from './button';
+export * from './basic';
+export * from './table';

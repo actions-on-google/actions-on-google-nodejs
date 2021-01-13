@@ -14,41 +14,34 @@
  * limitations under the License.
  */
 
-import * as Api from '../../api/v2'
-import { Intent, InputValueSpec } from '../conversation'
-import { ProtoAny } from '../../../../common'
+import * as Api from '../../api/v2';
+import {Intent, InputValueSpec} from '../conversation';
+import {ProtoAny} from '../../../../common';
 
 /** @public */
-export interface HelperOptions<
-  TIntent extends Intent,
-  TValueSpec,
-> {
-  intent: TIntent
-  type: InputValueSpec
-  data?: TValueSpec
+export interface HelperOptions<TIntent extends Intent, TValueSpec> {
+  intent: TIntent;
+  type: InputValueSpec;
+  data?: TValueSpec;
 }
 
 /** @public */
-export interface Helper<
-  TIntent extends Intent,
-  TValueSpec
-> extends Api.GoogleActionsV2ExpectedIntent { }
+export interface Helper<TIntent extends Intent, TValueSpec>
+  extends Api.GoogleActionsV2ExpectedIntent {}
 
 /** @public */
-export class Helper<
-  TIntent extends Intent,
-  TValueSpec
-> implements Api.GoogleActionsV2ExpectedIntent {
-  inputValueData: ProtoAny<InputValueSpec, TValueSpec>
+export class Helper<TIntent extends Intent, TValueSpec>
+  implements Api.GoogleActionsV2ExpectedIntent {
+  inputValueData: ProtoAny<InputValueSpec, TValueSpec>;
 
   constructor(options: HelperOptions<TIntent, TValueSpec>) {
-    this.intent = options.intent
-    this.inputValueData = Object.assign({ '@type': options.type }, options.data)
+    this.intent = options.intent;
+    this.inputValueData = Object.assign({'@type': options.type}, options.data);
   }
 }
 
 /** @public */
-export class SoloHelper<
-  TIntent extends Intent,
+export class SoloHelper<TIntent extends Intent, TValueSpec> extends Helper<
+  TIntent,
   TValueSpec
-> extends Helper<TIntent, TValueSpec> { }
+> {}

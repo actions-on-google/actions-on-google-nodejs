@@ -14,90 +14,92 @@
  * limitations under the License.
  */
 
-import test from 'ava'
-import * as Api from '../../../api/v2'
-import * as common from '../../../../../common'
-import { HtmlResponse } from '../html'
-import { RichResponse } from '../rich'
-import { DialogflowConversation } from '../../../../dialogflow'
-import { ActionsSdkConversation } from '../../../conv'
+import test from 'ava';
+import * as Api from '../../../api/v2';
+import * as common from '../../../../../common';
+import {HtmlResponse} from '../html';
+import {RichResponse} from '../rich';
+import {DialogflowConversation} from '../../../../dialogflow';
+import {ActionsSdkConversation} from '../../../conv';
 
 test('basic complete use case works', t => {
   const immersive = new HtmlResponse({
     url: 'https://example.com',
-    data: { test: 'abc' },
+    data: {test: 'abc'},
     suppress: true,
-  })
+  });
   const raw: Api.GoogleActionsV2UiElementsHtmlResponse = {
     url: 'https://example.com',
-    updatedState: { test: 'abc' },
+    updatedState: {test: 'abc'},
     suppressMic: true,
-  }
-  t.deepEqual(common.clone(immersive), raw)
-})
+  };
+  t.deepEqual(common.clone(immersive), raw);
+});
 
 test('basic complete non aliased use case works', t => {
   const immersive = new HtmlResponse({
     url: 'https://example.com',
-    updatedState: { test: 'abc' },
+    updatedState: {test: 'abc'},
     suppressMic: true,
-  })
+  });
   const raw: Api.GoogleActionsV2UiElementsHtmlResponse = {
     url: 'https://example.com',
-    updatedState: { test: 'abc' },
+    updatedState: {test: 'abc'},
     suppressMic: true,
-  }
-  t.deepEqual(common.clone(immersive), raw)
-})
+  };
+  t.deepEqual(common.clone(immersive), raw);
+});
 
 test('only url works', t => {
   const immersive = new HtmlResponse({
     url: 'https://example.com',
-  })
+  });
   const raw: Api.GoogleActionsV2UiElementsHtmlResponse = {
     url: 'https://example.com',
-  }
-  t.deepEqual(common.clone(immersive), raw)
-})
+  };
+  t.deepEqual(common.clone(immersive), raw);
+});
 
 test('only data works', t => {
   const immersive = new HtmlResponse({
-    data: { test: 'abc' },
-  })
+    data: {test: 'abc'},
+  });
   const raw: Api.GoogleActionsV2UiElementsHtmlResponse = {
-    updatedState: { test: 'abc' },
-  }
-  t.deepEqual(common.clone(immersive), raw)
-})
+    updatedState: {test: 'abc'},
+  };
+  t.deepEqual(common.clone(immersive), raw);
+});
 
 test('changing aliased suppress works', t => {
-  const immersive = new HtmlResponse()
-  immersive.suppress = true
-  t.is(immersive.suppress, true)
+  const immersive = new HtmlResponse();
+  immersive.suppress = true;
+  t.is(immersive.suppress, true);
 
   const raw: Api.GoogleActionsV2UiElementsHtmlResponse = {
     suppressMic: true,
-  }
-  t.deepEqual(common.clone(immersive), raw)
-})
+  };
+  t.deepEqual(common.clone(immersive), raw);
+});
 
 test('changing aliased data works', t => {
-  const immersive = new HtmlResponse()
-  immersive.data = { test: 'abc' }
-  t.deepEqual(immersive.data, { test: 'abc' })
+  const immersive = new HtmlResponse();
+  immersive.data = {test: 'abc'};
+  t.deepEqual(immersive.data, {test: 'abc'});
 
   const raw: Api.GoogleActionsV2UiElementsHtmlResponse = {
-    updatedState: { test: 'abc' },
-  }
-  t.deepEqual(common.clone(immersive), raw)
-})
+    updatedState: {test: 'abc'},
+  };
+  t.deepEqual(common.clone(immersive), raw);
+});
 
 test('works in RichResponse', t => {
-  const rich = new RichResponse()
+  const rich = new RichResponse();
 
-  rich.add(new HtmlResponse({
-    url: 'https://example.com',
-  }))
+  rich.add(
+    new HtmlResponse({
+      url: 'https://example.com',
+    })
+  );
 
   const raw: Api.GoogleActionsV2RichResponse = {
     items: [
@@ -107,17 +109,19 @@ test('works in RichResponse', t => {
         },
       },
     ],
-  }
+  };
 
-  t.deepEqual(common.clone(rich), raw)
-})
+  t.deepEqual(common.clone(rich), raw);
+});
 
 test('DialogflowConversation serialized correctly', t => {
-  const conv = new DialogflowConversation()
+  const conv = new DialogflowConversation();
 
-  conv.ask(new HtmlResponse({
-    url: 'https://example.com',
-  }))
+  conv.ask(
+    new HtmlResponse({
+      url: 'https://example.com',
+    })
+  );
 
   const raw = {
     payload: {
@@ -134,17 +138,19 @@ test('DialogflowConversation serialized correctly', t => {
         },
       },
     },
-  }
+  };
 
-  t.deepEqual(common.clone(conv.serialize()), raw)
-})
+  t.deepEqual(common.clone(conv.serialize()), raw);
+});
 
 test('ActionsSdkConversation serialized correctly', t => {
-  const conv = new ActionsSdkConversation()
+  const conv = new ActionsSdkConversation();
 
-  conv.ask(new HtmlResponse({
-    url: 'https://example.com',
-  }))
+  conv.ask(
+    new HtmlResponse({
+      url: 'https://example.com',
+    })
+  );
 
   const raw = {
     expectUserResponse: true,
@@ -168,7 +174,7 @@ test('ActionsSdkConversation serialized correctly', t => {
         },
       },
     ],
-  }
+  };
 
-  t.deepEqual(common.clone(conv.serialize()), raw)
-})
+  t.deepEqual(common.clone(conv.serialize()), raw);
+});

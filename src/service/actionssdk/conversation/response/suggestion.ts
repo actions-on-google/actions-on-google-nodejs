@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import * as Api from '../../api/v2'
-import { toArray } from '../../../../common'
+import * as Api from '../../api/v2';
+import {toArray} from '../../../../common';
 
 /**
  * Suggestions to show with response.
@@ -23,7 +23,7 @@ import { toArray } from '../../../../common'
  */
 export class Suggestions {
   /** @public */
-  suggestions: Api.GoogleActionsV2UiElementsSuggestion[] = []
+  suggestions: Api.GoogleActionsV2UiElementsSuggestion[] = [];
 
   /**
    * @param suggestions Texts of the suggestions.
@@ -31,13 +31,13 @@ export class Suggestions {
    */
   constructor(...suggestions: (string[] | string)[]) {
     for (const suggestion of suggestions) {
-      this.add(...toArray(suggestion))
+      this.add(...toArray(suggestion));
     }
   }
 
   /** @public */
   add(...suggestions: string[]) {
-    this.suggestions.push(...suggestions.map(title => ({ title })))
-    return this
+    this.suggestions.push(...suggestions.map(title => ({title})));
+    return this;
   }
 }

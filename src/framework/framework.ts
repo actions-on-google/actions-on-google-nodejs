@@ -14,44 +14,47 @@
  * limitations under the License.
  */
 
-import { ExpressHandler, Express, ExpressMetadata, express } from './express'
-import { LambdaHandler, Lambda, LambdaMetadata, lambda } from './lambda'
-import { JsonObject } from '../common'
+import {ExpressHandler, Express, ExpressMetadata, express} from './express';
+import {LambdaHandler, Lambda, LambdaMetadata, lambda} from './lambda';
+import {JsonObject} from '../common';
 
 export interface Frameworks {
   /** @public */
-  [name: string]: Framework<Function>
+  [name: string]: Framework<Function>;
 }
 
 /** @public */
 export interface Framework<THandler> {
   /** @public */
-  handle(base: StandardHandler): THandler
+  handle(base: StandardHandler): THandler;
 
   /** @public */
   // tslint:disable-next-line:no-any detect if it is the correct framework from any parameter type
-  check(...args: any[]): boolean
+  check(...args: any[]): boolean;
 }
 
 /** @public */
-export interface OmniHandler extends StandardHandler, ExpressHandler, LambdaHandler {
+export interface OmniHandler
+  extends StandardHandler,
+    ExpressHandler,
+    LambdaHandler {
   /** @public */
   // tslint:disable-next-line:no-any allow any inputs and outputs depending on framework
-  (...args: any[]): any
+  (...args: any[]): any;
 }
 
 export interface FrameworkMetadata {
   /** @public */
   // tslint:disable-next-line:no-any allow any framework metadata
-  [name: string]: any
+  [name: string]: any;
 }
 
 export interface BuiltinFrameworkMetadata extends FrameworkMetadata {
   /** @public */
-  express?: ExpressMetadata
+  express?: ExpressMetadata;
 
   /** @public */
-  lambda?: LambdaMetadata
+  lambda?: LambdaMetadata;
 }
 
 export interface BuiltinFrameworks extends Frameworks {
@@ -59,37 +62,37 @@ export interface BuiltinFrameworks extends Frameworks {
    * Plug and play web framework support for express using body-parser
    * @public
    */
-  express: Express
+  express: Express;
 
   /**
    * Plug and play web framework support for lambda API gateway
    * @public
    */
-  lambda: Lambda
+  lambda: Lambda;
 }
 
 /** @hidden */
 export const builtin: BuiltinFrameworks = {
   express,
   lambda,
-}
+};
 
 /** @public */
 export interface StandardResponse {
   /** @public */
-  status: number
+  status: number;
 
   /** @public */
-  body: JsonObject
+  body: JsonObject;
 
   /** @public */
-  headers?: Headers
+  headers?: Headers;
 }
 
 /** @public */
 export interface Headers {
   /** @public */
-  [header: string]: string | string[] | undefined
+  [header: string]: string | string[] | undefined;
 }
 
 /** @public */
@@ -103,6 +106,6 @@ export interface StandardHandler {
     headers: Headers,
 
     /** @public */
-    metadata?: BuiltinFrameworkMetadata,
-  ): Promise<StandardResponse>
+    metadata?: BuiltinFrameworkMetadata
+  ): Promise<StandardResponse>;
 }

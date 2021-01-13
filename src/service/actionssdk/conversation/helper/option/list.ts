@@ -14,20 +14,20 @@
  * limitations under the License.
  */
 
-import * as Api from '../../../api/v2'
-import { Helper } from '../helper'
-import { OptionArgument, OptionItems, convert } from './option'
+import * as Api from '../../../api/v2';
+import {Helper} from '../helper';
+import {OptionArgument, OptionItems, convert} from './option';
 
 /** @public */
-export type ListArgument = OptionArgument
+export type ListArgument = OptionArgument;
 
 /** @public */
 export interface ListOptions {
   /** @public */
-  title?: string
+  title?: string;
 
   /** @public */
-  items: OptionItems | Api.GoogleActionsV2UiElementsListSelectListItem[]
+  items: OptionItems | Api.GoogleActionsV2UiElementsListSelectListItem[];
 }
 
 /**
@@ -109,9 +109,11 @@ export class List extends Helper<
       data: {
         listSelect: {
           title: options.title,
-          items: Array.isArray(options.items) ? options.items : convert(options.items),
+          items: Array.isArray(options.items)
+            ? options.items
+            : convert(options.items),
         },
       },
-    })
+    });
   }
 }

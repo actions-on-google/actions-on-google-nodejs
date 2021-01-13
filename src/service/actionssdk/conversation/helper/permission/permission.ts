@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-import * as Api from '../../../api/v2'
-import { SoloHelper } from '../helper'
-import { toArray } from '../../../../../common'
+import * as Api from '../../../api/v2';
+import {SoloHelper} from '../helper';
+import {toArray} from '../../../../../common';
 
 /** @public */
-export type PermissionArgument = boolean
+export type PermissionArgument = boolean;
 
 /** @public */
 export interface PermissionOptions {
@@ -28,22 +28,23 @@ export interface PermissionOptions {
    * It's the TTS prompt prefix (action phrase) we ask the user.
    * @public
    */
-  context?: string
+  context?: string;
 
   /**
    * Array or string of permissions App supports,
    * each of which comes from {@link GoogleActionsV2PermissionValueSpecPermissions}.
    * @public
    */
-  permissions: Api.GoogleActionsV2PermissionValueSpecPermissions |
-    Api.GoogleActionsV2PermissionValueSpecPermissions[]
+  permissions:
+    | Api.GoogleActionsV2PermissionValueSpecPermissions
+    | Api.GoogleActionsV2PermissionValueSpecPermissions[];
 
   /**
    * Extra properties to be spread into the value.
    * For advanced usages like used in {@link UpdatePermission}
    * @public
    */
-  extra?: Api.GoogleActionsV2PermissionValueSpec
+  extra?: Api.GoogleActionsV2PermissionValueSpec;
 }
 
 /**
@@ -130,6 +131,6 @@ export class Permission extends SoloHelper<
         permissions: toArray(options.permissions),
         ...options.extra,
       },
-    })
+    });
   }
 }

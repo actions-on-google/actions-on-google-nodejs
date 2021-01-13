@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-import * as Api from '../../api/v2'
-import { Helper } from './helper'
-import { ProtoAny, deprecate } from '../../../../common'
-import { DialogSpec } from '../conversation'
+import * as Api from '../../api/v2';
+import {Helper} from './helper';
+import {ProtoAny, deprecate} from '../../../../common';
+import {DialogSpec} from '../conversation';
 
 /**
  * @public
@@ -28,32 +28,32 @@ export interface DeepLinkOptions {
    * The name of the link destination.
    * @public
    */
-  destination: string
+  destination: string;
 
   /**
    * URL of Android deep link.
    * @public
    */
-  url: string
+  url: string;
 
   /**
    * Android app package name to which to link.
    * @public
    */
-  package: string
+  package: string;
 
   /**
    * The reason to transfer the user. This may be appended to a Google-specified prompt.
    * @public
    */
-  reason?: string
+  reason?: string;
 }
 
 /**
  * @public
  * @deprecated
  */
-export type DeepLinkArgument = undefined
+export type DeepLinkArgument = undefined;
 
 /**
  * Requests the user to transfer to a linked out Android app intent. Using this feature
@@ -116,13 +116,17 @@ export class DeepLink extends Helper<
    * @public
    */
   constructor(options: DeepLinkOptions) {
-    deprecate('DeepLink', 'Access will be by request only')
+    deprecate('DeepLink', 'Access will be by request only');
 
-    const extension: ProtoAny<DialogSpec, Api.GoogleActionsV2LinkValueSpecLinkDialogSpec> = {
-      '@type': 'type.googleapis.com/google.actions.v2.LinkValueSpec.LinkDialogSpec',
+    const extension: ProtoAny<
+      DialogSpec,
+      Api.GoogleActionsV2LinkValueSpecLinkDialogSpec
+    > = {
+      '@type':
+        'type.googleapis.com/google.actions.v2.LinkValueSpec.LinkDialogSpec',
       destinationName: options.destination,
       requestLinkReason: options.reason,
-    }
+    };
 
     super({
       intent: 'actions.intent.LINK',
@@ -138,6 +142,6 @@ export class DeepLink extends Helper<
           extension,
         },
       },
-    })
+    });
   }
 }

@@ -14,41 +14,41 @@
  * limitations under the License.
  */
 
-import test from 'ava'
-import * as sinon from 'sinon'
+import test from 'ava';
+import * as sinon from 'sinon';
 
-import * as common from '../../../../common'
+import * as common from '../../../../common';
 
-import { User, Profile } from '../user'
+import {User, Profile} from '../user';
 
 test('user creates profile object', t => {
-  const user = new User()
-  t.true(user.profile instanceof Profile)
-})
+  const user = new User();
+  t.true(user.profile instanceof Profile);
+});
 
 test('profile reads idToken', t => {
-  const token = 'test'
+  const token = 'test';
   const profile = new Profile({
     idToken: token,
-  })
-  t.is(profile.token, token)
-})
+  });
+  t.is(profile.token, token);
+});
 
 test('user profile reads idToken', t => {
-  const token = 'test'
+  const token = 'test';
   const user = new User({
     idToken: token,
-  })
-  t.is(user.profile.token, token)
-})
+  });
+  t.is(user.profile.token, token);
+});
 
 test('user reads userId', t => {
-  const id = 'test'
+  const id = 'test';
   const user = new User({
     userId: id,
-  })
-  const stub = sinon.stub(common, 'deprecate')
-  t.is(user.id, id)
-  t.true(stub.called)
-  stub.restore()
-})
+  });
+  const stub = sinon.stub(common, 'deprecate');
+  t.is(user.id, id);
+  t.true(stub.called);
+  stub.restore();
+});

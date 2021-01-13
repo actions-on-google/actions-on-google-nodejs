@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-import test from 'ava'
-import * as common from '../../../../../../common'
-import { Table } from '../table'
-import { Image } from '../../image'
-import { Button } from '..'
+import test from 'ava';
+import * as common from '../../../../../../common';
+import {Table} from '../table';
+import {Image} from '../../image';
+import {Button} from '..';
 
 test('basic complete use case works', t => {
   const table = new Table({
@@ -78,7 +78,7 @@ test('basic complete use case works', t => {
         url: 'button url',
       }),
     ],
-  })
+  });
   t.deepEqual(common.clone(table), {
     title: 'title',
     subtitle: 'subtitle',
@@ -138,8 +138,8 @@ test('basic complete use case works', t => {
         },
       },
     ],
-  })
-})
+  });
+});
 
 test('strings as rows work', t => {
   const table = new Table({
@@ -161,7 +161,7 @@ test('strings as rows work', t => {
       ['first', 'second', 'third'],
       ['first 2', 'second 2', 'third 2'],
     ],
-  })
+  });
   t.deepEqual(common.clone(table), {
     rows: [
       {
@@ -205,8 +205,8 @@ test('strings as rows work', t => {
         horizontalAlignment: 'TRAILING',
       },
     ],
-  })
-})
+  });
+});
 
 test('rows work with default dividers true', t => {
   const table = new Table({
@@ -253,7 +253,7 @@ test('rows work with default dividers true', t => {
       },
     ],
     dividers: true,
-  })
+  });
   t.deepEqual(common.clone(table), {
     rows: [
       {
@@ -299,8 +299,8 @@ test('rows work with default dividers true', t => {
         horizontalAlignment: 'TRAILING',
       },
     ],
-  })
-})
+  });
+});
 
 test('rows work with default dividers true and overridden by dividerAfter', t => {
   const table = new Table({
@@ -349,7 +349,7 @@ test('rows work with default dividers true and overridden by dividerAfter', t =>
       },
     ],
     dividers: true,
-  })
+  });
   t.deepEqual(common.clone(table), {
     rows: [
       {
@@ -395,8 +395,8 @@ test('rows work with default dividers true and overridden by dividerAfter', t =>
         horizontalAlignment: 'TRAILING',
       },
     ],
-  })
-})
+  });
+});
 
 test('rows work with default dividers false and overridden by dividerAfter', t => {
   const table = new Table({
@@ -445,7 +445,7 @@ test('rows work with default dividers false and overridden by dividerAfter', t =
       },
     ],
     dividers: false,
-  })
+  });
   t.deepEqual(common.clone(table), {
     rows: [
       {
@@ -491,8 +491,8 @@ test('rows work with default dividers false and overridden by dividerAfter', t =
         horizontalAlignment: 'TRAILING',
       },
     ],
-  })
-})
+  });
+});
 
 test('strings as rows work with default dividers true', t => {
   const table = new Table({
@@ -515,7 +515,7 @@ test('strings as rows work with default dividers true', t => {
       ['first 2', 'second 2', 'third 2'],
     ],
     dividers: true,
-  })
+  });
   t.deepEqual(common.clone(table), {
     rows: [
       {
@@ -561,8 +561,8 @@ test('strings as rows work with default dividers true', t => {
         horizontalAlignment: 'TRAILING',
       },
     ],
-  })
-})
+  });
+});
 
 test('strings as rows work with default dividers false', t => {
   const table = new Table({
@@ -585,7 +585,7 @@ test('strings as rows work with default dividers false', t => {
       ['first 2', 'second 2', 'third 2'],
     ],
     dividers: false,
-  })
+  });
   t.deepEqual(common.clone(table), {
     rows: [
       {
@@ -631,8 +631,8 @@ test('strings as rows work with default dividers false', t => {
         horizontalAlignment: 'TRAILING',
       },
     ],
-  })
-})
+  });
+});
 
 test('raw columnProperties works with align alias', t => {
   const table = new Table({
@@ -678,7 +678,7 @@ test('raw columnProperties works with align alias', t => {
         ],
       },
     ],
-  })
+  });
   t.deepEqual(common.clone(table), {
     rows: [
       {
@@ -722,8 +722,8 @@ test('raw columnProperties works with align alias', t => {
         horizontalAlignment: 'TRAILING',
       },
     ],
-  })
-})
+  });
+});
 
 test('raw columnProperties works with raw alignment property', t => {
   const table = new Table({
@@ -769,7 +769,7 @@ test('raw columnProperties works with raw alignment property', t => {
         ],
       },
     ],
-  })
+  });
   t.deepEqual(common.clone(table), {
     rows: [
       {
@@ -813,8 +813,8 @@ test('raw columnProperties works with raw alignment property', t => {
         horizontalAlignment: 'TRAILING',
       },
     ],
-  })
-})
+  });
+});
 
 test('columns works with raw alignment property', t => {
   const table = new Table({
@@ -860,7 +860,7 @@ test('columns works with raw alignment property', t => {
         ],
       },
     ],
-  })
+  });
   t.deepEqual(common.clone(table), {
     rows: [
       {
@@ -904,8 +904,8 @@ test('columns works with raw alignment property', t => {
         horizontalAlignment: 'TRAILING',
       },
     ],
-  })
-})
+  });
+});
 
 test('columns works with number', t => {
   const table = new Table({
@@ -938,7 +938,7 @@ test('columns works with number', t => {
         ],
       },
     ],
-  })
+  });
   t.deepEqual(common.clone(table), {
     rows: [
       {
@@ -968,13 +968,9 @@ test('columns works with number', t => {
         ],
       },
     ],
-    columnProperties: [
-      {},
-      {},
-      {},
-    ],
-  })
-})
+    columnProperties: [{}, {}, {}],
+  });
+});
 
 test('columns works with number and columnProperties already set', t => {
   const table = new Table({
@@ -1012,7 +1008,7 @@ test('columns works with number and columnProperties already set', t => {
         ],
       },
     ],
-  })
+  });
   t.deepEqual(common.clone(table), {
     rows: [
       {
@@ -1049,8 +1045,8 @@ test('columns works with number and columnProperties already set', t => {
       {},
       {},
     ],
-  })
-})
+  });
+});
 
 test('a single Button works', t => {
   const table = new Table({
@@ -1100,7 +1096,7 @@ test('a single Button works', t => {
       title: 'title',
       url: 'button url',
     }),
-  })
+  });
   t.deepEqual(common.clone(table), {
     rows: [
       {
@@ -1152,8 +1148,8 @@ test('a single Button works', t => {
         },
       },
     ],
-  })
-})
+  });
+});
 
 test('cells as strings works', t => {
   const table = new Table({
@@ -1181,7 +1177,7 @@ test('cells as strings works', t => {
         dividerAfter: true,
       },
     ],
-  })
+  });
   t.deepEqual(common.clone(table), {
     rows: [
       {
@@ -1227,8 +1223,8 @@ test('cells as strings works', t => {
         horizontalAlignment: 'TRAILING',
       },
     ],
-  })
-})
+  });
+});
 
 test('columns as strings work', t => {
   const table = new Table({
@@ -1261,7 +1257,7 @@ test('columns as strings work', t => {
         ],
       },
     ],
-  })
+  });
   t.deepEqual(common.clone(table), {
     rows: [
       {
@@ -1302,5 +1298,5 @@ test('columns as strings work', t => {
         header: 'column 2',
       },
     ],
-  })
-})
+  });
+});

@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-import * as Api from '../api/v2'
-import { Headers } from '../../../framework'
-import { Surface, Available } from './surface'
-import { User } from './user'
+import * as Api from '../api/v2';
+import {Headers} from '../../../framework';
+import {Surface, Available} from './surface';
+import {User} from './user';
 import {
   Image,
   BasicCard,
@@ -31,118 +31,123 @@ import {
   BrowseCarousel,
   OrderUpdate,
   LinkOutSuggestion,
-} from './response'
-import { Helper, SoloHelper, TransactionDecision, TransactionRequirements } from './helper'
-import { Arguments } from './argument'
-import { Device } from './device'
-import { Input } from './input'
-import { JsonObject } from '../../../common'
-import { ServiceBaseApp, AppOptions } from '../../../assistant'
-import { OAuth2Client } from 'google-auth-library'
-import { Canvas } from './canvas'
+} from './response';
+import {
+  Helper,
+  SoloHelper,
+  TransactionDecision,
+  TransactionRequirements,
+} from './helper';
+import {Arguments} from './argument';
+import {Device} from './device';
+import {Input} from './input';
+import {JsonObject} from '../../../common';
+import {ServiceBaseApp, AppOptions} from '../../../assistant';
+import {OAuth2Client} from 'google-auth-library';
+import {Canvas} from './canvas';
 
 /** @public */
 export type Intent =
-  'actions.intent.MAIN' |
-  'actions.intent.TEXT' |
-  'actions.intent.PERMISSION' |
-  'actions.intent.OPTION' |
-  'actions.intent.TRANSACTION_REQUIREMENTS_CHECK' |
-  'actions.intent.DELIVERY_ADDRESS' |
-  'actions.intent.TRANSACTION_DECISION' |
-  'actions.intent.CONFIRMATION' |
-  'actions.intent.DATETIME' |
-  'actions.intent.SIGN_IN' |
-  'actions.intent.NO_INPUT' |
-  'actions.intent.CANCEL' |
-  'actions.intent.NEW_SURFACE' |
-  'actions.intent.REGISTER_UPDATE' |
-  'actions.intent.CONFIGURE_UPDATES' |
-  'actions.intent.PLACE' |
-  'actions.intent.LINK' |
-  'actions.intent.MEDIA_STATUS' |
-  'actions.intent.COMPLETE_PURCHASE' |
-  'actions.intent.DIGITAL_PURCHASE_CHECK'
+  | 'actions.intent.MAIN'
+  | 'actions.intent.TEXT'
+  | 'actions.intent.PERMISSION'
+  | 'actions.intent.OPTION'
+  | 'actions.intent.TRANSACTION_REQUIREMENTS_CHECK'
+  | 'actions.intent.DELIVERY_ADDRESS'
+  | 'actions.intent.TRANSACTION_DECISION'
+  | 'actions.intent.CONFIRMATION'
+  | 'actions.intent.DATETIME'
+  | 'actions.intent.SIGN_IN'
+  | 'actions.intent.NO_INPUT'
+  | 'actions.intent.CANCEL'
+  | 'actions.intent.NEW_SURFACE'
+  | 'actions.intent.REGISTER_UPDATE'
+  | 'actions.intent.CONFIGURE_UPDATES'
+  | 'actions.intent.PLACE'
+  | 'actions.intent.LINK'
+  | 'actions.intent.MEDIA_STATUS'
+  | 'actions.intent.COMPLETE_PURCHASE'
+  | 'actions.intent.DIGITAL_PURCHASE_CHECK';
 
 /** @hidden */
 export type InputValueSpec =
-  'type.googleapis.com/google.actions.v2.PermissionValueSpec' |
-  'type.googleapis.com/google.actions.v2.OptionValueSpec' |
-  'type.googleapis.com/google.actions.v2.TransactionRequirementsCheckSpec' |
-  'type.googleapis.com/google.actions.v2.DeliveryAddressValueSpec' |
-  'type.googleapis.com/google.actions.v2.TransactionDecisionValueSpec' |
-  'type.googleapis.com/google.actions.v2.ConfirmationValueSpec' |
-  'type.googleapis.com/google.actions.v2.DateTimeValueSpec' |
-  'type.googleapis.com/google.actions.v2.NewSurfaceValueSpec' |
-  'type.googleapis.com/google.actions.v2.RegisterUpdateValueSpec' |
-  'type.googleapis.com/google.actions.v2.SignInValueSpec' |
-  'type.googleapis.com/google.actions.v2.PlaceValueSpec' |
-  'type.googleapis.com/google.actions.v2.LinkValueSpec' |
-  'type.googleapis.com/google.actions.transactions.v3.CompletePurchaseValueSpec' |
-  'type.googleapis.com/google.actions.transactions.v3.TransactionDecisionValueSpec' |
-  'type.googleapis.com/google.actions.transactions.v3.TransactionRequirementsCheckSpec' |
-  'type.googleapis.com/google.actions.transactions.v3.DigitalPurchaseCheckSpec'
+  | 'type.googleapis.com/google.actions.v2.PermissionValueSpec'
+  | 'type.googleapis.com/google.actions.v2.OptionValueSpec'
+  | 'type.googleapis.com/google.actions.v2.TransactionRequirementsCheckSpec'
+  | 'type.googleapis.com/google.actions.v2.DeliveryAddressValueSpec'
+  | 'type.googleapis.com/google.actions.v2.TransactionDecisionValueSpec'
+  | 'type.googleapis.com/google.actions.v2.ConfirmationValueSpec'
+  | 'type.googleapis.com/google.actions.v2.DateTimeValueSpec'
+  | 'type.googleapis.com/google.actions.v2.NewSurfaceValueSpec'
+  | 'type.googleapis.com/google.actions.v2.RegisterUpdateValueSpec'
+  | 'type.googleapis.com/google.actions.v2.SignInValueSpec'
+  | 'type.googleapis.com/google.actions.v2.PlaceValueSpec'
+  | 'type.googleapis.com/google.actions.v2.LinkValueSpec'
+  | 'type.googleapis.com/google.actions.transactions.v3.CompletePurchaseValueSpec'
+  | 'type.googleapis.com/google.actions.transactions.v3.TransactionDecisionValueSpec'
+  | 'type.googleapis.com/google.actions.transactions.v3.TransactionRequirementsCheckSpec'
+  | 'type.googleapis.com/google.actions.transactions.v3.DigitalPurchaseCheckSpec';
 
 /** @hidden */
 export type DialogSpec =
-  'type.googleapis.com/google.actions.v2.PlaceValueSpec.PlaceDialogSpec' |
-  'type.googleapis.com/google.actions.v2.LinkValueSpec.LinkDialogSpec'
+  | 'type.googleapis.com/google.actions.v2.PlaceValueSpec.PlaceDialogSpec'
+  | 'type.googleapis.com/google.actions.v2.LinkValueSpec.LinkDialogSpec';
 
 /** @public */
 export type Response =
-  RichResponse |
-  RichResponseItem |
-  Image |
-  Suggestions |
-  MediaObject |
-  Helper<Intent, JsonObject>
+  | RichResponse
+  | RichResponseItem
+  | Image
+  | Suggestions
+  | MediaObject
+  | Helper<Intent, JsonObject>;
 
 /** @hidden */
 export interface ConversationResponse {
-  richResponse: Api.GoogleActionsV2RichResponse
-  expectUserResponse: boolean
-  userStorage: string
-  expectedIntent?: Api.GoogleActionsV2ExpectedIntent
-  noInputPrompts?: Api.GoogleActionsV2SimpleResponse[]
-  speechBiasingHints?: string[]
+  richResponse: Api.GoogleActionsV2RichResponse;
+  expectUserResponse: boolean;
+  userStorage: string;
+  expectedIntent?: Api.GoogleActionsV2ExpectedIntent;
+  noInputPrompts?: Api.GoogleActionsV2SimpleResponse[];
+  speechBiasingHints?: string[];
 }
 
 export interface ConversationOptionsInit<TConvData, TUserStorage> {
   /** @public */
-  data?: TConvData
+  data?: TConvData;
 
   /** @public */
-  storage?: TUserStorage
+  storage?: TUserStorage;
 }
 
 /** @hidden */
 export interface ConversationBaseOptions<TConvData, TUserStorage> {
   /** @public */
-  headers?: Headers
+  headers?: Headers;
 
   /** @public */
-  init?: ConversationOptionsInit<TConvData, TUserStorage>
+  init?: ConversationOptionsInit<TConvData, TUserStorage>;
 
   /** @public */
-  debug?: boolean
+  debug?: boolean;
 
   /** @public */
-  ordersv3?: boolean
+  ordersv3?: boolean;
 }
 
 /** @hidden */
 export interface ConversationOptions<TUserStorage> {
   /** @public */
-  request?: Api.GoogleActionsV2AppRequest
+  request?: Api.GoogleActionsV2AppRequest;
 
   /** @public */
-  headers?: Headers
+  headers?: Headers;
 
   /** @public */
-  init?: ConversationOptionsInit<{}, TUserStorage>
+  init?: ConversationOptionsInit<{}, TUserStorage>;
 
   /** @public */
-  ordersv3?: boolean
+  ordersv3?: boolean;
 }
 
 /**
@@ -172,30 +177,30 @@ export interface ConversationOptions<TUserStorage> {
  *
  * @public
  */
-export class UnauthorizedError extends Error { }
+export class UnauthorizedError extends Error {}
 
 /** @public */
 export class Conversation<TUserStorage> {
   /** @public */
-  request: Api.GoogleActionsV2AppRequest
+  request: Api.GoogleActionsV2AppRequest;
 
   /** @public */
-  headers: Headers
+  headers: Headers;
 
   /** @public */
-  responses: Response[] = []
+  responses: Response[] = [];
 
   /** @public */
-  expectUserResponse = true
+  expectUserResponse = true;
 
   /** @public */
-  surface: Surface
+  surface: Surface;
 
   /** @public */
-  available: Available
+  available: Available;
 
   /** @public */
-  digested = false
+  digested = false;
 
   /**
    * True if the app is being tested in sandbox mode. Enable sandbox
@@ -203,10 +208,10 @@ export class Conversation<TUserStorage> {
    * transactions.
    * @public
    */
-  sandbox: boolean
+  sandbox: boolean;
 
   /** @public */
-  input: Input
+  input: Input;
 
   /**
    * Gets the {@link User} object.
@@ -215,16 +220,16 @@ export class Conversation<TUserStorage> {
    * see {@link Permission|conv.ask(new Permission)}).
    * @public
    */
-  user: User<TUserStorage>
+  user: User<TUserStorage>;
 
   /** @public */
-  arguments: Arguments
+  arguments: Arguments;
 
   /** @public */
-  device: Device
+  device: Device;
 
   /** @public */
-  canvas: Canvas
+  canvas: Canvas;
 
   /**
    * Gets the unique conversation ID. It's a new ID for the initial query,
@@ -240,17 +245,17 @@ export class Conversation<TUserStorage> {
    *
    * @public
    */
-  id: string
+  id: string;
 
   /** @public */
-  type: Api.GoogleActionsV2ConversationType
+  type: Api.GoogleActionsV2ConversationType;
 
   /**
    * Shortcut for
    * {@link Capabilities|conv.surface.capabilities.has('actions.capability.SCREEN_OUTPUT')}
    * @public
    */
-  screen: boolean
+  screen: boolean;
 
   /**
    * Set reprompts when users don't provide input to this action (no-input errors).
@@ -277,7 +282,7 @@ export class Conversation<TUserStorage> {
    *
    * @public
    */
-  noInputs: (string | SimpleResponse)[] = []
+  noInputs: (string | SimpleResponse)[] = [];
 
   /**
    * Sets speech biasing options.
@@ -293,71 +298,75 @@ export class Conversation<TUserStorage> {
    *
    * @public
    */
-  speechBiasing: string[] = []
+  speechBiasing: string[] = [];
 
   /** @hidden */
-  _raw?: JsonObject
+  _raw?: JsonObject;
 
   /** @hidden */
-  _responded = false
+  _responded = false;
 
   /** @hidden */
-  _init: ConversationOptionsInit<{}, TUserStorage>
+  _init: ConversationOptionsInit<{}, TUserStorage>;
 
   /** @hidden */
-  _ordersv3 = false
+  _ordersv3 = false;
 
   /** @hidden */
   constructor(options: ConversationOptions<TUserStorage> = {}) {
-    const { request = {}, headers = {}, init = {}, ordersv3 = false } = options
+    const {request = {}, headers = {}, init = {}, ordersv3 = false} = options;
 
-    this.request = request
-    this.headers = headers
-    this._init = init
-    this._ordersv3 = ordersv3
+    this.request = request;
+    this.headers = headers;
+    this._init = init;
+    this._ordersv3 = ordersv3;
 
-    this.sandbox = !!this.request.isInSandbox
+    this.sandbox = !!this.request.isInSandbox;
 
-    const { inputs = [], conversation = {} } = this.request
-    const [input = {}] = inputs
-    const { rawInputs = [] } = input
+    const {inputs = [], conversation = {}} = this.request;
+    const [input = {}] = inputs;
+    const {rawInputs = []} = input;
 
-    this.input = new Input(rawInputs[0])
-    this.surface = new Surface(this.request.surface)
-    this.available = new Available(this.request.availableSurfaces)
+    this.input = new Input(rawInputs[0]);
+    this.surface = new Surface(this.request.surface);
+    this.available = new Available(this.request.availableSurfaces);
 
-    this.user = new User(this.request.user, this._init.storage)
+    this.user = new User(this.request.user, this._init.storage);
 
-    this.arguments = new Arguments(input.arguments)
+    this.arguments = new Arguments(input.arguments);
 
-    this.device = new Device(this.request.device)
+    this.device = new Device(this.request.device);
 
-    this.canvas = new Canvas(input)
+    this.canvas = new Canvas(input);
 
-    this.id = conversation.conversationId!
+    this.id = conversation.conversationId!;
 
-    this.type = conversation.type!
+    this.type = conversation.type!;
 
-    this.screen = this.surface.capabilities.has('actions.capability.SCREEN_OUTPUT')
+    this.screen = this.surface.capabilities.has(
+      'actions.capability.SCREEN_OUTPUT'
+    );
   }
 
   /** @public */
   json<T = JsonObject>(json: T) {
-    this._raw = json
-    this._responded = true
-    return this
+    this._raw = json;
+    this._responded = true;
+    return this;
   }
 
   /** @public */
   add(...responses: Response[]) {
     if (this.digested) {
-      throw new Error('Response has already been sent. ' +
-        'Is this being used in an async call that was not ' +
-        'returned as a promise to the intent handler?')
+      throw new Error(
+        'Response has already been sent. ' +
+          'Is this being used in an async call that was not ' +
+          'returned as a promise to the intent handler?'
+      );
     }
-    this.responses.push(...responses)
-    this._responded = true
-    return this
+    this.responses.push(...responses);
+    this._responded = true;
+    return this;
   }
 
   /**
@@ -402,8 +411,8 @@ export class Conversation<TUserStorage> {
    * @public
    */
   ask(...responses: Response[]) {
-    this.expectUserResponse = true
-    return this.add(...responses)
+    this.expectUserResponse = true;
+    return this.add(...responses);
   }
 
   /**
@@ -446,67 +455,70 @@ export class Conversation<TUserStorage> {
    * @public
    */
   close(...responses: Response[]) {
-    this.expectUserResponse = false
-    return this.add(...responses)
+    this.expectUserResponse = false;
+    return this.add(...responses);
   }
 
   /** @public */
   response(): ConversationResponse {
     if (!this._responded) {
-      throw new Error('No response has been set. ' +
-        'Is this being used in an async call that was not ' +
-        'returned as a promise to the intent handler?')
+      throw new Error(
+        'No response has been set. ' +
+          'Is this being used in an async call that was not ' +
+          'returned as a promise to the intent handler?'
+      );
     }
     if (this.digested) {
-      throw new Error('Response has already been digested')
+      throw new Error('Response has already been digested');
     }
-    this.digested = true
-    const { expectUserResponse } = this
-    let richResponse = new RichResponse()
-    let expectedIntent: Api.GoogleActionsV2ExpectedIntent | undefined
-    let requireSimpleResponse = false
+    this.digested = true;
+    const {expectUserResponse} = this;
+    let richResponse = new RichResponse();
+    let expectedIntent: Api.GoogleActionsV2ExpectedIntent | undefined;
+    let requireSimpleResponse = false;
     for (const response of this.responses) {
       if (typeof response === 'string') {
-        richResponse.add(response)
-        continue
+        richResponse.add(response);
+        continue;
       }
       if (response instanceof Helper) {
         if (!(response instanceof SoloHelper)) {
-          requireSimpleResponse = true
+          requireSimpleResponse = true;
         }
         if (this._ordersv3) {
-          let type: InputValueSpec | null = null
+          let type: InputValueSpec | null = null;
           if (response instanceof TransactionDecision) {
-            type = 'type.googleapis.com/google.actions.transactions.v3.TransactionDecisionValueSpec'
+            type =
+              'type.googleapis.com/google.actions.transactions.v3.TransactionDecisionValueSpec';
           } else if (response instanceof TransactionRequirements) {
             type =
-              'type.googleapis.com/google.actions.transactions.v3.TransactionRequirementsCheckSpec'
+              'type.googleapis.com/google.actions.transactions.v3.TransactionRequirementsCheckSpec';
           }
           if (type !== null) {
-            response.inputValueData['@type'] = type
+            response.inputValueData['@type'] = type;
           }
         }
-        expectedIntent = response
-        continue
+        expectedIntent = response;
+        continue;
       }
       if (response instanceof RichResponse) {
-        richResponse = response
-        continue
+        richResponse = response;
+        continue;
       }
       if (response instanceof Suggestions) {
-        requireSimpleResponse = true
-        richResponse.addSuggestion(response)
-        continue
+        requireSimpleResponse = true;
+        richResponse.addSuggestion(response);
+        continue;
       }
       if (response instanceof Image) {
-        requireSimpleResponse = true
-        richResponse.add(new BasicCard({ image: response }))
-        continue
+        requireSimpleResponse = true;
+        richResponse.add(new BasicCard({image: response}));
+        continue;
       }
       if (response instanceof MediaObject) {
-        requireSimpleResponse = true
-        richResponse.add(new MediaResponse(response))
-        continue
+        requireSimpleResponse = true;
+        richResponse.add(new MediaResponse(response));
+        continue;
       }
       if (
         response instanceof BasicCard ||
@@ -516,48 +528,55 @@ export class Conversation<TUserStorage> {
         response instanceof OrderUpdate ||
         response instanceof LinkOutSuggestion
       ) {
-        requireSimpleResponse = true
-        richResponse.add(response)
-        continue
+        requireSimpleResponse = true;
+        richResponse.add(response);
+        continue;
       }
-      richResponse.add(response)
+      richResponse.add(response);
     }
     if (this._ordersv3) {
       for (const response of richResponse.items!) {
-        const { structuredResponse } = response
+        const {structuredResponse} = response;
         if (structuredResponse && structuredResponse.orderUpdate) {
-          response.structuredResponse = { orderUpdateV3: structuredResponse.orderUpdate }
+          response.structuredResponse = {
+            orderUpdateV3: structuredResponse.orderUpdate,
+          };
         }
       }
     }
-    let hasSimpleResponse = false
+    let hasSimpleResponse = false;
     for (const response of richResponse.items!) {
       if (response.simpleResponse) {
-        hasSimpleResponse = true
-        break
+        hasSimpleResponse = true;
+        break;
       }
     }
     if (requireSimpleResponse && !hasSimpleResponse) {
-      throw new Error('A simple response is required in addition to this type of response')
+      throw new Error(
+        'A simple response is required in addition to this type of response'
+      );
     }
-    const userStorageIn = (new User(this.user.raw, this._init.storage))._serialize()
-    const userStorageOut = this.user._serialize()
-    const userStorage = userStorageOut === userStorageIn ? '' : userStorageOut
+    const userStorageIn = new User(
+      this.user.raw,
+      this._init.storage
+    )._serialize();
+    const userStorageOut = this.user._serialize();
+    const userStorage = userStorageOut === userStorageIn ? '' : userStorageOut;
     const response: ConversationResponse = {
       expectUserResponse,
       richResponse,
       userStorage,
       expectedIntent,
-    }
+    };
     if (this.noInputs.length > 0) {
       response.noInputPrompts = this.noInputs.map(prompt => {
-        return (typeof prompt === 'string') ? new SimpleResponse(prompt) : prompt
-      })
+        return typeof prompt === 'string' ? new SimpleResponse(prompt) : prompt;
+      });
     }
     if (this.speechBiasing.length > 0) {
-      response.speechBiasingHints = this.speechBiasing
+      response.speechBiasingHints = this.speechBiasing;
     }
-    return response
+    return response;
   }
 }
 
@@ -567,50 +586,52 @@ export interface ExceptionHandler<
 > {
   /** @public */
   // tslint:disable-next-line:no-any allow to return any just detect if is promise
-  (conv: TConversation, error: Error): Promise<any> | any
+  (conv: TConversation, error: Error): Promise<any> | any;
 }
 
 /** @hidden */
 export interface Traversed {
-  [key: string]: boolean
+  [key: string]: boolean;
 }
 
 /** @hidden */
-export interface ConversationAppOptions<TConvData, TUserStorage> extends AppOptions {
+export interface ConversationAppOptions<TConvData, TUserStorage>
+  extends AppOptions {
   /** @public */
-  init?: () => ConversationOptionsInit<TConvData, TUserStorage>
+  init?: () => ConversationOptionsInit<TConvData, TUserStorage>;
 
   /**
    * Client ID for User Profile Payload Verification
    * See {@link Profile#payload|conv.user.profile.payload}
    * @public
    */
-  clientId?: string
+  clientId?: string;
 
   /** @public */
-  ordersv3?: boolean
+  ordersv3?: boolean;
 }
 
 export interface OAuth2ConfigClient {
   /** @public */
-  id: string
+  id: string;
 }
 
 export interface OAuth2Config {
   /** @public */
-  client: OAuth2ConfigClient
+  client: OAuth2ConfigClient;
 }
 
-export interface ConversationApp<TConvData, TUserStorage> extends ServiceBaseApp {
+export interface ConversationApp<TConvData, TUserStorage>
+  extends ServiceBaseApp {
   /** @public */
-  init?: () => ConversationOptionsInit<TConvData, TUserStorage>
+  init?: () => ConversationOptionsInit<TConvData, TUserStorage>;
 
   /** @public */
-  auth?: OAuth2Config
+  auth?: OAuth2Config;
 
   /** @public */
-  ordersv3: boolean
+  ordersv3: boolean;
 
   /** @hidden */
-  _client?: OAuth2Client
+  _client?: OAuth2Client;
 }

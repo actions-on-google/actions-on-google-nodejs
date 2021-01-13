@@ -14,52 +14,52 @@
  * limitations under the License.
  */
 
-import ava, { TestInterface } from 'ava'
-import { DialogflowConversation } from '../conv'
-import * as Api from '../api/v2'
-import * as ActionsApi from '../../actionssdk/api/v2'
-import { ContextValues } from '../context'
-import { Incoming } from '../incoming'
-import { clone } from '../../../common'
-import { Permission, SimpleResponse, Image, List } from '../../actionssdk'
+import ava, {TestInterface} from 'ava';
+import {DialogflowConversation} from '../conv';
+import * as Api from '../api/v2';
+import * as ActionsApi from '../../actionssdk/api/v2';
+import {ContextValues} from '../context';
+import {Incoming} from '../incoming';
+import {clone} from '../../../common';
+import {Permission, SimpleResponse, Image, List} from '../../actionssdk';
 
 interface AvaContext {
-  conv: DialogflowConversation
-  body: Api.GoogleCloudDialogflowV2WebhookRequest
-  request: ActionsApi.GoogleActionsV2AppRequest
+  conv: DialogflowConversation;
+  body: Api.GoogleCloudDialogflowV2WebhookRequest;
+  request: ActionsApi.GoogleActionsV2AppRequest;
 }
 
-const test = ava as TestInterface<AvaContext>
+const test = ava as TestInterface<AvaContext>;
 
 test.beforeEach(t => {
   t.context.request = {
     isInSandbox: true,
-  }
+  };
   t.context.body = {
     originalDetectIntentRequest: {
       payload: t.context.request,
     },
-  }
+  };
   t.context.conv = new DialogflowConversation({
     body: t.context.body,
     headers: {},
-  })
-})
+  });
+});
 
 test('conv can be instantiated', t => {
-  t.true(t.context.conv instanceof DialogflowConversation)
-})
+  t.true(t.context.conv instanceof DialogflowConversation);
+});
 
 test('conv.request is set correctly', t => {
-  t.is(t.context.conv.request, t.context.request)
-})
+  t.is(t.context.conv.request, t.context.request);
+});
 
 test('conv.body is set correctly', t => {
-  t.is(t.context.conv.body, t.context.body)
-})
+  t.is(t.context.conv.body, t.context.body);
+});
 
 test('conv.action is parsed correctly', t => {
-  const action = 'abc123'
+  const action = 'abc123';
   const conv = new DialogflowConversation({
     body: {
       queryResult: {
@@ -70,12 +70,12 @@ test('conv.action is parsed correctly', t => {
       },
     } as Api.GoogleCloudDialogflowV2WebhookRequest,
     headers: {},
-  })
-  t.is(conv.action, action)
-})
+  });
+  t.is(conv.action, action);
+});
 
 test('conv.intent is parsed correctly', t => {
-  const intent = 'abc123'
+  const intent = 'abc123';
   const conv = new DialogflowConversation({
     body: {
       queryResult: {
@@ -88,15 +88,15 @@ test('conv.intent is parsed correctly', t => {
       },
     } as Api.GoogleCloudDialogflowV2WebhookRequest,
     headers: {},
-  })
-  t.is(conv.intent, intent)
-})
+  });
+  t.is(conv.intent, intent);
+});
 
 test('conv.parameters is parsed correctly', t => {
   const parameters = {
     a: '1',
     b: '2',
-  }
+  };
   const conv = new DialogflowConversation({
     body: {
       queryResult: {
@@ -107,20 +107,20 @@ test('conv.parameters is parsed correctly', t => {
       },
     } as Api.GoogleCloudDialogflowV2WebhookRequest,
     headers: {},
-  })
-  t.is(conv.parameters, parameters)
-})
+  });
+  t.is(conv.parameters, parameters);
+});
 
 test('conv.contexts is an instance of ContextValues', t => {
-  t.true(t.context.conv.contexts instanceof ContextValues)
-})
+  t.true(t.context.conv.contexts instanceof ContextValues);
+});
 
 test('conv.incoming is an instance of Incoming', t => {
-  t.true(t.context.conv.incoming instanceof Incoming)
-})
+  t.true(t.context.conv.incoming instanceof Incoming);
+});
 
 test('conv.query is parsed correctly', t => {
-  const query = 'abc123'
+  const query = 'abc123';
   const conv = new DialogflowConversation({
     body: {
       queryResult: {
@@ -131,17 +131,17 @@ test('conv.query is parsed correctly', t => {
       },
     } as Api.GoogleCloudDialogflowV2WebhookRequest,
     headers: {},
-  })
-  t.is(conv.query, query)
-})
+  });
+  t.is(conv.query, query);
+});
 
 test('conv.version is detected correctly to be 2', t => {
-  t.is(t.context.conv.version, 2)
-})
+  t.is(t.context.conv.version, 2);
+});
 
 test('conv.followup sets the raw json correctly with no parameters', t => {
-  const lang = 'ab-CD'
-  const event = 'abc_123'
+  const lang = 'ab-CD';
+  const event = 'abc_123';
   const conv = new DialogflowConversation({
     body: {
       queryResult: {
@@ -152,23 +152,23 @@ test('conv.followup sets the raw json correctly with no parameters', t => {
       },
     } as Api.GoogleCloudDialogflowV2WebhookRequest,
     headers: {},
-  })
-  conv.followup(event)
+  });
+  conv.followup(event);
   t.deepEqual(clone(conv.serialize()), {
     followupEventInput: {
       name: event,
       languageCode: lang,
     },
-  })
-})
+  });
+});
 
 test('conv.followup sets the raw json correctly with parameters', t => {
-  const lang = 'ab-CD'
-  const event = 'abc_123'
+  const lang = 'ab-CD';
+  const event = 'abc_123';
   const parameters = {
     a: '1',
     b: '2',
-  }
+  };
   const conv = new DialogflowConversation({
     body: {
       queryResult: {
@@ -179,24 +179,24 @@ test('conv.followup sets the raw json correctly with parameters', t => {
       },
     } as Api.GoogleCloudDialogflowV2WebhookRequest,
     headers: {},
-  })
-  conv.followup(event, parameters)
+  });
+  conv.followup(event, parameters);
   t.deepEqual(clone(conv.serialize()), {
     followupEventInput: {
       name: event,
       languageCode: lang,
       parameters,
     },
-  })
-})
+  });
+});
 
 test('conv.followup sets the raw json correctly with parameters and lang', t => {
-  const lang = 'ef-GH'
-  const event = 'abc_123'
+  const lang = 'ef-GH';
+  const event = 'abc_123';
   const parameters = {
     a: '1',
     b: '2',
-  }
+  };
   const conv = new DialogflowConversation({
     body: {
       queryResult: {
@@ -207,16 +207,16 @@ test('conv.followup sets the raw json correctly with parameters and lang', t => 
       },
     } as Api.GoogleCloudDialogflowV2WebhookRequest,
     headers: {},
-  })
-  conv.followup(event, parameters, lang)
+  });
+  conv.followup(event, parameters, lang);
   t.deepEqual(clone(conv.serialize()), {
     followupEventInput: {
       name: event,
       languageCode: lang,
       parameters,
     },
-  })
-})
+  });
+});
 
 test('conv.serialize returns the raw json when set with conv.json', t => {
   const json = {
@@ -226,18 +226,18 @@ test('conv.serialize returns the raw json when set with conv.json', t => {
       d: '3',
       e: '4',
     },
-  }
-  t.context.conv.json(json)
-  t.deepEqual(t.context.conv.serialize() as typeof json, json)
-})
+  };
+  t.context.conv.json(json);
+  t.deepEqual(t.context.conv.serialize() as typeof json, json);
+});
 
 test('conv.serialize returns the correct response with simple response string', t => {
-  const response = 'abc123'
+  const response = 'abc123';
   const conv = new DialogflowConversation({
     body: {},
     headers: {},
-  })
-  conv.add(response)
+  });
+  conv.add(response);
   t.deepEqual(clone(conv.serialize()), {
     payload: {
       google: {
@@ -253,18 +253,20 @@ test('conv.serialize returns the correct response with simple response string', 
         },
       },
     },
-  })
-})
+  });
+});
 
 test('conv.serialize returns the correct response with permission response', t => {
   const conv = new DialogflowConversation({
     body: {},
     headers: {},
-  })
-  conv.ask(new Permission({
-    permissions: 'NAME',
-    context: 'To read your mind',
-  }))
+  });
+  conv.ask(
+    new Permission({
+      permissions: 'NAME',
+      context: 'To read your mind',
+    })
+  );
   t.deepEqual(clone(conv.serialize()), {
     payload: {
       google: {
@@ -272,28 +274,27 @@ test('conv.serialize returns the correct response with permission response', t =
         systemIntent: {
           intent: 'actions.intent.PERMISSION',
           data: {
-            '@type': 'type.googleapis.com/google.actions.v2.PermissionValueSpec',
+            '@type':
+              'type.googleapis.com/google.actions.v2.PermissionValueSpec',
             optContext: 'To read your mind',
-            permissions: [
-              'NAME',
-            ],
+            permissions: ['NAME'],
           },
         },
       },
     },
-  })
-})
+  });
+});
 
 test('conv.serialize returns the correct response with simple response string and reprompts', t => {
-  const response = 'abc123'
-  const reprompt1 = 'reprompt123'
-  const reprompt2 = 'reprompt456'
+  const response = 'abc123';
+  const reprompt1 = 'reprompt123';
+  const reprompt2 = 'reprompt456';
   const conv = new DialogflowConversation({
     body: {} as Api.GoogleCloudDialogflowV2WebhookRequest,
     headers: {},
-  })
-  conv.add(response)
-  conv.noInputs = [reprompt1, new SimpleResponse(reprompt2)]
+  });
+  conv.add(response);
+  conv.noInputs = [reprompt1, new SimpleResponse(reprompt2)];
   t.deepEqual(clone(conv.serialize()), {
     payload: {
       google: {
@@ -317,47 +318,46 @@ test('conv.serialize returns the correct response with simple response string an
         ],
       },
     },
-  })
-})
+  });
+});
 
-const simulatorConv = () => new DialogflowConversation({
-  body: {
-    responseId: 'responseIdRandom123',
-    queryResult: {
-      queryText: 'test',
-      action: 'input.unknown',
-      parameters: {},
-      allRequiredParamsPresent: true,
-      fulfillmentText: 'Sorry, what was that?',
-      fulfillmentMessages: [
-        {
-          text: {
-            text: [
-              'One more time?',
-            ],
+const simulatorConv = () =>
+  new DialogflowConversation({
+    body: {
+      responseId: 'responseIdRandom123',
+      queryResult: {
+        queryText: 'test',
+        action: 'input.unknown',
+        parameters: {},
+        allRequiredParamsPresent: true,
+        fulfillmentText: 'Sorry, what was that?',
+        fulfillmentMessages: [
+          {
+            text: {
+              text: ['One more time?'],
+            },
           },
+        ],
+        intent: {
+          name: 'projects/projectRandom/agent/intents/randomId',
+          displayName: 'Default Fallback Intent',
+          isFallback: true,
         },
-      ],
-      intent: {
-        name: `projects/projectRandom/agent/intents/randomId`,
-        displayName: 'Default Fallback Intent',
-        isFallback: true,
+        intentDetectionConfidence: 1,
+        languageCode: 'en',
       },
-      intentDetectionConfidence: 1,
-      languageCode: 'en',
-    },
-    originalDetectIntentRequest: {
-      payload: {},
-    },
-    session: 'sessionRandom',
-  } as Api.GoogleCloudDialogflowV2WebhookRequest,
-  headers: {},
-})
+      originalDetectIntentRequest: {
+        payload: {},
+      },
+      session: 'sessionRandom',
+    } as Api.GoogleCloudDialogflowV2WebhookRequest,
+    headers: {},
+  });
 
 test('conv.serialize w/ simple response has fulfillmentText when from simulator', t => {
-  const response = 'abc123'
-  const conv = simulatorConv()
-  conv.add(response)
+  const response = 'abc123';
+  const conv = simulatorConv();
+  conv.add(response);
   t.deepEqual(clone(conv.serialize()), {
     payload: {
       google: {
@@ -374,17 +374,19 @@ test('conv.serialize w/ simple response has fulfillmentText when from simulator'
       },
     },
     fulfillmentText: response,
-  })
-})
+  });
+});
 
 test('conv.serialize w/ simple response text has fulfillmentText when from simulator', t => {
-  const speech = 'abc123'
-  const text = 'abcd1234'
-  const conv = simulatorConv()
-  conv.add(new SimpleResponse({
-    speech,
-    text,
-  }))
+  const speech = 'abc123';
+  const text = 'abcd1234';
+  const conv = simulatorConv();
+  conv.add(
+    new SimpleResponse({
+      speech,
+      text,
+    })
+  );
   t.deepEqual(clone(conv.serialize()), {
     payload: {
       google: {
@@ -402,15 +404,15 @@ test('conv.serialize w/ simple response text has fulfillmentText when from simul
       },
     },
     fulfillmentText: text,
-  })
-})
+  });
+});
 
 test('conv.serialize w/ two simple responses has fulfillmentText warning for simulator', t => {
-  const response = 'abc123'
-  const response2 = 'abcd1234'
-  const conv = simulatorConv()
-  conv.add(response)
-  conv.add(response2)
+  const response = 'abc123';
+  const response2 = 'abcd1234';
+  const conv = simulatorConv();
+  conv.add(response);
+  conv.add(response2);
   t.deepEqual(clone(conv.serialize()), {
     payload: {
       google: {
@@ -429,58 +431,63 @@ test('conv.serialize w/ two simple responses has fulfillmentText warning for sim
             },
           ],
         },
-        },
       },
-    fulfillmentText: 'Cannot display response in Dialogflow simulator. ' +
+    },
+    fulfillmentText:
+      'Cannot display response in Dialogflow simulator. ' +
       'Please test on the Google Assistant simulator instead.',
-  })
-})
+  });
+});
 
 test('conv.serialize w/ solo helper has fulfillmentText warning for simulator', t => {
-  const permission: 'NAME' = 'NAME'
-  const context = 'To read your mind'
-  const conv = simulatorConv()
-  conv.ask(new Permission({
-    permissions: permission,
-    context,
-  }))
+  const permission: 'NAME' = 'NAME';
+  const context = 'To read your mind';
+  const conv = simulatorConv();
+  conv.ask(
+    new Permission({
+      permissions: permission,
+      context,
+    })
+  );
   t.deepEqual(clone(conv.serialize()), {
     payload: {
       google: {
         expectUserResponse: true,
         systemIntent: {
           data: {
-            '@type': 'type.googleapis.com/google.actions.v2.PermissionValueSpec',
+            '@type':
+              'type.googleapis.com/google.actions.v2.PermissionValueSpec',
             optContext: context,
-            permissions: [
-              permission,
-            ],
+            permissions: [permission],
           },
           intent: 'actions.intent.PERMISSION',
         },
-        },
-      },
-    fulfillmentText: 'Cannot display response in Dialogflow simulator. ' +
-      'Please test on the Google Assistant simulator instead.',
-  })
-})
-
-test('conv.serialize w/ non solo helper has fulfillmentText warning for simulator', t => {
-  const response = 'abc123'
-  const conv = simulatorConv()
-  conv.ask(response)
-  conv.ask(new List({
-    items: {
-      one: {
-        title: 'one1',
-        synonyms: ['one11', 'one12'],
-      },
-      two: {
-        title: 'two1',
-        synonyms: ['two11', 'two12'],
       },
     },
-  }))
+    fulfillmentText:
+      'Cannot display response in Dialogflow simulator. ' +
+      'Please test on the Google Assistant simulator instead.',
+  });
+});
+
+test('conv.serialize w/ non solo helper has fulfillmentText warning for simulator', t => {
+  const response = 'abc123';
+  const conv = simulatorConv();
+  conv.ask(response);
+  conv.ask(
+    new List({
+      items: {
+        one: {
+          title: 'one1',
+          synonyms: ['one11', 'one12'],
+        },
+        two: {
+          title: 'two1',
+          synonyms: ['two11', 'two12'],
+        },
+      },
+    })
+  );
   t.deepEqual(clone(conv.serialize()), {
     payload: {
       google: {
@@ -502,20 +509,14 @@ test('conv.serialize w/ non solo helper has fulfillmentText warning for simulato
                 {
                   optionInfo: {
                     key: 'one',
-                    synonyms: [
-                      'one11',
-                      'one12',
-                    ],
+                    synonyms: ['one11', 'one12'],
                   },
                   title: 'one1',
                 },
                 {
                   optionInfo: {
                     key: 'two',
-                    synonyms: [
-                      'two11',
-                      'two12',
-                    ],
+                    synonyms: ['two11', 'two12'],
                   },
                   title: 'two1',
                 },
@@ -524,23 +525,26 @@ test('conv.serialize w/ non solo helper has fulfillmentText warning for simulato
           },
           intent: 'actions.intent.OPTION',
         },
-        },
       },
-    fulfillmentText: 'Cannot display response in Dialogflow simulator. ' +
+    },
+    fulfillmentText:
+      'Cannot display response in Dialogflow simulator. ' +
       'Please test on the Google Assistant simulator instead.',
-  })
-})
+  });
+});
 
 test('conv.serialize w/ image has fulfillmentText warning for simulator', t => {
-  const response = 'abc123'
-  const image = 'abcd1234'
-  const alt = 'abcde12345'
-  const conv = simulatorConv()
-  conv.add(response)
-  conv.add(new Image({
-    url: image,
-    alt,
-  }))
+  const response = 'abc123';
+  const image = 'abcd1234';
+  const alt = 'abcde12345';
+  const conv = simulatorConv();
+  conv.add(response);
+  conv.add(
+    new Image({
+      url: image,
+      alt,
+    })
+  );
   t.deepEqual(clone(conv.serialize()), {
     payload: {
       google: {
@@ -562,20 +566,21 @@ test('conv.serialize w/ image has fulfillmentText warning for simulator', t => {
             },
           ],
         },
-        },
       },
-    fulfillmentText: 'Cannot display response in Dialogflow simulator. ' +
+    },
+    fulfillmentText:
+      'Cannot display response in Dialogflow simulator. ' +
       'Please test on the Google Assistant simulator instead.',
-  })
-})
+  });
+});
 
 test('conv.serialize defaults to v2 for empty request', t => {
-  const response = 'abc123'
+  const response = 'abc123';
   const conv = new DialogflowConversation({
     body: {},
     headers: {},
-  })
-  conv.add(response)
+  });
+  conv.add(response);
   t.deepEqual(clone(conv.serialize()), {
     payload: {
       google: {
@@ -591,11 +596,11 @@ test('conv.serialize defaults to v2 for empty request', t => {
         },
       },
     },
-  })
-})
+  });
+});
 
 test('conv.data is parsed correctly', t => {
-  const session = 'sessionId123'
+  const session = 'sessionId123';
   const data = {
     a: '1',
     b: '2',
@@ -603,27 +608,29 @@ test('conv.data is parsed correctly', t => {
       d: '3',
       e: '4',
     },
-  }
+  };
   const conv = new DialogflowConversation({
     body: {
       queryResult: {
-        outputContexts: [{
-          name: `${session}/contexts/_actions_on_google`,
-          parameters: {
-            data: JSON.stringify(data),
+        outputContexts: [
+          {
+            name: `${session}/contexts/_actions_on_google`,
+            parameters: {
+              data: JSON.stringify(data),
+            },
           },
-        }],
+        ],
       },
     } as Api.GoogleCloudDialogflowV2WebhookRequest,
-  })
-  t.deepEqual(conv.data, data)
-})
+  });
+  t.deepEqual(conv.data, data);
+});
 
 test('conv generates no contexts from empty conv.data', t => {
-  const response = `What's up?`
-  const conv = new DialogflowConversation()
-  t.deepEqual(conv.data, {})
-  conv.ask(response)
+  const response = "What's up?";
+  const conv = new DialogflowConversation();
+  t.deepEqual(conv.data, {});
+  conv.ask(response);
   t.deepEqual(clone(conv.serialize()), {
     payload: {
       google: {
@@ -639,12 +646,12 @@ test('conv generates no contexts from empty conv.data', t => {
         },
       },
     },
-  })
-})
+  });
+});
 
 test('conv generates first conv.data replaced correctly', t => {
-  const session = 'sessionId123'
-  const response = `What's up?`
+  const session = 'sessionId123';
+  const response = "What's up?";
   const data = {
     a: '1',
     b: '2',
@@ -652,15 +659,15 @@ test('conv generates first conv.data replaced correctly', t => {
       d: '3',
       e: '4',
     },
-  }
+  };
   const conv = new DialogflowConversation({
     body: {
       session,
     } as Api.GoogleCloudDialogflowV2WebhookRequest,
-  })
-  t.deepEqual(conv.data, {})
-  conv.ask(response)
-  conv.data = data
+  });
+  t.deepEqual(conv.data, {});
+  conv.ask(response);
+  conv.data = data;
   t.deepEqual(clone(conv.serialize()), {
     payload: {
       google: {
@@ -685,21 +692,21 @@ test('conv generates first conv.data replaced correctly', t => {
         },
       },
     ],
-  })
-})
+  });
+});
 
 test('conv generates first conv.data mutated correctly', t => {
-  const session = 'sessionId123'
-  const response = `What's up?`
-  const a = '7'
-  const conv = new DialogflowConversation<{ a?: string }>({
+  const session = 'sessionId123';
+  const response = "What's up?";
+  const a = '7';
+  const conv = new DialogflowConversation<{a?: string}>({
     body: {
       session,
-    }  as Api.GoogleCloudDialogflowV2WebhookRequest,
-  })
-  t.deepEqual(conv.data, {})
-  conv.ask(response)
-  conv.data.a = a
+    } as Api.GoogleCloudDialogflowV2WebhookRequest,
+  });
+  t.deepEqual(conv.data, {});
+  conv.ask(response);
+  conv.data.a = a;
   t.deepEqual(clone(conv.serialize()), {
     payload: {
       google: {
@@ -720,16 +727,16 @@ test('conv generates first conv.data mutated correctly', t => {
         name: `${session}/contexts/_actions_on_google`,
         lifespanCount: 99,
         parameters: {
-          data: JSON.stringify({ a }),
+          data: JSON.stringify({a}),
         },
       },
     ],
-  })
-})
+  });
+});
 
 test('conv generates different conv.data correctly', t => {
-  const session = 'sessionId123'
-  const response = `What's up?`
+  const session = 'sessionId123';
+  const response = "What's up?";
   const data = {
     a: '1',
     b: '2',
@@ -737,24 +744,26 @@ test('conv generates different conv.data correctly', t => {
       d: '3',
       e: '4',
     },
-  }
-  const e = '6'
+  };
+  const e = '6';
   const conv = new DialogflowConversation<typeof data>({
     body: {
       session,
       queryResult: {
-        outputContexts: [{
-          name: `${session}/contexts/_actions_on_google`,
-          parameters: {
-            data: JSON.stringify(data),
+        outputContexts: [
+          {
+            name: `${session}/contexts/_actions_on_google`,
+            parameters: {
+              data: JSON.stringify(data),
+            },
           },
-        }],
+        ],
       },
     } as Api.GoogleCloudDialogflowV2WebhookRequest,
-  })
-  t.deepEqual(conv.data, data)
-  conv.ask(response)
-  conv.data.c.e = e
+  });
+  t.deepEqual(conv.data, data);
+  conv.ask(response);
+  conv.data.c.e = e;
   t.deepEqual(clone(conv.serialize()), {
     payload: {
       google: {
@@ -786,12 +795,12 @@ test('conv generates different conv.data correctly', t => {
         },
       },
     ],
-  })
-})
+  });
+});
 
 test('conv generates different conv.data correctly when only with init data', t => {
-  const session = 'sessionId123'
-  const response = `What's up?`
+  const session = 'sessionId123';
+  const response = "What's up?";
   const data = {
     a: '1',
     b: '2',
@@ -799,8 +808,8 @@ test('conv generates different conv.data correctly when only with init data', t 
       d: '3',
       e: '4',
     },
-  }
-  const a = '7'
+  };
+  const a = '7';
   const conv = new DialogflowConversation<typeof data>({
     body: {
       session,
@@ -808,10 +817,10 @@ test('conv generates different conv.data correctly when only with init data', t 
     init: {
       data,
     },
-  })
-  t.deepEqual(conv.data, data)
-  conv.ask(response)
-  conv.data.a = a
+  });
+  t.deepEqual(conv.data, data);
+  conv.ask(response);
+  conv.data.a = a;
   t.deepEqual(clone(conv.serialize()), {
     payload: {
       google: {
@@ -843,12 +852,12 @@ test('conv generates different conv.data correctly when only with init data', t 
         },
       },
     ],
-  })
-})
+  });
+});
 
 test('conv generates same conv.data as no output contexts', t => {
-  const session = 'sessionId123'
-  const response = `What's up?`
+  const session = 'sessionId123';
+  const response = "What's up?";
   const data = {
     a: '1',
     b: '2',
@@ -856,22 +865,24 @@ test('conv generates same conv.data as no output contexts', t => {
       d: '3',
       e: '4',
     },
-  }
+  };
   const conv = new DialogflowConversation<typeof data>({
     body: {
       session,
       queryResult: {
-        outputContexts: [{
-          name: `${session}/contexts/_actions_on_google`,
-          parameters: {
-            data: JSON.stringify(data),
+        outputContexts: [
+          {
+            name: `${session}/contexts/_actions_on_google`,
+            parameters: {
+              data: JSON.stringify(data),
+            },
           },
-        }],
+        ],
       },
     } as Api.GoogleCloudDialogflowV2WebhookRequest,
-  })
-  t.deepEqual(conv.data, data)
-  conv.ask(response)
+  });
+  t.deepEqual(conv.data, data);
+  conv.ask(response);
   t.deepEqual(clone(conv.serialize()), {
     payload: {
       google: {
@@ -887,11 +898,11 @@ test('conv generates same conv.data as no output contexts', t => {
         },
       },
     },
-  })
-})
+  });
+});
 
 test('conv sends userStorage when it is not empty', t => {
-  const response = `What's up?`
+  const response = "What's up?";
   const data = {
     a: '1',
     b: '2',
@@ -899,11 +910,11 @@ test('conv sends userStorage when it is not empty', t => {
       d: '3',
       e: '4',
     },
-  }
-  const conv = new DialogflowConversation()
-  t.deepEqual(conv.data, {})
-  conv.user.storage = data
-  conv.ask(response)
+  };
+  const conv = new DialogflowConversation();
+  t.deepEqual(conv.data, {});
+  conv.user.storage = data;
+  conv.ask(response);
   t.deepEqual(clone(conv.serialize()), {
     payload: {
       google: {
@@ -917,17 +928,17 @@ test('conv sends userStorage when it is not empty', t => {
             },
           ],
         },
-        userStorage: JSON.stringify({ data }),
+        userStorage: JSON.stringify({data}),
       },
     },
-  })
-})
+  });
+});
 
 test('conv does not send userStorage when it is empty', t => {
-  const response = `What's up?`
-  const conv = new DialogflowConversation()
-  t.deepEqual(conv.user.storage, {})
-  conv.ask(response)
+  const response = "What's up?";
+  const conv = new DialogflowConversation();
+  t.deepEqual(conv.user.storage, {});
+  conv.ask(response);
   t.deepEqual(clone(conv.serialize()), {
     payload: {
       google: {
@@ -943,19 +954,19 @@ test('conv does not send userStorage when it is empty', t => {
         },
       },
     },
-  })
-})
+  });
+});
 
 test('conv does not detect coming from simulator given no responseId', t => {
-  const response = `What's up?`
+  const response = "What's up?";
   const conv = new DialogflowConversation({
     body: {
       originalDetectIntentRequest: {
         payload: {},
       },
     },
-  })
-  conv.ask(response)
+  });
+  conv.ask(response);
   t.deepEqual(clone(conv.serialize()), {
     payload: {
       google: {
@@ -971,15 +982,15 @@ test('conv does not detect coming from simulator given no responseId', t => {
         },
       },
     },
-  })
-})
+  });
+});
 
 test('conv sends speechBiasingHints when set', t => {
-  const response = 'What is your favorite color out of red, blue, and green?'
-  const biasing = ['red', 'blue', 'green']
-  const conv = new DialogflowConversation()
-  conv.speechBiasing = biasing
-  conv.ask(response)
+  const response = 'What is your favorite color out of red, blue, and green?';
+  const biasing = ['red', 'blue', 'green'];
+  const conv = new DialogflowConversation();
+  conv.speechBiasing = biasing;
+  conv.ask(response);
   t.deepEqual(clone(conv.serialize()), {
     payload: {
       google: {
@@ -996,14 +1007,14 @@ test('conv sends speechBiasingHints when set', t => {
         speechBiasingHints: biasing,
       },
     },
-  })
-})
+  });
+});
 
 test('conv does not error out when simple response is after image', t => {
-  const response = 'How are you?'
-  const conv = new DialogflowConversation()
-  conv.ask(new Image({ url: '', alt: '' }))
-  conv.ask(response)
+  const response = 'How are you?';
+  const conv = new DialogflowConversation();
+  conv.ask(new Image({url: '', alt: ''}));
+  conv.ask(response);
   t.deepEqual(clone(conv.serialize()), {
     payload: {
       google: {
@@ -1027,19 +1038,21 @@ test('conv does not error out when simple response is after image', t => {
         },
       },
     },
-  })
-})
+  });
+});
 
 test('conv w/ simple response after image has fulfillmentText warning for simulator', t => {
-  const response = 'abc123'
-  const image = 'abcd1234'
-  const alt = 'abcde12345'
-  const conv = simulatorConv()
-  conv.add(new Image({
-    url: image,
-    alt,
-  }))
-  conv.add(response)
+  const response = 'abc123';
+  const image = 'abcd1234';
+  const alt = 'abcde12345';
+  const conv = simulatorConv();
+  conv.add(
+    new Image({
+      url: image,
+      alt,
+    })
+  );
+  conv.add(response);
   t.deepEqual(clone(conv.serialize()), {
     payload: {
       google: {
@@ -1061,9 +1074,10 @@ test('conv w/ simple response after image has fulfillmentText warning for simula
             },
           ],
         },
-        },
       },
-    fulfillmentText: 'Cannot display response in Dialogflow simulator. ' +
+    },
+    fulfillmentText:
+      'Cannot display response in Dialogflow simulator. ' +
       'Please test on the Google Assistant simulator instead.',
-  })
-})
+  });
+});

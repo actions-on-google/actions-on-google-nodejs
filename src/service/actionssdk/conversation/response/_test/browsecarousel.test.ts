@@ -14,19 +14,19 @@
  * limitations under the License.
  */
 
-import test from 'ava'
+import test from 'ava';
 
-import { BrowseCarouselItem } from '..'
+import {BrowseCarouselItem} from '..';
 
 test('browse carousel handle URL in constructor', t => {
   const simpleBrowseCarousel = new BrowseCarouselItem({
     title: 'Title',
     url: 'https://example.com',
-  })
+  });
 
   t.deepEqual(simpleBrowseCarousel.openUrlAction, {
     url: 'https://example.com',
-  })
+  });
 
   const ampBrowseCarousel = new BrowseCarouselItem({
     title: 'Title',
@@ -34,10 +34,10 @@ test('browse carousel handle URL in constructor', t => {
       url: 'https://example.com',
       urlTypeHint: 'AMP_CONTENT',
     },
-  })
+  });
 
   t.deepEqual(ampBrowseCarousel.openUrlAction, {
     url: 'https://example.com',
     urlTypeHint: 'AMP_CONTENT',
-  })
-})
+  });
+});

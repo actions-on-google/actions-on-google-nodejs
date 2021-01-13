@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import test from 'ava'
-import { CompletePurchase } from '..'
+import test from 'ava';
+import {CompletePurchase} from '..';
 
 test('CompletePurchase creates a correct Helper class instance', t => {
   const helper = new CompletePurchase({
@@ -25,15 +25,16 @@ test('CompletePurchase creates a correct Helper class instance', t => {
       packageName: 'test3',
       skuType: 'SKU_TYPE_IN_APP',
     },
-  })
-  t.is(helper.intent, 'actions.intent.COMPLETE_PURCHASE')
+  });
+  t.is(helper.intent, 'actions.intent.COMPLETE_PURCHASE');
   t.deepEqual(helper.inputValueData, {
-    '@type': 'type.googleapis.com/google.actions.transactions.v3.CompletePurchaseValueSpec',
+    '@type':
+      'type.googleapis.com/google.actions.transactions.v3.CompletePurchaseValueSpec',
     developerPayload: 'test1',
     skuId: {
       id: 'test2',
       packageName: 'test3',
       skuType: 'SKU_TYPE_IN_APP',
     },
-  })
-})
+  });
+});

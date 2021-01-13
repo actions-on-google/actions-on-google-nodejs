@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-export * from './decision'
-export * from './requirements'
-export * from './deliveryaddress'
-export * from './completepurchase'
-export * from './digitalpurchasecheck'
+export * from './decision';
+export * from './requirements';
+export * from './deliveryaddress';
+export * from './completepurchase';
+export * from './digitalpurchasecheck';

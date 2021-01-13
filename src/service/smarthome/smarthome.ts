@@ -14,27 +14,27 @@
  * limitations under the License.
  */
 
-import { AppOptions, AppHandler, ServiceBaseApp, attach } from '../../assistant'
-import { JsonObject } from '../../common'
-import * as common from '../../common'
-import { Headers, BuiltinFrameworkMetadata } from '../../framework'
-import * as Api from './api/v1'
-import { google } from 'googleapis'
+import {AppOptions, AppHandler, ServiceBaseApp, attach} from '../../assistant';
+import {JsonObject} from '../../common';
+import * as common from '../../common';
+import {Headers, BuiltinFrameworkMetadata} from '../../framework';
+import * as Api from './api/v1';
+import {google} from 'googleapis';
 
-const encoding = 'utf8'
+const encoding = 'utf8';
 
 /** @public */
 export interface SmartHomeJwt {
-  type: 'service_account',
-  project_id: string,
-  private_key_id: string,
-  private_key: string,
-  client_email: string,
-  client_id: string,
-  auth_uri: string,
-  token_uri: string,
-  auth_provider_x509_cert_url: string,
-  client_x509_cert_url: string,
+  type: 'service_account';
+  project_id: string;
+  private_key_id: string;
+  private_key: string;
+  client_email: string;
+  client_id: string;
+  auth_uri: string;
+  token_uri: string;
+  auth_provider_x509_cert_url: string;
+  client_x509_cert_url: string;
 }
 
 /** @public */
@@ -45,7 +45,7 @@ export interface SmartHomeOptions extends AppOptions {
    * to learn more.
    * @public
    */
-  key?: string
+  key?: string;
 
   /**
    * A JWT (JSON Web Token) that is able to access the home graph API.
@@ -53,36 +53,37 @@ export interface SmartHomeOptions extends AppOptions {
    * created through the Google Cloud Console: https://console.cloud.google.com/apis/credentials
    * @public
    */
-  jwt?: SmartHomeJwt
+  jwt?: SmartHomeJwt;
 }
 
 /** @public */
 export interface SmartHomeHandler<
   TRequest extends Api.SmartHomeV1Request,
-  TResponse extends Api.SmartHomeV1Response,
-  > {
-  (
-    body: TRequest,
-    headers: Headers,
-    framework: BuiltinFrameworkMetadata,
-  ): TResponse | Promise<TResponse>
+  TResponse extends Api.SmartHomeV1Response
+> {
+  (body: TRequest, headers: Headers, framework: BuiltinFrameworkMetadata):
+    | TResponse
+    | Promise<TResponse>;
 }
 
 /** @hidden */
 export interface SmartHomeHandlers {
-  [intent: string]: SmartHomeHandler<Api.SmartHomeV1Request, Api.SmartHomeV1Response>
+  [intent: string]: SmartHomeHandler<
+    Api.SmartHomeV1Request,
+    Api.SmartHomeV1Response
+  >;
 }
 
 /** @public */
 export interface SmartHomeApp extends ServiceBaseApp {
   /** @hidden */
-  _intents: SmartHomeHandlers
+  _intents: SmartHomeHandlers;
 
   /** @hidden */
   _intent(
     intent: Api.SmartHomeV1Intents,
-    handler: SmartHomeHandler<Api.SmartHomeV1Request, Api.SmartHomeV1Response>,
-  ): this
+    handler: SmartHomeHandler<Api.SmartHomeV1Request, Api.SmartHomeV1Response>
+  ): this;
 
   /**
    * Defines a function that will run when a SYNC request is received.
@@ -107,8 +108,11 @@ export interface SmartHomeApp extends ServiceBaseApp {
    * @public
    */
   onSync(
-    handler: SmartHomeHandler<Api.SmartHomeV1SyncRequest, Api.SmartHomeV1SyncResponse>,
-  ): this
+    handler: SmartHomeHandler<
+      Api.SmartHomeV1SyncRequest,
+      Api.SmartHomeV1SyncResponse
+    >
+  ): this;
 
   /**
    * Defines a function that will run when a QUERY request is received.
@@ -133,8 +137,11 @@ export interface SmartHomeApp extends ServiceBaseApp {
    * @public
    */
   onQuery(
-    handler: SmartHomeHandler<Api.SmartHomeV1QueryRequest, Api.SmartHomeV1QueryResponse>,
-  ): this
+    handler: SmartHomeHandler<
+      Api.SmartHomeV1QueryRequest,
+      Api.SmartHomeV1QueryResponse
+    >
+  ): this;
 
   /**
    * Defines a function that will run when an EXECUTE request is received.
@@ -158,8 +165,11 @@ export interface SmartHomeApp extends ServiceBaseApp {
    * @public
    */
   onExecute(
-    handler: SmartHomeHandler<Api.SmartHomeV1ExecuteRequest, Api.SmartHomeV1ExecuteResponse>,
-  ): this
+    handler: SmartHomeHandler<
+      Api.SmartHomeV1ExecuteRequest,
+      Api.SmartHomeV1ExecuteResponse
+    >
+  ): this;
 
   /**
    * Defines a function that will run when a DISCONNECT request is received.
@@ -179,8 +189,11 @@ export interface SmartHomeApp extends ServiceBaseApp {
    * @public
    */
   onDisconnect(
-    handler: SmartHomeHandler<Api.SmartHomeV1DisconnectRequest, Api.SmartHomeV1DisconnectResponse>,
-  ): this
+    handler: SmartHomeHandler<
+      Api.SmartHomeV1DisconnectRequest,
+      Api.SmartHomeV1DisconnectResponse
+    >
+  ): this;
 
   /**
    * Sends a request to the home graph to send a new SYNC request. This should
@@ -218,7 +231,7 @@ export interface SmartHomeApp extends ServiceBaseApp {
    *
    * @public
    */
-  requestSync(agentUserId: string): Promise<string>
+  requestSync(agentUserId: string): Promise<string>;
 
   /**
    * Reports the current state of a device or set of devices to the home graph.
@@ -261,72 +274,80 @@ export interface SmartHomeApp extends ServiceBaseApp {
    *
    * @public
    */
-  reportState(reportedState: Api.SmartHomeV1ReportStateRequest): Promise<string>
+  reportState(
+    reportedState: Api.SmartHomeV1ReportStateRequest
+  ): Promise<string>;
 
   /** @public */
-  key?: string
+  key?: string;
 
   /** @public */
-  jwt?: SmartHomeJwt
+  jwt?: SmartHomeJwt;
 }
 
 /** @public */
 export interface SmartHome {
-  (options?: SmartHomeOptions): AppHandler & SmartHomeApp
+  (options?: SmartHomeOptions): AppHandler & SmartHomeApp;
 }
 
-const makeApiCall = (url: string, data: JsonObject, jwt?: SmartHomeJwt): Promise<string> => {
+const makeApiCall = (
+  url: string,
+  data: JsonObject,
+  jwt?: SmartHomeJwt
+): Promise<string> => {
   const options = {
     hostname: 'homegraph.googleapis.com',
     port: 443,
     path: url,
     method: 'POST',
     headers: {},
-  }
+  };
 
   const apiCall = (options: JsonObject) => {
     if (jwt && !options.headers.Authorization) {
-      throw new Error('JWT is defined but Authorization header is not defined '
-        + JSON.stringify(options))
+      throw new Error(
+        'JWT is defined but Authorization header is not defined ' +
+          JSON.stringify(options)
+      );
     }
     return new Promise<string>((resolve, reject) => {
-      const buffers: Buffer[] = []
-      const req = common.request(options, (res) => {
-        res.on('data', (d) => {
-          buffers.push(typeof d === 'string' ? Buffer.from(d, encoding) : d)
-        })
+      const buffers: Buffer[] = [];
+      const req = common.request(options, res => {
+        res.on('data', d => {
+          buffers.push(typeof d === 'string' ? Buffer.from(d, encoding) : d);
+        });
 
         res.on('end', () => {
-          const apiResponse: string = Buffer.concat(buffers).toString(encoding)
-          const apiResponseJson = JSON.parse(apiResponse)
+          const apiResponse: string = Buffer.concat(buffers).toString(encoding);
+          const apiResponseJson = JSON.parse(apiResponse);
           if (apiResponseJson.error && apiResponseJson.error.code >= 400) {
             // While the response ended, it contains an error.
             // In this case, this should reject the Promise.
-            reject(apiResponse)
-            return
+            reject(apiResponse);
+            return;
           }
-          resolve(apiResponse)
-        })
-      })
+          resolve(apiResponse);
+        });
+      });
 
-      req.on('error', (e) => {
-        reject(e)
-      })
+      req.on('error', e => {
+        reject(e);
+      });
       // Write data to request body
-      req.write(JSON.stringify(data))
-      req.end()
-    })
-  }
+      req.write(JSON.stringify(data));
+      req.end();
+    });
+  };
 
   if (jwt) {
     return new Promise<JsonObject>((resolve, reject) => {
       // For testing, we do not need to actually authorize
       if (jwt.client_id === 'sample-client-id') {
         options.headers = {
-          Authorization: ` Bearer 1234`,
-        }
-        resolve(options)
-        return
+          Authorization: ' Bearer 1234',
+        };
+        resolve(options);
+        return;
       }
       // Generate JWT, then make the API call if provided
       const jwtClient = new google.auth.JWT(
@@ -334,25 +355,24 @@ const makeApiCall = (url: string, data: JsonObject, jwt?: SmartHomeJwt): Promise
         undefined,
         jwt.private_key,
         ['https://www.googleapis.com/auth/homegraph'],
-        undefined,
-      )
+        undefined
+      );
       jwtClient.authorize((err: Error, tokens: JsonObject) => {
         if (err) {
-          return reject(err)
+          return reject(err);
         }
         options.headers = {
           Authorization: ` Bearer ${tokens.access_token}`,
-        }
-        resolve(options)
-      })
-    })
-      .then((options) => {
-        return apiCall(options)
-      })
+        };
+        resolve(options);
+      });
+    }).then(options => {
+      return apiCall(options);
+    });
   } else {
-    return apiCall(options)
+    return apiCall(options);
   }
-}
+};
 
 /**
  *
@@ -383,61 +403,79 @@ const makeApiCall = (url: string, data: JsonObject, jwt?: SmartHomeJwt): Promise
  *
  * @public
  */
-export const smarthome: SmartHome = (options = {}) => attach<SmartHomeApp>({
-  _intents: {},
-  _intent(this: SmartHomeApp, intent, handler) {
-    this._intents[intent] = handler
-    return this
-  },
-  onSync(this: SmartHomeApp, handler) {
-    return this._intent('action.devices.SYNC', handler)
-  },
-  onQuery(this: SmartHomeApp, handler) {
-    return this._intent('action.devices.QUERY', handler)
-  },
-  onExecute(this: SmartHomeApp, handler) {
-    return this._intent('action.devices.EXECUTE', handler)
-  },
-  onDisconnect(this: SmartHomeApp, handler) {
-    return this._intent('action.devices.DISCONNECT', handler)
-  },
-  async requestSync(this: SmartHomeApp, agentUserId) {
-    if (this.jwt) {
-      return await makeApiCall('/v1/devices:requestSync', {
-        agent_user_id: agentUserId,
-      }, this.jwt)
-    }
-    if (this.key) {
-      return await makeApiCall(`/v1/devices:requestSync?key=${encodeURIComponent(this.key)}`, {
-        agent_user_id: agentUserId,
-      })
-    }
-    throw new Error(`An API key was not specified. ` +
-        `Please visit https://console.cloud.google.com/apis/api/homegraph.googleapis.com/overview`)
-  },
-  async reportState(this: SmartHomeApp, reportedState) {
-    if (!this.jwt) {
-      throw new Error(`A JWT was not specified. ` +
-        `Please visit https://console.cloud.google.com/apis/credentials`)
-    }
-    return await makeApiCall('/v1/devices:reportStateAndNotification',
-      reportedState, this.jwt)
-  },
-  key: options.key,
-  jwt: options.jwt,
-  async handler(
-    this: SmartHomeApp,
-    body: Api.SmartHomeV1Request,
-    headers,
-    metadata = {},
-  ) {
-    const { intent } = body.inputs[0]
-    const handler = this._intents[intent]
+export const smarthome: SmartHome = (options = {}) =>
+  attach<SmartHomeApp>(
+    {
+      _intents: {},
+      _intent(this: SmartHomeApp, intent, handler) {
+        this._intents[intent] = handler;
+        return this;
+      },
+      onSync(this: SmartHomeApp, handler) {
+        return this._intent('action.devices.SYNC', handler);
+      },
+      onQuery(this: SmartHomeApp, handler) {
+        return this._intent('action.devices.QUERY', handler);
+      },
+      onExecute(this: SmartHomeApp, handler) {
+        return this._intent('action.devices.EXECUTE', handler);
+      },
+      onDisconnect(this: SmartHomeApp, handler) {
+        return this._intent('action.devices.DISCONNECT', handler);
+      },
+      async requestSync(this: SmartHomeApp, agentUserId) {
+        if (this.jwt) {
+          return await makeApiCall(
+            '/v1/devices:requestSync',
+            {
+              agent_user_id: agentUserId,
+            },
+            this.jwt
+          );
+        }
+        if (this.key) {
+          return await makeApiCall(
+            `/v1/devices:requestSync?key=${encodeURIComponent(this.key)}`,
+            {
+              agent_user_id: agentUserId,
+            }
+          );
+        }
+        throw new Error(
+          'An API key was not specified. ' +
+            'Please visit https://console.cloud.google.com/apis/api/homegraph.googleapis.com/overview'
+        );
+      },
+      async reportState(this: SmartHomeApp, reportedState) {
+        if (!this.jwt) {
+          throw new Error(
+            'A JWT was not specified. ' +
+              'Please visit https://console.cloud.google.com/apis/credentials'
+          );
+        }
+        return await makeApiCall(
+          '/v1/devices:reportStateAndNotification',
+          reportedState,
+          this.jwt
+        );
+      },
+      key: options.key,
+      jwt: options.jwt,
+      async handler(
+        this: SmartHomeApp,
+        body: Api.SmartHomeV1Request,
+        headers,
+        metadata = {}
+      ) {
+        const {intent} = body.inputs[0];
+        const handler = this._intents[intent];
 
-    return {
-      status: 200,
-      headers: {},
-      body: await handler(body, headers, metadata),
-    }
-  },
-}, options)
+        return {
+          status: 200,
+          headers: {},
+          body: await handler(body, headers, metadata),
+        };
+      },
+    },
+    options
+  );

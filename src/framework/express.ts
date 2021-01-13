@@ -18,21 +18,21 @@
  * @file Add built in plug and play web framework support for express using body-parser
  */
 
-import { Framework, StandardHandler } from './framework'
-import { Request, Response } from 'express'
-import * as common from '../common'
+import {Framework, StandardHandler} from './framework';
+import {Request, Response} from 'express';
+import * as common from '../common';
 
 export interface ExpressHandler {
   /** @public */
-  (request: Request, response: Response): void
+  (request: Request, response: Response): void;
 }
 
 export interface ExpressMetadata {
   /** @public */
-  request: Request
+  request: Request;
 
   /** @public */
-  response: Response
+  response: Response;
 }
 
 /** @hidden */
@@ -42,34 +42,34 @@ export class Express implements Framework<ExpressHandler> {
       const metadata: ExpressMetadata = {
         request,
         response,
-      }
-      standard(request.body, request.headers, { express: metadata })
-      .then(({ status, body, headers }) => {
-        if (headers) {
-          for (const key in headers) {
-            response.setHeader(key, headers[key]!)
+      };
+      standard(request.body, request.headers, {express: metadata})
+        .then(({status, body, headers}) => {
+          if (headers) {
+            for (const key in headers) {
+              response.setHeader(key, headers[key]!);
+            }
           }
-        }
-        response.status(status).send(body)
-      })
-      .catch((e: Error) => {
-        common.error(e.stack || e)
-        response.status(500).send({ error: e.message || e })
-      })
-    }
+          response.status(status).send(body);
+        })
+        .catch((e: Error) => {
+          common.error(e.stack || e);
+          response.status(500).send({error: e.message || e});
+        });
+    };
   }
 
   isResponse(second: {}): second is Response {
-    return typeof (second as Response).send === 'function'
+    return typeof (second as Response).send === 'function';
   }
   isRequest(first: {}): first is Request {
-    return typeof (first as Request).get === 'function'
+    return typeof (first as Request).get === 'function';
   }
 
   check(first: {}, second: {}) {
-    return this.isRequest(first) && this.isResponse(second)
+    return this.isRequest(first) && this.isResponse(second);
   }
 }
 
 /** @hidden */
-export const express = new Express()
+export const express = new Express();

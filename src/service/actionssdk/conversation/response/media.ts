@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import * as Api from '../../api/v2'
+import * as Api from '../../api/v2';
 
 /** @public */
 export interface MediaObjectOptions {
@@ -22,42 +22,42 @@ export interface MediaObjectOptions {
    * MediaObject URL.
    * @public
    */
-  url: string
+  url: string;
 
   /** @public */
-  description?: string
+  description?: string;
 
   /**
    * Name of the MediaObject.
    * @public
    */
-  name?: string
+  name?: string;
 
   /**
    * Icon image.
    * @public
    */
-  icon?: Api.GoogleActionsV2UiElementsImage
+  icon?: Api.GoogleActionsV2UiElementsImage;
 
   /**
    * Large image.
    * @public
    */
-  image?: Api.GoogleActionsV2UiElementsImage
+  image?: Api.GoogleActionsV2UiElementsImage;
 }
 
 const toMediaObject = (object: MediaObjectString) => {
   if (typeof object === 'string') {
-    return new MediaObject(object)
+    return new MediaObject(object);
   }
-  return object
-}
+  return object;
+};
 
 /**
  * Class for initializing and constructing MediaObject
  * @public
  */
-export interface MediaObject extends Api.GoogleActionsV2MediaObject { }
+export interface MediaObject extends Api.GoogleActionsV2MediaObject {}
 export class MediaObject implements Api.GoogleActionsV2MediaObject {
   /**
    * @param options MediaObject options or just a string for the url
@@ -65,18 +65,18 @@ export class MediaObject implements Api.GoogleActionsV2MediaObject {
    */
   constructor(options: MediaObjectOptions | string) {
     if (typeof options === 'string') {
-      this.contentUrl = options
-      return
+      this.contentUrl = options;
+      return;
     }
-    this.contentUrl = options.url
-    this.description = options.description
-    this.icon = options.icon
-    this.largeImage = options.image
-    this.name = options.name
+    this.contentUrl = options.url;
+    this.description = options.description;
+    this.icon = options.icon;
+    this.largeImage = options.image;
+    this.name = options.name;
   }
 }
 
-export type MediaObjectString = Api.GoogleActionsV2MediaObject | string
+export type MediaObjectString = Api.GoogleActionsV2MediaObject | string;
 
 /** @public */
 export interface MediaResponseOptions {
@@ -84,66 +84,64 @@ export interface MediaResponseOptions {
    * Array of MediaObject held in the MediaResponse.
    * @public
    */
-  objects: MediaObjectString[]
+  objects: MediaObjectString[];
   /**
    * Type of the media within this MediaResponse.
    * Defaults to 'AUDIO'
    * @public
    */
-  type?: Api.GoogleActionsV2MediaResponseMediaType
+  type?: Api.GoogleActionsV2MediaResponseMediaType;
 }
 
 const isOptions = (
-  options: MediaResponseOptions | MediaObjectString,
+  options: MediaResponseOptions | MediaObjectString
 ): options is MediaResponseOptions => {
-  const test = options as MediaResponseOptions
-  return Array.isArray(test.objects)
-}
+  const test = options as MediaResponseOptions;
+  return Array.isArray(test.objects);
+};
 
 /**
  * Class for initializing and constructing MediaResponse.
  * @public
  */
-export interface MediaResponse extends Api.GoogleActionsV2MediaResponse { }
+export interface MediaResponse extends Api.GoogleActionsV2MediaResponse {}
 export class MediaResponse implements Api.GoogleActionsV2MediaResponse {
   /**
    * @param options MediaResponse options
    * @public
    */
-  constructor(options: MediaResponseOptions)
+  constructor(options: MediaResponseOptions);
   /**
    * @param objects MediaObjects
    * @public
    */
-  constructor(objects: MediaObjectString[])
+  constructor(objects: MediaObjectString[]);
   /**
    * @param objects MediaObjects
    * @public
    */
-  constructor(...objects: MediaObjectString[])
+  constructor(...objects: MediaObjectString[]);
   constructor(
-    options?: MediaResponseOptions |
-      MediaObjectString[] |
-      MediaObjectString,
+    options?: MediaResponseOptions | MediaObjectString[] | MediaObjectString,
     ...objects: MediaObjectString[]
   ) {
-    this.mediaType = 'AUDIO'
+    this.mediaType = 'AUDIO';
 
     if (!options) {
-      this.mediaObjects = []
-      return
+      this.mediaObjects = [];
+      return;
     }
 
     if (Array.isArray(options)) {
-      this.mediaObjects = options.map(o => toMediaObject(o))
-      return
+      this.mediaObjects = options.map(o => toMediaObject(o));
+      return;
     }
 
     if (isOptions(options)) {
-      this.mediaType = options.type || this.mediaType
-      this.mediaObjects = options.objects.map(o => toMediaObject(o))
-      return
+      this.mediaType = options.type || this.mediaType;
+      this.mediaObjects = options.objects.map(o => toMediaObject(o));
+      return;
     }
-    this.mediaObjects = [options].concat(objects).map(o => toMediaObject(o))
+    this.mediaObjects = [options].concat(objects).map(o => toMediaObject(o));
   }
 }

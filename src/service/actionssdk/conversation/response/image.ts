@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import * as Api from '../../api/v2'
+import * as Api from '../../api/v2';
 
 /** @public */
 export interface ImageOptions {
@@ -22,41 +22,41 @@ export interface ImageOptions {
    * Image source URL.
    * @public
    */
-  url: string
+  url: string;
 
   /**
    * Text to replace for image for accessibility.
    * @public
    */
-  alt: string
+  alt: string;
 
   /**
    * Height of the image.
    * @public
    */
-  height?: number
+  height?: number;
 
   /**
    * Width of the image.
    * @public
    */
-  width?: number
+  width?: number;
 }
 
 /**
  * Image type shown on visual elements.
  * @public
  */
-export interface Image extends Api.GoogleActionsV2UiElementsImage { }
+export interface Image extends Api.GoogleActionsV2UiElementsImage {}
 export class Image implements Api.GoogleActionsV2UiElementsImage {
   /**
    * @param options Image options
    * @public
    */
   constructor(option: ImageOptions) {
-    this.url = option.url
-    this.accessibilityText = option.alt
-    this.height = option.height
-    this.width = option.width
+    this.url = option.url;
+    this.accessibilityText = option.alt;
+    this.height = option.height;
+    this.width = option.width;
   }
 }

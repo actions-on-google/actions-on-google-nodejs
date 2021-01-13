@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import * as Api from '../../../api/v2'
+import * as Api from '../../../api/v2';
 
 /** @public */
 export interface ButtonOptions {
@@ -22,38 +22,38 @@ export interface ButtonOptions {
    * Text shown on the button.
    * @public
    */
-  title: string
+  title: string;
 
   /**
    * String URL to open.
    * @public
    */
-  url?: string
+  url?: string;
 
   /**
    * Action to take when selected. Recommended to use the url property for simple web page url open.
    * @public
    */
-  action?: Api.GoogleActionsV2UiElementsOpenUrlAction
+  action?: Api.GoogleActionsV2UiElementsOpenUrlAction;
 }
 
 /**
  * Card Button. Shown below cards. Open a URL when selected.
  * @public
  */
-export interface Button extends Api.GoogleActionsV2UiElementsButton { }
+export interface Button extends Api.GoogleActionsV2UiElementsButton {}
 export class Button implements Api.GoogleActionsV2UiElementsButton {
   /**
    * @param options Button options
    * @public
    */
   constructor(options: ButtonOptions) {
-    this.title = options.title
+    this.title = options.title;
     if (options.url) {
-      this.openUrlAction = { url: options.url }
+      this.openUrlAction = {url: options.url};
     }
     if (options.action) {
-      this.openUrlAction = options.action
+      this.openUrlAction = options.action;
     }
   }
 }

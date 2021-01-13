@@ -14,5 +14,5 @@
  * limitations under the License.
  */
 
-export * from './permission'
-export * from './update'
+export * from './permission';
+export * from './update';

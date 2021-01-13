@@ -14,43 +14,45 @@
  * limitations under the License.
  */
 
-import * as Api from '../../../api/v2'
-import * as common from '../../../../../common'
+import * as Api from '../../../api/v2';
+import * as common from '../../../../../common';
 
 /** @public */
 export interface BasicCardOptions {
   /** @public */
-  title?: string
+  title?: string;
 
   /** @public */
-  subtitle?: string
+  subtitle?: string;
 
   /** @public */
-  text?: string
+  text?: string;
 
   /** @public */
-  image?: Api.GoogleActionsV2UiElementsImage
+  image?: Api.GoogleActionsV2UiElementsImage;
 
   /** @public */
-  buttons?: Api.GoogleActionsV2UiElementsButton | Api.GoogleActionsV2UiElementsButton[]
+  buttons?:
+    | Api.GoogleActionsV2UiElementsButton
+    | Api.GoogleActionsV2UiElementsButton[];
 
   /** @public */
-  display?: Api.GoogleActionsV2UiElementsBasicCardImageDisplayOptions
+  display?: Api.GoogleActionsV2UiElementsBasicCardImageDisplayOptions;
 }
 
 /** @public */
-export interface BasicCard extends Api.GoogleActionsV2UiElementsBasicCard { }
+export interface BasicCard extends Api.GoogleActionsV2UiElementsBasicCard {}
 export class BasicCard implements Api.GoogleActionsV2UiElementsBasicCard {
   /** @public */
   constructor(options: BasicCardOptions) {
-    this.title = options.title
-    this.subtitle = options.subtitle
-    this.formattedText = options.text
-    this.image = options.image
-    const { buttons } = options
+    this.title = options.title;
+    this.subtitle = options.subtitle;
+    this.formattedText = options.text;
+    this.image = options.image;
+    const {buttons} = options;
     if (buttons) {
-      this.buttons = common.toArray(buttons)
+      this.buttons = common.toArray(buttons);
     }
-    this.imageDisplayOptions = options.display
+    this.imageDisplayOptions = options.display;
   }
 }

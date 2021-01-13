@@ -14,23 +14,23 @@
  * limitations under the License.
  */
 
-import * as Api from '../api/v2'
+import * as Api from '../api/v2';
 
 /** @public */
 export type SurfaceCapability =
-  'actions.capability.AUDIO_OUTPUT' |
-  'actions.capability.SCREEN_OUTPUT' |
-  'actions.capability.MEDIA_RESPONSE_AUDIO' |
-  'actions.capability.WEB_BROWSER' |
-  'actions.capability.INTERACTIVE_CANVAS'
+  | 'actions.capability.AUDIO_OUTPUT'
+  | 'actions.capability.SCREEN_OUTPUT'
+  | 'actions.capability.MEDIA_RESPONSE_AUDIO'
+  | 'actions.capability.WEB_BROWSER'
+  | 'actions.capability.INTERACTIVE_CANVAS';
 
 export class Surface {
   /** @public */
-  capabilities: Capabilities
+  capabilities: Capabilities;
 
   /** @hidden */
   constructor(surface: Api.GoogleActionsV2Surface = {}) {
-    this.capabilities = new Capabilities(surface.capabilities)
+    this.capabilities = new Capabilities(surface.capabilities);
   }
 
   /**
@@ -53,9 +53,9 @@ export class Surface {
    */
   has(attribute: SurfaceCapability) {
     if (this.capabilities.has(attribute)) {
-      return true
+      return true;
     }
-    return false
+    return false;
   }
 }
 
@@ -64,11 +64,11 @@ export class Capabilities {
    * List of surface capabilities of user device.
    * @public
    */
-  list: Api.GoogleActionsV2Capability[]
+  list: Api.GoogleActionsV2Capability[];
 
   /** @hidden */
   constructor(list: Api.GoogleActionsV2Capability[] = []) {
-    this.list = list
+    this.list = list;
   }
 
   /**
@@ -76,17 +76,17 @@ export class Capabilities {
    * @public
    */
   has(capability: SurfaceCapability) {
-    return this.list.map(c => c.name).indexOf(capability) > -1
+    return this.list.map(c => c.name).indexOf(capability) > -1;
   }
 }
 
 export class AvailableSurfacesCapabilities {
   /** @public */
-  surfaces: Surface[]
+  surfaces: Surface[];
 
   /** @hidden */
   constructor(surfaces: Surface[]) {
-    this.surfaces = surfaces
+    this.surfaces = surfaces;
   }
 
   /**
@@ -96,21 +96,24 @@ export class AvailableSurfacesCapabilities {
    * @public
    */
   has(capability: SurfaceCapability) {
-    return this.surfaces.findIndex(surface => surface.capabilities.has(capability)) > -1
+    return (
+      this.surfaces.findIndex(surface => surface.capabilities.has(capability)) >
+      -1
+    );
   }
 }
 
 export class AvailableSurfaces {
   /** @public */
-  list: Surface[]
+  list: Surface[];
 
   /** @public */
-  capabilities: AvailableSurfacesCapabilities
+  capabilities: AvailableSurfacesCapabilities;
 
   /** @hidden */
   constructor(list: Api.GoogleActionsV2Surface[]) {
-    this.list = list.map(surface => new Surface(surface))
-    this.capabilities = new AvailableSurfacesCapabilities(this.list)
+    this.list = list.map(surface => new Surface(surface));
+    this.capabilities = new AvailableSurfacesCapabilities(this.list);
   }
 
   /**
@@ -133,18 +136,18 @@ export class AvailableSurfaces {
    */
   has(attribute: SurfaceCapability) {
     if (this.capabilities.has(attribute)) {
-      return true
+      return true;
     }
-    return false
+    return false;
   }
 }
 
 export class Available {
   /** @public */
-  surfaces: AvailableSurfaces
+  surfaces: AvailableSurfaces;
 
   /** @hidden */
   constructor(surfaces: Api.GoogleActionsV2Surface[] = []) {
-    this.surfaces = new AvailableSurfaces(surfaces)
+    this.surfaces = new AvailableSurfaces(surfaces);
   }
 }

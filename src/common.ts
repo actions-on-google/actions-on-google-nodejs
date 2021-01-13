@@ -14,79 +14,81 @@
  * limitations under the License.
  */
 
-import * as Debug from 'debug'
-import * as https from 'https'
+import * as Debug from 'debug';
+import * as https from 'https';
 
-const name = 'actions-on-google'
-
-/** @hidden */
-export const debug = Debug(`${name}:debug`)
+const name = 'actions-on-google';
 
 /** @hidden */
-export const warn = Debug(`${name}:warn`)
+export const debug = Debug(`${name}:debug`);
 
 /** @hidden */
-// tslint:disable-next-line:no-console Allow console binding
-export const error = console.error.bind(console) as typeof console.error
+export const warn = Debug(`${name}:warn`);
 
 /** @hidden */
 // tslint:disable-next-line:no-console Allow console binding
-export const info = console.log.bind(console) as typeof console.log
+export const error = console.error.bind(console) as typeof console.error;
 
-warn.log = error
-debug.log = info
+/** @hidden */
+// tslint:disable-next-line:no-console Allow console binding
+export const info = console.log.bind(console) as typeof console.log;
+
+warn.log = error;
+debug.log = info;
 
 /** @hidden */
 export const deprecate = (feature: string, alternative: string) =>
-  info(`${feature} is *DEPRECATED*: ${alternative}`)
+  info(`${feature} is *DEPRECATED*: ${alternative}`);
 
 /** @public */
 export interface JsonObject {
   // tslint:disable-next-line:no-any JSON value can be anything
-  [key: string]: any
+  [key: string]: any;
 }
 
 /** @hidden */
-export const values = <T>(o: { [key: string]: T }) => Object.keys(o).map(k => o[k])
+export const values = <T>(o: {[key: string]: T}) =>
+  Object.keys(o).map(k => o[k]);
 
 /** @hidden */
-export const clone = <T>(o: T): T => JSON.parse(JSON.stringify(o))
+export const clone = <T>(o: T): T => JSON.parse(JSON.stringify(o));
 
 /** @hidden */
 // tslint:disable-next-line:no-any root can be anything
 export const stringify = (root: any, ...exclude: string[]) => {
-  const excluded = new Set(exclude)
+  const excluded = new Set(exclude);
   const filtered = Object.keys(root).reduce((o, k) => {
     if (excluded.has(k)) {
-      o[k] = '[Excluded]'
-      return o
+      o[k] = '[Excluded]';
+      return o;
     }
-    const value = root[k]
+    const value = root[k];
     try {
-      JSON.stringify(value)
-      o[k] = value
-      return o
+      JSON.stringify(value);
+      o[k] = value;
+      return o;
     } catch (e) {
-      const { message = '' } = e
-      o[k] = message.includes('Converting circular structure to JSON') ?
-        '[Circular]' : `[Stringify Error] ${e}`
-      return o
+      const {message = ''} = e;
+      o[k] = message.includes('Converting circular structure to JSON')
+        ? '[Circular]'
+        : `[Stringify Error] ${e}`;
+      return o;
     }
-  }, {} as typeof root)
-  return JSON.stringify(filtered, null, 2)
-}
+  }, {} as typeof root);
+  return JSON.stringify(filtered, null, 2);
+};
 
 /** @hidden */
-export type ProtoAny<TType, TSpec> = { '@type': TType } & TSpec
+export type ProtoAny<TType, TSpec> = {'@type': TType} & TSpec;
 
 /** @hidden */
-export const toArray = <T>(a: T | T[]) => Array.isArray(a) ? a : [a]
+export const toArray = <T>(a: T | T[]) => (Array.isArray(a) ? a : [a]);
 
 /** @hidden */
 export interface ApiClientObjectMap<TValue> {
-  [key: string]: TValue
+  [key: string]: TValue;
 }
 
 // Bind this to https to ensure its not implementation dependent
 /** @hidden */
-export const request: typeof https.request = https.request.bind(https)
+export const request: typeof https.request = https.request.bind(https);

@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-import * as Api from '../../api/v2'
-import { SoloHelper } from './helper'
+import * as Api from '../../api/v2';
+import {SoloHelper} from './helper';
 
 /** @public */
-export type DateTimeArgument = Api.GoogleActionsV2DateTime
+export type DateTimeArgument = Api.GoogleActionsV2DateTime;
 
 export interface DateTimeOptionsPrompts {
   /**
@@ -26,21 +26,21 @@ export interface DateTimeOptionsPrompts {
    * If not provided, Google will use a generic prompt.
    * @public
    */
-  initial?: string
+  initial?: string;
 
   /**
    * The prompt used to specifically ask for the date if not provided by user.
    * If not provided, Google will use a generic prompt.
    * @public
    */
-  date?: string
+  date?: string;
 
   /**
    * The prompt used to specifically ask for the time if not provided by user.
    * If not provided, Google will use a generic prompt.
    * @public
    */
-  time?: string
+  time?: string;
 }
 
 /** @public */
@@ -49,7 +49,7 @@ export interface DateTimeOptions {
    * Prompts for the user
    * @public
    */
-  prompts?: DateTimeOptionsPrompts
+  prompts?: DateTimeOptionsPrompts;
 }
 
 /**
@@ -115,7 +115,7 @@ export class DateTime extends SoloHelper<
    * @public
    */
   constructor(options: DateTimeOptions) {
-    const { prompts = {} } = options
+    const {prompts = {}} = options;
 
     super({
       intent: 'actions.intent.DATETIME',
@@ -127,6 +127,6 @@ export class DateTime extends SoloHelper<
           requestTimeText: prompts.time,
         },
       },
-    })
+    });
   }
 }

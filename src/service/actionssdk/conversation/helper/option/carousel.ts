@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-import * as Api from '../../../api/v2'
-import { Helper } from '../helper'
-import { OptionArgument, OptionItems, convert, OptionItem } from './option'
+import * as Api from '../../../api/v2';
+import {Helper} from '../helper';
+import {OptionArgument, OptionItems, convert, OptionItem} from './option';
 
 /** @public */
-export type CarouselArgument = OptionArgument
+export type CarouselArgument = OptionArgument;
 
 /** @public */
 export interface CarouselOptionItem extends OptionItem {
@@ -27,7 +27,7 @@ export interface CarouselOptionItem extends OptionItem {
    * Description text of the item.
    * @public
    */
-  description: string
+  description: string;
 }
 
 /** @public */
@@ -36,13 +36,15 @@ export interface CarouselOptions {
    * Sets the display options for the images in this carousel.
    * @public
    */
-  display?: Api.GoogleActionsV2UiElementsCarouselSelectImageDisplayOptions
+  display?: Api.GoogleActionsV2UiElementsCarouselSelectImageDisplayOptions;
 
   /**
    * List of 2-20 items to show in this carousel. Required.
    * @public
    */
-  items: OptionItems<CarouselOptionItem> | Api.GoogleActionsV2UiElementsCarouselSelectCarouselItem[]
+  items:
+    | OptionItems<CarouselOptionItem>
+    | Api.GoogleActionsV2UiElementsCarouselSelectCarouselItem[];
 }
 
 /**
@@ -127,10 +129,12 @@ export class Carousel extends Helper<
       type: 'type.googleapis.com/google.actions.v2.OptionValueSpec',
       data: {
         carouselSelect: {
-          items: Array.isArray(options.items) ? options.items : convert(options.items),
+          items: Array.isArray(options.items)
+            ? options.items
+            : convert(options.items),
           imageDisplayOptions: options.display,
         },
       },
-    })
+    });
   }
 }

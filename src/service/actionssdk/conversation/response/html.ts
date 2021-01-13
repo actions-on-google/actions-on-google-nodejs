@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import * as Api from '../../api/v2'
-import { JsonObject } from '../../../../common'
+import * as Api from '../../api/v2';
+import {JsonObject} from '../../../../common';
 
 /** @public */
 export interface HtmlResponseOptions<TData extends JsonObject = JsonObject> {
@@ -24,7 +24,7 @@ export interface HtmlResponseOptions<TData extends JsonObject = JsonObject> {
    *
    * @public
    */
-  url?: string
+  url?: string;
 
   /**
    * Configure if the mic is closed after this html response.
@@ -32,7 +32,7 @@ export interface HtmlResponseOptions<TData extends JsonObject = JsonObject> {
    * Alias of `suppressMic`
    * @public
    */
-  suppress?: boolean
+  suppress?: boolean;
 
   /**
    * Communicate the following JSON object to the web app.
@@ -40,47 +40,53 @@ export interface HtmlResponseOptions<TData extends JsonObject = JsonObject> {
    * Alias of `updatedState`
    * @public
    */
-  data?: TData
+  data?: TData;
 }
 
 /**
  * Html Canvas Response
  * @public
  */
-export interface HtmlResponse extends Api.GoogleActionsV2UiElementsHtmlResponse { }
+export interface HtmlResponse
+  extends Api.GoogleActionsV2UiElementsHtmlResponse {}
 export class HtmlResponse<TData extends JsonObject = JsonObject>
   implements Api.GoogleActionsV2UiElementsHtmlResponse {
   /**
    * @param options Canvas options
    * @public
    */
-  constructor(options: HtmlResponseOptions<TData> |
-      Api.GoogleActionsV2UiElementsHtmlResponse = {}) {
-    const abstracted = options as HtmlResponseOptions
-    const raw = options as Api.GoogleActionsV2UiElementsHtmlResponse
-    this.url = options.url
-    this.suppressMic = typeof raw.suppressMic !== 'undefined' ?
-      raw.suppressMic : abstracted.suppress
-    this.updatedState = raw.updatedState || abstracted.data
+  constructor(
+    options:
+      | HtmlResponseOptions<TData>
+      | Api.GoogleActionsV2UiElementsHtmlResponse = {}
+  ) {
+    const abstracted = options as HtmlResponseOptions;
+    const raw = options as Api.GoogleActionsV2UiElementsHtmlResponse;
+    this.url = options.url;
+    this.suppressMic =
+      typeof raw.suppressMic !== 'undefined'
+        ? raw.suppressMic
+        : abstracted.suppress;
+    this.updatedState = raw.updatedState || abstracted.data;
   }
 
   /** @public */
   get suppress() {
-    return !!this.suppressMic
+    return !!this.suppressMic;
   }
 
   /** @public */
   set suppress(suppress) {
-    this.suppressMic = suppress
+    this.suppressMic = suppress;
   }
 
   /** @public */
   get data() {
-    return this.updatedState as TData
+    return this.updatedState as TData;
   }
 
   /** @public */
   set data(data) {
-    this.updatedState = data
+    this.updatedState = data;
   }
 }

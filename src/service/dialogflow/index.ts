@@ -14,6 +14,6 @@
  * limitations under the License.
  */
 
-export * from './dialogflow'
-export * from './conv'
-export * from './context'
+export * from './dialogflow';
+export * from './conv';
+export * from './context';

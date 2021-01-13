@@ -14,17 +14,17 @@
  * limitations under the License.
  */
 
-import * as Api from '../../../api/v2'
+import * as Api from '../../../api/v2';
 
 /** @public */
-export type OptionArgument = string
+export type OptionArgument = string;
 
 export interface OptionItems<TOptionItem = OptionItem | string> {
   /**
    * key: Unique string ID for this option.
    * @public
    */
-  [key: string]: TOptionItem
+  [key: string]: TOptionItem;
 }
 
 /**
@@ -36,51 +36,53 @@ export interface OptionItem {
    * Synonyms that can be used by the user to indicate this option if they do not use the key.
    * @public
    */
-  synonyms?: string[]
+  synonyms?: string[];
 
   /**
    * Name of the item.
    * @public
    */
-  title: string
+  title: string;
 
   /**
    * Optional text describing the item.
    * @public
    */
-  description?: string
+  description?: string;
 
   /**
    * Square image to show for this item.
    * @public
    */
-  image?: Api.GoogleActionsV2UiElementsImage
+  image?: Api.GoogleActionsV2UiElementsImage;
 }
 
 /** @hidden */
-export interface ApiOptionItem extends Api.GoogleActionsV2UiElementsCarouselSelectCarouselItem { }
+export interface ApiOptionItem
+  extends Api.GoogleActionsV2UiElementsCarouselSelectCarouselItem {}
 
 /** @hidden */
-export const convert = (items: OptionItems) => Object.keys(items).map(key => {
-  const value = items[key]
-  if (typeof value === 'string') {
+export const convert = (items: OptionItems) =>
+  Object.keys(items).map(key => {
+    const value = items[key];
+    if (typeof value === 'string') {
+      const item: ApiOptionItem = {
+        title: value,
+        optionInfo: {
+          key,
+        },
+      };
+      return item;
+    }
+    const {description, image, synonyms, title} = value;
     const item: ApiOptionItem = {
-      title: value,
       optionInfo: {
         key,
+        synonyms,
       },
-    }
-    return item
-  }
-  const { description, image, synonyms, title } = value
-  const item: ApiOptionItem = {
-    optionInfo: {
-      key,
-      synonyms,
-    },
-    description,
-    image,
-    title,
-  }
-  return item
-})
+      description,
+      image,
+      title,
+    };
+    return item;
+  });

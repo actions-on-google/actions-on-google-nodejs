@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-import * as Api from '../../api/v2'
-import { SoloHelper } from './helper'
+import * as Api from '../../api/v2';
+import {SoloHelper} from './helper';
 
 /** @public */
-export type SignInArgument = Api.GoogleActionsV2SignInValue
+export type SignInArgument = Api.GoogleActionsV2SignInValue;
 
 /**
  * Hands the user off to a web sign in flow. App sign in and OAuth credentials
@@ -82,6 +82,6 @@ export class SignIn extends SoloHelper<
       data: {
         optContext: context,
       },
-    })
+    });
   }
 }

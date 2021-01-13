@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import * as Api from '../../api/v2'
+import * as Api from '../../api/v2';
 
 /** @public */
-export type MediaStatusArgument = Api.GoogleActionsV2MediaStatus
+export type MediaStatusArgument = Api.GoogleActionsV2MediaStatus;

@@ -14,42 +14,47 @@
  * limitations under the License.
  */
 
-import { OmniHandler, StandardHandler, BuiltinFrameworks, builtin } from './framework'
-import * as common from './common'
+import {
+  OmniHandler,
+  StandardHandler,
+  BuiltinFrameworks,
+  builtin,
+} from './framework';
+import * as common from './common';
 
 /** @public */
-export type AppHandler = OmniHandler & BaseApp
+export type AppHandler = OmniHandler & BaseApp;
 
 /** @public */
 export interface AppOptions {
   /** @public */
-  debug?: boolean
+  debug?: boolean;
 }
 
 /** @hidden */
 export interface ServiceBaseApp {
   /** @public */
-  handler: StandardHandler
+  handler: StandardHandler;
 }
 
 /** @public */
 export interface Plugin<TService, TPlugin> {
   /** @public */
-  <TApp>(app: AppHandler & TService & TApp): (AppHandler & TService & TApp & TPlugin) | void
+  <TApp>(app: AppHandler & TService & TApp):
+    | (AppHandler & TService & TApp & TPlugin)
+    | void;
 }
 
 /** @public */
 export interface BaseApp extends ServiceBaseApp {
   /** @public */
-  frameworks: BuiltinFrameworks
+  frameworks: BuiltinFrameworks;
 
   /** @public */
-  use<TService, TPlugin>(
-    plugin: Plugin<TService, TPlugin>,
-  ): this & TPlugin
+  use<TService, TPlugin>(plugin: Plugin<TService, TPlugin>): this & TPlugin;
 
   /** @public */
-  debug: boolean
+  debug: boolean;
 }
 
 /** @hidden */
@@ -57,40 +62,43 @@ const create = (options?: AppOptions): BaseApp => ({
   frameworks: Object.assign({}, builtin),
   handler: () => Promise.reject(new Error('StandardHandler not set')),
   use(plugin) {
-    return plugin(this) || this
+    return plugin(this) || this;
   },
   debug: !!(options && options.debug),
-})
+});
 
 /** @hidden */
 export const attach = <TService>(
   service: TService,
-  options?: AppOptions,
+  options?: AppOptions
 ): AppHandler & TService => {
-  let app: (BaseApp & TService) | (AppHandler & TService) = Object.assign(create(options), service)
+  let app: (BaseApp & TService) | (AppHandler & TService) = Object.assign(
+    create(options),
+    service
+  );
   // tslint:disable-next-line:no-any automatically detect any inputs
   const omni: OmniHandler = (...args: any[]) => {
     for (const framework of common.values(app.frameworks)) {
       if (framework.check(...args)) {
-        return framework.handle(app.handler)(...args)
+        return framework.handle(app.handler)(...args);
       }
     }
-    return app.handler(args[0], args[1])
-  }
-  app = Object.assign(omni, app)
-  const handler: typeof app.handler = app.handler.bind(app)
+    return app.handler(args[0], args[1]);
+  };
+  app = Object.assign(omni, app);
+  const handler: typeof app.handler = app.handler.bind(app);
   const standard: StandardHandler = async (body, headers, metadata) => {
-    const log = app.debug ? common.info : common.debug
-    log('Request', common.stringify(body))
-    log('Headers', common.stringify(headers))
-    const response = await handler(body, headers, metadata)
+    const log = app.debug ? common.info : common.debug;
+    log('Request', common.stringify(body));
+    log('Headers', common.stringify(headers));
+    const response = await handler(body, headers, metadata);
     if (!response.headers) {
-      response.headers = {}
+      response.headers = {};
     }
-    response.headers['content-type'] = 'application/json;charset=utf-8'
-    log('Response', common.stringify(response))
-    return response
-  }
-  app.handler = standard
-  return app as AppHandler & TService
-}
+    response.headers['content-type'] = 'application/json;charset=utf-8';
+    log('Response', common.stringify(response));
+    return response;
+  };
+  app.handler = standard;
+  return app as AppHandler & TService;
+};

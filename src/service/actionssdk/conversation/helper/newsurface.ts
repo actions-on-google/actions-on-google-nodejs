@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-import * as Api from '../../api/v2'
-import { SoloHelper } from './helper'
-import { toArray } from '../../../../common'
-import { SurfaceCapability } from '../surface'
+import * as Api from '../../api/v2';
+import {SoloHelper} from './helper';
+import {toArray} from '../../../../common';
+import {SurfaceCapability} from '../surface';
 
 /** @public */
-export type NewSurfaceArgument = Api.GoogleActionsV2NewSurfaceValue
+export type NewSurfaceArgument = Api.GoogleActionsV2NewSurfaceValue;
 
 /** @public */
 export interface NewSurfaceOptions {
@@ -29,19 +29,19 @@ export interface NewSurfaceOptions {
    * It's the TTS prompt prefix (action phrase) we ask the user.
    * @public
    */
-  context: string
+  context: string;
 
   /**
    * Title of the notification appearing on new surface device.
    * @public
    */
-  notification: string
+  notification: string;
 
   /**
    * The list of capabilities required in the surface.
    * @public
    */
-  capabilities: SurfaceCapability | SurfaceCapability[]
+  capabilities: SurfaceCapability | SurfaceCapability[];
 }
 
 /**
@@ -138,6 +138,6 @@ export class NewSurface extends SoloHelper<
         context: options.context,
         notificationTitle: options.notification,
       },
-    })
+    });
   }
 }

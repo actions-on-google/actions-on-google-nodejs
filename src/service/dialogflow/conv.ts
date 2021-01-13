@@ -14,105 +14,121 @@
  * limitations under the License.
  */
 
-import * as Api from './api/v2'
-import * as ApiV1 from './api/v1'
-import * as ActionsApi from '../actionssdk/api/v2'
-import { Conversation, ConversationBaseOptions, ConversationOptionsInit } from '../actionssdk'
-import { ProtoAny, JsonObject } from '../../common'
-import { Contexts, ContextValues, Parameters } from './context'
-import { Incoming } from './incoming'
+import * as Api from './api/v2';
+import * as ApiV1 from './api/v1';
+import * as ActionsApi from '../actionssdk/api/v2';
+import {
+  Conversation,
+  ConversationBaseOptions,
+  ConversationOptionsInit,
+} from '../actionssdk';
+import {ProtoAny, JsonObject} from '../../common';
+import {Contexts, ContextValues, Parameters} from './context';
+import {Incoming} from './incoming';
 
-const CONV_DATA_CONTEXT = '_actions_on_google'
-const CONV_DATA_CONTEXT_LIFESPAN = 99
-const SIMULATOR_WARNING = 'Cannot display response in Dialogflow simulator. ' +
-  'Please test on the Google Assistant simulator instead.'
+const CONV_DATA_CONTEXT = '_actions_on_google';
+const CONV_DATA_CONTEXT_LIFESPAN = 99;
+const SIMULATOR_WARNING =
+  'Cannot display response in Dialogflow simulator. ' +
+  'Please test on the Google Assistant simulator instead.';
 
 /** @hidden */
 export interface SystemIntent {
-  intent: string
-  data: ProtoAny<string, JsonObject>
+  intent: string;
+  data: ProtoAny<string, JsonObject>;
 }
 
 /** @hidden */
 export interface GoogleAssistantResponse {
-  expectUserResponse?: boolean
-  noInputPrompts?: ActionsApi.GoogleActionsV2SimpleResponse[]
-  isSsml?: boolean
-  richResponse?: ActionsApi.GoogleActionsV2RichResponse
-  systemIntent?: SystemIntent
-  userStorage?: string
-  speechBiasingHints?: string[]
+  expectUserResponse?: boolean;
+  noInputPrompts?: ActionsApi.GoogleActionsV2SimpleResponse[];
+  isSsml?: boolean;
+  richResponse?: ActionsApi.GoogleActionsV2RichResponse;
+  systemIntent?: SystemIntent;
+  userStorage?: string;
+  speechBiasingHints?: string[];
 }
 
 /** @hidden */
 export interface PayloadGoogle {
-  google: GoogleAssistantResponse
+  google: GoogleAssistantResponse;
 }
 
 /** @public */
-export interface DialogflowConversationOptions<
-  TConvData,
-  TUserStorage
-> extends ConversationBaseOptions<TConvData, TUserStorage> {
+export interface DialogflowConversationOptions<TConvData, TUserStorage>
+  extends ConversationBaseOptions<TConvData, TUserStorage> {
   /** @public */
-  body?: Api.GoogleCloudDialogflowV2WebhookRequest | ApiV1.DialogflowV1WebhookRequest
+  body?:
+    | Api.GoogleCloudDialogflowV2WebhookRequest
+    | ApiV1.DialogflowV1WebhookRequest;
 }
 
 const isV1 = (
-  body: Api.GoogleCloudDialogflowV2WebhookRequest | ApiV1.DialogflowV1WebhookRequest,
-): body is ApiV1.DialogflowV1WebhookRequest => !!(body as ApiV1.DialogflowV1WebhookRequest).result
+  body:
+    | Api.GoogleCloudDialogflowV2WebhookRequest
+    | ApiV1.DialogflowV1WebhookRequest
+): body is ApiV1.DialogflowV1WebhookRequest =>
+  !!(body as ApiV1.DialogflowV1WebhookRequest).result;
 
 const isSimulator = (
-  body: Api.GoogleCloudDialogflowV2WebhookRequest | ApiV1.DialogflowV1WebhookRequest,
+  body:
+    | Api.GoogleCloudDialogflowV2WebhookRequest
+    | ApiV1.DialogflowV1WebhookRequest
 ) => {
   if (isV1(body)) {
-    return !body.originalRequest
+    return !body.originalRequest;
   }
   if (!body.originalDetectIntentRequest) {
-    return false
+    return false;
   }
-  return Object.keys(body.originalDetectIntentRequest.payload!).length === 0 &&
+  return (
+    Object.keys(body.originalDetectIntentRequest.payload!).length === 0 &&
     !!body.responseId
-}
+  );
+};
 
 const getRequest = (
-  body: Api.GoogleCloudDialogflowV2WebhookRequest | ApiV1.DialogflowV1WebhookRequest,
+  body:
+    | Api.GoogleCloudDialogflowV2WebhookRequest
+    | ApiV1.DialogflowV1WebhookRequest
 ): ActionsApi.GoogleActionsV2AppRequest => {
   if (isV1(body)) {
-    const { originalRequest = {} } = body
-    const { data = {} } = originalRequest
-    return data
+    const {originalRequest = {}} = body;
+    const {data = {}} = originalRequest;
+    return data;
   }
-  const { originalDetectIntentRequest = {} } = body
-  const { payload = {} } = originalDetectIntentRequest
-  return payload
-}
+  const {originalDetectIntentRequest = {}} = body;
+  const {payload = {}} = originalDetectIntentRequest;
+  return payload;
+};
 
-const serializeData = <TConvData>(data: TConvData) =>
-  JSON.stringify(data)
+const serializeData = <TConvData>(data: TConvData) => JSON.stringify(data);
 
 const deserializeData = <TContexts extends Contexts, TConvData>(
-  contexts: ContextValues<TContexts>, defaultData?: TConvData,
+  contexts: ContextValues<TContexts>,
+  defaultData?: TConvData
 ): TConvData => {
-  const context = contexts.get(CONV_DATA_CONTEXT)
+  const context = contexts.get(CONV_DATA_CONTEXT);
   if (context) {
-    const { data } = context.parameters
+    const {data} = context.parameters;
     if (typeof data === 'string') {
-      return JSON.parse(data)
+      return JSON.parse(data);
     }
   }
 
-  return Object.assign({}, defaultData) as TConvData
-}
+  return Object.assign({}, defaultData) as TConvData;
+};
 
 /** @public */
 export class DialogflowConversation<
   TConvData = JsonObject,
   TUserStorage = JsonObject,
-  TContexts extends Contexts = Contexts,
+  TContexts extends Contexts = Contexts
 > extends Conversation<TUserStorage> {
   /** @public */
-  body: Api.GoogleCloudDialogflowV2WebhookRequest | ApiV1.DialogflowV1WebhookRequest
+  body:
+    | Api.GoogleCloudDialogflowV2WebhookRequest
+    | ApiV1.DialogflowV1WebhookRequest;
 
   /**
    * Get the current Dialogflow action name.
@@ -127,7 +143,7 @@ export class DialogflowConversation<
    *
    * @public
    */
-  action: string
+  action: string;
 
   /**
    * Get the current Dialogflow intent name.
@@ -142,7 +158,7 @@ export class DialogflowConversation<
    *
    * @public
    */
-  intent: string
+  intent: string;
 
   /**
    * The Dialogflow parameters from the current intent.
@@ -174,13 +190,13 @@ export class DialogflowConversation<
    *
    * @public
    */
-  parameters: Parameters
+  parameters: Parameters;
 
   /** @public */
-  contexts: ContextValues<TContexts>
+  contexts: ContextValues<TContexts>;
 
   /** @public */
-  incoming: Incoming
+  incoming: Incoming;
 
   /**
    * The user's raw input query.
@@ -195,7 +211,7 @@ export class DialogflowConversation<
    *
    * @public
    */
-  query: string
+  query: string;
 
   /**
    * The session data in JSON format.
@@ -211,34 +227,38 @@ export class DialogflowConversation<
    *
    * @public
    */
-  data: TConvData
+  data: TConvData;
 
   /** @public */
-  version: number
+  version: number;
 
   /** @hidden */
-  _followup?: Api.GoogleCloudDialogflowV2EventInput | ApiV1.DialogflowV1FollowupEvent
+  _followup?:
+    | Api.GoogleCloudDialogflowV2EventInput
+    | ApiV1.DialogflowV1FollowupEvent;
 
   /** @hidden */
-  _init: ConversationOptionsInit<TConvData, TUserStorage>
+  _init: ConversationOptionsInit<TConvData, TUserStorage>;
 
   /** @public */
-  constructor(options: DialogflowConversationOptions<TConvData, TUserStorage> = {}) {
-    const { body = {} } = options
+  constructor(
+    options: DialogflowConversationOptions<TConvData, TUserStorage> = {}
+  ) {
+    const {body = {}} = options;
 
     super({
       request: getRequest(body),
       headers: options.headers,
       init: options.init,
       ordersv3: options.ordersv3,
-    })
+    });
 
-    this.body = body
+    this.body = body;
 
     if (isV1(this.body)) {
-      this.version = 1
+      this.version = 1;
 
-      const { result = {} } = this.body
+      const {result = {}} = this.body;
       const {
         action = '',
         parameters = {},
@@ -246,19 +266,19 @@ export class DialogflowConversation<
         resolvedQuery = '',
         metadata = {},
         fulfillment,
-      } = result
-      const { intentName = '' } = metadata
+      } = result;
+      const {intentName = ''} = metadata;
 
-      this.action = action
-      this.intent = intentName
-      this.parameters = parameters
-      this.contexts = new ContextValues(contexts)
-      this.incoming = new Incoming(fulfillment)
-      this.query = resolvedQuery
+      this.action = action;
+      this.intent = intentName;
+      this.parameters = parameters;
+      this.contexts = new ContextValues(contexts);
+      this.incoming = new Incoming(fulfillment);
+      this.query = resolvedQuery;
     } else {
-      this.version = 2
+      this.version = 2;
 
-      const { queryResult = {} } = this.body
+      const {queryResult = {}} = this.body;
       const {
         action = '',
         parameters = {},
@@ -266,26 +286,26 @@ export class DialogflowConversation<
         intent = {},
         queryText = '',
         fulfillmentMessages,
-      } = queryResult
-      const { displayName = '' } = intent
+      } = queryResult;
+      const {displayName = ''} = intent;
 
-      this.action = action
-      this.intent = displayName
-      this.parameters = parameters
-      this.contexts = new ContextValues(outputContexts, this.body.session)
-      this.incoming = new Incoming(fulfillmentMessages)
-      this.query = queryText
+      this.action = action;
+      this.intent = displayName;
+      this.parameters = parameters;
+      this.contexts = new ContextValues(outputContexts, this.body.session);
+      this.incoming = new Incoming(fulfillmentMessages);
+      this.query = queryText;
     }
 
     for (const key in this.parameters) {
-      const value = this.parameters[key]
+      const value = this.parameters[key];
       if (typeof value !== 'object') {
         // Convert all non-objects to strings for consistency
-        this.parameters[key] = String(value)
+        this.parameters[key] = String(value);
       }
     }
 
-    this.data = deserializeData(this.contexts, this._init.data)
+    this.data = deserializeData(this.contexts, this._init.data);
   }
 
   /**
@@ -320,31 +340,33 @@ export class DialogflowConversation<
    * @public
    */
   followup(event: string, parameters?: Parameters, lang?: string) {
-    this._responded = true
+    this._responded = true;
     if (this.version === 1) {
       this._followup = {
-          name: event,
-          data: parameters,
-      }
-      return this
+        name: event,
+        data: parameters,
+      };
+      return this;
     }
-    const body = this.body as Api.GoogleCloudDialogflowV2WebhookRequest
+    const body = this.body as Api.GoogleCloudDialogflowV2WebhookRequest;
     this._followup = {
       name: event,
       parameters,
       languageCode: lang || body.queryResult!.languageCode,
-    }
-    return this
+    };
+    return this;
   }
 
   /** @public */
-  serialize(): Api.GoogleCloudDialogflowV2WebhookResponse | ApiV1.DialogflowV1WebhookResponse {
+  serialize():
+    | Api.GoogleCloudDialogflowV2WebhookResponse
+    | ApiV1.DialogflowV1WebhookResponse {
     if (this._raw) {
-      return this._raw
+      return this._raw;
     }
-    let payload: PayloadGoogle | undefined
+    let payload: PayloadGoogle | undefined;
     if (this._followup) {
-      this.digested = true
+      this.digested = true;
     } else {
       const {
         richResponse,
@@ -353,7 +375,7 @@ export class DialogflowConversation<
         expectedIntent,
         noInputPrompts,
         speechBiasingHints,
-      } = this.response()
+      } = this.response();
       const google: GoogleAssistantResponse = {
         expectUserResponse,
         systemIntent: expectedIntent && {
@@ -362,75 +384,78 @@ export class DialogflowConversation<
         },
         noInputPrompts,
         speechBiasingHints,
-      }
+      };
       if (richResponse.items!.length) {
-        google.richResponse = richResponse
+        google.richResponse = richResponse;
       }
       if (userStorage) {
-        google.userStorage = userStorage
+        google.userStorage = userStorage;
       }
-      payload = { google }
+      payload = {google};
     }
-    const convDataDefault = deserializeData<TContexts, TConvData>(this.contexts, this._init.data)
-    const convDataIn = serializeData(convDataDefault)
-    const convDataOut = serializeData(this.data)
+    const convDataDefault = deserializeData<TContexts, TConvData>(
+      this.contexts,
+      this._init.data
+    );
+    const convDataIn = serializeData(convDataDefault);
+    const convDataOut = serializeData(this.data);
     if (convDataOut !== convDataIn) {
       // Previously was setting every webhook call
       // But now will only set if different so lifespan does not get reset
       this.contexts.set(CONV_DATA_CONTEXT, CONV_DATA_CONTEXT_LIFESPAN, {
         data: convDataOut,
-      })
+      });
     }
-    const simulator = isSimulator(this.body)
+    const simulator = isSimulator(this.body);
     if (this.version === 1) {
       const response: ApiV1.DialogflowV1WebhookResponse = {
         data: payload,
         followupEvent: this._followup,
-      }
-      const contextOut = this.contexts._serializeV1()
+      };
+      const contextOut = this.contexts._serializeV1();
       if (contextOut.length) {
-        response.contextOut = contextOut
+        response.contextOut = contextOut;
       }
       if (simulator && payload) {
-        const { richResponse = {} } = payload.google
-        const { items = [] } = richResponse
+        const {richResponse = {}} = payload.google;
+        const {items = []} = richResponse;
         // Simulator only shows speech response
         // Since this is only shown to the simulator as text, the speech is the displayText
-        response.speech = SIMULATOR_WARNING
+        response.speech = SIMULATOR_WARNING;
         if (!payload.google.systemIntent && items.length < 2) {
-          for (const { simpleResponse } of items) {
+          for (const {simpleResponse} of items) {
             if (simpleResponse) {
-              response.speech = simpleResponse.displayText ||
-              simpleResponse.textToSpeech
-              break
+              response.speech =
+                simpleResponse.displayText || simpleResponse.textToSpeech;
+              break;
             }
           }
         }
       }
-      return response
+      return response;
     }
     const response: Api.GoogleCloudDialogflowV2WebhookResponse = {
       payload,
       followupEventInput: this._followup,
-    }
-    const outputContexts = this.contexts._serialize()
+    };
+    const outputContexts = this.contexts._serialize();
     if (outputContexts.length) {
-      response.outputContexts = outputContexts
+      response.outputContexts = outputContexts;
     }
     if (simulator && payload) {
-      const { richResponse = {} } = payload.google
-      const { items = [] } = richResponse
-      response.fulfillmentText = SIMULATOR_WARNING
+      const {richResponse = {}} = payload.google;
+      const {items = []} = richResponse;
+      response.fulfillmentText = SIMULATOR_WARNING;
       if (!payload.google.systemIntent && items.length < 2) {
-        for (const { simpleResponse } of items) {
+        for (const {simpleResponse} of items) {
           if (simpleResponse) {
-            response.fulfillmentText = simpleResponse.displayText ||
-            simpleResponse.textToSpeech
-            break
+            response.fulfillmentText =
+              simpleResponse.displayText || simpleResponse.textToSpeech;
+            break;
           }
         }
       }
     }
-    return response
+    return response;
   }
 }

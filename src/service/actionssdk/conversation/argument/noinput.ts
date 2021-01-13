@@ -15,7 +15,7 @@
  */
 
 /** @public */
-export type RepromptArgument = string
+export type RepromptArgument = string;
 
 /** @public */
-export type FinalRepromptArgument = boolean
+export type FinalRepromptArgument = boolean;
