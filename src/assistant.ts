@@ -21,9 +21,23 @@ import * as common from './common'
 export type AppHandler = OmniHandler & BaseApp
 
 /** @public */
+export interface LogFn {
+  (params: any[]): void;
+}
+
+/** @public */
+export interface AppLogs {
+  debug: LogFn,
+  info: LogFn,
+  warn: LogFn,
+  error: LogFn
+}
+
+/** @public */
 export interface AppOptions {
   /** @public */
-  debug?: boolean
+  debug?: boolean,
+  logs?: AppLogs
 }
 
 /** @hidden */
@@ -50,6 +64,7 @@ export interface BaseApp extends ServiceBaseApp {
 
   /** @public */
   debug: boolean
+  logs?: AppLogs
 }
 
 /** @hidden */
@@ -60,6 +75,7 @@ const create = (options?: AppOptions): BaseApp => ({
     return plugin(this) || this
   },
   debug: !!(options && options.debug),
+  logs: (typeof (options) === 'undefined' || typeof (options.logs) === 'undefined') ? undefined : options.logs
 })
 
 /** @hidden */
@@ -78,6 +94,12 @@ export const attach = <TService>(
     return app.handler(args[0], args[1])
   }
   app = Object.assign(omni, app)
+
+  if (app.logs) {
+    // Redefine debug, warn, error, info according to app definitions of logs.
+    common.setLogs(app.logs)
+  }
+
   const handler: typeof app.handler = app.handler.bind(app)
   const standard: StandardHandler = async (body, headers, metadata) => {
     const log = app.debug ? common.info : common.debug
