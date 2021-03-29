@@ -23,13 +23,13 @@ import {google} from 'googleapis';
 
 const encoding = 'utf8';
 const homegraphWrapperDeprecationNotice = method =>
-  `SmartHomeApp.${method} homegraph wrapper method is deprecated. Use Google APIs Node.js Client: https://www.npmjs.com/package/googleapis bindings for Home Graph: https://googleapis.dev/nodejs/googleapis/latest/homegraph/classes/Homegraph.html`;
+  `SmartHomeApp.${method} Home Graph wrapper method is deprecated. Use Google APIs Node.js Client for Home Graph: https://www.npmjs.com/package/@googleapis/homegraph`;
 
 /**
- *  @public
- *  @deprecated Use Google APIs Node.js Client:
- *  https://www.npmjs.com/package/googleapis bindings for Home Graph:
- *  https://googleapis.dev/nodejs/googleapis/latest/homegraph/classes/Homegraph.html
+ * @public
+ * @deprecated Home Graph credentials are deprecated.
+ * Use Google APIs Node.js Client for Home Graph:
+ * https://www.npmjs.com/package/@googleapis/homegraph
  */
 export interface SmartHomeJwt {
   type: 'service_account';
@@ -51,9 +51,9 @@ export interface SmartHomeOptions extends AppOptions {
    * https://console.cloud.google.com/apis/api/homegraph.googleapis.com/overview
    * to learn more.
    * @public
-   * @deprecated Use Google APIs Node.js Client:
-   * https://www.npmjs.com/package/googleapis bindings for Home Graph:
-   * https://googleapis.dev/nodejs/googleapis/latest/homegraph/classes/Homegraph.html
+   * @deprecated Home Graph credentials are deprecated.
+   * Use Google APIs Node.js Client for Home Graph:
+   * https://www.npmjs.com/package/@googleapis/homegraph
    */
   key?: string;
 
@@ -62,9 +62,9 @@ export interface SmartHomeOptions extends AppOptions {
    * This is used for report state. See https://jwt.io/. A JWT can be
    * created through the Google Cloud Console: https://console.cloud.google.com/apis/credentials
    * @public
-   * @deprecated Use Google APIs Node.js Client:
-   * https://www.npmjs.com/package/googleapis bindings for Home Graph:
-   * https://googleapis.dev/nodejs/googleapis/latest/homegraph/classes/Homegraph.html
+   * @deprecated Home Graph credentials are deprecated.
+   * Use Google APIs Node.js Client for Home Graph:
+   * https://www.npmjs.com/package/@googleapis/homegraph
    */
   jwt?: SmartHomeJwt;
 }
@@ -243,9 +243,9 @@ export interface SmartHomeApp extends ServiceBaseApp {
    * @param agentUserId The user identifier.
    *
    * @public
-   * @deprecated Use Google APIs Node.js Client:
-   * https://www.npmjs.com/package/googleapis bindings for Home Graph:
-   * https://googleapis.dev/nodejs/googleapis/latest/homegraph/classes/Homegraph.html
+   * @deprecated Home Graph wrapper methods are deprecated.
+   * Use Google APIs Node.js Client for Home Graph:
+   * https://www.npmjs.com/package/@googleapis/homegraph
    */
   requestSync(agentUserId: string): Promise<string>;
 
@@ -289,9 +289,9 @@ export interface SmartHomeApp extends ServiceBaseApp {
    * @param reportedState A payload containing a device or set of devices with their states
    *
    * @public
-   * @deprecated Use Google APIs Node.js Client:
-   * https://www.npmjs.com/package/googleapis bindings for Home Graph:
-   * https://googleapis.dev/nodejs/googleapis/latest/homegraph/classes/Homegraph.html
+   * @deprecated Home Graph wrapper methods are deprecated.
+   * Use Google APIs Node.js Client for Home Graph:
+   * https://www.npmjs.com/package/@googleapis/homegraph
    */
   reportState(
     reportedState: Api.SmartHomeV1ReportStateRequest
@@ -299,17 +299,17 @@ export interface SmartHomeApp extends ServiceBaseApp {
 
   /**
    * @public
-   * @deprecated Use Google APIs Node.js Client:
-   * https://www.npmjs.com/package/googleapis bindings for Home Graph:
-   * https://googleapis.dev/nodejs/googleapis/latest/homegraph/classes/Homegraph.html
+   * @deprecated Home Graph credentials are deprecated.
+   * Use Google APIs Node.js Client for Home Graph:
+   * https://www.npmjs.com/package/@googleapis/homegraph
    */
   key?: string;
 
   /**
    * @public
-   * @deprecated Use Google APIs Node.js Client:
-   * https://www.npmjs.com/package/googleapis bindings for Home Graph:
-   * https://googleapis.dev/nodejs/googleapis/latest/homegraph/classes/Homegraph.html
+   * @deprecated Home Graph credentials are deprecated.
+   * Use Google APIs Node.js Client for Home Graph:
+   * https://www.npmjs.com/package/@googleapis/homegraph
    */
   jwt?: SmartHomeJwt;
 }
