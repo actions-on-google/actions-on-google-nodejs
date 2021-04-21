@@ -47,10 +47,6 @@
     "client library"
   ],
   "devDependencies": {
-    "@types/aws-lambda": "^0.0.33",
-    "@types/debug": "^0.0.30",
-    "@types/express": "~4.17.7",
-    "@types/express-serve-static-core": "~4.17.7",
     "@types/node": "^14.11.2",
     "@types/sinon": "^4.3.3",
     "ava": "^1.4.1",
@@ -66,7 +62,10 @@
   "dependencies": {
     "debug": "^3.1.0",
     "google-auth-library": "^1.6.1",
-    "googleapis": "^39.2.0"
+    "googleapis": "^39.2.0",
+    "@types/aws-lambda": "^0.0.33",
+    "@types/debug": "^0.0.30",
+    "@types/express": "~4.17.7"
   },
   "resolutions": {
     "typedoc-default-themes": "0.6.0"
