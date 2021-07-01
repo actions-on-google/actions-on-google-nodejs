@@ -15,8 +15,8 @@
  */
 
 import test from 'ava';
-import * as module from '../noinput';
+import * as noInputModule from '../noinput';
 
 test('module is an object', t => {
-  t.is(typeof module, 'object');
+  t.is(typeof noInputModule, 'object');
 });

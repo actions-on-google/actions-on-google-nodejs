@@ -27,28 +27,28 @@ set -x
 # Fail on any error.
 set -e
 
-# Test on Node.js 10.18.0
-echo "Running tests on Node 10.18.0"
+# Test on Node.js 12.22.2
+echo "Running tests on Node 12.22.2"
 rm -rf node_modules yarn.lock package-lock.json
-nvm install 10.18.0
-nvm use 10.18.0
+nvm install 12.22.2
+nvm use 12.22.2
 npm i -g yarn
 
 # Actual build
 yarn
 yarn build
 
-# only check coverage for 10.18.0
+# only check coverage for 12.22.2
 sh script/coverage.sh
 
-# only generate docs using 10.18.0
+# only generate docs using 12.22.2
 yarn docs
 
-# Test on Node.js 12
-echo "Running tests on Node 12"
+# Test on Node.js 14
+echo "Running tests on Node 14"
 rm -rf node_modules yarn.lock package-lock.json
-nvm install 12
-nvm use 12
+nvm install 14
+nvm use 14
 npm i -g yarn
 
 # Actual build

@@ -18,7 +18,8 @@ import * as Api from '../../../api/v2';
 import {SoloHelper} from '../helper';
 
 /** @public */
-export type CompletePurchaseArgument = Api.GoogleActionsTransactionsV3CompletePurchaseValue;
+export type CompletePurchaseArgument =
+  Api.GoogleActionsTransactionsV3CompletePurchaseValue;
 
 /**
  * Asks the user to complete a purchase
@@ -37,8 +38,7 @@ export class CompletePurchase extends SoloHelper<
   ) {
     super({
       intent: 'actions.intent.COMPLETE_PURCHASE',
-      type:
-        'type.googleapis.com/google.actions.transactions.v3.CompletePurchaseValueSpec',
+      type: 'type.googleapis.com/google.actions.transactions.v3.CompletePurchaseValueSpec',
       data: options,
     });
   }

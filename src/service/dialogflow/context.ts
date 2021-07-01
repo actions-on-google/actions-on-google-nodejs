@@ -153,16 +153,14 @@ export class ContextValues<TContexts extends Contexts> {
 
   /** @hidden */
   _serializeV1(): ApiV1.DialogflowV1Context[] {
-    return Object.keys(this.output).map(
-      (name): ApiV1.DialogflowV1Context => {
-        const {lifespan, parameters} = this.output[name]!;
-        return {
-          name,
-          lifespan,
-          parameters,
-        };
-      }
-    );
+    return Object.keys(this.output).map((name): ApiV1.DialogflowV1Context => {
+      const {lifespan, parameters} = this.output[name]!;
+      return {
+        name,
+        lifespan,
+        parameters,
+      };
+    });
   }
 
   /**

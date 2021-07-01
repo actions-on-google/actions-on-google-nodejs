@@ -26,7 +26,8 @@ export interface OpenUrlActionOptions {
 export interface OpenUrlAction
   extends Api.GoogleActionsV2UiElementsOpenUrlAction {}
 export class OpenUrlAction
-  implements Api.GoogleActionsV2UiElementsOpenUrlAction {
+  implements Api.GoogleActionsV2UiElementsOpenUrlAction
+{
   /** @public */
   constructor(options: OpenUrlActionOptions) {
     this.url = options.url;

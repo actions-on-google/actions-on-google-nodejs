@@ -39,7 +39,8 @@ export interface LinkOutSuggestionOptions {
 export interface LinkOutSuggestion
   extends Api.GoogleActionsV2UiElementsLinkOutSuggestion {}
 export class LinkOutSuggestion
-  implements Api.GoogleActionsV2UiElementsLinkOutSuggestion {
+  implements Api.GoogleActionsV2UiElementsLinkOutSuggestion
+{
   /**
    * @param options LinkOutSuggestion options
    * @public
