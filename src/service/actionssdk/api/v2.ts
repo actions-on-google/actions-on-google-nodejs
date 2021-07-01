@@ -492,22 +492,6 @@ export interface GoogleActionsOrdersV3LineItem {
    * Reservation orders like restaurant, haircut etc.
    */
   reservation?: GoogleActionsOrdersV3VerticalsReservationReservationItemExtension;
-  /**
-   * Deprecated. Use vertical level status instead. For example, for purchases,
-   * use PurchaseOrderExtension.status.
-   * User visible label for the state of this line item.
-   */
-  userVisibleStateLabel?: string;
-  /**
-   * Deprecated: Use verticals instead.
-   * Required: Semantic Contents of line item based on its type/vertical.
-   * Every vertical should include its own fulfillment details.
-   * Must be either one of the following values:
-   * google.actions.orders.v3.verticals.purchase.PurchaseItemExtension
-   * google.actions.orders.v3.verticals.reservation.ReservationItemExtension
-   * google.actions.orders.v3.verticals.ticket.TicketItemExtension
-   */
-  vertical?: ApiClientObjectMap<any>;
 }
 
 export interface GoogleActionsOrdersV3Merchant {
@@ -623,20 +607,6 @@ export interface GoogleActionsOrdersV3Order {
    * including websites, apps and email.
    */
   userVisibleOrderId?: string;
-  /**
-   * Deprecated: Use OrderExtensions status instead.
-   * User visible label for the state of this order.
-   */
-  userVisibleStateLabel?: string;
-  /**
-   * Deprecated: Use verticals instead.
-   * These properties will apply to all line items, unless overridden in
-   * some line item. This vertical must match the line item level vertical type.
-   * Possible values:
-   * google.actions.orders.v3.verticals.purchase.PurchaseOrderExtension
-   * google.actions.orders.v3.verticals.ticket.TicketOrderExtension
-   */
-  vertical?: ApiClientObjectMap<any>;
 }
 
 export interface GoogleActionsOrdersV3OrderContents {
@@ -654,17 +624,6 @@ export interface GoogleActionsOrdersV3OrderUpdate {
    * Reason for the change/update.
    */
   reason?: string;
-  /**
-   * Deprecated: Use OrderUpdate.update_mask instead.
-   * If type = SNAPSHOT, OrderUpdate.order should be the entire order.
-   * If type = ORDER_STATUS, this is the order level status change. Only
-   * order.last_update_time and this vertical status are picked up.
-   * Note: type.ORDER_STATUS only supports PurcahaseOrderExtension status
-   * updates and there is no plan to extend this support. Instead, we recommend
-   * using update_mask as it is more generic, extensible and can be used for all
-   * verticals.
-   */
-  type?: GoogleActionsOrdersV3OrderUpdateType;
   /**
    * Note: There are following consideration/recommendations for following
    * special fields:
@@ -2248,11 +2207,6 @@ export interface GoogleActionsV2OrdersGenericExtension {
 
 export interface GoogleActionsV2OrdersGoogleProvidedPaymentOptions {
   /**
-   * If true, billing address will be returned.
-   * Deprecated: Use facilitation_specification field instead.
-   */
-  billingAddressRequired?: boolean;
-  /**
    * This JSON blob captures the specification for how Google facilitates
    * the payment for integrators, which is the PaymentDataRequest object
    * as defined in
@@ -2290,26 +2244,6 @@ export interface GoogleActionsV2OrdersGoogleProvidedPaymentOptions {
    *  }
    */
   facilitationSpecification?: string;
-  /**
-   * If true, disallow prepaid cards from being used in the transaction.
-   * Deprecated: Use facilitation_specification field instead.
-   */
-  prepaidCardDisallowed?: boolean;
-  /**
-   * The app allows cards from any card network listed here being used in
-   * transaction.
-   * By default, Amex, Visa, MC and Discover are supported.
-   * Deprecated: Use facilitation_specification field instead.
-   */
-  supportedCardNetworks?: GoogleActionsV2OrdersGoogleProvidedPaymentOptionsSupportedCardNetworks[];
-  /**
-   * Required field for requesting Google provided payment instrument.
-   * These tokenization parameters  will be used for generating payment token
-   * for use in transaction. The app should get these parameters from their
-   * payment gateway.
-   * Deprecated: Use facilitation_specification field instead.
-   */
-  tokenizationParameters?: GoogleActionsV2OrdersPaymentMethodTokenizationParameters;
 }
 
 export interface GoogleActionsV2OrdersInTransitInfo {
@@ -2733,15 +2667,6 @@ export interface GoogleActionsV2OrdersProposedOrder {
 }
 
 export interface GoogleActionsV2OrdersReceipt {
-  /**
-   * Confirmed order id when order has been received by the integrator. This is
-   * the canonical order id used in integrator's system referencing the order
-   * and may subsequently be used to identify the order as `action_order_id`.
-   *
-   * Note that this field is deprecated. Please pass the field through
-   * OrderUpdate.action_order_id instead.
-   */
-  confirmedActionOrderId?: string;
   /**
    * Optional. The user facing id referencing to current order, which will show
    * up in the receipt card if present. This should be the id that usually
@@ -3352,10 +3277,6 @@ export interface GoogleActionsV2UiElementsLinkOutSuggestion {
    * https://developer.chrome.com/multidevice/android/intents
    */
   openUrlAction?: GoogleActionsV2UiElementsOpenUrlAction;
-  /**
-   * Deprecated. Use OpenUrlAction instead.
-   */
-  url?: string;
 }
 
 export interface GoogleActionsV2UiElementsListSelect {

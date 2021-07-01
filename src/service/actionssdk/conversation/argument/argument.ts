@@ -23,7 +23,6 @@ import {
   DateTimeArgument,
   SignInArgument,
   PlaceArgument,
-  DeepLinkArgument,
   TransactionDecisionArgument,
   TransactionRequirementsArgument,
   DeliveryAddressArgument,
@@ -166,15 +165,6 @@ export interface ArgumentsNamed {
    * @public
    */
   PLACE?: PlaceArgument;
-
-  /**
-   * The link non status argument.
-   * Is undefined as a noop.
-   * Use {@link Status#get|conv.arguments.status.get('LINK')} to explicitly get the status.
-   * @public
-   * @deprecated
-   */
-  LINK?: DeepLinkArgument;
 
   /**
    * The status of MEDIA_STATUS intent.

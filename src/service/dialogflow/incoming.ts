@@ -172,7 +172,9 @@ export class Incoming {
           this.parsed.push(
             new LinkOutSuggestion({
               name: linkOutSuggestion.destinationName!,
-              url: linkOutSuggestion.uri!,
+              openUrlAction: {
+                url: linkOutSuggestion.uri,
+              },
             })
           );
           continue;
@@ -315,7 +317,9 @@ export class Incoming {
             this.parsed.push(
               new LinkOutSuggestion({
                 name: assumed.destinationName!,
-                url: assumed.url!,
+                openUrlAction: {
+                  url: assumed.url!,
+                },
               })
             );
             continue;

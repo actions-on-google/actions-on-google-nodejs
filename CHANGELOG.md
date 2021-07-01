@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 - Update minimum Node version to 12 and update dependencies
+- Remove deprecated classes, methods, and fields
 
 ## [2.14.0]
 ### Added
