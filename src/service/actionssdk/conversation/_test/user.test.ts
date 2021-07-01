@@ -41,14 +41,3 @@ test('user profile reads idToken', t => {
   });
   t.is(user.profile.token, token);
 });
-
-test('user reads userId', t => {
-  const id = 'test';
-  const user = new User({
-    userId: id,
-  });
-  const stub = sinon.stub(common, 'deprecate');
-  t.is(user.id, id);
-  t.true(stub.called);
-  stub.restore();
-});

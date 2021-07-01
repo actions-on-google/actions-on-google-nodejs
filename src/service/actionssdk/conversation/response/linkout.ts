@@ -25,10 +25,10 @@ export interface LinkOutSuggestionOptions {
   name: string;
 
   /**
-   * String URL to open.
+   * URL action when clicked.
    * @public
    */
-  url: string;
+  openUrlAction: Api.GoogleActionsV2UiElementsOpenUrlAction;
 }
 
 /**
@@ -47,6 +47,6 @@ export class LinkOutSuggestion
    */
   constructor(options: LinkOutSuggestionOptions) {
     this.destinationName = options.name;
-    this.url = options.url;
+    this.openUrlAction = options.openUrlAction;
   }
 }

@@ -279,7 +279,6 @@ export class User<TUserStorage> {
     const {userStorage} = this.raw;
     this.storage = userStorage ? JSON.parse(userStorage).data : initial || {};
 
-    this.id = this.raw.userId!;
     this.locale = this.raw.locale!;
 
     this.verification = this.raw.userVerificationStatus;
@@ -308,22 +307,5 @@ export class User<TUserStorage> {
     const payload = await this.profile._verify(client, id);
     this.email = payload!.email;
     return payload;
-  }
-
-  /**
-   * Random string ID for Google user.
-   * @deprecated Use {@link User#storage|conv.user.storage} instead.
-   * @public
-   */
-  get id() {
-    common.deprecate(
-      'conv.user.id',
-      'Use conv.user.storage to store data instead'
-    );
-    return this._id;
-  }
-
-  set id(value) {
-    this._id = value;
   }
 }

@@ -98,10 +98,6 @@ test('new conversation', t => {
   t.is(conv.body, appRequest);
   t.is(conv.intent, intent);
   t.is(conv.id, CONVERSATION_ID);
-  const stub = sinon.stub(common, 'deprecate');
-  t.is(conv.user.id, USER_ID);
-  t.true(stub.called);
-  stub.restore();
   t.is(conv.type, 'NEW');
   t.false(conv.digested);
 

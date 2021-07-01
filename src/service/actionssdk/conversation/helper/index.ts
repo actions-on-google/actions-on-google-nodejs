@@ -22,7 +22,6 @@ export * from './datetime';
 export * from './signin';
 export * from './registerupdate';
 export * from './place';
-export * from './deeplink';
 
 export * from './permission';
 export * from './option';

@@ -613,7 +613,7 @@ test('conv enforces simple response for OrderUpdate', t => {
 
 test('conv enforces simple response for LinkOutSuggestion', t => {
   const conv = new Conversation();
-  conv.ask(new LinkOutSuggestion({url: '', name: ''}));
+  conv.ask(new LinkOutSuggestion({openUrlAction: {url: ''}, name: ''}));
   t.throws(() => conv.response(), {
     message:
       'A simple response is required in addition to this type of response',
