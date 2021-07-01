@@ -403,8 +403,8 @@ test('app uses async middleware returning void', async t => {
   const middleware: DialogflowMiddleware<
     TestMiddleware & DialogflowConversation<{}, {}, Contexts>
   > = async conv => {
-    (conv as TestMiddleware &
-      DialogflowConversation<{}, {}, Contexts>).test = () => conv.ask(response);
+    (conv as TestMiddleware & DialogflowConversation<{}, {}, Contexts>).test =
+      () => conv.ask(response);
   };
   const app = dialogflow<
     TestMiddleware & DialogflowConversation<{}, {}, Contexts>
@@ -669,5 +669,5 @@ test('throwing an Error in catch makes library propogate error', async t => {
   app.catch(() => {
     throw new Error(message);
   });
-  await t.throwsAsync(app.handler({}, {}), message);
+  await t.throwsAsync(app.handler({}, {}), {message});
 });

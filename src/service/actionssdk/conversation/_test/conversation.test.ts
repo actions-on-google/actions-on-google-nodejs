@@ -417,19 +417,21 @@ test('conv generates same user storage as empty string', t => {
 
 test('conv.response throws error when no response has been set', t => {
   const conv = new Conversation();
-  t.throws(
-    () => conv.response(),
-    'No response has been set. ' +
+  t.throws(() => conv.response(), {
+    message:
+      'No response has been set. ' +
       'Is this being used in an async call that was not ' +
-      'returned as a promise to the intent handler?'
-  );
+      'returned as a promise to the intent handler?',
+  });
 });
 
 test('conv.response throws error when response has been digested twice', t => {
   const conv = new Conversation();
   conv.ask("What's up?");
   conv.response();
-  t.throws(() => conv.response(), 'Response has already been digested');
+  t.throws(() => conv.response(), {
+    message: 'Response has already been digested',
+  });
 });
 
 test('conv.response throws error when only one helper has been sent', t => {
@@ -439,10 +441,10 @@ test('conv.response throws error when only one helper has been sent', t => {
       items: [],
     })
   );
-  t.throws(
-    () => conv.response(),
-    'A simple response is required in addition to this type of response'
-  );
+  t.throws(() => conv.response(), {
+    message:
+      'A simple response is required in addition to this type of response',
+  });
 });
 
 test('conv.response does not throws error when only one SoloHelper has been sent', t => {
@@ -476,10 +478,10 @@ test('conv.response throws error when only one rich response has been sent', t =
       alt: 'alt',
     })
   );
-  t.throws(
-    () => conv.response(),
-    'A simple response is required in addition to this type of response'
-  );
+  t.throws(() => conv.response(), {
+    message:
+      'A simple response is required in addition to this type of response',
+  });
 });
 
 test('conv sends speechBiasingHints when set', t => {
@@ -508,21 +510,21 @@ test('conv throws error when conv.add is used after response already been sent',
   const conv = new Conversation();
   conv.ask('hello');
   t.is(typeof conv.response(), 'object');
-  t.throws(
-    () => conv.add('test'),
-    'Response has already been sent. ' +
+  t.throws(() => conv.add('test'), {
+    message:
+      'Response has already been sent. ' +
       'Is this being used in an async call that was not ' +
-      'returned as a promise to the intent handler?'
-  );
+      'returned as a promise to the intent handler?',
+  });
 });
 
 test('conv enforces simple response for non SoloHelper Helper classes', t => {
   const conv = new Conversation();
   conv.ask(new List({items: []}));
-  t.throws(
-    () => conv.response(),
-    'A simple response is required in addition to this type of response'
-  );
+  t.throws(() => conv.response(), {
+    message:
+      'A simple response is required in addition to this type of response',
+  });
 });
 
 test('conv does not enforce simple response for SoloHelper classes', t => {
@@ -540,82 +542,82 @@ test('conv does not enforce simple response for a raw RichResponse input', t => 
 test('conv enforces simple response for Suggestions', t => {
   const conv = new Conversation();
   conv.ask(new Suggestions());
-  t.throws(
-    () => conv.response(),
-    'A simple response is required in addition to this type of response'
-  );
+  t.throws(() => conv.response(), {
+    message:
+      'A simple response is required in addition to this type of response',
+  });
 });
 
 test('conv enforces simple response for Image', t => {
   const conv = new Conversation();
   conv.ask(new Image({url: '', alt: ''}));
-  t.throws(
-    () => conv.response(),
-    'A simple response is required in addition to this type of response'
-  );
+  t.throws(() => conv.response(), {
+    message:
+      'A simple response is required in addition to this type of response',
+  });
 });
 
 test('conv enforces simple response for MediaObject', t => {
   const conv = new Conversation();
   conv.ask(new MediaObject({url: ''}));
-  t.throws(
-    () => conv.response(),
-    'A simple response is required in addition to this type of response'
-  );
+  t.throws(() => conv.response(), {
+    message:
+      'A simple response is required in addition to this type of response',
+  });
 });
 
 test('conv enforces simple response for BasicCard', t => {
   const conv = new Conversation();
   conv.ask(new BasicCard({}));
-  t.throws(
-    () => conv.response(),
-    'A simple response is required in addition to this type of response'
-  );
+  t.throws(() => conv.response(), {
+    message:
+      'A simple response is required in addition to this type of response',
+  });
 });
 
 test('conv enforces simple response for Table', t => {
   const conv = new Conversation();
   conv.ask(new Table({rows: []}));
-  t.throws(
-    () => conv.response(),
-    'A simple response is required in addition to this type of response'
-  );
+  t.throws(() => conv.response(), {
+    message:
+      'A simple response is required in addition to this type of response',
+  });
 });
 
 test('conv enforces simple response for BrowseCarousel', t => {
   const conv = new Conversation();
   conv.ask(new BrowseCarousel());
-  t.throws(
-    () => conv.response(),
-    'A simple response is required in addition to this type of response'
-  );
+  t.throws(() => conv.response(), {
+    message:
+      'A simple response is required in addition to this type of response',
+  });
 });
 
 test('conv enforces simple response for MediaResponse', t => {
   const conv = new Conversation();
   conv.ask(new MediaResponse());
-  t.throws(
-    () => conv.response(),
-    'A simple response is required in addition to this type of response'
-  );
+  t.throws(() => conv.response(), {
+    message:
+      'A simple response is required in addition to this type of response',
+  });
 });
 
 test('conv enforces simple response for OrderUpdate', t => {
   const conv = new Conversation();
   conv.ask(new OrderUpdate({}));
-  t.throws(
-    () => conv.response(),
-    'A simple response is required in addition to this type of response'
-  );
+  t.throws(() => conv.response(), {
+    message:
+      'A simple response is required in addition to this type of response',
+  });
 });
 
 test('conv enforces simple response for LinkOutSuggestion', t => {
   const conv = new Conversation();
   conv.ask(new LinkOutSuggestion({url: '', name: ''}));
-  t.throws(
-    () => conv.response(),
-    'A simple response is required in addition to this type of response'
-  );
+  t.throws(() => conv.response(), {
+    message:
+      'A simple response is required in addition to this type of response',
+  });
 });
 
 test('conv does not enforce simple response for raw RichResponse item', t => {

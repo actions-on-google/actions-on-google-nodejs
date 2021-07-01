@@ -46,10 +46,9 @@ test('app.frameworks is an object', t => {
 });
 
 test('app.handler throws error by default', async t => {
-  const stub = sinon.stub(common, 'error');
-  await t.throwsAsync(t.context.app.handler({}, {}));
-  t.true(stub.called);
-  stub.restore();
+  await t.throwsAsync(t.context.app.handler({}, {}), {
+    message: 'StandardHandler not set',
+  });
 });
 
 test('app.debug is false when not passed options', t => {
@@ -245,6 +244,7 @@ test('app is callable as an Express request', async t => {
       get() {},
     },
     {
+      setHeader() {},
       send(resBody: JsonObject) {
         t.is(resStatus, 123);
         t.is(resBody.body, body);

@@ -44,8 +44,7 @@ export class TransactionDecision extends SoloHelper<
   ) {
     super({
       intent: 'actions.intent.TRANSACTION_DECISION',
-      type:
-        'type.googleapis.com/google.actions.v2.TransactionDecisionValueSpec',
+      type: 'type.googleapis.com/google.actions.v2.TransactionDecisionValueSpec',
       data: options,
     });
   }

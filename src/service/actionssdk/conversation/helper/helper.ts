@@ -31,7 +31,8 @@ export interface Helper<TIntent extends Intent, TValueSpec>
 
 /** @public */
 export class Helper<TIntent extends Intent, TValueSpec>
-  implements Api.GoogleActionsV2ExpectedIntent {
+  implements Api.GoogleActionsV2ExpectedIntent
+{
   inputValueData: ProtoAny<InputValueSpec, TValueSpec>;
 
   constructor(options: HelperOptions<TIntent, TValueSpec>) {

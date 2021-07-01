@@ -79,7 +79,8 @@ export interface BrowseCarouselItemOptions {
 export interface BrowseCarouselItem
   extends Api.GoogleActionsV2UiElementsCarouselBrowseItem {}
 export class BrowseCarouselItem
-  implements Api.GoogleActionsV2UiElementsCarouselBrowseItem {
+  implements Api.GoogleActionsV2UiElementsCarouselBrowseItem
+{
   /**
    * @param options BrowseCarouselItem options
    * @public
@@ -116,7 +117,8 @@ const isOptions = (
 export interface BrowseCarousel
   extends Api.GoogleActionsV2UiElementsCarouselBrowse {}
 export class BrowseCarousel
-  implements Api.GoogleActionsV2UiElementsCarouselBrowse {
+  implements Api.GoogleActionsV2UiElementsCarouselBrowse
+{
   /**
    * @param options BrowseCarousel options
    * @public

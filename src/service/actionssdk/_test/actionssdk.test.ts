@@ -257,9 +257,9 @@ test('app uses async middleware returning void', async t => {
   const middleware: ActionsSdkMiddleware<
     TestMiddleware & ActionsSdkConversation<{}, {}>
   > = async conv => {
-    (conv as TestMiddleware &
-      TestMiddleware &
-      ActionsSdkConversation<{}, {}>).test = () => conv.ask(response);
+    (
+      conv as TestMiddleware & TestMiddleware & ActionsSdkConversation<{}, {}>
+    ).test = () => conv.ask(response);
   };
   const app = actionssdk<TestMiddleware & ActionsSdkConversation<{}, {}>>();
   app._middlewares.push(middleware);
@@ -373,5 +373,5 @@ test('throwing an Error in catch makes library propogate error', async t => {
   app.catch(() => {
     throw new Error(message);
   });
-  await t.throwsAsync(app.handler({}, {}), message);
+  await t.throwsAsync(app.handler({}, {}), {message});
 });

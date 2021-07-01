@@ -41,7 +41,8 @@ import {ApiClientObjectMap} from '../../../../common';
 export {ApiClientObjectMap};
 
 /** @public */
-export type Argument = Api.GoogleActionsV2Argument[keyof Api.GoogleActionsV2Argument];
+export type Argument =
+  Api.GoogleActionsV2Argument[keyof Api.GoogleActionsV2Argument];
 
 export interface ArgumentsNamed {
   /**

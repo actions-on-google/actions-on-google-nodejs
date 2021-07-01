@@ -5,11 +5,9 @@
     "**/index.ts",
     "**/common.ts"
   ],
-  "ignoreCompilerErrors": true,
   "disableOutputCheck": true,
   "excludeExternals": true,
   "excludePrivate": true,
-  "excludeNotExported": true,
   "links": [{
     "label": "Guides",
     "url": "https://developers.google.com/actions/extending-the-assistant"
