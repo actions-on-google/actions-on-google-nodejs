@@ -3,7 +3,7 @@
 This client library makes it easy to create Actions for the Google Assistant and
 supports Dialogflow, Actions SDK (v2), and Smart Home fulfillment.
 
-:warning: For [Conversation Actions](https://developers.google.com/assistant/conversational/actions) built using [Actions Builder](https://developers.google.com/assistant/console/builder) see https://github.com/actions-on-google/assistant-conversation-nodejs
+:warning: We now recommend using [Actions Builder or the Actions SDK](https://developers.google.com/assistant/conversational/overview) to develop, test, and deploy Conversational Actions. For [Conversational Actions](https://developers.google.com/assistant/conversational/actions) built using [Actions Builder](https://developers.google.com/assistant/console/builder) see the [@assistant/conversation](https://github.com/actions-on-google/assistant-conversation-nodejs) library.
 
 * [Client Library GitHub repo](https://github.com/actions-on-google/actions-on-google-nodejs)
 * [Client Library reference docs](https://actions-on-google.github.io/actions-on-google-nodejs/)
