@@ -25,8 +25,7 @@ test('Helper class creates an ExpectedIntent', t => {
     Api.GoogleActionsTransactionsV3CompletePurchaseValueSpec
   >({
     intent: 'actions.intent.COMPLETE_PURCHASE',
-    type:
-      'type.googleapis.com/google.actions.transactions.v3.CompletePurchaseValueSpec',
+    type: 'type.googleapis.com/google.actions.transactions.v3.CompletePurchaseValueSpec',
     data: {
       developerPayload: 'test1',
       skuId: {

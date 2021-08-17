@@ -419,8 +419,7 @@ export const REPORT_STATE_RESPONSE_ERROR = {
         links: [
           {
             description: 'Link error',
-            url:
-              'https://console.developers.google.com/apis/api/homegraph.googleapis.com/',
+            url: 'https://console.developers.google.com/apis/api/homegraph.googleapis.com/',
           },
         ],
       },

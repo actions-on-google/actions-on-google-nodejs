@@ -44,8 +44,7 @@ export class TransactionRequirements extends SoloHelper<
   ) {
     super({
       intent: 'actions.intent.TRANSACTION_REQUIREMENTS_CHECK',
-      type:
-        'type.googleapis.com/google.actions.v2.TransactionRequirementsCheckSpec',
+      type: 'type.googleapis.com/google.actions.v2.TransactionRequirementsCheckSpec',
       data: options,
     });
   }

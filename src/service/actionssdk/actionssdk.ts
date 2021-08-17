@@ -349,10 +349,13 @@ export const actionssdk: ActionsSdk = <
       ) {
         const {debug, init, verification, ordersv3} = this;
         if (verification) {
-          const {project, status = 403, error = (e: string) => e} =
-            typeof verification === 'string'
-              ? {project: verification}
-              : verification;
+          const {
+            project,
+            status = 403,
+            error = (e: string) => e,
+          } = typeof verification === 'string'
+            ? {project: verification}
+            : verification;
           const token = headers['authorization'] as string;
           try {
             await this._client!.verifyIdToken({
@@ -387,12 +390,11 @@ export const actionssdk: ActionsSdk = <
         }
         for (const middleware of this._middlewares) {
           const result = middleware(conv, metadata);
-          conv = (result instanceof ActionsSdkConversation
-            ? result
-            : (await result) || conv) as ActionsSdkConversation<
-            TConvData,
-            TUserStorage
-          >;
+          conv = (
+            result instanceof ActionsSdkConversation
+              ? result
+              : (await result) || conv
+          ) as ActionsSdkConversation<TConvData, TUserStorage>;
         }
         const log = debug ? common.info : common.debug;
         log(

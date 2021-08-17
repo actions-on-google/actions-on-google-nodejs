@@ -50,7 +50,8 @@ export interface HtmlResponseOptions<TData extends JsonObject = JsonObject> {
 export interface HtmlResponse
   extends Api.GoogleActionsV2UiElementsHtmlResponse {}
 export class HtmlResponse<TData extends JsonObject = JsonObject>
-  implements Api.GoogleActionsV2UiElementsHtmlResponse {
+  implements Api.GoogleActionsV2UiElementsHtmlResponse
+{
   /**
    * @param options Canvas options
    * @public

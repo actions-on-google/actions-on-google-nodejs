@@ -65,8 +65,7 @@ export type GoogleActionsOrdersV3VerticalsPurchaseMerchantUnitMeasureUnit =
   | 'POUND';
 
 export type GoogleActionsOrdersV3VerticalsPurchasePickupInfoCurbsideInfoCurbsideFulfillmentType =
-  | 'UNSPECIFIED'
-  | 'VEHICLE_DETAIL';
+  'UNSPECIFIED' | 'VEHICLE_DETAIL';
 
 export type GoogleActionsOrdersV3VerticalsPurchasePickupInfoPickupType =
   | 'UNSPECIFIED'
@@ -96,9 +95,7 @@ export type GoogleActionsOrdersV3VerticalsPurchasePurchaseErrorType =
   | 'PAYMENT_DECLINED';
 
 export type GoogleActionsOrdersV3VerticalsPurchasePurchaseFulfillmentInfoFulfillmentType =
-  | 'TYPE_UNSPECIFIED'
-  | 'DELIVERY'
-  | 'PICKUP';
+  'TYPE_UNSPECIFIED' | 'DELIVERY' | 'PICKUP';
 
 export type GoogleActionsOrdersV3VerticalsPurchasePurchaseItemExtensionStatus =
   | 'PURCHASE_STATUS_UNSPECIFIED'
@@ -121,23 +118,22 @@ export type GoogleActionsOrdersV3VerticalsPurchasePurchaseItemExtensionType =
   | 'GROCERY';
 
 export type GoogleActionsOrdersV3VerticalsPurchasePurchaseOrderExtensionPurchaseLocationType =
-  | 'UNSPECIFIED_LOCATION'
-  | 'ONLINE_PURCHASE'
-  | 'INSTORE_PURCHASE';
+  'UNSPECIFIED_LOCATION' | 'ONLINE_PURCHASE' | 'INSTORE_PURCHASE';
 
 export type GoogleActionsOrdersV3VerticalsPurchasePurchaseOrderExtensionStatus =
-  | 'PURCHASE_STATUS_UNSPECIFIED'
-  | 'READY_FOR_PICKUP'
-  | 'SHIPPED'
-  | 'DELIVERED'
-  | 'OUT_OF_STOCK'
-  | 'IN_PREPARATION'
-  | 'CREATED'
-  | 'CONFIRMED'
-  | 'REJECTED'
-  | 'RETURNED'
-  | 'CANCELLED'
-  | 'CHANGE_REQUESTED';
+
+    | 'PURCHASE_STATUS_UNSPECIFIED'
+    | 'READY_FOR_PICKUP'
+    | 'SHIPPED'
+    | 'DELIVERED'
+    | 'OUT_OF_STOCK'
+    | 'IN_PREPARATION'
+    | 'CREATED'
+    | 'CONFIRMED'
+    | 'REJECTED'
+    | 'RETURNED'
+    | 'CANCELLED'
+    | 'CHANGE_REQUESTED';
 
 export type GoogleActionsOrdersV3VerticalsPurchasePurchaseOrderExtensionType =
   | 'PURCHASE_TYPE_UNSPECIFIED'
@@ -146,18 +142,17 @@ export type GoogleActionsOrdersV3VerticalsPurchasePurchaseOrderExtensionType =
   | 'GROCERY';
 
 export type GoogleActionsOrdersV3VerticalsReservationReservationItemExtensionStatus =
-  | 'RESERVATION_STATUS_UNSPECIFIED'
-  | 'PENDING'
-  | 'CONFIRMED'
-  | 'CANCELLED'
-  | 'FULFILLED'
-  | 'CHANGE_REQUESTED'
-  | 'REJECTED';
+
+    | 'RESERVATION_STATUS_UNSPECIFIED'
+    | 'PENDING'
+    | 'CONFIRMED'
+    | 'CANCELLED'
+    | 'FULFILLED'
+    | 'CHANGE_REQUESTED'
+    | 'REJECTED';
 
 export type GoogleActionsOrdersV3VerticalsReservationReservationItemExtensionType =
-  | 'RESERVATION_TYPE_UNSPECIFIED'
-  | 'RESTAURANT'
-  | 'HAIRDRESSER';
+  'RESERVATION_TYPE_UNSPECIFIED' | 'RESTAURANT' | 'HAIRDRESSER';
 
 export type GoogleActionsOrdersV3VerticalsTicketEventCharacterType =
   | 'TYPE_UNKNOWN'
@@ -212,17 +207,16 @@ export type GoogleActionsTransactionsV3SkuIdSkuType =
   | 'SKU_TYPE_SUBSCRIPTION';
 
 export type GoogleActionsTransactionsV3TransactionDecisionValueTransactionDecision =
-  | 'TRANSACTION_DECISION_UNSPECIFIED'
-  | 'USER_CANNOT_TRANSACT'
-  | 'ORDER_ACCEPTED'
-  | 'ORDER_REJECTED'
-  | 'DELIVERY_ADDRESS_UPDATED'
-  | 'CART_CHANGE_REQUESTED';
+
+    | 'TRANSACTION_DECISION_UNSPECIFIED'
+    | 'USER_CANNOT_TRANSACT'
+    | 'ORDER_ACCEPTED'
+    | 'ORDER_REJECTED'
+    | 'DELIVERY_ADDRESS_UPDATED'
+    | 'CART_CHANGE_REQUESTED';
 
 export type GoogleActionsTransactionsV3TransactionRequirementsCheckResultResultType =
-  | 'RESULT_TYPE_UNSPECIFIED'
-  | 'CAN_TRANSACT'
-  | 'CANNOT_TRANSACT';
+  'RESULT_TYPE_UNSPECIFIED' | 'CAN_TRANSACT' | 'CANNOT_TRANSACT';
 
 export type GoogleActionsTransactionsV3UserInfoOptionsUserInfoProperties =
   | 'USER_INFO_PROPERTY_UNSPECIFIED'
@@ -271,12 +265,13 @@ export type GoogleActionsV2OrdersCustomerInfoOptionsCustomerInfoProperties =
   | 'EMAIL';
 
 export type GoogleActionsV2OrdersGoogleProvidedPaymentOptionsSupportedCardNetworks =
-  | 'UNSPECIFIED_CARD_NETWORK'
-  | 'AMEX'
-  | 'DISCOVER'
-  | 'MASTERCARD'
-  | 'VISA'
-  | 'JCB';
+
+    | 'UNSPECIFIED_CARD_NETWORK'
+    | 'AMEX'
+    | 'DISCOVER'
+    | 'MASTERCARD'
+    | 'VISA'
+    | 'JCB';
 
 export type GoogleActionsV2OrdersLineItemType =
   | 'UNSPECIFIED'
@@ -319,9 +314,7 @@ export type GoogleActionsV2OrdersPaymentInfoPaymentType =
   | 'GIFT_CARD';
 
 export type GoogleActionsV2OrdersPaymentMethodTokenizationParametersTokenizationType =
-  | 'UNSPECIFIED_TOKENIZATION_TYPE'
-  | 'PAYMENT_GATEWAY'
-  | 'DIRECT';
+  'UNSPECIFIED_TOKENIZATION_TYPE' | 'PAYMENT_GATEWAY' | 'DIRECT';
 
 export type GoogleActionsV2OrdersPriceType = 'UNKNOWN' | 'ESTIMATE' | 'ACTUAL';
 
@@ -407,9 +400,7 @@ export type GoogleActionsV2UiElementsOpenUrlActionUrlTypeHint =
   | 'AMP_CONTENT';
 
 export type GoogleActionsV2UiElementsTableCardColumnPropertiesHorizontalAlignment =
-  | 'LEADING'
-  | 'CENTER'
-  | 'TRAILING';
+  'LEADING' | 'CENTER' | 'TRAILING';
 
 export type GoogleActionsV2UserPermissions =
   | 'UNSPECIFIED_PERMISSION'

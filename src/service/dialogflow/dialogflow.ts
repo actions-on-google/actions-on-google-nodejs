@@ -553,13 +553,11 @@ export const dialogflow: Dialogflow = <
         for (const middleware of this._middlewares) {
           // tslint:disable-next-line:no-any genericize Conversation type
           const result = middleware(conv as any, metadata);
-          conv = (result instanceof DialogflowConversation
-            ? result
-            : (await result) || conv) as DialogflowConversation<
-            TConvData,
-            TUserStorage,
-            TContexts
-          >;
+          conv = (
+            result instanceof DialogflowConversation
+              ? result
+              : (await result) || conv
+          ) as DialogflowConversation<TConvData, TUserStorage, TContexts>;
         }
         const log = debug ? common.info : common.debug;
         log(
