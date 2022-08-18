@@ -348,7 +348,13 @@ const makeApiCall = (
 
         res.on('end', () => {
           const apiResponse: string = Buffer.concat(buffers).toString(encoding);
-          const apiResponseJson = JSON.parse(apiResponse);
+          let apiResponseJson;
+          try {
+            apiResponseJson = JSON.parse(apiResponse);
+          } catch (error) {
+            reject(error);
+            return;
+          } 
           if (apiResponseJson.error && apiResponseJson.error.code >= 400) {
             // While the response ended, it contains an error.
             // In this case, this should reject the Promise.
