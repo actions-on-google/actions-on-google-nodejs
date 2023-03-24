@@ -307,7 +307,7 @@ export class Conversation<TUserStorage> {
   _responded = false;
 
   /** @hidden */
-  _init: ConversationOptionsInit<{}, TUserStorage>;
+  _init: ConversationOptionsInit<any, TUserStorage>;
 
   /** @hidden */
   _ordersv3 = false;
